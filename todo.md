@@ -211,13 +211,13 @@
 
 ## V5 – Hibajavítások és Kétnyelvűség
 
-- [ ] Responsive CSS javítás – asztali és mobil layout túlfolyás megszüntetése
-- [ ] Szöveg és blokk csúszások javítása minden oldalon
-- [ ] Emoji eltávolítás az összes oldalról (NewServicePage, Home, stb.)
-- [ ] Footer linkek kattinthatóvá tétele (wouter Link komponens)
-- [ ] Referenciák / Esettanulmányok seed adatok pótlása az adatbázisba
-- [ ] Referenciák oldal megjelenítés javítása
-- [ ] Kétnyelvűség (HU/EN) – i18n rendszer implementálása
-- [ ] Nyelvválasztó gomb a navigációban
-- [ ] Angol fordítások az összes főbb oldalhoz
-- [ ] URL struktúra: /en/* és /hu/* (vagy lang paraméter)
+- [x] Responsive CSS javítás – asztali és mobil layout túlfolyás megszüntetése
+- [x] Szöveg és blokk csúszások javítása minden oldalon
+- [x] Emoji eltávolítás az összes oldalról (NewServicePage, Home, stb.)
+- [x] Footer linkek kattinthatóvá tétele (wouter Link komponens)
+- [x] Referenciák / Esettanulmányok seed adatok pótlása az adatbázisba
+- [x] Referenciák oldal megjelenítés javítása
+- [x] Kétnyelvűség (HU/EN) – i18n rendszer implementálása
+- [x] Nyelvválasztó gomb a navigációban
+- [x] Angol fordítások az összes főbb oldalhoz
+- [x] URL struktúra: /en/* és /hu/* (vagy lang paraméter – LanguageContext alapon)

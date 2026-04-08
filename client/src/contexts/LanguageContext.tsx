@@ -254,11 +254,18 @@ const translations: Record<Language, Record<string, string>> = {
 // ─── Provider ────────────────────────────────────────────────────────────────
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Language>(() => {
+    // 1. Check URL param ?lang=en or ?lang=hu
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlLang = urlParams.get("lang");
+      if (urlLang === "hu" || urlLang === "en") return urlLang;
+    } catch {}
+    // 2. Check localStorage
     try {
       const stored = localStorage.getItem("g2a-lang");
       if (stored === "hu" || stored === "en") return stored;
     } catch {}
-    // Auto-detect from browser
+    // 3. Auto-detect from browser
     const browserLang = navigator.language.toLowerCase();
     return browserLang.startsWith("hu") ? "hu" : "en";
   });
@@ -266,12 +273,25 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const setLang = (newLang: Language) => {
     setLangState(newLang);
     try { localStorage.setItem("g2a-lang", newLang); } catch {}
-    // Update html lang attribute
+    // Update URL param without page reload
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("lang", newLang);
+      window.history.replaceState({}, "", url.toString());
+    } catch {}
     document.documentElement.lang = newLang;
   };
 
   useEffect(() => {
     document.documentElement.lang = lang;
+    // Sync URL param on mount
+    try {
+      const url = new URL(window.location.href);
+      if (!url.searchParams.has("lang")) {
+        url.searchParams.set("lang", lang);
+        window.history.replaceState({}, "", url.toString());
+      }
+    } catch {}
   }, [lang]);
 
   const t = (key: string): string => {
