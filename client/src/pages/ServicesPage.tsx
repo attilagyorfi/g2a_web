@@ -1,14 +1,26 @@
 import { Link } from "wouter";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Globe, Palette, BarChart3, Share2, Target, Search, Code2, Bot, MousePointerClick, Facebook, FileText, Zap, Leaf, Users, Globe2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
 
-const serviceIcons: Record<string, string> = {
-  lokalizacio: "🌐", arculattervezes: "🎨", hirdeteskezeles: "📈",
-  "kozossegi-media": "📱", "strategiai-marketing": "🎯",
-  "keresőoptimalizalas": "🔍", webfejlesztes: "💻",
+const serviceIconMap: Record<string, React.ReactNode> = {
+  lokalizacio: <Globe size={24} />,
+  arculattervezes: <Palette size={24} />,
+  hirdeteskezeles: <BarChart3 size={24} />,
+  "kozossegi-media": <Share2 size={24} />,
+  "strategiai-marketing": <Target size={24} />,
+  "keresőoptimalizálas": <Search size={24} />,
+  webfejlesztes: <Code2 size={24} />,
+  "ai-marketing": <Bot size={24} />,
+  "ppc-google-ads": <MousePointerClick size={24} />,
+  "meta-hirdetes": <Facebook size={24} />,
+  tartalommarketing: <FileText size={24} />,
+  "marketing-automatizacio": <Zap size={24} />,
+  "esg-kommunikacio": <Leaf size={24} />,
+  "employer-branding": <Users size={24} />,
+  "nemzetkozi-marketing": <Globe2 size={24} />,
 };
 
 export default function ServicesPage() {
@@ -38,7 +50,7 @@ export default function ServicesPage() {
                 <Link key={service.id} href={`/szolgaltatasok/${service.slug}`} style={{ textDecoration: "none" }}>
                   <div className="g2a-card" style={{ height: "100%", cursor: "pointer" }}>
                     <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "1.25rem" }}>
-                      <span style={{ fontSize: "2.5rem" }}>{serviceIcons[service.slug] || "⚡"}</span>
+                      <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "48px", height: "48px", borderRadius: "10px", background: "rgba(233,17,48,0.1)", color: "#e91130" }}>{serviceIconMap[service.slug] || <Target size={24} />}</span>
                       <span style={{ fontFamily: "Roboto Mono, monospace", fontSize: "3rem", fontWeight: 700, color: "rgba(233,17,48,0.12)", lineHeight: 1 }}>{service.number || "01"}</span>
                     </div>
                     <h2 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.125rem", fontWeight: 600, marginBottom: "0.75rem" }}>{service.title}</h2>

@@ -67,7 +67,7 @@ export default function ContactPage() {
 
         <section className="g2a-section" style={{ backgroundColor: "#1a1a1a" }}>
           <div className="g2a-container">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "4rem", alignItems: "start" }}>
+            <div className="g2a-layout-sidebar" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "4rem", alignItems: "start" }}>
               {/* Contact Info */}
               <div>
                 <h2 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.25rem", fontWeight: 600, marginBottom: "2rem" }}>
@@ -112,7 +112,7 @@ export default function ContactPage() {
 
                 {success ? (
                   <div style={{ backgroundColor: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", borderRadius: "8px", padding: "2rem", textAlign: "center" }}>
-                    <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>✓</div>
+                    <div style={{ width: "56px", height: "56px", borderRadius: "50%", background: "rgba(34,197,94,0.15)", border: "2px solid rgba(34,197,94,0.4)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1rem", color: "#4ade80", fontSize: "1.5rem", fontWeight: 700 }}>OK</div>
                     <h3 style={{ color: "#4ade80", fontFamily: "Roboto Mono, monospace", marginBottom: "0.5rem" }}>Üzenet elküldve!</h3>
                     <p style={{ color: "#888", fontSize: "0.9rem" }}>Hamarosan felvesszük Önnel a kapcsolatot.</p>
                     <button onClick={() => setSuccess(false)} className="g2a-btn-primary" style={{ marginTop: "1.5rem" }}>

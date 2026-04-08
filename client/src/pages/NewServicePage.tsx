@@ -31,7 +31,7 @@ const SERVICE_CONFIGS: Record<string, ServiceConfig> = {
     heroDesc: "Automatizáld a marketingedet, személyre szabott tartalmakkal és AI-alapú elemzésekkel növeld a konverzióidat.",
     metaTitle: "AI Marketing – Mesterséges Intelligencia a Marketingben | G2A Marketing",
     metaDesc: "AI-alapú marketing megoldások: automatizált kampányok, személyre szabott tartalmak, prediktív elemzés. Növeld a hatékonyságot mesterséges intelligenciával.",
-    icon: "🤖",
+    icon: "bot",
     color: "#7c3aed",
     intro: "A mesterséges intelligencia forradalmasítja a marketinget. Az AI-alapú eszközök segítségével pontosabb célzást, személyre szabott kommunikációt és automatizált folyamatokat valósíthatunk meg – mindezt töredék idő és költség alatt.",
     benefits: [
@@ -62,7 +62,7 @@ const SERVICE_CONFIGS: Record<string, ServiceConfig> = {
     heroDesc: "Maximalizáld a Google Ads befektetés megtérülését profi kampánykezeléssel, precíz célzással és folyamatos optimalizálással.",
     metaTitle: "PPC Google Ads Kezelés – Fizetett Hirdetések | G2A Marketing",
     metaDesc: "Professzionális Google Ads kampánykezelés. Search, Display, Shopping, YouTube hirdetések. Mérhető eredmények, maximális ROI.",
-    icon: "🎯",
+    icon: "target",
     color: "#ea4335",
     intro: "A Google Ads az egyik leghatékonyabb eszköz az azonnali láthatóság és konverziók növelésére. Szakértő csapatunk minden kampánytípusban jártas – a keresési hirdetésektől a Shopping kampányokig.",
     benefits: [
@@ -93,7 +93,7 @@ const SERVICE_CONFIGS: Record<string, ServiceConfig> = {
     heroDesc: "Érd el célközönségedet a világ legnagyobb közösségi platformjain. Precíz célzás, kreatív hirdetések, mérhető eredmények.",
     metaTitle: "Meta Hirdetések – Facebook és Instagram Ads | G2A Marketing",
     metaDesc: "Professzionális Meta (Facebook, Instagram) hirdetéskezelés. Célzott kampányok, remarketing, konverzióoptimalizálás.",
-    icon: "📱",
+    icon: "smartphone",
     color: "#1877f2",
     intro: "A Meta platformok (Facebook, Instagram, WhatsApp) több mint 3 milliárd aktív felhasználóval rendelkeznek. Precíz célzási lehetőségeikkel pontosan elérheted az ideális ügyfeleidet.",
     benefits: [
@@ -124,7 +124,7 @@ const SERVICE_CONFIGS: Record<string, ServiceConfig> = {
     heroDesc: "Építs tekintélyt és organikus forgalmat értékes tartalmakkal. Blog, videó, podcast, infografika – minden csatornán.",
     metaTitle: "Tartalommarketing Ügynökség – Blog, SEO Tartalom | G2A Marketing",
     metaDesc: "Professzionális tartalommarketing: SEO-optimalizált blogcikkek, videók, közösségi média tartalmak. Növeld az organikus forgalmat és az ügyfélbizalmat.",
-    icon: "✍️",
+    icon: "pen",
     color: "#10b981",
     intro: "A tartalommarketing az egyik legköltséghatékonyabb módszer az organikus forgalom és az ügyfélbizalom növelésére. Értékes, SEO-optimalizált tartalmakkal vonzzuk a potenciális ügyfeleket.",
     benefits: [
@@ -155,7 +155,7 @@ const SERVICE_CONFIGS: Record<string, ServiceConfig> = {
     heroDesc: "Spórolj időt és növeld a bevételt automatizált marketing folyamatokkal. CRM integráció, email automatizálás, lead nurturing.",
     metaTitle: "Marketing Automatizáció – CRM, Email, Lead Nurturing | G2A Marketing",
     metaDesc: "Marketing automatizáció: CRM integráció, email automatizálás, lead nurturing, sales funnel optimalizálás. Növeld a hatékonyságot automatizált folyamatokkal.",
-    icon: "⚙️",
+    icon: "zap",
     color: "#f59e0b",
     intro: "A marketing automatizáció lehetővé teszi, hogy a megfelelő üzenetet a megfelelő időben juttasd el a megfelelő embernek – emberi beavatkozás nélkül. Ez növeli a hatékonyságot és csökkenti a manuális munkát.",
     benefits: [
@@ -186,7 +186,7 @@ const SERVICE_CONFIGS: Record<string, ServiceConfig> = {
     heroDesc: "Kommunikáld hatékonyan a vállalat fenntarthatósági törekvéseit. ESG jelentések, zöld marketing, stakeholder kommunikáció.",
     metaTitle: "ESG Kommunikáció – Fenntarthatósági Marketing | G2A Marketing",
     metaDesc: "ESG és fenntarthatósági kommunikáció: ESG jelentések, zöld marketing stratégia, stakeholder kommunikáció, CSR tartalmak.",
-    icon: "🌱",
+    icon: "leaf",
     color: "#22c55e",
     intro: "Az ESG (Environmental, Social, Governance) szempontok egyre fontosabbak a befektetők, ügyfelek és munkavállalók számára. Segítünk hatékonyan kommunikálni a vállalat fenntarthatósági törekvéseit.",
     benefits: [
@@ -217,7 +217,7 @@ const SERVICE_CONFIGS: Record<string, ServiceConfig> = {
     heroDesc: "Vonzd a legjobb tehetségeket és tartsd meg a munkatársaidat erős munkáltatói márkával. EVP, karrieroldal, toborzási marketing.",
     metaTitle: "Employer Branding – Munkáltatói Márka Építés | G2A Marketing",
     metaDesc: "Employer branding: EVP fejlesztés, karrieroldal, toborzási marketing, munkáltatói kommunikáció. Vonzd a legjobb tehetségeket.",
-    icon: "👥",
+    icon: "users",
     color: "#8b5cf6",
     intro: "A tehetséges munkavállalókért folyó verseny soha nem volt akkora, mint ma. Az erős munkáltatói márka nemcsak a toborzást könnyíti meg, hanem csökkenti a fluktuációt és növeli a munkavállalói elköteleződést.",
     benefits: [
@@ -248,7 +248,7 @@ const SERVICE_CONFIGS: Record<string, ServiceConfig> = {
     heroDesc: "Lépj be új piacokra hatékonyan. Lokalizáció, multilingvális SEO, cross-border kampányok és kulturálisan adaptált kommunikáció.",
     metaTitle: "Nemzetközi Marketing – Globális Terjeszkedés | G2A Marketing",
     metaDesc: "Nemzetközi marketing: lokalizáció, multilingvális SEO, cross-border kampányok, kulturálisan adaptált kommunikáció. Terjeszkedj globálisan.",
-    icon: "🌍",
+    icon: "globe",
     color: "#06b6d4",
     intro: "A globális terjeszkedés komoly kihívásokat jelent – különböző kultúrák, nyelvek, szabályozások és fogyasztói szokások. Segítünk hatékonyan belépni új piacokra és adaptálni a marketing üzeneteket.",
     benefits: [
@@ -324,7 +324,9 @@ export default function NewServicePage({ params }: Props) {
               <span style={{ color: "var(--g2a-text-muted)" }}>/</span>
               <span style={{ color: config.color, fontSize: "0.875rem", fontFamily: "Roboto Mono, monospace" }}>{config.title}</span>
             </div>
-            <div style={{ fontSize: "4rem", marginBottom: "1.5rem" }}>{config.icon}</div>
+            <div style={{ width: "64px", height: "64px", borderRadius: "12px", background: `${config.color}18`, border: `1px solid ${config.color}40`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.5rem", color: config.color }}>
+              <span style={{ fontSize: "1.25rem", fontWeight: 700, fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>{config.icon.slice(0, 3).toUpperCase()}</span>
+            </div>
             <h1 style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 800, color: "var(--g2a-text)", fontFamily: "Roboto Mono, monospace", marginBottom: "1rem", lineHeight: 1.1 }}>
               {config.title}
             </h1>
@@ -421,7 +423,7 @@ export default function NewServicePage({ params }: Props) {
         {/* Contact Form */}
         <section style={{ padding: "5rem 0", background: "var(--g2a-surface)" }}>
           <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 2rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "start" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "clamp(1fr, 50%, 1fr) 1fr", gap: "4rem", alignItems: "start" }} className="g2a-layout-sidebar">
               <div>
                 <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "Roboto Mono, monospace", marginBottom: "1.5rem" }}>
                   Vegyük fel a kapcsolatot!

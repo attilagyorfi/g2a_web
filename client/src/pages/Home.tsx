@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import Navigation from "@/components/Navigation";
@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import CookieBanner from "@/components/CookieBanner";
 import SeoHead from "@/components/SeoHead";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   ArrowRight, CheckCircle, ChevronRight, Play, Zap, Target, TrendingUp,
   Globe, Code, Megaphone, Search, Palette, Users, Bot, BarChart3,
@@ -190,6 +191,7 @@ export default function Home() {
   const { data: testimonialsList } = trpc.content.testimonials.useQuery();
   const { data: partnersList } = trpc.content.partners.useQuery();
 
+  const { lang, t } = useLanguage();
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -246,12 +248,12 @@ export default function Home() {
           <div className="g2a-container" style={{ position: "relative", zIndex: 1, padding: "4rem 1.5rem" }}>
             <div style={{ maxWidth: "820px" }}>
               <div className="g2a-section-label animate-fadeIn" style={{ animationDelay: "0.1s" }}>
-                🚀 Prémium B2B Marketing Ügynökség
+                {lang === "en" ? "Premium B2B Marketing Agency" : "Prémium B2B Marketing Ügynökség"}
               </div>
 
               <h1 className="g2a-headline-xl animate-fadeInUp" style={{ animationDelay: "0.2s", marginBottom: "1.5rem" }}>
-                Stratégiai marketing,{" "}
-                <span className="g2a-gradient-text">mérhető növekedés</span>
+                {lang === "en" ? "Strategic marketing," : "Stratégiai marketing,"}{" "}
+                <span className="g2a-gradient-text">{lang === "en" ? "measurable growth" : "mérhető növekedés"}</span>
               </h1>
 
               <p className="animate-fadeInUp" style={{
@@ -260,18 +262,21 @@ export default function Home() {
                 maxWidth: "640px", marginBottom: "2.5rem",
                 fontFamily: "Inter, sans-serif",
               }}>
-                AI-alapú megoldások és stratégiai marketing azoknak a cégeknek, akik nem akarnak elveszni a zajban. SEO, PPC, webfejlesztés és teljes marketing ökoszisztéma – egy kézből.
+                {lang === "en"
+                  ? "AI-powered solutions and strategic marketing for companies that refuse to get lost in the noise. SEO, PPC, web development and a complete marketing ecosystem – from a single source."
+                  : "AI-alapú megoldások és stratégiai marketing azoknak a cégeknek, akik nem akarnak elveszni a zajban. SEO, PPC, webfejlesztés és teljes marketing ökoszisztéma – egy kézből."
+                }
               </p>
 
               <div className="animate-fadeInUp" style={{ animationDelay: "0.5s", display: "flex", gap: "1rem", flexWrap: "wrap", marginBottom: "3.5rem" }}>
                 <Link href="/ingyenes-audit" style={{ textDecoration: "none" }}>
                   <span className="g2a-btn-primary" style={{ fontSize: "1rem", padding: "1rem 2rem" }}>
-                    Ingyenes Marketing Audit <ArrowRight size={18} />
+                    {lang === "en" ? "Free Marketing Audit" : "Ingyenes Marketing Audit"} <ArrowRight size={18} />
                   </span>
                 </Link>
-                <Link href="/referenciank" style={{ textDecoration: "none" }}>
+                <Link href="/referenciak" style={{ textDecoration: "none" }}>
                   <span className="g2a-btn-secondary" style={{ fontSize: "1rem", padding: "1rem 2rem" }}>
-                    <Play size={16} /> Referenciáink
+                    <Play size={16} /> {lang === "en" ? "Our References" : "Referenciáink"}
                   </span>
                 </Link>
               </div>
@@ -283,10 +288,10 @@ export default function Home() {
                 maxWidth: "580px",
               }}>
                 {[
-                  { num: 150, suffix: "+", label: "Sikeres projekt" },
-                  { num: 8, suffix: "+", label: "Iparág" },
-                  { num: 10, suffix: "+", label: "Ország" },
-                  { num: 98, suffix: "%", label: "Elégedett ügyfél" },
+                  { num: 150, suffix: "+", label: lang === "en" ? "Successful projects" : "Sikeres projekt" },
+                  { num: 8, suffix: "+", label: lang === "en" ? "Industries" : "Iparág" },
+                  { num: 10, suffix: "+", label: lang === "en" ? "Countries" : "Ország" },
+                  { num: 98, suffix: "%", label: lang === "en" ? "Satisfied clients" : "Elégedett ügyfél" },
                 ].map((s, i) => (
                   <div key={i} style={{ textAlign: "center" }}>
                     <div className="g2a-stat-number">
@@ -343,12 +348,12 @@ export default function Home() {
         <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg)" }}>
           <div className="g2a-container">
             <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-              <div className="g2a-section-label reveal">Célcsoportjaink</div>
+              <div className="g2a-section-label reveal">{lang === "en" ? "Our Target Audience" : "Célcsoportjaink"}</div>
               <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>
-                Kinek segítünk?
+                {lang === "en" ? "Who do we help?" : "Kinek segítünk?"}
               </h2>
               <p className="g2a-section-subtitle reveal reveal-delay-2" style={{ margin: "0 auto", textAlign: "center" }}>
-                KKV-któl nagyvállalatig, egészségügytől autóiparig – 8+ iparágban bizonyított tapasztalattal
+                {lang === "en" ? "From SMEs to enterprises, from healthcare to automotive – proven expertise in 8+ industries" : "KKV-któl nagyvallalatig, egészségügytől autóiparig – 8+ iparágban bizonyított tapasztalattal"}
               </p>
             </div>
 
@@ -373,12 +378,12 @@ export default function Home() {
         <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
           <div className="g2a-container">
             <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-              <div className="g2a-section-label reveal">Megoldások</div>
+              <div className="g2a-section-label reveal">{lang === "en" ? "Solutions" : "Megoldások"}</div>
               <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>
-                Mi a te problémád?
+                {lang === "en" ? "What is your challenge?" : "Mi a te problémád?"}
               </h2>
               <p className="g2a-section-subtitle reveal reveal-delay-2" style={{ margin: "0 auto", textAlign: "center" }}>
-                Nem hagyományos kategóriák szerint gondolkodunk – a te üzleti kihívásaidból indulunk ki
+                {lang === "en" ? "We don't think in traditional categories – we start from your business challenges" : "Nem hagyományos kategóriák szerint gondolkodunk – a te üzleti kihívásaidból indulunk ki"}
               </p>
             </div>
 
@@ -419,9 +424,9 @@ export default function Home() {
                   Nem ígérünk – bizonyítunk. Íme néhány ügyfél eredménye.
                 </p>
               </div>
-              <Link href="/referenciank" style={{ textDecoration: "none" }} className="reveal">
+                <Link href="/referenciak" style={{ textDecoration: "none" }} className="reveal">
                 <span className="g2a-btn-secondary" style={{ fontSize: "0.875rem" }}>
-                  Összes referencia <ArrowRight size={14} />
+                  {lang === "en" ? "All references" : "Összes referencia"} <ArrowRight size={14} />
                 </span>
               </Link>
             </div>
@@ -465,7 +470,7 @@ export default function Home() {
           borderBottom: "1px solid rgba(233,17,48,0.15)",
         }}>
           <div className="g2a-container">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "center" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "3rem", alignItems: "center" }}>
               <div>
                 <div className="g2a-section-label reveal">AI & Innováció</div>
                 <h2 className="g2a-section-title reveal reveal-delay-1">
@@ -524,14 +529,14 @@ export default function Home() {
         {/* ── INGYENES AUDIT ────────────────────────────────────────────── */}
         <section className="g2a-section g2a-cta-gradient">
           <div className="g2a-container">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "3rem", alignItems: "center" }}>
               <div>
-                <div className="g2a-section-label reveal">Ingyenes ajánlat</div>
+                <div className="g2a-section-label reveal">{lang === "en" ? "Free offer" : "Ingyenes ajánlat"}</div>
                 <h2 className="g2a-section-title reveal reveal-delay-1">
-                  Ingyenes Marketing Audit
+                  {lang === "en" ? "Free Marketing Audit" : "Ingyenes Marketing Audit"}
                 </h2>
                 <p className="g2a-section-subtitle reveal reveal-delay-2" style={{ marginBottom: "2rem" }}>
-                  Megvizsgáljuk a teljes online jelenlétedet és megmutatjuk, hol veszítesz el ügyfeleket – teljesen ingyenesen.
+                  {lang === "en" ? "We examine your entire online presence and show you where you are losing customers – completely free." : "Megvizsgáljuk a teljes online jelenlétedet és megmutatjuk, hol veszítesz el ügyfeleket – teljesen ingyenesen."}
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }} className="reveal reveal-delay-3">
                   {AUDIT_ITEMS.map((item, i) => (
@@ -544,10 +549,10 @@ export default function Home() {
               </div>
               <div className="g2a-card reveal reveal-delay-2" style={{ padding: "2.5rem" }}>
                 <h3 style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "1.375rem", color: "var(--g2a-text-primary)", marginBottom: "0.5rem" }}>
-                  Kérd az ingyenes auditot
+                  {lang === "en" ? "Request the free audit" : "Kérd az ingyenes auditot"}
                 </h3>
                 <p style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)", marginBottom: "1.75rem" }}>
-                  24 órán belül felvesszük veled a kapcsolatot.
+                  {lang === "en" ? "We will contact you within 24 hours." : "24 órán belül felvesszük veled a kapcsolatot."}
                 </p>
                 <AuditForm />
               </div>
@@ -560,9 +565,9 @@ export default function Home() {
           <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg)" }}>
             <div className="g2a-container">
               <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-                <div className="g2a-section-label reveal">Vélemények</div>
+                <div className="g2a-section-label reveal">{lang === "en" ? "Testimonials" : "Vélemények"}</div>
                 <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>
-                  Mit mondanak az ügyfeleink?
+                  {lang === "en" ? "What do our clients say?" : "Mit mondanak az ügyfeleink?"}
                 </h2>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem" }}>
@@ -603,9 +608,9 @@ export default function Home() {
           <div className="g2a-container">
             <div style={{ maxWidth: "760px", margin: "0 auto" }}>
               <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-                <div className="g2a-section-label reveal">GYIK</div>
+                <div className="g2a-section-label reveal">{lang === "en" ? "FAQ" : "GYIK"}</div>
                 <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>
-                  Gyakori kérdések
+                  {lang === "en" ? "Frequently Asked Questions" : "Gyakori kérdések"}
                 </h2>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
@@ -637,12 +642,12 @@ export default function Home() {
         }}>
           <div className="g2a-container">
             <div style={{ maxWidth: "560px", margin: "0 auto", textAlign: "center" }}>
-              <div className="g2a-section-label reveal">Hírlevél</div>
+              <div className="g2a-section-label reveal">{lang === "en" ? "Newsletter" : "Hírlevél"}</div>
               <h2 className="reveal reveal-delay-1" style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "clamp(1.5rem, 2.5vw, 2rem)", color: "var(--g2a-text-primary)", marginBottom: "0.75rem" }}>
-                Marketing trendek, minden héten
+                {lang === "en" ? "Marketing trends, every week" : "Marketing trendek, minden héten"}
               </h2>
               <p className="reveal reveal-delay-2" style={{ color: "var(--g2a-text-secondary)", marginBottom: "1.75rem", fontSize: "0.95rem" }}>
-                Iratkozz fel hírlevelünkre és kapj heti marketing tippeket, esettanulmányokat és AI-újdonságokat.
+                {lang === "en" ? "Subscribe to our newsletter and receive weekly marketing tips, case studies and AI updates." : "Iratkozz fel hírlevelünkre és kapj heti marketing tippeket, esettanulmányokat és AI-újdonságokat."}
               </p>
               <form onSubmit={handleNewsletter} className="reveal reveal-delay-3" style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
                 <input
@@ -653,11 +658,11 @@ export default function Home() {
                   style={{ flex: 1, minWidth: "220px" }}
                 />
                 <button type="submit" className="g2a-btn-primary" disabled={newsletterStatus === "loading"} style={{ flexShrink: 0 }}>
-                  {newsletterStatus === "loading" ? "Feliratkozás..." : "Feliratkozás"}
+                  {newsletterStatus === "loading" ? (lang === "en" ? "Subscribing..." : "Feliratkozás...") : (lang === "en" ? "Subscribe" : "Feliratkozás")}
                 </button>
               </form>
               {newsletterStatus === "success" && (
-                <p style={{ color: "#10b981", marginTop: "0.75rem", fontSize: "0.875rem" }}>✓ Sikeresen feliratkoztál!</p>
+                <p style={{ color: "#10b981", marginTop: "0.75rem", fontSize: "0.875rem" }}>Sikeresen feliratkoztál!</p>
               )}
               {newsletterStatus === "error" && (
                 <p style={{ color: "#e91130", marginTop: "0.75rem", fontSize: "0.875rem" }}>Hiba történt. Kérjük, próbáld újra.</p>
@@ -673,20 +678,20 @@ export default function Home() {
         }}>
           <div className="g2a-container" style={{ textAlign: "center" }}>
             <h2 className="g2a-headline-lg reveal" style={{ marginBottom: "1.25rem" }}>
-              Készen állsz a növekedésre?
+              {lang === "en" ? "Ready to grow?" : "Készen állsz a növekedésre?"}
             </h2>
             <p className="g2a-section-subtitle reveal reveal-delay-1" style={{ margin: "0 auto 2.5rem", textAlign: "center" }}>
-              Vedd fel velünk a kapcsolatot és indítsuk el a közös munkát egy ingyenes konzultációval.
+              {lang === "en" ? "Contact us and let's start working together with a free consultation." : "Vedd fel velünk a kapcsolatot és indítsük el a közös munkát egy ingyenes konzultációval."}
             </p>
             <div className="reveal reveal-delay-2" style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
               <Link href="/ingyenes-audit" style={{ textDecoration: "none" }}>
                 <span className="g2a-btn-primary" style={{ fontSize: "1rem", padding: "1rem 2rem" }}>
-                  Ingyenes Audit kérése <ArrowRight size={18} />
+                  {lang === "en" ? "Request Free Audit" : "Ingyenes Audit kérése"} <ArrowRight size={18} />
                 </span>
               </Link>
               <Link href="/kapcsolat" style={{ textDecoration: "none" }}>
                 <span className="g2a-btn-secondary" style={{ fontSize: "1rem", padding: "1rem 2rem" }}>
-                  <Phone size={16} /> Kapcsolatfelvétel
+                  <Phone size={16} /> {lang === "en" ? "Contact us" : "Kapcsolatfelvétel"}
                 </span>
               </Link>
             </div>

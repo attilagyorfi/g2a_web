@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X, ChevronDown, Sun, Moon, Phone, Mail, Clock, ArrowRight, Facebook, Youtube, Linkedin } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const LOGO_URL = "https://g2amarketing.hu/wp-content/uploads/2022/06/g2a_512x512_transparent_feher.png";
 
@@ -39,6 +40,7 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [location] = useLocation();
   const { theme, toggleTheme, switchable } = useTheme();
+  const { lang, setLang, t } = useLanguage();
   const servicesRef = useRef<HTMLDivElement>(null);
   const industriesRef = useRef<HTMLDivElement>(null);
   const isLight = theme === "light";
@@ -213,13 +215,13 @@ export default function Navigation() {
               )}
             </div>
 
-            <NavLink href="/rolunk" label="Rólunk" current={location} isLight={isLight} />
-            <NavLink href="/hirek" label="Blog" current={location} isLight={isLight} />
-            <NavLink href="/kapcsolat" label="Kapcsolat" current={location} isLight={isLight} />
+            <NavLink href="/rolunk" label={t("nav.about")} current={location} isLight={isLight} />
+            <NavLink href="/hirek" label={t("nav.blog")} current={location} isLight={isLight} />
+            <NavLink href="/kapcsolat" label={t("nav.contact")} current={location} isLight={isLight} />
           </div>
 
           {/* Right actions */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             {switchable && (
               <button onClick={toggleTheme}
                 title={isLight ? "Sötét mód" : "Világos mód"}
@@ -234,9 +236,26 @@ export default function Navigation() {
                 {isLight ? <Moon size={15} /> : <Sun size={15} />}
               </button>
             )}
+            {/* Language switcher */}
+            <button
+              onClick={() => setLang(lang === "hu" ? "en" : "hu")}
+              title={lang === "hu" ? "Switch to English" : "Váltás magyarra"}
+              style={{
+                display: "flex", alignItems: "center", gap: "0.3rem",
+                padding: "0.35rem 0.625rem", borderRadius: "6px",
+                backgroundColor: "var(--g2a-bg-card)", border: "1px solid var(--g2a-border)",
+                color: "var(--g2a-text-secondary)", cursor: "pointer", transition: "all 0.2s",
+                fontFamily: "Roboto Mono, monospace", fontSize: "0.75rem", fontWeight: 600,
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "#e91130"; e.currentTarget.style.color = "#e91130"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--g2a-border)"; e.currentTarget.style.color = "var(--g2a-text-secondary)"; }}
+            >
+              <span style={{ fontSize: "1rem", lineHeight: 1 }}>{lang === "hu" ? "🇬🇧" : "🇭🇺"}</span>
+              {lang === "hu" ? "EN" : "HU"}
+            </button>
             <Link href="/ingyenes-audit" style={{ textDecoration: "none" }} className="hidden md:inline-flex">
               <span className="g2a-btn-primary" style={{ padding: "0.625rem 1.25rem", fontSize: "0.875rem" }}>
-                Ingyenes Audit
+                {t("nav.freeAudit")}
               </span>
             </Link>
             <button onClick={() => setMobileOpen(!mobileOpen)}

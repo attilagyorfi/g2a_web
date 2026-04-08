@@ -502,3 +502,115 @@
 @media (max-width: 480px) {
   .g2a-section { padding: 3rem 0; }
 }
+
+/* ─── RESPONSIVE FIXES ────────────────────────────────────────────────────── */
+/* Prevent horizontal overflow globally */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Responsive grid helpers */
+.g2a-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.g2a-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.g2a-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+@media (max-width: 1024px) {
+  .g2a-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .g2a-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .g2a-grid-2 { grid-template-columns: 1fr; }
+  .g2a-grid-3 { grid-template-columns: 1fr; }
+  .g2a-grid-4 { grid-template-columns: 1fr 1fr; }
+  .g2a-container { padding: 0 1rem; }
+  .g2a-section { padding: 3rem 0; }
+}
+@media (max-width: 480px) {
+  .g2a-grid-4 { grid-template-columns: 1fr; }
+}
+
+/* Responsive contact/form grids */
+.g2a-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 640px) {
+  .g2a-form-grid { grid-template-columns: 1fr; }
+}
+
+/* Two-column layout with sidebar */
+.g2a-layout-sidebar {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 4rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .g2a-layout-sidebar { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* Hero section responsive */
+.g2a-hero-section {
+  padding: 8rem 0 5rem;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .g2a-hero-section { padding: 6rem 0 3rem; min-height: auto; }
+}
+
+/* Navigation mega-menu overflow fix */
+.g2a-mega-menu {
+  max-width: min(640px, calc(100vw - 2rem));
+  left: 50%;
+  transform: translateX(-40%);
+}
+@media (max-width: 900px) {
+  .g2a-mega-menu {
+    left: 0;
+    transform: none;
+    width: calc(100vw - 2rem);
+    max-width: 100%;
+  }
+}
+
+/* Image overflow fix */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Text overflow prevention */
+.g2a-text-clamp {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mobile button stack */
+.g2a-btn-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+@media (max-width: 480px) {
+  .g2a-btn-group { flex-direction: column; }
+  .g2a-btn-primary, .g2a-btn-secondary { width: 100%; justify-content: center; }
+}

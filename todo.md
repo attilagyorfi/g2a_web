@@ -208,3 +208,16 @@
 - [x] App.tsx frissítve – AdminCaseStudies és AdminAuditLeads route-ok
 - [x] 21/21 vitest teszt zöld
 - [x] TypeScript 0 hibával fordult le
+
+## V5 – Hibajavítások és Kétnyelvűség
+
+- [ ] Responsive CSS javítás – asztali és mobil layout túlfolyás megszüntetése
+- [ ] Szöveg és blokk csúszások javítása minden oldalon
+- [ ] Emoji eltávolítás az összes oldalról (NewServicePage, Home, stb.)
+- [ ] Footer linkek kattinthatóvá tétele (wouter Link komponens)
+- [ ] Referenciák / Esettanulmányok seed adatok pótlása az adatbázisba
+- [ ] Referenciák oldal megjelenítés javítása
+- [ ] Kétnyelvűség (HU/EN) – i18n rendszer implementálása
+- [ ] Nyelvválasztó gomb a navigációban
+- [ ] Angol fordítások az összes főbb oldalhoz
+- [ ] URL struktúra: /en/* és /hu/* (vagy lang paraméter)
