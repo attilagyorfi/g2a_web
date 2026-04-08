@@ -126,3 +126,72 @@
 - [x] newsletter.subscribe teszt
 - [x] admin access control tesztek (3 db)
 - [x] Összes teszt átment: 16/16 ✓
+
+## V2 – Prémium B2B Modernizáció
+
+### Globális stílus
+- [ ] Dark/light mode kapcsoló implementálása
+- [ ] Scroll progress indicator (piros vonal a tetején)
+- [ ] Smooth scroll animációk (framer-motion fade-in on scroll)
+- [ ] Sticky CTA gomb (lebegő "Ingyenes Audit" gomb)
+- [ ] Roboto Mono + Inter/Outfit kombinált tipográfia
+
+### Főoldal újraírása
+- [ ] Hero szekció – erős headline, motion design háttér, bizalmi elemek (ügyféllogók, projektek száma, iparágak)
+- [ ] "Kinek segítünk" szekció – 8 iparági blokk kártyákkal
+- [ ] Szolgáltatások probléma-alapú megjelenítéssel (6 probléma blokk)
+- [ ] Esettanulmányok mini preview (3 kiemelt case study)
+- [ ] AI és innováció szekció
+- [ ] "Miért minket válassz" szekció – 8 érv
+- [ ] Ingyenes marketing audit szekció – lead form
+- [ ] Testimonials frissítése
+- [ ] Partner logók slider
+
+### Új aloldalak
+- [ ] Rólunk oldal (About page)
+- [ ] Ingyenes Marketing Audit oldal
+- [ ] AI Marketing oldal
+- [ ] PPC / Google Ads oldal
+- [ ] Meta Hirdetések oldal
+- [ ] Tartalommarketing oldal
+- [ ] Marketing Automatizáció oldal
+- [ ] ESG Kommunikáció oldal
+- [ ] Employer Branding oldal
+- [ ] Nemzetközi Marketing oldal
+- [ ] Referenciák / Esettanulmányok oldal iparági szűrővel
+
+### Iparági SEO landing oldalak (8 db)
+- [ ] Marketing egészségügyi cégeknek
+- [ ] Marketing szépségipari cégeknek
+- [ ] Marketing mérnöki irodáknak
+- [ ] Marketing autóipari cégeknek
+- [ ] Marketing ügyvédi irodáknak
+- [ ] Marketing technológiai cégeknek
+- [ ] Marketing önkormányzati projekteknek
+- [ ] Marketing B2B cégeknek
+
+### Backend bővítés
+- [ ] Case studies adatbázis tábla és admin kezelés
+- [ ] Audit leads adatbázis tábla és admin kezelés
+- [ ] GTM/GA4 script integráció (admin beállítható)
+- [ ] Többnyelvűség előkészítés (hu/en route struktúra)
+
+### Navigáció frissítése
+- [ ] Mega menü Szolgáltatásokhoz (összes aloldal)
+- [ ] Iparágak dropdown a navigációban
+
+## V2 Elvégzett feladatok
+
+- [x] Rólunk oldal (csapat, értékek, időszalag, CTA)
+- [x] Ingyenes Marketing Audit oldal (form, folyamat, tartalom)
+- [x] Referenciák / Esettanulmányok oldal (6 case study, iparági szűrő)
+- [x] 8 iparági SEO landing oldal (egészségügy, szépségipar, mérnöki, autóipar, ügyvédi, tech, önkormányzat, B2B)
+- [x] Navigation frissítve – Rólunk, Iparágak dropdown, Ingyenes Audit CTA
+- [x] App.tsx frissítve – összes új route
+- [x] sitemap.xml frissítve – 30+ URL
+- [x] Tesztek frissítve – 21/21 zöld
+- [x] TypeScript 0 hiba
+- [x] Scroll progress indicator
+- [x] Scroll reveal animációk
+- [x] Dark/light mode kapcsoló (switchable ThemeProvider)
+- [x] Roboto Mono + Inter/Outfit kombinált tipográfia

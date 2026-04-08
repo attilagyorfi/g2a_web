@@ -30,11 +30,19 @@ import AdminIndustries from "./pages/admin/AdminIndustries";
 import AdminTechnologies from "./pages/admin/AdminTechnologies";
 import AdminValues from "./pages/admin/AdminValues";
 import AdminCategories from "./pages/admin/AdminCategories";
+import RolunkPage from "./pages/RolunkPage";
+import AuditPage from "./pages/AuditPage";
+import ReferenciakPage from "./pages/ReferenciakPage";
+import IparagiLandingPage from "./pages/IparagiLandingPage";
 
 function PublicRouter() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/rolunk" component={RolunkPage} />
+      <Route path="/ingyenes-audit" component={AuditPage} />
+      <Route path="/referenciak" component={ReferenciakPage} />
+      <Route path="/iparagi/:slug" component={IparagiLandingPage} />
       <Route path="/szolgaltatasok" component={ServicesPage} />
       <Route path="/szolgaltatasok/:slug" component={ServicePage} />
       <Route path="/szakertelem" component={ExpertisePage} />

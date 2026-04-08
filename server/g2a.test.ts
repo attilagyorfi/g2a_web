@@ -198,3 +198,57 @@ describe("admin access control", () => {
     expect(Array.isArray(settings)).toBe(true);
   });
 });
+
+// ─── New page content tests ────────────────────────────────────────────────────
+
+describe("content.industries", () => {
+  it("returns a list of industries", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const industries = await caller.content.industries();
+    expect(Array.isArray(industries)).toBe(true);
+    if (industries.length > 0) {
+      expect(industries[0]).toHaveProperty("id");
+      expect(industries[0]).toHaveProperty("name");
+    }
+  });
+});
+
+describe("content.values", () => {
+  it("returns a list of values", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const values = await caller.content.values();
+    expect(Array.isArray(values)).toBe(true);
+  });
+});
+
+describe("content.technologies", () => {
+  it("returns a list of technologies", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const techs = await caller.content.technologies();
+    expect(Array.isArray(techs)).toBe(true);
+  });
+});
+
+describe("content.pageSeo", () => {
+  it("returns SEO data for a page slug", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const seo = await caller.content.pageSeo({ slug: "fooldal" });
+    // May be null if no SEO data exists for this slug
+    if (seo) {
+      expect(seo).toHaveProperty("slug");
+    }
+  });
+});
+
+describe("admin.pages", () => {
+  it("admin.pages.list is accessible to admin users", async () => {
+    const { ctx } = createAdminContext();
+    const caller = appRouter.createCaller(ctx);
+    const pages = await caller.admin.pages.list();
+    expect(Array.isArray(pages)).toBe(true);
+  });
+});

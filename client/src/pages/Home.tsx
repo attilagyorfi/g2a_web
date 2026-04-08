@@ -1,231 +1,367 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
-import { ChevronRight, ChevronLeft, ArrowRight, Plus, Minus, Quote, Star } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import ScrollProgressBar from "@/components/ScrollProgressBar";
 import CookieBanner from "@/components/CookieBanner";
 import SeoHead from "@/components/SeoHead";
+import {
+  ArrowRight, CheckCircle, ChevronRight, Play, Zap, Target, TrendingUp,
+  Globe, Code, Megaphone, Search, Palette, Users, Bot, BarChart3,
+  Building2, Stethoscope, Car, Wrench, Lightbulb, Scale, ShoppingBag,
+  Star, Quote, Phone, Mail, Clock, Award, Shield, Rocket, Brain,
+  ChevronDown, ChevronUp, ExternalLink
+} from "lucide-react";
 
-const HERO_BG = "https://g2amarketing.hu/wp-content/uploads/2024/08/Away.webp";
-const LOGO_URL = "https://g2amarketing.hu/wp-content/uploads/2022/06/g2a_512x512_transparent_feher.png";
+// ─── Scroll Reveal Hook ────────────────────────────────────────────────────
+function useRevealAll(containerRef: React.RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
+    );
+    const el = containerRef.current;
+    if (el) {
+      el.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    }
+    return () => observer.disconnect();
+  }, [containerRef]);
+}
 
-const serviceIcons: Record<string, string> = {
-  lokalizacio: "🌐",
-  arculattervezes: "🎨",
-  hirdeteskezeles: "📈",
-  "kozossegi-media": "📱",
-  "strategiai-marketing": "🎯",
-  "keresőoptimalizalas": "🔍",
-  webfejlesztes: "💻",
-};
-
-export default function Home() {
-  const { data: slides } = trpc.content.heroSlides.useQuery();
-  const { data: services } = trpc.content.services.useQuery();
-  const { data: testimonials } = trpc.content.testimonials.useQuery();
-  const { data: partners } = trpc.content.partners.useQuery();
-  const { data: industries } = trpc.content.industries.useQuery();
-  const { data: values } = trpc.content.values.useQuery();
-  const { data: settings } = trpc.content.siteSettings.useQuery();
-  const { data: pageSeo } = trpc.content.pageSeo.useQuery({ slug: "/" });
-
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [openValue, setOpenValue] = useState<number | null>(0);
-  const [email, setEmail] = useState("");
-  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const subscribeMutation = trpc.newsletter.subscribe.useMutation();
-
-  const settingsMap = Object.fromEntries((settings || []).map(s => [s.key, s.value]));
-  const heroSlides = slides && slides.length > 0 ? slides : [{
-    id: 0, title: "G2A MARKETING ÜGYNÖKSÉG", subtitle: "Kreatív online marketing ügynökség",
-    backgroundImage: HERO_BG, backgroundImageAlt: "G2A Marketing háttér",
-    ctaPrimaryText: "Ingyenes Marketing Felmérés", ctaPrimaryUrl: "/kapcsolat",
-    ctaSecondaryText: "Brosúra", ctaSecondaryUrl: "#",
-    sortOrder: 0, isActive: true, createdAt: new Date(),
-  }];
+// ─── Stat Counter ──────────────────────────────────────────────────────────
+function StatCounter({ target, suffix = "", duration = 2000 }: { target: number; suffix?: string; duration?: number }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
 
   useEffect(() => {
-    if (heroSlides.length <= 1) return;
-    const timer = setInterval(() => setCurrentSlide(p => (p + 1) % heroSlides.length), 5000);
-    return () => clearInterval(timer);
-  }, [heroSlides.length]);
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started.current) {
+        started.current = true;
+        const start = Date.now();
+        const tick = () => {
+          const elapsed = Date.now() - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          setCount(Math.round(eased * target));
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }, { threshold: 0.5 });
+    const el = ref.current;
+    if (el) observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, duration]);
 
-  const handleNewsletter = async (e: React.FormEvent) => {
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
+// ─── Data ──────────────────────────────────────────────────────────────────
+const PROBLEMS = [
+  {
+    icon: <Target size={24} />,
+    problem: "Nem jön elég érdeklődő",
+    desc: "A weboldal látogatói nem konvertálnak, az ajánlatkérések száma alacsony.",
+    services: ["SEO", "Google Ads", "Landing Page"],
+    slug: "seo",
+  },
+  {
+    icon: <BarChart3 size={24} />,
+    problem: "Nem hoz eredményt a hirdetés",
+    desc: "Magas hirdetési költség, alacsony megtérülés, átláthatatlan riportok.",
+    services: ["PPC Audit", "Meta Ads", "Kampányoptimalizálás"],
+    slug: "hirdeteskezeles",
+  },
+  {
+    icon: <Code size={24} />,
+    problem: "Elavult a weboldal",
+    desc: "Lassú, nem mobilbarát, rossz UX – elvesznek a potenciális ügyfelek.",
+    services: ["Webfejlesztés", "UX Design", "Core Web Vitals"],
+    slug: "webfejlesztes",
+  },
+  {
+    icon: <Search size={24} />,
+    problem: "Nem találnak rá a Google-ben",
+    desc: "A versenytársak megelőznek a keresési találatokban, elvesznek az organikus látogatók.",
+    services: ["SEO Stratégia", "Tartalommarketing", "Technikai SEO"],
+    slug: "seo",
+  },
+  {
+    icon: <Rocket size={24} />,
+    problem: "Nincs marketingstratégia",
+    desc: "Ad-hoc kampányok, egységes stratégia nélkül – az erőforrások szétforgácsolódnak.",
+    services: ["Marketing Stratégia", "Brand Pozicionálás", "Roadmap"],
+    slug: "strategiai-marketing",
+  },
+  {
+    icon: <Brain size={24} />,
+    problem: "Nem használják ki az AI-t",
+    desc: "A versenytársak AI-alapú eszközökkel gyorsabban és olcsóbban dolgoznak.",
+    services: ["AI Marketing", "Automatizáció", "AI Tartalom"],
+    slug: "ai-marketing",
+  },
+];
+
+const INDUSTRIES = [
+  { icon: <Stethoscope size={22} />, label: "Egészségügy", slug: "marketing-egeszsegugyi-cegeknek", count: "40+ projekt" },
+  { icon: <ShoppingBag size={22} />, label: "Szépségipar", slug: "marketing-szepsegipari-cegeknek", count: "25+ projekt" },
+  { icon: <Wrench size={22} />, label: "Mérnöki irodák", slug: "marketing-mernoki-irodaknak", count: "30+ projekt" },
+  { icon: <Car size={22} />, label: "Autóipar", slug: "marketing-autoipari-cegeknek", count: "20+ projekt" },
+  { icon: <Scale size={22} />, label: "Ügyvédi irodák", slug: "marketing-ugyvedii-irodaknak", count: "15+ projekt" },
+  { icon: <Code size={22} />, label: "Technológia", slug: "marketing-technologiai-cegeknek", count: "35+ projekt" },
+  { icon: <Lightbulb size={22} />, label: "Önkormányzat", slug: "marketing-onkormanyzati-projekteknek", count: "10+ projekt" },
+  { icon: <Building2 size={22} />, label: "B2B cégek", slug: "marketing-b2b-cegeknek", count: "50+ projekt" },
+];
+
+const AI_FEATURES = [
+  { icon: <Bot size={20} />, title: "AI Tartalomgyártás", desc: "Gyorsabb, SEO-optimalizált tartalom generálás AI segítségével" },
+  { icon: <Search size={20} />, title: "AI SEO Elemzés", desc: "Automatikus kulcsszókutatás és versenytárs-elemzés" },
+  { icon: <BarChart3 size={20} />, title: "Kampányoptimalizálás", desc: "Valós idejű AI-alapú bid management és targeting" },
+  { icon: <TrendingUp size={20} />, title: "Prediktív Reporting", desc: "Előrejelzések és automatikus teljesítmény-riportok" },
+  { icon: <Zap size={20} />, title: "Workflow Automatizáció", desc: "Ismétlődő feladatok automatizálása, több idő a stratégiára" },
+  { icon: <Globe size={20} />, title: "Nemzetközi Kommunikáció", desc: "AI-alapú fordítás és lokalizáció 20+ nyelven" },
+];
+
+const WHY_US = [
+  { icon: <Brain size={20} />, title: "Stratégiai gondolkodás", desc: "Nem csak kivitelezünk – üzleti célokat értünk el" },
+  { icon: <Zap size={20} />, title: "Gyors reakcióidő", desc: "24 órán belül válaszolunk minden megkeresésre" },
+  { icon: <Globe size={20} />, title: "Nemzetközi tapasztalat", desc: "Több mint 10 országban szerzett marketing tapasztalat" },
+  { icon: <Bot size={20} />, title: "AI-alapú működés", desc: "Minden folyamatunkba integrálva van az AI" },
+  { icon: <Shield size={20} />, title: "Átlátható riportok", desc: "Heti és havi részletes teljesítmény-riportok" },
+  { icon: <Award size={20} />, title: "Teljes ökoszisztéma", desc: "Stratégiától a kivitelezésig – egy kézből" },
+  { icon: <Users size={20} />, title: "Több iparági tapasztalat", desc: "8+ iparágban bizonyított eredmények" },
+  { icon: <Target size={20} />, title: "Mérhető eredmények", desc: "Minden kampánynál KPI-alapú célkitűzések" },
+];
+
+const AUDIT_ITEMS = [
+  "Weboldal technikai állapota (Core Web Vitals, sebesség)",
+  "SEO jelenlét és kulcsszó pozíciók",
+  "Google Ads és Meta kampányok hatékonysága",
+  "Közösségi média jelenlét és engagement",
+  "Versenytárs-elemzés és piaci pozíció",
+  "Konverziós ráta és UX problémák",
+];
+
+const CASE_STUDIES = [
+  {
+    industry: "Egészségügy",
+    client: "Magánklinika",
+    problem: "Alacsony online foglalások száma, gyenge SEO jelenlét",
+    solution: "Teljes SEO stratégia + Google Ads + weboldal optimalizálás",
+    result: "+340% organikus forgalom, +180% online foglalás",
+    platforms: ["Google Ads", "SEO", "Web"],
+    color: "#10b981",
+  },
+  {
+    industry: "Autóipar",
+    client: "Autókereskedő hálózat",
+    problem: "Magas hirdetési költség, alacsony konverzió",
+    solution: "PPC audit + kampányrestruktúra + landing page optimalizálás",
+    result: "-45% CPA, +220% lead generálás",
+    platforms: ["Google Ads", "Meta Ads", "Analytics"],
+    color: "#3b82f6",
+  },
+  {
+    industry: "B2B Technológia",
+    client: "SaaS vállalat",
+    problem: "Nemzetközi piacra lépés, brand awareness hiánya",
+    solution: "Teljes brand stratégia + multilingual SEO + LinkedIn kampányok",
+    result: "+5 új piac, +280% demo foglalás",
+    platforms: ["LinkedIn Ads", "SEO", "Content"],
+    color: "#8b5cf6",
+  },
+];
+
+// ─── Main Component ────────────────────────────────────────────────────────
+export default function Home() {
+  const pageRef = useRef<HTMLDivElement>(null);
+  useRevealAll(pageRef);
+
+  const { data: seoData } = trpc.content.pageSeo.useQuery({ slug: "fooldal" });
+  const { data: testimonialsList } = trpc.content.testimonials.useQuery();
+  const { data: partnersList } = trpc.content.partners.useQuery();
+
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const newsletterMutation = trpc.newsletter.subscribe.useMutation({
+    onSuccess: () => { setNewsletterStatus("success"); setNewsletterEmail(""); },
+    onError: () => setNewsletterStatus("error"),
+  });
+
+  const handleNewsletter = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!newsletterEmail) return;
     setNewsletterStatus("loading");
-    try {
-      await subscribeMutation.mutateAsync({ email });
-      setNewsletterStatus("success");
-      setEmail("");
-    } catch {
-      setNewsletterStatus("error");
-    }
+    newsletterMutation.mutate({ email: newsletterEmail });
   };
 
-  const schemaJson = JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "MarketingAgency",
-    "name": "G2A Marketing",
-    "url": "https://g2amarketing.hu",
-    "logo": LOGO_URL,
-    "telephone": "+36301902575",
-    "email": "info@g2amarketing.hu",
-    "address": { "@type": "PostalAddress", "addressLocality": "Pécs", "addressCountry": "HU" },
-    "openingHours": "Mo-Fr 08:00-17:00",
-    "description": "Adatvezérelt, kreatív online marketing ügynökség Pécsről.",
-    "sameAs": ["https://facebook.com/g2amarketing", "https://linkedin.com/company/g2amarketing"],
-  });
+  const faqs = [
+    { q: "Mennyi idő alatt láthatók az eredmények?", a: "SEO esetén 3–6 hónap, PPC kampányoknál 2–4 hét alatt mérhető eredmények jelennek meg. Az ingyenes audit során pontosabb becslést adunk." },
+    { q: "Milyen méretű cégeknek dolgoztok?", a: "KKV-któl nagyvállalatig minden méretű ügyféllel dolgozunk. Tapasztalatunk van egyszemélyes vállalkozásoktól multinacionális cégekig." },
+    { q: "Mi az ingyenes marketing audit folyamata?", a: "Kitöltöd az audit kérő űrlapot, 24 órán belül felvesszük veled a kapcsolatot, majd 5–7 munkanapon belül elkészítjük a részletes auditot." },
+    { q: "Hogyan méritek a kampányok sikerét?", a: "Minden kampányhoz egyedi KPI-okat határozunk meg (ROAS, CPA, CTR, konverziós ráta stb.) és heti/havi riportokban számolunk be az eredményekről." },
+    { q: "Dolgoztok nemzetközi piacokon is?", a: "Igen, több mint 10 országban van tapasztalatunk. Lokalizáció, multilingual SEO és nemzetközi PPC kampányok terén egyaránt segítünk." },
+  ];
 
   return (
     <>
       <SeoHead
-        title={pageSeo?.metaTitle || "G2A Marketing Pécs – Adatvezérelt Online Marketing Ügynökség"}
-        description={pageSeo?.metaDescription || "A G2A Marketing adatvezérelt, kreatív online marketing ügynökség Pécsről."}
-        ogTitle={pageSeo?.ogTitle || undefined}
-        ogDescription={pageSeo?.ogDescription || undefined}
-        ogImage={pageSeo?.ogImage || undefined}
-        schemaJson={schemaJson}
+        title={seoData?.metaTitle || "G2A Marketing – Adatvezérelt B2B Marketing Ügynökség | Pécs"}
+        description={seoData?.metaDescription || "Stratégiai marketing, AI-alapú megoldások és mérhető növekedés. SEO, PPC, webfejlesztés és teljes marketing ökoszisztéma B2B cégeknek."}
       />
+      <ScrollProgressBar />
       <Navigation />
-      <main style={{ paddingTop: "100px" }}>
-        {/* ─── Hero Slider ─────────────────────────────────────────────────── */}
-        <section style={{ position: "relative", height: "calc(100vh - 100px)", minHeight: "500px", overflow: "hidden", backgroundColor: "#111" }}>
-          {heroSlides.map((slide, i) => (
-            <div key={slide.id} style={{
-              position: "absolute", inset: 0,
-              opacity: i === currentSlide ? 1 : 0,
-              transition: "opacity 0.8s ease",
-              zIndex: i === currentSlide ? 1 : 0,
-            }}>
-              {slide.backgroundImage && (
-                <img src={slide.backgroundImage} alt={slide.backgroundImageAlt || slide.title}
-                  style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }} />
-              )}
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.2) 100%)" }} />
-              <div className="g2a-container" style={{ position: "relative", zIndex: 2, height: "100%", display: "flex", alignItems: "center" }}>
-                <div style={{ maxWidth: "640px" }}>
-                  {slide.subtitle && (
-                    <div className="g2a-section-label" style={{ marginBottom: "1rem" }}>{slide.subtitle}</div>
-                  )}
-                  <h1 style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 700, color: "#fff", lineHeight: 1.15, marginBottom: "2rem", fontFamily: "Roboto Mono, monospace" }}>
-                    {slide.title}
-                  </h1>
-                  <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-                    {slide.ctaPrimaryText && (
-                      <Link href={slide.ctaPrimaryUrl || "/kapcsolat"} className="g2a-btn-primary">
-                        {slide.ctaPrimaryText}
-                        <ArrowRight size={16} />
-                      </Link>
-                    )}
-                    {slide.ctaSecondaryText && (
-                      <a href={slide.ctaSecondaryUrl || "#"} className="g2a-btn-secondary">
-                        {slide.ctaSecondaryText}
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-          {/* Slider Controls */}
-          {heroSlides.length > 1 && (
-            <>
-              <button onClick={() => setCurrentSlide(p => (p - 1 + heroSlides.length) % heroSlides.length)}
-                style={{ position: "absolute", left: "1.5rem", top: "50%", transform: "translateY(-50%)", zIndex: 3, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", width: "44px", height: "44px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s" }}
-                aria-label="Előző dia">
-                <ChevronLeft size={20} />
-              </button>
-              <button onClick={() => setCurrentSlide(p => (p + 1) % heroSlides.length)}
-                style={{ position: "absolute", right: "1.5rem", top: "50%", transform: "translateY(-50%)", zIndex: 3, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", width: "44px", height: "44px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s" }}
-                aria-label="Következő dia">
-                <ChevronRight size={20} />
-              </button>
-              <div style={{ position: "absolute", bottom: "2rem", left: "50%", transform: "translateX(-50%)", zIndex: 3, display: "flex", gap: "0.5rem" }}>
-                {heroSlides.map((_, i) => (
-                  <button key={i} onClick={() => setCurrentSlide(i)}
-                    style={{ width: i === currentSlide ? "24px" : "8px", height: "8px", borderRadius: "4px", background: i === currentSlide ? "#e91130" : "rgba(255,255,255,0.4)", border: "none", cursor: "pointer", transition: "all 0.3s" }}
-                    aria-label={`${i + 1}. dia`} />
-                ))}
-              </div>
-            </>
-          )}
-        </section>
+      <CookieBanner />
 
-        {/* ─── Quote Section ────────────────────────────────────────────────── */}
-        <section style={{ backgroundColor: "#e91130", padding: "3rem 0" }}>
-          <div className="g2a-container" style={{ textAlign: "center" }}>
-            <Quote size={32} style={{ color: "rgba(255,255,255,0.4)", margin: "0 auto 1rem" }} />
-            <blockquote style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)", fontWeight: 500, color: "#ffffff", fontStyle: "italic", fontFamily: "Roboto, sans-serif", maxWidth: "800px", margin: "0 auto", lineHeight: 1.6 }}>
-              {settingsMap.homepage_quote || '"A marketing az, amikor a józan paraszti gondolkodást egy csipetnyi kreativitással fűszerezed."'}
-            </blockquote>
-          </div>
-        </section>
+      <div ref={pageRef}>
+        {/* ── HERO ─────────────────────────────────────────────────────── */}
+        <section style={{
+          minHeight: "100vh", display: "flex", alignItems: "center",
+          background: "radial-gradient(ellipse at 70% 40%, rgba(233,17,48,0.1) 0%, transparent 55%), radial-gradient(ellipse at 15% 80%, rgba(233,17,48,0.06) 0%, transparent 45%), var(--g2a-bg)",
+          position: "relative", overflow: "hidden",
+          paddingTop: "6rem",
+        }}>
+          {/* Grid pattern */}
+          <div className="g2a-grid-pattern" style={{ position: "absolute", inset: 0, opacity: 0.6 }} />
 
-        {/* ─── About Section ────────────────────────────────────────────────── */}
-        <section className="g2a-section" style={{ backgroundColor: "#1a1a1a" }}>
-          <div className="g2a-container">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
-              <div>
-                <div className="g2a-section-label">Rólunk</div>
-                <h2 className="g2a-section-title" style={{ fontSize: "clamp(1.5rem, 2.5vw, 2rem)" }}>
-                  {settingsMap.homepage_about_title || "Adatvezérelt marketing, amivel a márkád nem csak látható, hanem kiemelkedő lesz."}
-                </h2>
-                <p style={{ color: "#b0b0b0", lineHeight: 1.8, marginBottom: "2rem" }}>
-                  {settingsMap.homepage_about_text || "A G2A Marketing egy adatvezérelt, kreatív online marketing ügynökség, akik segítik a márkák fejlődését."}
-                </p>
-                <Link href="/kapcsolat" className="g2a-btn-primary">
-                  Ingyenes Marketing Felmérés
-                  <ArrowRight size={16} />
+          {/* Decorative circles */}
+          <div style={{
+            position: "absolute", right: "-10%", top: "10%",
+            width: "600px", height: "600px", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(233,17,48,0.06) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
+
+          <div className="g2a-container" style={{ position: "relative", zIndex: 1, padding: "4rem 1.5rem" }}>
+            <div style={{ maxWidth: "820px" }}>
+              <div className="g2a-section-label animate-fadeIn" style={{ animationDelay: "0.1s" }}>
+                🚀 Prémium B2B Marketing Ügynökség
+              </div>
+
+              <h1 className="g2a-headline-xl animate-fadeInUp" style={{ animationDelay: "0.2s", marginBottom: "1.5rem" }}>
+                Stratégiai marketing,{" "}
+                <span className="g2a-gradient-text">mérhető növekedés</span>
+              </h1>
+
+              <p className="animate-fadeInUp" style={{
+                animationDelay: "0.35s", fontSize: "clamp(1.05rem, 1.8vw, 1.25rem)",
+                color: "var(--g2a-text-secondary)", lineHeight: "1.7",
+                maxWidth: "640px", marginBottom: "2.5rem",
+                fontFamily: "Inter, sans-serif",
+              }}>
+                AI-alapú megoldások és stratégiai marketing azoknak a cégeknek, akik nem akarnak elveszni a zajban. SEO, PPC, webfejlesztés és teljes marketing ökoszisztéma – egy kézből.
+              </p>
+
+              <div className="animate-fadeInUp" style={{ animationDelay: "0.5s", display: "flex", gap: "1rem", flexWrap: "wrap", marginBottom: "3.5rem" }}>
+                <Link href="/ingyenes-audit" style={{ textDecoration: "none" }}>
+                  <span className="g2a-btn-primary" style={{ fontSize: "1rem", padding: "1rem 2rem" }}>
+                    Ingyenes Marketing Audit <ArrowRight size={18} />
+                  </span>
+                </Link>
+                <Link href="/referenciank" style={{ textDecoration: "none" }}>
+                  <span className="g2a-btn-secondary" style={{ fontSize: "1rem", padding: "1rem 2rem" }}>
+                    <Play size={16} /> Referenciáink
+                  </span>
                 </Link>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+
+              {/* Trust stats */}
+              <div className="animate-fadeIn" style={{
+                animationDelay: "0.65s",
+                display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem",
+                maxWidth: "580px",
+              }}>
                 {[
-                  { num: "150+", label: "Elégedett ügyfél" },
-                  { num: "8+", label: "Év tapasztalat" },
-                  { num: "500+", label: "Sikeres kampány" },
-                  { num: "23+", label: "Aktív partner" },
-                ].map(stat => (
-                  <div key={stat.label} style={{ backgroundColor: "#1e1e1e", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "1.5rem", textAlign: "center" }}>
-                    <div style={{ fontSize: "2rem", fontWeight: 700, color: "#e91130", fontFamily: "Roboto Mono, monospace", marginBottom: "0.25rem" }}>{stat.num}</div>
-                    <div style={{ fontSize: "0.8125rem", color: "#888", textTransform: "uppercase", letterSpacing: "0.05em" }}>{stat.label}</div>
+                  { num: 150, suffix: "+", label: "Sikeres projekt" },
+                  { num: 8, suffix: "+", label: "Iparág" },
+                  { num: 10, suffix: "+", label: "Ország" },
+                  { num: 98, suffix: "%", label: "Elégedett ügyfél" },
+                ].map((s, i) => (
+                  <div key={i} style={{ textAlign: "center" }}>
+                    <div className="g2a-stat-number">
+                      <StatCounter target={s.num} suffix={s.suffix} />
+                    </div>
+                    <div className="g2a-stat-label">{s.label}</div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
+
+          {/* Scroll indicator */}
+          <div style={{
+            position: "absolute", bottom: "2rem", left: "50%", transform: "translateX(-50%)",
+            display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem",
+            color: "var(--g2a-text-muted)", fontSize: "0.75rem", fontFamily: "Roboto Mono, monospace",
+            letterSpacing: "0.1em", textTransform: "uppercase",
+            animation: "float 2.5s ease-in-out infinite",
+          }}>
+            <span>Görgess</span>
+            <ChevronDown size={16} />
+          </div>
         </section>
 
-        {/* ─── Services Section ─────────────────────────────────────────────── */}
-        <section className="g2a-section" style={{ backgroundColor: "#161616" }}>
+        {/* ── PARTNER LOGOS ─────────────────────────────────────────────── */}
+        {partnersList && partnersList.length > 0 && (
+          <section style={{
+            padding: "2.5rem 0",
+            backgroundColor: "var(--g2a-bg-2)",
+            borderTop: "1px solid var(--g2a-border)",
+            borderBottom: "1px solid var(--g2a-border)",
+            overflow: "hidden",
+          }}>
+            <div style={{ overflow: "hidden" }}>
+              <div className="animate-marquee" style={{ display: "flex", gap: "3rem", width: "max-content", alignItems: "center" }}>
+                {[...partnersList, ...partnersList].map((p, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.75rem", opacity: 0.5, filter: "grayscale(1)", transition: "opacity 0.2s, filter 0.2s", flexShrink: 0 }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = "1"; (e.currentTarget as HTMLElement).style.filter = "grayscale(0)"; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = "0.5"; (e.currentTarget as HTMLElement).style.filter = "grayscale(1)"; }}>
+                    {p.logo ? (
+                      <img src={p.logo} alt={p.logoAlt || p.name} style={{ height: "32px", width: "auto", maxWidth: "120px", objectFit: "contain" }} />
+                    ) : (
+                      <span style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--g2a-text-secondary)", whiteSpace: "nowrap" }}>{p.name}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── KINEK SEGÍTÜNK ────────────────────────────────────────────── */}
+        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg)" }}>
           <div className="g2a-container">
-            <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-              <div className="g2a-section-label">Amit kínálunk</div>
-              <h2 className="g2a-section-title">Szolgáltatásaink</h2>
-              <p style={{ color: "#888", maxWidth: "560px", margin: "0 auto" }}>
-                Teljes körű digitális marketing megoldások, amelyek valódi eredményeket hoznak vállalkozásodnak.
+            <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
+              <div className="g2a-section-label reveal">Célcsoportjaink</div>
+              <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>
+                Kinek segítünk?
+              </h2>
+              <p className="g2a-section-subtitle reveal reveal-delay-2" style={{ margin: "0 auto", textAlign: "center" }}>
+                KKV-któl nagyvállalatig, egészségügytől autóiparig – 8+ iparágban bizonyított tapasztalattal
               </p>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
-              {(services || []).map(service => (
-                <Link key={service.id} href={`/szolgaltatasok/${service.slug}`} style={{ textDecoration: "none" }}>
-                  <div className="g2a-card" style={{ height: "100%", cursor: "pointer" }}>
-                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "1.25rem" }}>
-                      <span style={{ fontSize: "2rem" }}>{serviceIcons[service.slug] || "⚡"}</span>
-                      <span style={{ fontFamily: "Roboto Mono, monospace", fontSize: "2.5rem", fontWeight: 700, color: "rgba(233,17,48,0.12)", lineHeight: 1 }}>
-                        {service.number || "01"}
-                      </span>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.25rem" }}>
+              {INDUSTRIES.map((ind, i) => (
+                <Link key={ind.slug} href={`/iparagi/${ind.slug}`} style={{ textDecoration: "none" }}>
+                  <div className={`g2a-card reveal reveal-delay-${(i % 4) + 1}`} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <div className="g2a-icon-box">{ind.icon}</div>
+                    <div>
+                      <div style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--g2a-text-primary)", marginBottom: "0.25rem" }}>{ind.label}</div>
+                      <div style={{ fontFamily: "Roboto Mono, monospace", fontSize: "0.7rem", color: "#e91130", letterSpacing: "0.05em" }}>{ind.count}</div>
                     </div>
-                    <h3 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.0625rem", fontWeight: 600, marginBottom: "0.75rem" }}>
-                      {service.title}
-                    </h3>
-                    <p style={{ color: "#888", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: "1.25rem" }}>
-                      {service.shortDescription}
-                    </p>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", color: "#e91130", fontSize: "0.8125rem", fontWeight: 500 }}>
-                      Részletek <ArrowRight size={14} />
-                    </div>
+                    <ChevronRight size={16} style={{ marginLeft: "auto", color: "var(--g2a-text-muted)" }} />
                   </div>
                 </Link>
               ))}
@@ -233,90 +369,226 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ─── Industries Section ───────────────────────────────────────────── */}
-        <section className="g2a-section" style={{ backgroundColor: "#1a1a1a" }}>
+        {/* ── PROBLÉMA-ALAPÚ SZOLGÁLTATÁSOK ────────────────────────────── */}
+        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
           <div className="g2a-container">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "4rem", alignItems: "start" }}>
-              <div>
-                <div className="g2a-section-label">Szakterületek</div>
-                <h2 className="g2a-section-title">Iparágak, ahol otthon vagyunk</h2>
-                <p style={{ color: "#888", lineHeight: 1.8, marginBottom: "2rem" }}>
-                  Tapasztalatunk számos iparágra kiterjed, így pontosan értjük az adott piac kihívásait.
-                </p>
-                <Link href="/szakertelem" className="g2a-btn-primary">
-                  Szakértelmeink <ArrowRight size={16} />
-                </Link>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "1rem" }}>
-                {(industries || []).map(ind => (
-                  <div key={ind.id} style={{ backgroundColor: "#1e1e1e", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "1.25rem", display: "flex", alignItems: "center", gap: "0.75rem", transition: "border-color 0.2s" }}
-                    onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(233,17,48,0.4)")}
-                    onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)")}>
-                    <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#e91130", flexShrink: 0 }} />
-                    <span style={{ color: "#d0d0d0", fontSize: "0.875rem", fontWeight: 500 }}>{ind.name}</span>
-                  </div>
-                ))}
-              </div>
+            <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
+              <div className="g2a-section-label reveal">Megoldások</div>
+              <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>
+                Mi a te problémád?
+              </h2>
+              <p className="g2a-section-subtitle reveal reveal-delay-2" style={{ margin: "0 auto", textAlign: "center" }}>
+                Nem hagyományos kategóriák szerint gondolkodunk – a te üzleti kihívásaidból indulunk ki
+              </p>
             </div>
-          </div>
-        </section>
 
-        {/* ─── Values Accordion ─────────────────────────────────────────────── */}
-        <section className="g2a-section" style={{ backgroundColor: "#161616" }}>
-          <div className="g2a-container">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "start" }}>
-              <div>
-                <div className="g2a-section-label">Értékeink</div>
-                <h2 className="g2a-section-title">Amiben hiszünk és ahogy dolgozunk</h2>
-                <p style={{ color: "#888", lineHeight: 1.8 }}>
-                  Minden projektünkben ezek az alapelvek vezérelnek minket. Nem csak szavak – ezek a mindennapi munkánk alapjai.
-                </p>
-              </div>
-              <div>
-                {(values || []).map((val, i) => (
-                  <div key={val.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-                    <button
-                      onClick={() => setOpenValue(openValue === i ? null : i)}
-                      style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1.25rem 0", cursor: "pointer", background: "none", border: "none", color: openValue === i ? "#e91130" : "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1rem", fontWeight: 500, transition: "color 0.2s", textAlign: "left" }}>
-                      {val.title}
-                      {openValue === i ? <Minus size={16} style={{ flexShrink: 0 }} /> : <Plus size={16} style={{ flexShrink: 0 }} />}
-                    </button>
-                    {openValue === i && (
-                      <div style={{ paddingBottom: "1.25rem", color: "#888", fontSize: "0.9rem", lineHeight: 1.7 }}>
-                        {val.description}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ─── Testimonials ─────────────────────────────────────────────────── */}
-        {testimonials && testimonials.length > 0 && (
-          <section className="g2a-section" style={{ backgroundColor: "#1a1a1a" }}>
-            <div className="g2a-container">
-              <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-                <div className="g2a-section-label">Vélemények</div>
-                <h2 className="g2a-section-title">Mit mondanak ügyfeleink</h2>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1.5rem" }}>
-                {testimonials.map(t => (
-                  <div key={t.id} className="g2a-card">
-                    <div style={{ display: "flex", gap: "0.25rem", marginBottom: "1rem" }}>
-                      {[1,2,3,4,5].map(s => <Star key={s} size={14} style={{ color: "#e91130", fill: "#e91130" }} />)}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.5rem" }}>
+              {PROBLEMS.map((p, i) => (
+                <div key={i} className={`g2a-card reveal reveal-delay-${(i % 3) + 1}`}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem", marginBottom: "1rem" }}>
+                    <div className="g2a-icon-box-lg">{p.icon}</div>
+                    <div>
+                      <h3 style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "1.1rem", color: "var(--g2a-text-primary)", marginBottom: "0.5rem" }}>{p.problem}</h3>
+                      <p style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)", lineHeight: "1.6", margin: 0 }}>{p.desc}</p>
                     </div>
-                    <blockquote style={{ color: "#d0d0d0", fontSize: "0.9375rem", lineHeight: 1.7, fontStyle: "italic", marginBottom: "1.5rem" }}>
+                  </div>
+                  <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1.25rem" }}>
+                    {p.services.map((s, j) => <span key={j} className="g2a-tag-neutral">{s}</span>)}
+                  </div>
+                  <Link href={`/szolgaltatasok/${p.slug}`} style={{ textDecoration: "none" }}>
+                    <span className="g2a-btn-ghost" style={{ padding: "0.5rem 0", fontSize: "0.875rem" }}>
+                      Megoldás megtekintése <ArrowRight size={14} />
+                    </span>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── ESETTANULMÁNYOK ───────────────────────────────────────────── */}
+        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg)" }}>
+          <div className="g2a-container">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "3rem", flexWrap: "wrap", gap: "1rem" }}>
+              <div>
+                <div className="g2a-section-label reveal">Referenciák</div>
+                <h2 className="g2a-section-title reveal reveal-delay-1" style={{ marginBottom: "0.5rem" }}>
+                  Valós eredmények
+                </h2>
+                <p className="g2a-section-subtitle reveal reveal-delay-2">
+                  Nem ígérünk – bizonyítunk. Íme néhány ügyfél eredménye.
+                </p>
+              </div>
+              <Link href="/referenciank" style={{ textDecoration: "none" }} className="reveal">
+                <span className="g2a-btn-secondary" style={{ fontSize: "0.875rem" }}>
+                  Összes referencia <ArrowRight size={14} />
+                </span>
+              </Link>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem" }}>
+              {CASE_STUDIES.map((cs, i) => (
+                <div key={i} className={`g2a-card reveal reveal-delay-${i + 1}`} style={{ position: "relative", overflow: "hidden" }}>
+                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", backgroundColor: cs.color }} />
+                  <div style={{ marginBottom: "1rem" }}>
+                    <span className="g2a-tag" style={{ marginBottom: "0.75rem", display: "inline-block" }}>{cs.industry}</span>
+                    <h3 style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "1.1rem", color: "var(--g2a-text-primary)", marginBottom: "0.5rem" }}>{cs.client}</h3>
+                  </div>
+                  <div style={{ marginBottom: "1rem" }}>
+                    <div style={{ fontSize: "0.8rem", color: "var(--g2a-text-muted)", fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.375rem" }}>Kihívás</div>
+                    <p style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)", margin: 0 }}>{cs.problem}</p>
+                  </div>
+                  <div style={{ marginBottom: "1rem" }}>
+                    <div style={{ fontSize: "0.8rem", color: "var(--g2a-text-muted)", fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.375rem" }}>Megoldás</div>
+                    <p style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)", margin: 0 }}>{cs.solution}</p>
+                  </div>
+                  <div style={{
+                    padding: "0.875rem 1rem", borderRadius: "8px",
+                    backgroundColor: `${cs.color}12`, border: `1px solid ${cs.color}30`,
+                    marginBottom: "1rem",
+                  }}>
+                    <div style={{ fontFamily: "Outfit, sans-serif", fontWeight: 800, fontSize: "1.1rem", color: cs.color }}>{cs.result}</div>
+                  </div>
+                  <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                    {cs.platforms.map((pl, j) => <span key={j} className="g2a-tag-neutral">{pl}</span>)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── AI & INNOVÁCIÓ ────────────────────────────────────────────── */}
+        <section className="g2a-section" style={{
+          background: "linear-gradient(135deg, #0a0005 0%, #0f0f0f 40%, #050010 100%)",
+          borderTop: "1px solid rgba(233,17,48,0.15)",
+          borderBottom: "1px solid rgba(233,17,48,0.15)",
+        }}>
+          <div className="g2a-container">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "center" }}>
+              <div>
+                <div className="g2a-section-label reveal">AI & Innováció</div>
+                <h2 className="g2a-section-title reveal reveal-delay-1">
+                  Hogyan használjuk az AI-t?
+                </h2>
+                <p className="g2a-section-subtitle reveal reveal-delay-2" style={{ marginBottom: "2rem" }}>
+                  Az AI nem a jövő – a mi napi eszközünk. Minden folyamatunkba integrálva van, hogy gyorsabban és hatékonyabban dolgozzunk az ügyfelekért.
+                </p>
+                <div className="reveal reveal-delay-3">
+                  <Link href="/szolgaltatasok/ai-marketing" style={{ textDecoration: "none" }}>
+                    <span className="g2a-btn-primary">
+                      AI Marketing megoldások <ArrowRight size={16} />
+                    </span>
+                  </Link>
+                </div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                {AI_FEATURES.map((f, i) => (
+                  <div key={i} className={`g2a-card-red reveal reveal-delay-${(i % 3) + 1}`}>
+                    <div style={{ color: "#e91130", marginBottom: "0.75rem" }}>{f.icon}</div>
+                    <div style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "0.95rem", color: "var(--g2a-text-primary)", marginBottom: "0.375rem" }}>{f.title}</div>
+                    <div style={{ fontSize: "0.8rem", color: "var(--g2a-text-secondary)", lineHeight: "1.5" }}>{f.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── MIÉRT MINKET ─────────────────────────────────────────────── */}
+        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
+          <div className="g2a-container">
+            <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
+              <div className="g2a-section-label reveal">Miért G2A?</div>
+              <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>
+                Miért válassz minket?
+              </h2>
+              <p className="g2a-section-subtitle reveal reveal-delay-2" style={{ margin: "0 auto", textAlign: "center" }}>
+                Nem csak egy ügynökség vagyunk – stratégiai partnerek vagyunk a növekedésedben
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1.25rem" }}>
+              {WHY_US.map((w, i) => (
+                <div key={i} className={`g2a-card reveal reveal-delay-${(i % 4) + 1}`} style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
+                  <div className="g2a-icon-box" style={{ flexShrink: 0 }}>{w.icon}</div>
+                  <div>
+                    <div style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--g2a-text-primary)", marginBottom: "0.375rem" }}>{w.title}</div>
+                    <div style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)", lineHeight: "1.6" }}>{w.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── INGYENES AUDIT ────────────────────────────────────────────── */}
+        <section className="g2a-section g2a-cta-gradient">
+          <div className="g2a-container">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
+              <div>
+                <div className="g2a-section-label reveal">Ingyenes ajánlat</div>
+                <h2 className="g2a-section-title reveal reveal-delay-1">
+                  Ingyenes Marketing Audit
+                </h2>
+                <p className="g2a-section-subtitle reveal reveal-delay-2" style={{ marginBottom: "2rem" }}>
+                  Megvizsgáljuk a teljes online jelenlétedet és megmutatjuk, hol veszítesz el ügyfeleket – teljesen ingyenesen.
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }} className="reveal reveal-delay-3">
+                  {AUDIT_ITEMS.map((item, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem" }}>
+                      <CheckCircle size={16} style={{ color: "#e91130", flexShrink: 0, marginTop: "0.2rem" }} />
+                      <span style={{ fontSize: "0.9rem", color: "var(--g2a-text-secondary)", fontFamily: "Inter, sans-serif" }}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="g2a-card reveal reveal-delay-2" style={{ padding: "2.5rem" }}>
+                <h3 style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "1.375rem", color: "var(--g2a-text-primary)", marginBottom: "0.5rem" }}>
+                  Kérd az ingyenes auditot
+                </h3>
+                <p style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)", marginBottom: "1.75rem" }}>
+                  24 órán belül felvesszük veled a kapcsolatot.
+                </p>
+                <AuditForm />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── TESTIMONIALS ─────────────────────────────────────────────── */}
+        {testimonialsList && testimonialsList.length > 0 && (
+          <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg)" }}>
+            <div className="g2a-container">
+              <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
+                <div className="g2a-section-label reveal">Vélemények</div>
+                <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>
+                  Mit mondanak az ügyfeleink?
+                </h2>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem" }}>
+                {testimonialsList.slice(0, 3).map((t, i) => (
+                  <div key={t.id} className={`g2a-card reveal reveal-delay-${i + 1}`}>
+                    <Quote size={28} style={{ color: "#e91130", marginBottom: "1rem", opacity: 0.7 }} />
+                    <p style={{ fontSize: "0.95rem", color: "var(--g2a-text-secondary)", lineHeight: "1.75", marginBottom: "1.5rem", fontStyle: "italic" }}>
                       "{t.quote}"
-                    </blockquote>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                      <div style={{ width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#e91130", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: "1rem", flexShrink: 0 }}>
+                    </p>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
+                      <div style={{
+                        width: "44px", height: "44px", borderRadius: "50%",
+                        backgroundColor: "rgba(233,17,48,0.15)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontFamily: "Outfit, sans-serif", fontWeight: 800, fontSize: "1.1rem", color: "#e91130",
+                      }}>
                         {t.authorName.charAt(0)}
                       </div>
                       <div>
-                        <div style={{ color: "#ffffff", fontWeight: 600, fontSize: "0.9rem" }}>{t.authorName}</div>
-                        <div style={{ color: "#888", fontSize: "0.8125rem" }}>{t.authorTitle}{t.authorCompany ? `, ${t.authorCompany}` : ""}</div>
+                        <div style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "0.95rem", color: "var(--g2a-text-primary)" }}>{t.authorName}</div>
+                        {t.authorCompany && <div style={{ fontSize: "0.8rem", color: "var(--g2a-text-muted)" }}>{t.authorCompany}</div>}
+                      </div>
+                      <div style={{ marginLeft: "auto", display: "flex", gap: "2px" }}>
+                        {Array.from({ length: 5 }).map((_, j) => (
+                          <Star key={j} size={13} style={{ color: "#f59e0b", fill: "#f59e0b" }} />
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -326,86 +598,201 @@ export default function Home() {
           </section>
         )}
 
-        {/* ─── Partners Slider ──────────────────────────────────────────────── */}
-        {partners && partners.length > 0 && (
-          <section className="g2a-section-sm" style={{ backgroundColor: "#161616", overflow: "hidden" }}>
-            <div className="g2a-container" style={{ marginBottom: "2rem", textAlign: "center" }}>
-              <div className="g2a-section-label">Partnereink</div>
-              <h2 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.5rem", fontWeight: 700 }}>
-                Akikkel együtt dolgozunk
-              </h2>
-            </div>
-            <div style={{ overflow: "hidden", position: "relative" }}>
-              <div style={{ display: "flex", gap: "2rem", animation: "marquee 25s linear infinite", width: "max-content" }}>
-                {[...partners, ...partners].map((p, i) => (
-                  <div key={`${p.id}-${i}`} style={{ display: "flex", alignItems: "center", justifyContent: "center", minWidth: "160px", height: "60px", backgroundColor: "#1e1e1e", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", padding: "0 1.5rem", flexShrink: 0 }}>
-                    {p.logo ? (
-                      <img src={p.logo} alt={p.logoAlt || `${p.name} logó`} style={{ maxHeight: "32px", maxWidth: "120px", objectFit: "contain", filter: "brightness(0.8) grayscale(0.3)" }} />
-                    ) : (
-                      <span style={{ color: "#666", fontSize: "0.875rem", fontWeight: 500, fontFamily: "Roboto Mono, monospace", whiteSpace: "nowrap" }}>{p.name}</span>
+        {/* ── FAQ ──────────────────────────────────────────────────────── */}
+        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
+          <div className="g2a-container">
+            <div style={{ maxWidth: "760px", margin: "0 auto" }}>
+              <div style={{ textAlign: "center", marginBottom: "3rem" }}>
+                <div className="g2a-section-label reveal">GYIK</div>
+                <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>
+                  Gyakori kérdések
+                </h2>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                {faqs.map((faq, i) => (
+                  <div key={i} className={`g2a-card reveal reveal-delay-${(i % 3) + 1}`} style={{ padding: "1.25rem 1.5rem", cursor: "pointer" }}
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
+                      <h3 style={{ fontFamily: "Outfit, sans-serif", fontWeight: 600, fontSize: "1rem", color: "var(--g2a-text-primary)", margin: 0 }}>{faq.q}</h3>
+                      <div style={{ color: "#e91130", flexShrink: 0 }}>
+                        {openFaq === i ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                      </div>
+                    </div>
+                    {openFaq === i && (
+                      <p style={{ marginTop: "0.875rem", fontSize: "0.9rem", color: "var(--g2a-text-secondary)", lineHeight: "1.7", marginBottom: 0 }}>
+                        {faq.a}
+                      </p>
                     )}
                   </div>
                 ))}
               </div>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
-        {/* ─── Newsletter Section ───────────────────────────────────────────── */}
-        <section className="g2a-section" style={{ backgroundColor: "#1a1a1a" }}>
+        {/* ── NEWSLETTER ───────────────────────────────────────────────── */}
+        <section className="g2a-section-sm" style={{
+          backgroundColor: "var(--g2a-bg)",
+          borderTop: "1px solid var(--g2a-border)",
+        }}>
           <div className="g2a-container">
-            <div style={{ backgroundColor: "#1e1e1e", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "3rem", textAlign: "center", maxWidth: "640px", margin: "0 auto" }}>
-              <div className="g2a-section-label">Hírlevél</div>
-              <h2 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.75rem", fontWeight: 700, marginBottom: "1rem" }}>
-                Maradj naprakész
+            <div style={{ maxWidth: "560px", margin: "0 auto", textAlign: "center" }}>
+              <div className="g2a-section-label reveal">Hírlevél</div>
+              <h2 className="reveal reveal-delay-1" style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "clamp(1.5rem, 2.5vw, 2rem)", color: "var(--g2a-text-primary)", marginBottom: "0.75rem" }}>
+                Marketing trendek, minden héten
               </h2>
-              <p style={{ color: "#888", marginBottom: "2rem", lineHeight: 1.7 }}>
-                Iratkozz fel hírlevelünkre és elsőként értesülj a legfrissebb marketing trendekről és tippekről.
+              <p className="reveal reveal-delay-2" style={{ color: "var(--g2a-text-secondary)", marginBottom: "1.75rem", fontSize: "0.95rem" }}>
+                Iratkozz fel hírlevelünkre és kapj heti marketing tippeket, esettanulmányokat és AI-újdonságokat.
               </p>
-              {newsletterStatus === "success" ? (
-                <div style={{ backgroundColor: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", borderRadius: "6px", padding: "1rem", color: "#4ade80" }}>
-                  ✓ Sikeresen feliratkoztál! Köszönjük.
-                </div>
-              ) : (
-                <form onSubmit={handleNewsletter} style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-                  <input
-                    type="email" value={email} onChange={e => setEmail(e.target.value)}
-                    placeholder="Email cím" required className="g2a-input"
-                    style={{ flex: 1, minWidth: "200px" }} />
-                  <button type="submit" className="g2a-btn-primary" disabled={newsletterStatus === "loading"}>
-                    {newsletterStatus === "loading" ? "Feliratkozás..." : "Feliratkozom"}
-                  </button>
-                </form>
+              <form onSubmit={handleNewsletter} className="reveal reveal-delay-3" style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+                <input
+                  type="email" required value={newsletterEmail}
+                  onChange={e => setNewsletterEmail(e.target.value)}
+                  placeholder="Email cím"
+                  className="g2a-input"
+                  style={{ flex: 1, minWidth: "220px" }}
+                />
+                <button type="submit" className="g2a-btn-primary" disabled={newsletterStatus === "loading"} style={{ flexShrink: 0 }}>
+                  {newsletterStatus === "loading" ? "Feliratkozás..." : "Feliratkozás"}
+                </button>
+              </form>
+              {newsletterStatus === "success" && (
+                <p style={{ color: "#10b981", marginTop: "0.75rem", fontSize: "0.875rem" }}>✓ Sikeresen feliratkoztál!</p>
               )}
               {newsletterStatus === "error" && (
-                <p style={{ color: "#e91130", fontSize: "0.875rem", marginTop: "0.75rem" }}>
-                  Hiba történt. Kérjük próbáld újra.
-                </p>
+                <p style={{ color: "#e91130", marginTop: "0.75rem", fontSize: "0.875rem" }}>Hiba történt. Kérjük, próbáld újra.</p>
               )}
             </div>
           </div>
         </section>
 
-        {/* ─── CTA Section ──────────────────────────────────────────────────── */}
-        <section style={{ backgroundColor: "#e91130", padding: "4rem 0" }}>
+        {/* ── CTA BOTTOM ───────────────────────────────────────────────── */}
+        <section className="g2a-section" style={{
+          background: "linear-gradient(135deg, rgba(233,17,48,0.08) 0%, var(--g2a-bg) 50%, rgba(233,17,48,0.05) 100%)",
+          borderTop: "1px solid var(--g2a-border)",
+        }}>
           <div className="g2a-container" style={{ textAlign: "center" }}>
-            <h2 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "clamp(1.5rem, 3vw, 2.5rem)", fontWeight: 700, marginBottom: "1rem" }}>
+            <h2 className="g2a-headline-lg reveal" style={{ marginBottom: "1.25rem" }}>
               Készen állsz a növekedésre?
             </h2>
-            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "1.0625rem", marginBottom: "2rem", maxWidth: "480px", margin: "0 auto 2rem" }}>
-              Kérj ingyenes marketing felmérést és derítsd ki, hogyan segíthetünk vállalkozásodnak.
+            <p className="g2a-section-subtitle reveal reveal-delay-1" style={{ margin: "0 auto 2.5rem", textAlign: "center" }}>
+              Vedd fel velünk a kapcsolatot és indítsuk el a közös munkát egy ingyenes konzultációval.
             </p>
-            <Link href="/kapcsolat" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", backgroundColor: "#ffffff", color: "#e91130", padding: "0.875rem 2rem", borderRadius: "5px", fontWeight: 600, fontSize: "1rem", textDecoration: "none", transition: "all 0.2s" }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#f5f5f5"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#ffffff"; }}>
-              Ingyenes Marketing Felmérés
-              <ArrowRight size={18} />
-            </Link>
+            <div className="reveal reveal-delay-2" style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+              <Link href="/ingyenes-audit" style={{ textDecoration: "none" }}>
+                <span className="g2a-btn-primary" style={{ fontSize: "1rem", padding: "1rem 2rem" }}>
+                  Ingyenes Audit kérése <ArrowRight size={18} />
+                </span>
+              </Link>
+              <Link href="/kapcsolat" style={{ textDecoration: "none" }}>
+                <span className="g2a-btn-secondary" style={{ fontSize: "1rem", padding: "1rem 2rem" }}>
+                  <Phone size={16} /> Kapcsolatfelvétel
+                </span>
+              </Link>
+            </div>
+            <div className="reveal reveal-delay-3" style={{ marginTop: "2.5rem", display: "flex", justifyContent: "center", gap: "2.5rem", flexWrap: "wrap" }}>
+              {[
+                { icon: <Phone size={14} />, text: "+36 30 190 2575" },
+                { icon: <Mail size={14} />, text: "info@g2amarketing.hu" },
+                { icon: <Clock size={14} />, text: "08:00 – 17:00" },
+              ].map((c, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--g2a-text-muted)", fontSize: "0.875rem", fontFamily: "Inter, sans-serif" }}>
+                  <span style={{ color: "#e91130" }}>{c.icon}</span>
+                  {c.text}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
-      </main>
+      </div>
+
+      {/* Sticky CTA */}
+      <StickyAuditCTA />
+
       <Footer />
-      <CookieBanner />
     </>
+  );
+}
+
+// ─── Audit Form ────────────────────────────────────────────────────────────
+function AuditForm() {
+  const [form, setForm] = useState({ name: "", email: "", phone: "", company: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const contactMutation = trpc.contact.submit.useMutation({
+    onSuccess: () => setStatus("success"),
+    onError: () => setStatus("error"),
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("loading");
+    contactMutation.mutate({ ...form, subject: "Ingyenes Marketing Audit kérés" });
+  };
+
+  if (status === "success") {
+    return (
+      <div style={{ textAlign: "center", padding: "2rem 0" }}>
+        <CheckCircle size={48} style={{ color: "#10b981", margin: "0 auto 1rem" }} />
+        <h3 style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, color: "var(--g2a-text-primary)", marginBottom: "0.5rem" }}>Köszönjük!</h3>
+        <p style={{ color: "var(--g2a-text-secondary)", fontSize: "0.9rem" }}>24 órán belül felvesszük veled a kapcsolatot.</p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+        <div>
+          <label className="g2a-label">Név *</label>
+          <input className="g2a-input" required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Kovács János" />
+        </div>
+        <div>
+          <label className="g2a-label">Email *</label>
+          <input className="g2a-input" type="email" required value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="info@ceg.hu" />
+        </div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+        <div>
+          <label className="g2a-label">Telefon</label>
+          <input className="g2a-input" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="+36 30..." />
+        </div>
+        <div>
+          <label className="g2a-label">Cég neve</label>
+          <input className="g2a-input" value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} placeholder="Cég Kft." />
+        </div>
+      </div>
+      <div>
+        <label className="g2a-label">Rövid leírás (opcionális)</label>
+        <textarea className="g2a-input" rows={3} value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} placeholder="Miben segíthetünk?" style={{ resize: "vertical" }} />
+      </div>
+      <button type="submit" className="g2a-btn-primary" disabled={status === "loading"} style={{ width: "100%", justifyContent: "center" }}>
+        {status === "loading" ? "Küldés..." : "Audit kérése – Ingyenesen"}
+      </button>
+      {status === "error" && <p style={{ color: "#e91130", fontSize: "0.875rem", textAlign: "center" }}>Hiba történt. Kérjük, próbáld újra.</p>}
+    </form>
+  );
+}
+
+// ─── Sticky CTA ────────────────────────────────────────────────────────────
+function StickyAuditCTA() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setVisible(window.scrollY > 600);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <div className="sticky-cta">
+      <Link href="/ingyenes-audit" style={{ textDecoration: "none" }}>
+        <span className="g2a-btn-primary animate-pulse-red" style={{ fontSize: "0.875rem", padding: "0.875rem 1.5rem", borderRadius: "50px" }}>
+          <Zap size={15} /> Ingyenes Audit
+        </span>
+      </Link>
+    </div>
   );
 }
