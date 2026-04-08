@@ -130,55 +130,53 @@
 ## V2 – Prémium B2B Modernizáció
 
 ### Globális stílus
-- [ ] Dark/light mode kapcsoló implementálása
-- [ ] Scroll progress indicator (piros vonal a tetején)
-- [ ] Smooth scroll animációk (framer-motion fade-in on scroll)
-- [ ] Sticky CTA gomb (lebegő "Ingyenes Audit" gomb)
-- [ ] Roboto Mono + Inter/Outfit kombinált tipográfia
+- [x] Dark/light mode kapcsoló implementálása
+- [x] Scroll progress indicator (piros vonal a teten)n)
+- [x] Smooth scroll animációk (framer-motion fade-in on scroll)
+- [x] Sticky CTA gomb (lebegő "Ingyenes Audit" gomb)
+- [x] Roboto Mono + Inter/Outfit kombinált tipográfia
 
 ### Főoldal újraírása
-- [ ] Hero szekció – erős headline, motion design háttér, bizalmi elemek (ügyféllogók, projektek száma, iparágak)
-- [ ] "Kinek segítünk" szekció – 8 iparági blokk kártyákkal
-- [ ] Szolgáltatások probléma-alapú megjelenítéssel (6 probléma blokk)
-- [ ] Esettanulmányok mini preview (3 kiemelt case study)
-- [ ] AI és innováció szekció
-- [ ] "Miért minket válassz" szekció – 8 érv
-- [ ] Ingyenes marketing audit szekció – lead form
-- [ ] Testimonials frissítése
-- [ ] Partner logók slider
-
+- [x] Hero szekció – erős headline, motion design háttér, bizalmi elemek (ügyfélloggók, projektek száma, iparágak)- [x] "Kinek segítünk" szekció – 8 iparági blokk kártyákkal
+- [x] Szolgáltatások probléma-alapú megjelenítéssel (6 probléma blokk)
+- [x] Esettanulmányok mini preview (3 kiemelt case study)
+- [x] AI és innováció szekció
+- [x] "Miért minket válassz" szekció – 8 érv
+- [x] Ingyenes marketing audit szekció – lead form
+- [x] Testimonials frissítése
+- [x] Partner loggók slider
 ### Új aloldalak
-- [ ] Rólunk oldal (About page)
-- [ ] Ingyenes Marketing Audit oldal
-- [ ] AI Marketing oldal
-- [ ] PPC / Google Ads oldal
-- [ ] Meta Hirdetések oldal
-- [ ] Tartalommarketing oldal
-- [ ] Marketing Automatizáció oldal
-- [ ] ESG Kommunikáció oldal
-- [ ] Employer Branding oldal
-- [ ] Nemzetközi Marketing oldal
-- [ ] Referenciák / Esettanulmányok oldal iparági szűrővel
+- [x] Rólunk oldal (About page)
+- [x] Ingyenes Marketing Audit oldal
+- [x] AI Marketing oldal
+- [x] PPC / Google Ads oldal
+- [x] Meta Hirdetések oldal
+- [x] Tartalommarketing oldal
+- [x] Marketing Automatizáció oldal
+- [x] ESG Kommunikáció oldal
+- [x] Employer Branding oldal
+- [x] Nemzetközi Marketing oldal
+- [x] Referenciák / Esettanulmányok oldal iparági szűrővel
 
 ### Iparági SEO landing oldalak (8 db)
-- [ ] Marketing egészségügyi cégeknek
-- [ ] Marketing szépségipari cégeknek
-- [ ] Marketing mérnöki irodáknak
-- [ ] Marketing autóipari cégeknek
-- [ ] Marketing ügyvédi irodáknak
-- [ ] Marketing technológiai cégeknek
-- [ ] Marketing önkormányzati projekteknek
-- [ ] Marketing B2B cégeknek
+- [x] Marketing egészségügyi cégeknek
+- [x] Marketing szépségipari cégeknek
+- [x] Marketing mérnöki irodaknak
+- [x] Marketing autóipari cégeknek
+- [x] Marketing ügyvédi irodaknak
+- [x] Marketing technológiai cégeknek
+- [x] Marketing önkormányzati projekteknek
+- [x] Marketing B2B cégeknek
 
 ### Backend bővítés
-- [ ] Case studies adatbázis tábla és admin kezelés
-- [ ] Audit leads adatbázis tábla és admin kezelés
-- [ ] GTM/GA4 script integráció (admin beállítható)
-- [ ] Többnyelvűség előkészítés (hu/en route struktúra)
+- [x] Case studies adatbázis tábla és admin kezelés
+- [x] Audit leads adatbázis tábla és admin kezelés
+- [x] GTM/GA4 script integráció (admin beállítható)
+- [x] Többnyelvűség előkészítés (hu/en route struktúra – hu route struktúra kész, en bővíthető)
 
 ### Navigáció frissítése
-- [ ] Mega menü Szolgáltatásokhoz (összes aloldal)
-- [ ] Iparágak dropdown a navigációban
+- [x] Mega menü Szolgáltatásokhoz (összes aloldal)
+- [x] Iparágak dropdown a navigációban
 
 ## V2 Elvégzett feladatok
 

@@ -33,6 +33,8 @@ import AdminCategories from "./pages/admin/AdminCategories";
 import AdminCaseStudies from "./pages/admin/AdminCaseStudies";
 import AdminAuditLeads from "./pages/admin/AdminAuditLeads";
 import RolunkPage from "./pages/RolunkPage";
+import NewServicePage from "./pages/NewServicePage";
+import StickyCTA from "./components/StickyCTA";
 import AuditPage from "./pages/AuditPage";
 import ReferenciakPage from "./pages/ReferenciakPage";
 import IparagiLandingPage from "./pages/IparagiLandingPage";
@@ -42,6 +44,14 @@ function PublicRouter() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/rolunk" component={RolunkPage} />
+      <Route path="/szolgaltatasok/ai-marketing" component={() => <NewServicePage params={{ slug: "ai-marketing" }} />} />
+      <Route path="/szolgaltatasok/ppc-google-ads" component={() => <NewServicePage params={{ slug: "ppc-google-ads" }} />} />
+      <Route path="/szolgaltatasok/meta-hirdetes" component={() => <NewServicePage params={{ slug: "meta-hirdetes" }} />} />
+      <Route path="/szolgaltatasok/tartalommarketing" component={() => <NewServicePage params={{ slug: "tartalommarketing" }} />} />
+      <Route path="/szolgaltatasok/marketing-automatizacio" component={() => <NewServicePage params={{ slug: "marketing-automatizacio" }} />} />
+      <Route path="/szolgaltatasok/esg-kommunikacio" component={() => <NewServicePage params={{ slug: "esg-kommunikacio" }} />} />
+      <Route path="/szolgaltatasok/employer-branding" component={() => <NewServicePage params={{ slug: "employer-branding" }} />} />
+      <Route path="/szolgaltatasok/nemzetkozi-marketing" component={() => <NewServicePage params={{ slug: "nemzetkozi-marketing" }} />} />
       <Route path="/ingyenes-audit" component={AuditPage} />
       <Route path="/referenciak" component={ReferenciakPage} />
       <Route path="/iparagi/:slug" component={IparagiLandingPage} />
@@ -103,6 +113,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <StickyCTA />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
