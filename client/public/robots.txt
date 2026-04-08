@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Disallow admin area from crawlers
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://g2amarketing.hu/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1

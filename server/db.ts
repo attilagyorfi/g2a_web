@@ -1,11 +1,26 @@
-import { eq } from "drizzle-orm";
+import { and, desc, eq, like, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
-import { ENV } from './_core/env';
+import {
+  InsertUser,
+  categories,
+  contactSubmissions,
+  heroSlides,
+  industries,
+  newsletterSubscribers,
+  pages,
+  partners,
+  posts,
+  services,
+  siteSettings,
+  technologies,
+  testimonials,
+  users,
+  values,
+} from "../drizzle/schema";
+import { ENV } from "./_core/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
-// Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
@@ -19,58 +34,36 @@ export async function getDb() {
 }
 
 export async function upsertUser(user: InsertUser): Promise<void> {
-  if (!user.openId) {
-    throw new Error("User openId is required for upsert");
-  }
-
+  if (!user.openId) throw new Error("User openId is required for upsert");
   const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot upsert user: database not available");
-    return;
-  }
-
+  if (!db) return;
   try {
-    const values: InsertUser = {
-      openId: user.openId,
-    };
+    const values_: InsertUser = { openId: user.openId };
     const updateSet: Record<string, unknown> = {};
-
     const textFields = ["name", "email", "loginMethod"] as const;
     type TextField = (typeof textFields)[number];
-
     const assignNullable = (field: TextField) => {
       const value = user[field];
       if (value === undefined) return;
       const normalized = value ?? null;
-      values[field] = normalized;
+      values_[field] = normalized;
       updateSet[field] = normalized;
     };
-
     textFields.forEach(assignNullable);
-
     if (user.lastSignedIn !== undefined) {
-      values.lastSignedIn = user.lastSignedIn;
+      values_.lastSignedIn = user.lastSignedIn;
       updateSet.lastSignedIn = user.lastSignedIn;
     }
     if (user.role !== undefined) {
-      values.role = user.role;
+      values_.role = user.role;
       updateSet.role = user.role;
     } else if (user.openId === ENV.ownerOpenId) {
-      values.role = 'admin';
-      updateSet.role = 'admin';
+      values_.role = "admin";
+      updateSet.role = "admin";
     }
-
-    if (!values.lastSignedIn) {
-      values.lastSignedIn = new Date();
-    }
-
-    if (Object.keys(updateSet).length === 0) {
-      updateSet.lastSignedIn = new Date();
-    }
-
-    await db.insert(users).values(values).onDuplicateKeyUpdate({
-      set: updateSet,
-    });
+    if (!values_.lastSignedIn) values_.lastSignedIn = new Date();
+    if (Object.keys(updateSet).length === 0) updateSet.lastSignedIn = new Date();
+    await db.insert(users).values(values_).onDuplicateKeyUpdate({ set: updateSet });
   } catch (error) {
     console.error("[Database] Failed to upsert user:", error);
     throw error;
@@ -79,14 +72,417 @@ export async function upsertUser(user: InsertUser): Promise<void> {
 
 export async function getUserByOpenId(openId: string) {
   const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot get user: database not available");
-    return undefined;
-  }
-
+  if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
-
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// ─── Site Settings ────────────────────────────────────────────────────────────
+export async function getSiteSetting(key: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(siteSettings).where(eq(siteSettings.key, key)).limit(1);
+  return result[0]?.value ?? null;
+}
+
+export async function getAllSiteSettings() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(siteSettings);
+}
+
+export async function upsertSiteSetting(key: string, value: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(siteSettings).values({ key, value }).onDuplicateKeyUpdate({ set: { value } });
+}
+
+// ─── Pages (SEO) ──────────────────────────────────────────────────────────────
+export async function getPageSeo(slug: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(pages).where(eq(pages.slug, slug)).limit(1);
+  return result[0] ?? null;
+}
+
+export async function getAllPages() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(pages);
+}
+
+export async function upsertPageSeo(data: {
+  slug: string;
+  title?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  schemaJson?: string;
+}) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(pages).values(data).onDuplicateKeyUpdate({ set: data });
+}
+
+// ─── Hero Slides ──────────────────────────────────────────────────────────────
+export async function getHeroSlides() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(heroSlides).where(eq(heroSlides.isActive, true)).orderBy(heroSlides.sortOrder);
+}
+
+export async function getAllHeroSlides() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(heroSlides).orderBy(heroSlides.sortOrder);
+}
+
+export async function createHeroSlide(data: Omit<typeof heroSlides.$inferInsert, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) return;
+  const [result] = await db.insert(heroSlides).values(data);
+  return result;
+}
+
+export async function updateHeroSlide(id: number, data: Partial<typeof heroSlides.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(heroSlides).set(data).where(eq(heroSlides.id, id));
+}
+
+export async function deleteHeroSlide(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(heroSlides).where(eq(heroSlides.id, id));
+}
+
+// ─── Services ─────────────────────────────────────────────────────────────────
+export async function getServices() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(services).orderBy(services.sortOrder);
+}
+
+export async function getServiceBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(services).where(eq(services.slug, slug)).limit(1);
+  return result[0] ?? null;
+}
+
+export async function createService(data: Omit<typeof services.$inferInsert, "id" | "createdAt" | "updatedAt">) {
+  const db = await getDb();
+  if (!db) return;
+  const [result] = await db.insert(services).values(data);
+  return result;
+}
+
+export async function updateService(id: number, data: Partial<typeof services.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(services).set(data).where(eq(services.id, id));
+}
+
+export async function deleteService(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(services).where(eq(services.id, id));
+}
+
+// ─── Categories ───────────────────────────────────────────────────────────────
+export async function getCategories() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(categories).orderBy(categories.name);
+}
+
+export async function createCategory(data: Omit<typeof categories.$inferInsert, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) return;
+  const [result] = await db.insert(categories).values(data);
+  return result;
+}
+
+export async function updateCategory(id: number, data: Partial<typeof categories.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(categories).set(data).where(eq(categories.id, id));
+}
+
+export async function deleteCategory(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(categories).where(eq(categories.id, id));
+}
+
+// ─── Posts ────────────────────────────────────────────────────────────────────
+export async function getPosts(opts: { page?: number; limit?: number; categoryId?: number; status?: "draft" | "published" } = {}) {
+  const db = await getDb();
+  if (!db) return { posts: [], total: 0 };
+  const { page = 1, limit = 10, categoryId, status = "published" } = opts;
+  const offset = (page - 1) * limit;
+
+  const conditions = [eq(posts.status, status)];
+  if (categoryId) conditions.push(eq(posts.categoryId, categoryId));
+
+  const [postList, countResult] = await Promise.all([
+    db.select().from(posts).where(and(...conditions)).orderBy(desc(posts.publishedAt)).limit(limit).offset(offset),
+    db.select({ count: sql<number>`count(*)` }).from(posts).where(and(...conditions)),
+  ]);
+
+  return { posts: postList, total: Number(countResult[0]?.count ?? 0) };
+}
+
+export async function getPostBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
+  return result[0] ?? null;
+}
+
+export async function getAllPostsAdmin() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(posts).orderBy(desc(posts.createdAt));
+}
+
+export async function createPost(data: Omit<typeof posts.$inferInsert, "id" | "createdAt" | "updatedAt">) {
+  const db = await getDb();
+  if (!db) return;
+  const [result] = await db.insert(posts).values(data);
+  return result;
+}
+
+export async function updatePost(id: number, data: Partial<typeof posts.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(posts).set(data).where(eq(posts.id, id));
+}
+
+export async function deletePost(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(posts).where(eq(posts.id, id));
+}
+
+// ─── Testimonials ─────────────────────────────────────────────────────────────
+export async function getTestimonials() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(testimonials).where(eq(testimonials.isActive, true)).orderBy(testimonials.sortOrder);
+}
+
+export async function getAllTestimonials() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(testimonials).orderBy(testimonials.sortOrder);
+}
+
+export async function createTestimonial(data: Omit<typeof testimonials.$inferInsert, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) return;
+  const [result] = await db.insert(testimonials).values(data);
+  return result;
+}
+
+export async function updateTestimonial(id: number, data: Partial<typeof testimonials.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(testimonials).set(data).where(eq(testimonials.id, id));
+}
+
+export async function deleteTestimonial(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(testimonials).where(eq(testimonials.id, id));
+}
+
+// ─── Partners ─────────────────────────────────────────────────────────────────
+export async function getPartners() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(partners).where(eq(partners.isActive, true)).orderBy(partners.sortOrder);
+}
+
+export async function getAllPartners() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(partners).orderBy(partners.sortOrder);
+}
+
+export async function createPartner(data: Omit<typeof partners.$inferInsert, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) return;
+  const [result] = await db.insert(partners).values(data);
+  return result;
+}
+
+export async function updatePartner(id: number, data: Partial<typeof partners.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(partners).set(data).where(eq(partners.id, id));
+}
+
+export async function deletePartner(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(partners).where(eq(partners.id, id));
+}
+
+// ─── Industries ───────────────────────────────────────────────────────────────
+export async function getIndustries() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(industries).where(eq(industries.isActive, true)).orderBy(industries.sortOrder);
+}
+
+export async function getAllIndustries() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(industries).orderBy(industries.sortOrder);
+}
+
+export async function createIndustry(data: Omit<typeof industries.$inferInsert, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) return;
+  const [result] = await db.insert(industries).values(data);
+  return result;
+}
+
+export async function updateIndustry(id: number, data: Partial<typeof industries.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(industries).set(data).where(eq(industries.id, id));
+}
+
+export async function deleteIndustry(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(industries).where(eq(industries.id, id));
+}
+
+// ─── Technologies ─────────────────────────────────────────────────────────────
+export async function getTechnologies() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(technologies).where(eq(technologies.isActive, true)).orderBy(technologies.sortOrder);
+}
+
+export async function getAllTechnologies() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(technologies).orderBy(technologies.sortOrder);
+}
+
+export async function createTechnology(data: Omit<typeof technologies.$inferInsert, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) return;
+  const [result] = await db.insert(technologies).values(data);
+  return result;
+}
+
+export async function updateTechnology(id: number, data: Partial<typeof technologies.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(technologies).set(data).where(eq(technologies.id, id));
+}
+
+export async function deleteTechnology(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(technologies).where(eq(technologies.id, id));
+}
+
+// ─── Values ───────────────────────────────────────────────────────────────────
+export async function getValues() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(values).where(eq(values.isActive, true)).orderBy(values.sortOrder);
+}
+
+export async function getAllValues() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(values).orderBy(values.sortOrder);
+}
+
+export async function createValue(data: Omit<typeof values.$inferInsert, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) return;
+  const [result] = await db.insert(values).values(data);
+  return result;
+}
+
+export async function updateValue(id: number, data: Partial<typeof values.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(values).set(data).where(eq(values.id, id));
+}
+
+export async function deleteValue(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(values).where(eq(values.id, id));
+}
+
+// ─── Contact Submissions ──────────────────────────────────────────────────────
+export async function createContactSubmission(data: Omit<typeof contactSubmissions.$inferInsert, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) return;
+  const [result] = await db.insert(contactSubmissions).values(data);
+  return result;
+}
+
+export async function getContactSubmissions() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(contactSubmissions).orderBy(desc(contactSubmissions.createdAt));
+}
+
+export async function markContactRead(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(contactSubmissions).set({ isRead: true }).where(eq(contactSubmissions.id, id));
+}
+
+export async function deleteContactSubmission(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(contactSubmissions).where(eq(contactSubmissions.id, id));
+}
+
+// ─── Newsletter ───────────────────────────────────────────────────────────────
+export async function createNewsletterSubscriber(data: Omit<typeof newsletterSubscribers.$inferInsert, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) return;
+  const [result] = await db.insert(newsletterSubscribers).values(data);
+  return result;
+}
+
+export async function getNewsletterSubscribers() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(newsletterSubscribers).where(eq(newsletterSubscribers.isActive, true)).orderBy(desc(newsletterSubscribers.createdAt));
+}
+
+export async function getAllNewsletterSubscribers() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(newsletterSubscribers).orderBy(desc(newsletterSubscribers.createdAt));
+}
+
+export async function checkNewsletterSubscriberExists(email: string) {
+  const db = await getDb();
+  if (!db) return false;
+  const result = await db.select().from(newsletterSubscribers).where(eq(newsletterSubscribers.email, email)).limit(1);
+  return result.length > 0;
+}
+
+export async function deleteNewsletterSubscriber(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(newsletterSubscribers).where(eq(newsletterSubscribers.id, id));
+}
