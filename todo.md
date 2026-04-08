@@ -195,3 +195,18 @@
 - [x] Scroll reveal animációk
 - [x] Dark/light mode kapcsoló (switchable ThemeProvider)
 - [x] Roboto Mono + Inter/Outfit kombinált tipográfia
+
+## V2 Legújabb elvégzett feladatok (2026-04-08 – 2. kör)
+
+- [x] case_studies és audit_leads adatbázis táblák létrehozva
+- [x] Case studies DB helpers és tRPC routerek (admin + publikus)
+- [x] Audit leads DB helpers és tRPC routerek (admin.auditLeads + audit.submit)
+- [x] AuditPage frissítve – audit.submit router használata
+- [x] AdminCaseStudies oldal (CRUD, ImageUploader, SEO mezők)
+- [x] AdminAuditLeads oldal (lista, kapcsolatba lépett jelölés, törlés)
+- [x] AdminLayout frissítve – Esettanulmányok és Audit Kérések menüpontok
+- [x] AdminSettings frissítve – GTM ID, GA4 ID, Meta Pixel ID, Google Search Console
+- [x] index.html frissítve – Roboto Mono, JSON-LD Organization schema, Open Graph, lang="hu", GTM placeholder
+- [x] App.tsx frissítve – AdminCaseStudies és AdminAuditLeads route-ok
+- [x] 21/21 vitest teszt zöld
+- [x] TypeScript 0 hibával fordult le

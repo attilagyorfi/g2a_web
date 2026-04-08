@@ -5,7 +5,7 @@ import { getLoginUrl } from "@/const";
 import {
   LayoutDashboard, FileText, Settings, Mail, Newspaper,
   Image, Star, Briefcase, Globe, Cpu, Heart, Tag,
-  ChevronLeft, ChevronRight, LogOut, Shield
+  ChevronLeft, ChevronRight, LogOut, Shield, BookOpen, ClipboardList
 } from "lucide-react";
 
 const LOGO_URL = "https://g2amarketing.hu/wp-content/uploads/2022/06/g2a_512x512_transparent_feher.png";
@@ -21,6 +21,8 @@ const navItems = [
   { href: "/admin/industries", icon: FileText, label: "Iparágak" },
   { href: "/admin/technologies", icon: Cpu, label: "Technológiák" },
   { href: "/admin/values", icon: Heart, label: "Értékek" },
+  { href: "/admin/case-studies", icon: BookOpen, label: "Esettanulmányok" },
+  { href: "/admin/audit-leads", icon: ClipboardList, label: "Audit Kérések" },
   { href: "/admin/contacts", icon: Mail, label: "Kapcsolatfelvételek" },
   { href: "/admin/newsletter", icon: FileText, label: "Hírlevél" },
   { href: "/admin/seo", icon: Globe, label: "SEO Oldalak" },

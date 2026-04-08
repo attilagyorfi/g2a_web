@@ -30,6 +30,8 @@ import AdminIndustries from "./pages/admin/AdminIndustries";
 import AdminTechnologies from "./pages/admin/AdminTechnologies";
 import AdminValues from "./pages/admin/AdminValues";
 import AdminCategories from "./pages/admin/AdminCategories";
+import AdminCaseStudies from "./pages/admin/AdminCaseStudies";
+import AdminAuditLeads from "./pages/admin/AdminAuditLeads";
 import RolunkPage from "./pages/RolunkPage";
 import AuditPage from "./pages/AuditPage";
 import ReferenciakPage from "./pages/ReferenciakPage";
@@ -76,6 +78,8 @@ function AdminRouter() {
         <Route path="/admin/values" component={AdminValues} />
         <Route path="/admin/contacts" component={AdminContacts} />
         <Route path="/admin/newsletter" component={AdminNewsletter} />
+        <Route path="/admin/case-studies" component={AdminCaseStudies} />
+        <Route path="/admin/audit-leads" component={AdminAuditLeads} />
         <Route path="/admin/seo" component={AdminSeoPages} />
         <Route path="/admin/settings" component={AdminSettings} />
         <Route component={AdminDashboard} />

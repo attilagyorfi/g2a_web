@@ -1,7 +1,9 @@
-import { and, desc, eq, like, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, like, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser,
+  auditLeads,
+  caseStudies,
   categories,
   contactSubmissions,
   heroSlides,
@@ -485,4 +487,60 @@ export async function deleteNewsletterSubscriber(id: number) {
   const db = await getDb();
   if (!db) return;
   await db.delete(newsletterSubscribers).where(eq(newsletterSubscribers.id, id));
+}
+
+// ─── Case Studies ─────────────────────────────────────────────────────────────
+export async function getAllCaseStudies() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(caseStudies).orderBy(asc(caseStudies.sortOrder), desc(caseStudies.createdAt));
+}
+export async function getActiveCaseStudies() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(caseStudies).where(eq(caseStudies.isActive, true)).orderBy(asc(caseStudies.sortOrder), desc(caseStudies.createdAt));
+}
+export async function getCaseStudyBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(caseStudies).where(eq(caseStudies.slug, slug)).limit(1);
+  return result[0] ?? null;
+}
+export async function upsertCaseStudy(data: Omit<typeof caseStudies.$inferInsert, "id" | "createdAt" | "updatedAt">) {
+  const db = await getDb();
+  if (!db) return;
+  if ((data as any).id) {
+    const { id, ...rest } = data as any;
+    await db.update(caseStudies).set(rest).where(eq(caseStudies.id, id));
+  } else {
+    await db.insert(caseStudies).values(data);
+  }
+}
+export async function deleteCaseStudy(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(caseStudies).where(eq(caseStudies.id, id));
+}
+
+// ─── Audit Leads ─────────────────────────────────────────────────────────────
+export async function createAuditLead(data: Omit<typeof auditLeads.$inferInsert, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) return;
+  const [result] = await db.insert(auditLeads).values(data);
+  return result;
+}
+export async function getAllAuditLeads() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(auditLeads).orderBy(desc(auditLeads.createdAt));
+}
+export async function markAuditLeadContacted(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(auditLeads).set({ isContacted: true }).where(eq(auditLeads.id, id));
+}
+export async function deleteAuditLead(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(auditLeads).where(eq(auditLeads.id, id));
 }

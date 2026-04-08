@@ -50,6 +50,8 @@ const contentRouter = router({
   categories: publicProcedure.query(() => db.getCategories()),
   siteSettings: publicProcedure.query(() => db.getAllSiteSettings()),
   pageSeo: publicProcedure.input(z.object({ slug: z.string() })).query(({ input }) => db.getPageSeo(input.slug)),
+  caseStudies: publicProcedure.query(() => db.getActiveCaseStudies()),
+  caseStudyBySlug: publicProcedure.input(z.object({ slug: z.string() })).query(({ input }) => db.getCaseStudyBySlug(input.slug)),
   posts: publicProcedure
     .input(z.object({ page: z.number().default(1), limit: z.number().default(10), categoryId: z.number().optional() }))
     .query(({ input }) => db.getPosts({ page: input.page, limit: input.limit, categoryId: input.categoryId, status: "published" })),
@@ -73,6 +75,29 @@ const contactRouter = router({
       await notifyOwner({
         title: `Új kapcsolatfelvétel: ${input.name}`,
         content: `**Feladó:** ${input.name}\n**Email:** ${input.email}\n**Telefon:** ${input.phone || "–"}\n**Tárgy:** ${input.subject || "–"}\n**Szolgáltatás:** ${input.serviceInterest || "–"}\n\n**Üzenet:**\n${input.message}`,
+      });
+      return { success: true };
+    }),
+});
+
+// ─── Audit Router ───────────────────────────────────────────────────────────
+const auditRouter = router({
+  submit: publicProcedure
+    .input(z.object({
+      name: z.string().min(2, "Kérjük adja meg a nevét"),
+      email: z.string().email("Érvényes email cím szükséges"),
+      phone: z.string().optional(),
+      company: z.string().optional(),
+      website: z.string().optional(),
+      monthlyBudget: z.string().optional(),
+      currentChallenges: z.string().optional(),
+      goals: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      await db.createAuditLead(input);
+      await notifyOwner({
+        title: `Új ingyenes audit kérés: ${input.name}`,
+        content: `**Név:** ${input.name}\n**Email:** ${input.email}\n**Telefon:** ${input.phone || "–"}\n**Cég:** ${input.company || "–"}\n**Weboldal:** ${input.website || "–"}\n**Havi büdzsé:** ${input.monthlyBudget || "–"}\n\n**Kihívások:**\n${input.currentChallenges || "–"}\n\n**Célok:**\n${input.goals || "–"}`,
       });
       return { success: true };
     }),
@@ -361,6 +386,34 @@ const adminRouter = router({
     })).mutation(({ input }) => db.upsertPageSeo(input)),
   }),
 
+  // Case Studies
+  caseStudies: router({
+    list: adminProcedure.query(() => db.getAllCaseStudies()),
+    upsert: adminProcedure.input(z.object({
+      id: z.number().optional(),
+      title: z.string(),
+      slug: z.string(),
+      client: z.string().optional(),
+      industry: z.string().optional(),
+      challenge: z.string().optional(),
+      solution: z.string().optional(),
+      results: z.string().optional(),
+      featuredImage: z.string().optional(),
+      featuredImageAlt: z.string().optional(),
+      tags: z.string().optional(),
+      isActive: z.boolean().optional(),
+      sortOrder: z.number().optional(),
+      metaTitle: z.string().optional(),
+      metaDescription: z.string().optional(),
+    })).mutation(({ input }) => db.upsertCaseStudy(input as any)),
+    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteCaseStudy(input.id)),
+  }),
+  // Audit Leads
+  auditLeads: router({
+    list: adminProcedure.query(() => db.getAllAuditLeads()),
+    markContacted: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.markAuditLeadContacted(input.id)),
+    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteAuditLead(input.id)),
+  }),
   // Site Settings
   settings: router({
     list: adminProcedure.query(() => db.getAllSiteSettings()),
@@ -398,6 +451,7 @@ export const appRouter = router({
   }),
   content: contentRouter,
   contact: contactRouter,
+  audit: auditRouter,
   newsletter: newsletterRouter,
   admin: adminRouter,
   upload: uploadRouter,

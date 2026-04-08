@@ -15,6 +15,13 @@
       "when": 1775658923782,
       "tag": "0001_breezy_wildside",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1775674814447,
+      "tag": "0002_chemical_makkari",
+      "breakpoints": true
     }
   ]
 }

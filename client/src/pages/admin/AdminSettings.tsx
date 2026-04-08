@@ -14,6 +14,10 @@ const SETTING_FIELDS = [
   { key: "instagram_url", label: "Instagram URL", placeholder: "https://instagram.com/..." },
   { key: "linkedin_url", label: "LinkedIn URL", placeholder: "https://linkedin.com/..." },
   { key: "footer_text", label: "Footer szöveg", placeholder: "© 2025 G2A Marketing. Minden jog fenntartva." },
+  { key: "gtm_id", label: "Google Tag Manager ID", placeholder: "GTM-XXXXXXX" },
+  { key: "ga4_id", label: "Google Analytics 4 Mérési azonosító", placeholder: "G-XXXXXXXXXX" },
+  { key: "meta_pixel_id", label: "Meta Pixel ID", placeholder: "1234567890" },
+  { key: "google_search_console", label: "Google Search Console verifikációs kód", placeholder: "google-site-verification=..." },
 ];
 
 export default function AdminSettings() {

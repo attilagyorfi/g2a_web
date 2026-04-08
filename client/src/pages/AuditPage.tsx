@@ -39,10 +39,10 @@ const PROCESS = [
 export default function AuditPage() {
   const pageRef = useRef<HTMLDivElement>(null);
   useReveal(pageRef);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", company: "", website: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", company: "", website: "", monthlyBudget: "", currentChallenges: "", goals: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
-  const contactMutation = trpc.contact.submit.useMutation({
+  const auditMutation = trpc.audit.submit.useMutation({
     onSuccess: () => setStatus("success"),
     onError: () => setStatus("error"),
   });
@@ -50,12 +50,15 @@ export default function AuditPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
-    contactMutation.mutate({
+    auditMutation.mutate({
       name: form.name,
       email: form.email,
-      phone: form.phone,
-      subject: "Ingyenes Marketing Audit kérés",
-      message: `Cég: ${form.company}\nWeboldal: ${form.website}\n\n${form.message}`,
+      phone: form.phone || undefined,
+      company: form.company || undefined,
+      website: form.website || undefined,
+      monthlyBudget: form.monthlyBudget || undefined,
+      currentChallenges: form.currentChallenges || undefined,
+      goals: form.goals || undefined,
     });
   };
 
@@ -199,7 +202,7 @@ export default function AuditPage() {
                     </div>
                     <div>
                       <label className="g2a-label">Miben segíthetünk? (opcionális)</label>
-                      <textarea className="g2a-input" rows={4} value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} placeholder="Pl.: Növelni szeretnénk az organikus forgalmat és csökkenteni a hirdetési költségeket..." style={{ resize: "vertical" }} />
+                      <textarea className="g2a-input" rows={4} value={form.currentChallenges} onChange={e => setForm(f => ({ ...f, currentChallenges: e.target.value }))} placeholder="Pl.: Növelni szeretnénk az organikus forgalmat és csökkenteni a hirdetési költségeket..." style={{ resize: "vertical" }} />
                     </div>
                     <button type="submit" className="g2a-btn-primary" disabled={status === "loading"} style={{ width: "100%", justifyContent: "center", padding: "1rem" }}>
                       {status === "loading" ? "Küldés folyamatban..." : "Audit kérése – Teljesen Ingyenes"}
