@@ -44,7 +44,7 @@
 - [x] Admin: newsletter feliratkozók listája
 - [x] Admin: oldal SEO meta szerkesztése
 - [x] Admin: site settings szerkesztése
-- [ ] Admin: képfeltöltés S3-ra (CDN)
+- [x] Admin: képfeltöltés S3-ra (CDN)
 
 ## Frontend – Globális
 - [x] Globális CSS stílus (sötét téma, #1a1a1a, #e91130, Roboto Mono)
@@ -99,7 +99,7 @@
 - [x] Newsletter feliratkozók listája
 - [x] Oldal SEO meta szerkesztése
 - [x] Site settings szerkesztése
-- [ ] Képfeltöltés CDN-re (jövőbeli fejlesztés)
+- [x] Képfeltöltés CDN-re (ImageUploader komponens: blog, hero, partnerek)
 
 ## SEO / AEO
 - [x] sitemap.xml

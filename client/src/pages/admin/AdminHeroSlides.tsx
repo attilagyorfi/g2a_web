@@ -2,6 +2,7 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Plus, Edit, Trash2, X, Check } from "lucide-react";
 import { toast } from "sonner";
+import ImageUploader from "@/components/ImageUploader";
 
 export default function AdminHeroSlides() {
   const { data: slides, refetch } = trpc.admin.heroSlides.list.useQuery();
@@ -36,8 +37,16 @@ export default function AdminHeroSlides() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
               <div style={{ gridColumn: "1/-1" }}><label style={ls}>Főcím *</label><input value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} required style={is} /></div>
               <div style={{ gridColumn: "1/-1" }}><label style={ls}>Alcím</label><textarea value={form.subtitle} onChange={e => setForm(p => ({ ...p, subtitle: e.target.value }))} style={{ ...is, resize: "vertical" }} rows={2} /></div>
-              <div><label style={ls}>Háttérkép URL</label><input value={form.backgroundImage} onChange={e => setForm(p => ({ ...p, backgroundImage: e.target.value }))} style={is} placeholder="https://..." /></div>
-              <div><label style={ls}>Háttérkép alt</label><input value={form.backgroundImageAlt} onChange={e => setForm(p => ({ ...p, backgroundImageAlt: e.target.value }))} style={is} /></div>
+              <div style={{ gridColumn: "1/-1" }}>
+                <ImageUploader
+                  value={form.backgroundImage}
+                  altValue={form.backgroundImageAlt}
+                  onChange={(url) => setForm(p => ({ ...p, backgroundImage: url }))}
+                  onAltChange={(alt) => setForm(p => ({ ...p, backgroundImageAlt: alt }))}
+                  label="Háttérkép"
+                  placeholder="Háttérkép URL vagy feltöltés"
+                />
+              </div>
               <div><label style={ls}>CTA 1 szöveg</label><input value={form.ctaPrimaryText} onChange={e => setForm(p => ({ ...p, ctaPrimaryText: e.target.value }))} style={is} placeholder="Kapcsolatfelvétel" /></div>
               <div><label style={ls}>CTA 1 URL</label><input value={form.ctaPrimaryUrl} onChange={e => setForm(p => ({ ...p, ctaPrimaryUrl: e.target.value }))} style={is} placeholder="/kapcsolat" /></div>
               <div><label style={ls}>CTA 2 szöveg</label><input value={form.ctaSecondaryText} onChange={e => setForm(p => ({ ...p, ctaSecondaryText: e.target.value }))} style={is} placeholder="Szolgáltatásaink" /></div>
@@ -48,12 +57,7 @@ export default function AdminHeroSlides() {
                 <label htmlFor="isActive" style={{ color: "#ccc", fontSize: "0.875rem", cursor: "pointer" }}>Aktív (megjelenik a weboldalon)</label>
               </div>
             </div>
-            {form.backgroundImage && (
-              <div style={{ marginTop: "1rem" }}>
-                <p style={{ ...ls, marginBottom: "0.5rem" }}>Előnézet</p>
-                <img src={form.backgroundImage} alt={form.backgroundImageAlt} style={{ maxHeight: "120px", borderRadius: "4px", objectFit: "cover" }} />
-              </div>
-            )}
+
             <button type="submit" className="g2a-btn-primary" style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "1rem" }}><Check size={16} /> Mentés</button>
           </form>
         </div>

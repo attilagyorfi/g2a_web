@@ -2,6 +2,7 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Plus, Edit, Trash2, X, Check } from "lucide-react";
 import { toast } from "sonner";
+import ImageUploader from "@/components/ImageUploader";
 
 export default function AdminPartners() {
   const { data: items, refetch } = trpc.admin.partners.list.useQuery();
@@ -29,8 +30,16 @@ export default function AdminPartners() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
               <div><label style={ls}>Név *</label><input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required style={is} /></div>
               <div><label style={ls}>Slug</label><input value={form.slug} onChange={e => setForm(p => ({ ...p, slug: e.target.value }))} style={is} /></div>
-              <div><label style={ls}>Logo URL</label><input value={form.logo} onChange={e => setForm(p => ({ ...p, logo: e.target.value }))} style={is} placeholder="https://..." /></div>
-              <div><label style={ls}>Logo alt szöveg</label><input value={form.logoAlt} onChange={e => setForm(p => ({ ...p, logoAlt: e.target.value }))} style={is} /></div>
+              <div style={{ gridColumn: "1/-1" }}>
+                <ImageUploader
+                  value={form.logo}
+                  altValue={form.logoAlt}
+                  onChange={(url) => setForm(p => ({ ...p, logo: url }))}
+                  onAltChange={(alt) => setForm(p => ({ ...p, logoAlt: alt }))}
+                  label="Logo kép"
+                  placeholder="Logo URL vagy feltöltés"
+                />
+              </div>
               <div><label style={ls}>Weboldal</label><input value={form.website} onChange={e => setForm(p => ({ ...p, website: e.target.value }))} style={is} placeholder="https://..." /></div>
               <div><label style={ls}>Sorrend</label><input type="number" value={form.sortOrder} onChange={e => setForm(p => ({ ...p, sortOrder: parseInt(e.target.value) || 0 }))} style={is} /></div>
               <div style={{ gridColumn: "1/-1" }}><label style={ls}>Leírás</label><textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} style={{ ...is, resize: "vertical" }} rows={2} /></div>

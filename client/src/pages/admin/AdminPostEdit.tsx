@@ -4,6 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { Save, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
+import ImageUploader from "@/components/ImageUploader";
 
 export default function AdminPostEdit() {
   const params = useParams<{ id: string }>();
@@ -122,15 +123,14 @@ export default function AdminPostEdit() {
             </div>
             <div style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "1.5rem" }}>
               <h3 style={{ color: "#fff", fontFamily: "Roboto Mono, monospace", fontSize: "0.9rem", fontWeight: 600, marginBottom: "1rem" }}>Kiemelt kép</h3>
-              <div style={{ marginBottom: "1rem" }}>
-                <label style={labelStyle}>Kép URL</label>
-                <input value={form.featuredImage} onChange={e => setForm(p => ({ ...p, featuredImage: e.target.value }))} style={inputStyle} placeholder="https://..." />
-              </div>
-              {form.featuredImage && <img src={form.featuredImage} alt="preview" style={{ width: "100%", height: "120px", objectFit: "cover", borderRadius: "4px", marginBottom: "0.75rem" }} />}
-              <div>
-                <label style={labelStyle}>Alt szöveg</label>
-                <input value={form.featuredImageAlt} onChange={e => setForm(p => ({ ...p, featuredImageAlt: e.target.value }))} style={inputStyle} placeholder="Kép leírása" />
-              </div>
+              <ImageUploader
+                value={form.featuredImage}
+                altValue={form.featuredImageAlt}
+                onChange={(url) => setForm(p => ({ ...p, featuredImage: url }))}
+                onAltChange={(alt) => setForm(p => ({ ...p, featuredImageAlt: alt }))}
+                label="Kiemelt kép"
+                placeholder="Kép URL vagy feltöltés"
+              />
             </div>
             <button type="submit" className="g2a-btn-primary" style={{ justifyContent: "center" }}>
               <Save size={16} /> Mentés
