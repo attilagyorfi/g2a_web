@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { images, serviceImages } from "@/lib/images";
 
 const serviceIconMap: Record<string, React.ReactNode> = {
   lokalizacio: <Globe size={24} />,
@@ -38,19 +39,26 @@ export default function ServicesPage() {
       />
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
-        <section style={{ backgroundColor: "#111", padding: "5rem 0" }}>
+        <section style={{ backgroundColor: "var(--g2a-bg)", padding: "5rem 0", borderBottom: "1px solid var(--g2a-border)" }}>
           <div className="g2a-container">
-            <div className="g2a-section-label">
-              {lang === "en" ? "What we offer" : "Amit kínálunk"}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
+              <div>
+                <div className="g2a-section-label">
+                  {lang === "en" ? "What we offer" : "Amit kínálunk"}
+                </div>
+                <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: "1.25rem" }}>
+                  {lang === "en" ? "Full-service digital marketing solutions" : "Teljes körű digitális marketing megoldások"}
+                </h1>
+                <p style={{ color: "var(--g2a-text-secondary)", fontSize: "1.125rem", lineHeight: 1.7 }}>
+                  {lang === "en"
+                    ? "Everything your business needs for digital success – all in one place."
+                    : "Minden, amire vállalkozásodnak szüksége van a digitális sikerhez – egy helyen."}
+                </p>
+              </div>
+              <div>
+                <img src={images.heroMarketing} alt="G2A Marketing szolgáltatások" style={{ width: "100%", borderRadius: "16px", objectFit: "cover", height: "300px", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }} />
+              </div>
             </div>
-            <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "1.25rem", maxWidth: "700px" }}>
-              {lang === "en" ? "Full-service digital marketing solutions" : "Teljes körű digitális marketing megoldások"}
-            </h1>
-            <p style={{ color: "var(--g2a-text-secondary)", fontSize: "1.125rem", lineHeight: 1.7, maxWidth: "600px" }}>
-              {lang === "en"
-                ? "Everything your business needs for digital success – all in one place."
-                : "Minden, amire vállalkozásodnak szüksége van a digitális sikerhez – egy helyen."}
-            </p>
           </div>
         </section>
 
@@ -61,10 +69,10 @@ export default function ServicesPage() {
                 <Link key={service.id} href={`/szolgaltatasok/${service.slug}`} style={{ textDecoration: "none" }}>
                   <div className="g2a-card" style={{ height: "100%", cursor: "pointer" }}>
                     <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "1.25rem" }}>
-                      <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "48px", height: "48px", borderRadius: "10px", background: "rgba(233,17,48,0.1)", color: "var(--g2a-amber)" }}>
+                      <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "48px", height: "48px", borderRadius: "10px", background: "var(--g2a-amber-light)", color: "var(--g2a-amber)" }}>
                         {serviceIconMap[service.slug] || <Target size={24} />}
                       </span>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "3rem", fontWeight: 700, color: "rgba(233,17,48,0.12)", lineHeight: 1 }}>
+                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "3rem", fontWeight: 700, color: "var(--g2a-amber-light)", lineHeight: 1 }}>
                         {service.number || "01"}
                       </span>
                     </div>

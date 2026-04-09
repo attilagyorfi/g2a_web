@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import {
   ArrowRight, CheckCircle2, Star, TrendingUp,
   BarChart3, Search, Globe, Megaphone, Palette, Code2, Cpu,
@@ -11,6 +13,7 @@ import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
 import SeoHead from "@/components/SeoHead";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
+import { AnimatedSection, AnimatedList } from "@/components/AnimatedSection";
 
 // ─── Icon map ──────────────────────────────────────────────────────────────
 const ICON_MAP: Record<string, React.ReactNode> = {
@@ -243,27 +246,12 @@ function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: strin
   return <span ref={ref}>{count}{suffix}</span>;
 }
 
-// ─── Section Fade-in ───────────────────────────────────────────────────────
+// ─── Section Fade-in (Framer Motion powered) ──────────────────────────────
 function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { setVisible(true); observer.disconnect(); }
-    }, { threshold: 0.1 });
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div ref={ref} style={{
-      opacity: visible ? 1 : 0,
-      transform: visible ? "translateY(0)" : "translateY(24px)",
-      transition: `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`,
-    }}>
+    <AnimatedSection delay={delay / 1000} direction="up">
       {children}
-    </div>
+    </AnimatedSection>
   );
 }
 
@@ -326,6 +314,7 @@ export default function Home() {
   return (
     <>
       <ScrollProgressBar />
+      <Navigation />
       <SeoHead
         title={seoData?.metaTitle || (lang === "hu" ? "G2A Marketing – Adatvezérelt Marketing Ügynökség" : "G2A Marketing – Data-Driven Marketing Agency")}
         description={seoData?.metaDescription || t.heroSubtitle}
@@ -343,7 +332,7 @@ export default function Home() {
           <span style={{ fontSize: "0.875rem", fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
             {t.announcementText}
           </span>
-          <Link href="/audit" style={{
+          <Link href="/ingyenes-audit" style={{
             fontSize: "0.8125rem", fontWeight: 700, color: "#000",
             textDecoration: "underline", fontFamily: "'Inter', sans-serif",
           }}>
@@ -416,7 +405,7 @@ export default function Home() {
                   {t.heroSubtitle}
                 </p>
                 <div style={{ display: "flex", gap: "0.875rem", flexWrap: "wrap" }}>
-                  <Link href="/audit" style={{
+                  <Link href="/ingyenes-audit" style={{
                     display: "inline-flex", alignItems: "center", gap: "0.5rem",
                     padding: "0.875rem 1.75rem", borderRadius: "10px",
                     background: "var(--g2a-amber)", color: "#000",
@@ -528,18 +517,20 @@ export default function Home() {
             }}>
               {t.trustLabel}
             </p>
-            <div style={{ display: "flex", gap: "2.5rem", alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
-              {partners.slice(0, 8).map((p: { id: number; name: string; logo?: string | null }) => (
-                <div key={p.id} style={{ opacity: 0.5, transition: "opacity 0.2s", filter: "grayscale(1)" }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = "1"; (e.currentTarget as HTMLElement).style.filter = "grayscale(0)"; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = "0.5"; (e.currentTarget as HTMLElement).style.filter = "grayscale(1)"; }}>
-                  {p.logo ? (
-                    <img src={p.logo} alt={p.name} style={{ height: "32px", width: "auto", objectFit: "contain" }} />
-                  ) : (
-                    <span style={{ fontSize: "0.875rem", fontWeight: 700, color: "var(--g2a-text-secondary)", fontFamily: "'Inter', sans-serif" }}>{p.name}</span>
-                  )}
-                </div>
-              ))}
+            <div style={{ overflow: "hidden", position: "relative" }}>
+              <div style={{ display: "flex", gap: "3rem", alignItems: "center", animation: "marquee 35s linear infinite", width: "max-content" }}>
+                {[...partners, ...partners].map((p: { id: number; name: string; logo?: string | null }, idx: number) => (
+                  <div key={`${p.id}-${idx}`} style={{ opacity: 0.55, transition: "opacity 0.2s", filter: "grayscale(1)", flexShrink: 0 }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = "1"; (e.currentTarget as HTMLElement).style.filter = "grayscale(0)"; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = "0.55"; (e.currentTarget as HTMLElement).style.filter = "grayscale(1)"; }}>
+                    {p.logo ? (
+                      <img src={p.logo} alt={p.name} style={{ height: "28px", width: "auto", objectFit: "contain" }} />
+                    ) : (
+                      <span style={{ fontSize: "0.875rem", fontWeight: 700, color: "var(--g2a-text-secondary)", fontFamily: "'Inter', sans-serif", whiteSpace: "nowrap" }}>{p.name}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -876,7 +867,7 @@ export default function Home() {
                 <p style={{ fontSize: "0.9rem", color: "var(--g2a-text-secondary)", fontFamily: "'Inter', sans-serif", marginBottom: "1.5rem" }}>
                   {lang === "hu" ? "Kötelezettség nélkül, azonnal foglalhatsz időpontot." : "No obligation, book an appointment immediately."}
                 </p>
-                <Link href="/audit" style={{
+                <Link href="/ingyenes-audit" style={{
                   display: "inline-flex", alignItems: "center", gap: "0.5rem",
                   padding: "0.875rem 2rem", borderRadius: "10px",
                   background: "var(--g2a-amber)", color: "#000",
@@ -999,7 +990,7 @@ export default function Home() {
               {t.ctaSubtitle}
             </p>
             <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link href="/audit" style={{
+              <Link href="/ingyenes-audit" style={{
                 display: "inline-flex", alignItems: "center", gap: "0.5rem",
                 padding: "0.875rem 1.75rem", borderRadius: "10px",
                 background: "#000", color: "var(--g2a-text-primary)",
@@ -1027,6 +1018,7 @@ export default function Home() {
         </div>
       </section>
 
+      <Footer />
       <style>{`
         @media (max-width: 768px) {
           .hero-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }

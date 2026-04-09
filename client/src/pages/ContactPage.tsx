@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { images } from "@/lib/images";
 
 export default function ContactPage() {
   const { lang, t } = useLanguage();
@@ -65,15 +66,22 @@ export default function ContactPage() {
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
         {/* Hero */}
-        <section style={{ backgroundColor: "#111", padding: "5rem 0" }}>
+        <section style={{ backgroundColor: "var(--g2a-bg)", padding: "5rem 0", borderBottom: "1px solid var(--g2a-border)" }}>
           <div className="g2a-container">
-            <div className="g2a-section-label">{lang === "en" ? "Contact" : "Kapcsolat"}</div>
-            <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "1.25rem" }}>
-              {t("contact.title")}
-            </h1>
-            <p style={{ color: "var(--g2a-text-secondary)", fontSize: "1.125rem", lineHeight: 1.7, maxWidth: "600px" }}>
-              {t("contact.subtitle")}
-            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
+              <div>
+                <div className="g2a-section-label">{lang === "en" ? "Contact" : "Kapcsolat"}</div>
+                <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: "1.25rem" }}>
+                  {t("contact.title")}
+                </h1>
+                <p style={{ color: "var(--g2a-text-secondary)", fontSize: "1.125rem", lineHeight: 1.7 }}>
+                  {t("contact.subtitle")}
+                </p>
+              </div>
+              <div>
+                <img src={images.contactOffice} alt="G2A Marketing iroda" style={{ width: "100%", borderRadius: "16px", objectFit: "cover", height: "300px", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }} />
+              </div>
+            </div>
           </div>
         </section>
 
@@ -89,7 +97,7 @@ export default function ContactPage() {
                 <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
                   {contactItems.map(item => (
                     <div key={item.label} style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
-                      <div style={{ width: "44px", height: "44px", backgroundColor: "rgba(233,17,48,0.12)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--g2a-amber)", flexShrink: 0 }}>
+                      <div style={{ width: "44px", height: "44px", backgroundColor: "var(--g2a-amber-light)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--g2a-amber)", flexShrink: 0 }}>
                         {item.icon}
                       </div>
                       <div>

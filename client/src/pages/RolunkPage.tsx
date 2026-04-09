@@ -5,6 +5,7 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import { Link } from "wouter";
 import { ArrowRight, Target, Brain, Globe, Zap, Shield, Award, Users, TrendingUp, CheckCircle } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { images } from "@/lib/images";
 
 function useReveal(ref: React.RefObject<HTMLDivElement | null>) {
   useEffect(() => {
@@ -62,18 +63,23 @@ export default function RolunkPage() {
         {/* Hero */}
         <section style={{
           minHeight: "60vh", display: "flex", alignItems: "center",
-          background: "radial-gradient(ellipse at 60% 40%, rgba(233,17,48,0.08) 0%, transparent 60%), var(--g2a-bg)",
+          background: "radial-gradient(ellipse at 60% 40%, rgba(245,158,11,0.08) 0%, transparent 60%), var(--g2a-bg)",
           paddingTop: "6rem",
         }}>
           <div className="g2a-grid-pattern" style={{ position: "absolute", inset: 0, opacity: 0.4 }} />
-          <div className="g2a-container" style={{ position: "relative", zIndex: 1, padding: "4rem 1.5rem" }}>
-            <div className="g2a-section-label animate-fadeIn">Rólunk</div>
-            <h1 className="g2a-headline-xl animate-fadeInUp" style={{ animationDelay: "0.15s", maxWidth: "700px" }}>
-              Stratégiai partnerek a <span className="g2a-gradient-text">növekedésedben</span>
-            </h1>
-            <p className="animate-fadeInUp" style={{ animationDelay: "0.3s", fontSize: "1.15rem", color: "var(--g2a-text-secondary)", maxWidth: "600px", lineHeight: "1.7", fontFamily: "Inter, sans-serif" }}>
-              2018 óta segítünk B2B cégeknek mérhető marketing eredményeket elérni. Nem csak ügynökség vagyunk – stratégiai partnerek vagyunk a hosszú távú növekedésben.
-            </p>
+          <div className="g2a-container" style={{ position: "relative", zIndex: 1, padding: "4rem 1.5rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
+            <div>
+              <div className="g2a-section-label animate-fadeIn">Rólunk</div>
+              <h1 className="g2a-headline-xl animate-fadeInUp" style={{ animationDelay: "0.15s" }}>
+                Stratégiai partnerek a <span className="g2a-gradient-text">növekedésedben</span>
+              </h1>
+              <p className="animate-fadeInUp" style={{ animationDelay: "0.3s", fontSize: "1.15rem", color: "var(--g2a-text-secondary)", lineHeight: "1.7", fontFamily: "Inter, sans-serif" }}>
+                2018 óta segítünk B2B cégeknek mérhető marketing eredményeket elérni. Nem csak ügynökség vagyunk – stratégiai partnerek vagyunk a hosszú távú növekedésben.
+              </p>
+            </div>
+            <div className="animate-fadeIn" style={{ animationDelay: "0.2s" }}>
+              <img src={images.heroTeam} alt="G2A Marketing csapat" style={{ width: "100%", borderRadius: "16px", objectFit: "cover", height: "360px", boxShadow: "0 24px 64px rgba(0,0,0,0.3)" }} />
+            </div>
           </div>
         </section>
 
@@ -167,7 +173,7 @@ export default function RolunkPage() {
                 <div key={i} className={`g2a-card reveal reveal-delay-${i + 1}`} style={{ textAlign: "center", padding: "2rem 1.5rem" }}>
                   <div style={{
                     width: "72px", height: "72px", borderRadius: "50%",
-                    backgroundColor: "rgba(233,17,48,0.12)", border: "2px solid rgba(233,17,48,0.3)",
+                    backgroundColor: "var(--g2a-amber-light)", border: "2px solid var(--g2a-amber-border)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     margin: "0 auto 1.25rem",
                     fontFamily: "Outfit, sans-serif", fontWeight: 800, fontSize: "1.75rem", color: "var(--g2a-amber)",

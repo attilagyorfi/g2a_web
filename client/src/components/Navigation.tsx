@@ -132,7 +132,7 @@ export default function Navigation() {
 
           {/* Desktop nav */}
           <div style={{ display: "flex", alignItems: "center", gap: "0.125rem" }} className="hidden md:flex">
-            <NavLink href="/" label="Főoldal" current={location} isLight={isLight} />
+            <NavLink href="/" label={lang === "hu" ? "Főoldal" : "Home"} current={location} isLight={isLight} />
 
             {/* Services mega dropdown */}
             <div ref={servicesRef} style={{ position: "relative" }}>
@@ -144,7 +144,7 @@ export default function Navigation() {
                   color: servicesOpen ? "var(--g2a-amber)" : "var(--g2a-text-secondary)",
                   background: "none", border: "none", cursor: "pointer", transition: "color 0.2s",
                 }}>
-                Szolgáltatások
+                {t("nav.services")}
                 <ChevronDown size={13} style={{ transform: servicesOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
               </button>
               {servicesOpen && (
@@ -169,7 +169,7 @@ export default function Navigation() {
                   ))}
                   <div style={{ gridColumn: "1/-1", borderTop: `1px solid ${dropdownBorder}`, marginTop: "0.5rem", paddingTop: "0.75rem" }}>
                     <Link href="/szolgaltatasok" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "0.375rem", color: "var(--g2a-amber)", fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: 600 }}>
-                      Összes szolgáltatás megtekintése <ArrowRight size={14} />
+                      {lang === "hu" ? "Összes szolgáltatás megtekintése" : "View all services"} <ArrowRight size={14} />
                     </Link>
                   </div>
                 </div>
@@ -186,7 +186,7 @@ export default function Navigation() {
                   color: industriesOpen ? "var(--g2a-amber)" : "var(--g2a-text-secondary)",
                   background: "none", border: "none", cursor: "pointer", transition: "color 0.2s",
                 }}>
-                Iparágak
+                {t("nav.industries")}
                 <ChevronDown size={13} style={{ transform: industriesOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
               </button>
               {industriesOpen && (
@@ -216,6 +216,7 @@ export default function Navigation() {
             </div>
 
             <NavLink href="/rolunk" label={t("nav.about")} current={location} isLight={isLight} />
+            <NavLink href="/referenciak" label={t("nav.references")} current={location} isLight={isLight} />
             <NavLink href="/hirek" label={t("nav.blog")} current={location} isLight={isLight} />
             <NavLink href="/kapcsolat" label={t("nav.contact")} current={location} isLight={isLight} />
           </div>
@@ -275,7 +276,7 @@ export default function Navigation() {
             maxHeight: "80vh", overflowY: "auto",
           }}>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.125rem" }}>
-              <MobileNavLink href="/" label="Főoldal" isLight={isLight} />
+              <MobileNavLink href="/" label={lang === "hu" ? "Főoldal" : "Home"} isLight={isLight} />
               <button onClick={() => setMobileServicesOpen(p => !p)}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -283,7 +284,7 @@ export default function Navigation() {
                   fontFamily: "Inter, sans-serif", fontSize: "0.9rem", fontWeight: 500,
                   color: "var(--g2a-text-secondary)", background: "none", border: "none", cursor: "pointer",
                 }}>
-                Szolgáltatások
+                {t("nav.services")}
                 <ChevronDown size={14} style={{ transform: mobileServicesOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
               </button>
               {mobileServicesOpen && (
@@ -291,18 +292,19 @@ export default function Navigation() {
                   {services.map(s => <MobileNavLink key={s.slug} href={`/szolgaltatasok/${s.slug}`} label={s.title} isLight={isLight} />)}
                 </div>
               )}
-              <div style={{ padding: "0.375rem 0.75rem", color: "var(--g2a-text-muted)", fontSize: "0.7rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "'JetBrains Mono', monospace", marginTop: "0.25rem" }}>Iparágak</div>
+              <div style={{ padding: "0.375rem 0.75rem", color: "var(--g2a-text-muted)", fontSize: "0.7rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "'JetBrains Mono', monospace", marginTop: "0.25rem" }}>{t("nav.industries")}</div>
               <div style={{ paddingLeft: "1rem", display: "flex", flexDirection: "column", gap: "0.125rem" }}>
                 {industries.map(ind => <MobileNavLink key={ind.slug} href={`/iparagi/${ind.slug}`} label={ind.label} isLight={isLight} />)}
               </div>
               <div style={{ height: "1px", backgroundColor: "var(--g2a-border)", margin: "0.75rem 0" }} />
-              <MobileNavLink href="/rolunk" label="Rólunk" isLight={isLight} />
-              <MobileNavLink href="/hirek" label="Blog" isLight={isLight} />
-              <MobileNavLink href="/kapcsolat" label="Kapcsolat" isLight={isLight} />
+              <MobileNavLink href="/rolunk" label={t("nav.about")} isLight={isLight} />
+              <MobileNavLink href="/referenciak" label={t("nav.references")} isLight={isLight} />
+              <MobileNavLink href="/hirek" label={t("nav.blog")} isLight={isLight} />
+              <MobileNavLink href="/kapcsolat" label={t("nav.contact")} isLight={isLight} />
               <div style={{ marginTop: "1rem" }}>
                 <Link href="/ingyenes-audit" style={{ textDecoration: "none" }}>
                   <span className="g2a-btn-primary" style={{ width: "100%", justifyContent: "center", display: "flex" }}>
-                    Ingyenes Marketing Audit
+                    {t("nav.freeAudit")}
                   </span>
                 </Link>
               </div>

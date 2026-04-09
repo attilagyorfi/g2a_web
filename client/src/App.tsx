@@ -35,6 +35,7 @@ import AdminAuditLeads from "./pages/admin/AdminAuditLeads";
 import RolunkPage from "./pages/RolunkPage";
 import NewServicePage from "./pages/NewServicePage";
 import StickyCTA from "./components/StickyCTA";
+import { RouteScrollToTop, BackToTopButton } from "./components/ScrollToTop";
 import AuditPage from "./pages/AuditPage";
 import ReferenciakPage from "./pages/ReferenciakPage";
 import IparagiLandingPage from "./pages/IparagiLandingPage";
@@ -112,8 +113,10 @@ function App() {
       <ThemeProvider defaultTheme="dark" switchable={true}>
         <TooltipProvider>
           <Toaster />
+          <RouteScrollToTop />
           <Router />
           <StickyCTA />
+          <BackToTopButton />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

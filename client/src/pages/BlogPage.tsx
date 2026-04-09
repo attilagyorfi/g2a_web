@@ -5,6 +5,7 @@ import { trpc } from "@/lib/trpc";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
+import { images } from "@/lib/images";
 
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
@@ -22,15 +23,22 @@ export default function BlogPage() {
       <SeoHead title={pageSeo?.metaTitle || "Hírek & Blog – G2A Marketing Pécs"} description={pageSeo?.metaDescription || "Marketing tippek, trendek és iparági hírek a G2A Marketing csapatától."} />
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
-        <section style={{ backgroundColor: "#111", padding: "5rem 0" }}>
+        <section style={{ backgroundColor: "var(--g2a-bg)", padding: "5rem 0", borderBottom: "1px solid var(--g2a-border)" }}>
           <div className="g2a-container">
-            <div className="g2a-section-label">Blog</div>
-            <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "1.25rem" }}>
-              Hírek & Cikkek
-            </h1>
-            <p style={{ color: "var(--g2a-text-secondary)", fontSize: "1.125rem", lineHeight: 1.7, maxWidth: "600px" }}>
-              Marketing tippek, trendek és iparági hírek a G2A Marketing csapatától.
-            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
+              <div>
+                <div className="g2a-section-label">Blog</div>
+                <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: "1.25rem" }}>
+                  Hírek & Cikkek
+                </h1>
+                <p style={{ color: "var(--g2a-text-secondary)", fontSize: "1.125rem", lineHeight: 1.7 }}>
+                  Marketing tippek, trendek és iparági hírek a G2A Marketing csatájától.
+                </p>
+              </div>
+              <div>
+                <img src={images.blogDefault} alt="G2A Marketing blog" style={{ width: "100%", borderRadius: "16px", objectFit: "cover", height: "280px", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }} />
+              </div>
+            </div>
           </div>
         </section>
 
@@ -59,13 +67,11 @@ export default function BlogPage() {
               {posts.map(post => (
                 <Link key={post.id} href={`/hirek/${post.slug}`} style={{ textDecoration: "none" }}>
                   <article className="g2a-card" style={{ height: "100%", cursor: "pointer", padding: 0, overflow: "hidden" }}>
-                    {post.featuredImage && (
-                      <div style={{ height: "200px", overflow: "hidden" }}>
-                        <img src={post.featuredImage} alt={post.featuredImageAlt || post.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s" }}
-                          onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
-                          onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")} />
-                      </div>
-                    )}
+                    <div style={{ height: "200px", overflow: "hidden" }}>
+                      <img src={post.featuredImage || images.blogDefault} alt={post.featuredImageAlt || post.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s" }}
+                        onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
+                        onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")} />
+                    </div>
                     <div style={{ padding: "1.5rem" }}>
                       {post.categoryId && categories?.find(c => c.id === post.categoryId) && (
                         <span className="g2a-tag" style={{ marginBottom: "0.75rem", display: "inline-block" }}>{categories.find(c => c.id === post.categoryId)?.name}</span>

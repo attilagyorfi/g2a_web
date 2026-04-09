@@ -236,3 +236,18 @@
 - [x] Hardkódolt fehér/fekete/szürke színek → CSS változókra cserélve
 - [x] 21/21 teszt zöld
 - [x] TypeScript 0 hiba
+
+## V7 – Hibajavítások és Új Funkciók
+
+- [x] Főmenü megjelenítés javítása a főoldalon
+- [x] Téma váltó (dark/light) az egész weboldalt változtassa, ne csak a menüt
+- [x] Banner "Kérd most" link 404 javítása
+- [x] Aloldalak tetejétől töltsenek be (scroll-to-top route változáskor)
+- [x] Back-to-top gomb hozzáadása
+- [x] Angol menüpontok fordítása (részben még magyarul vannak)
+- [x] Referenciák külön menüpont a navigációban
+- [x] Partnerek: csak valódi G2A partnerek jelenjenek meg, fiktívek eltávolítása
+- [x] Minden oldalhoz releváns képek hozzáadása
+- [x] Multi-step Marketing Audit form (iparág → budget → célok → kapcsolat)
+- [x] Blog fejlesztés: olvasási idő, tartalomjegyzék, kapcsolódó cikkek
+- [x] Framer Motion scroll-triggered animációk
