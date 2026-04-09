@@ -130,7 +130,7 @@ export default function ImageUploader({
             backgroundColor: "#222",
             border: "1px solid rgba(255,255,255,0.15)",
             borderRadius: "6px",
-            color: uploading ? "#666" : "#e91130",
+            color: uploading ? "#666" : "var(--g2a-amber)",
             cursor: uploading ? "not-allowed" : "pointer",
             display: "flex",
             alignItems: "center",
@@ -163,7 +163,7 @@ export default function ImageUploader({
               alignItems: "center",
               transition: "all 0.2s",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#e91130")}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--g2a-amber)")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#666")}
           >
             <X size={14} />
@@ -182,7 +182,7 @@ export default function ImageUploader({
 
       {/* Error message */}
       {error && (
-        <p style={{ color: "#e91130", fontSize: "0.8125rem", margin: 0 }}>{error}</p>
+        <p style={{ color: "var(--g2a-amber)", fontSize: "0.8125rem", margin: 0 }}>{error}</p>
       )}
 
       {/* Alt text field */}

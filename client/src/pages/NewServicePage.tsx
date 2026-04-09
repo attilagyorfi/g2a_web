@@ -295,7 +295,7 @@ export default function NewServicePage({ params }: Props) {
         <Navigation />
         <div style={{ textAlign: "center", color: "var(--g2a-text)" }}>
           <h1>Oldal nem található</h1>
-          <Link href="/szolgaltatasok" style={{ color: "#e91130" }}>Vissza a szolgáltatásokhoz</Link>
+          <Link href="/szolgaltatasok" style={{ color: "var(--g2a-amber)" }}>Vissza a szolgáltatásokhoz</Link>
         </div>
       </div>
     );
@@ -318,19 +318,19 @@ export default function NewServicePage({ params }: Props) {
           <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse at 30% 50%, ${config.color}15 0%, transparent 60%)` }} />
           <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 2rem", position: "relative" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
-              <Link href="/szolgaltatasok" style={{ color: "var(--g2a-text-muted)", textDecoration: "none", fontSize: "0.875rem", fontFamily: "Roboto Mono, monospace" }}>
+              <Link href="/szolgaltatasok" style={{ color: "var(--g2a-text-muted)", textDecoration: "none", fontSize: "0.875rem", fontFamily: "'JetBrains Mono', monospace" }}>
                 Szolgáltatások
               </Link>
               <span style={{ color: "var(--g2a-text-muted)" }}>/</span>
-              <span style={{ color: config.color, fontSize: "0.875rem", fontFamily: "Roboto Mono, monospace" }}>{config.title}</span>
+              <span style={{ color: config.color, fontSize: "0.875rem", fontFamily: "'JetBrains Mono', monospace" }}>{config.title}</span>
             </div>
             <div style={{ width: "64px", height: "64px", borderRadius: "12px", background: `${config.color}18`, border: `1px solid ${config.color}40`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.5rem", color: config.color }}>
-              <span style={{ fontSize: "1.25rem", fontWeight: 700, fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>{config.icon.slice(0, 3).toUpperCase()}</span>
+              <span style={{ fontSize: "1.25rem", fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>{config.icon.slice(0, 3).toUpperCase()}</span>
             </div>
-            <h1 style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 800, color: "var(--g2a-text)", fontFamily: "Roboto Mono, monospace", marginBottom: "1rem", lineHeight: 1.1 }}>
+            <h1 style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 800, color: "var(--g2a-text)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "1rem", lineHeight: 1.1 }}>
               {config.title}
             </h1>
-            <p style={{ fontSize: "1.25rem", color: config.color, fontFamily: "Roboto Mono, monospace", marginBottom: "1.5rem" }}>
+            <p style={{ fontSize: "1.25rem", color: config.color, fontFamily: "'JetBrains Mono', monospace", marginBottom: "1.5rem" }}>
               {config.subtitle}
             </p>
             <p style={{ fontSize: "1.125rem", color: "var(--g2a-text-muted)", maxWidth: "600px", lineHeight: 1.7, marginBottom: "2.5rem" }}>
@@ -359,7 +359,7 @@ export default function NewServicePage({ params }: Props) {
         {/* Benefits */}
         <section style={{ padding: "5rem 0" }}>
           <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 2rem" }}>
-            <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "Roboto Mono, monospace", textAlign: "center", marginBottom: "3rem" }}>
+            <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "'JetBrains Mono', monospace", textAlign: "center", marginBottom: "3rem" }}>
               Mit kapunk tőlünk?
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
@@ -368,7 +368,7 @@ export default function NewServicePage({ params }: Props) {
                   onMouseEnter={e => (e.currentTarget.style.borderColor = config.color)}
                   onMouseLeave={e => (e.currentTarget.style.borderColor = "var(--g2a-border)")}>
                   <CheckCircle size={20} style={{ color: config.color, marginBottom: "1rem" }} />
-                  <h3 style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--g2a-text)", marginBottom: "0.5rem", fontFamily: "Roboto Mono, monospace" }}>{b.title}</h3>
+                  <h3 style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--g2a-text)", marginBottom: "0.5rem", fontFamily: "'JetBrains Mono', monospace" }}>{b.title}</h3>
                   <p style={{ color: "var(--g2a-text-muted)", lineHeight: 1.6, fontSize: "0.9rem" }}>{b.desc}</p>
                 </div>
               ))}
@@ -379,16 +379,16 @@ export default function NewServicePage({ params }: Props) {
         {/* Process */}
         <section style={{ padding: "5rem 0", background: "var(--g2a-surface)" }}>
           <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 2rem" }}>
-            <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "Roboto Mono, monospace", textAlign: "center", marginBottom: "3rem" }}>
+            <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "'JetBrains Mono', monospace", textAlign: "center", marginBottom: "3rem" }}>
               Hogyan dolgozunk?
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: "2rem" }}>
               {config.process.map((p, i) => (
                 <div key={i} style={{ textAlign: "center" }}>
-                  <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: `${config.color}20`, border: `2px solid ${config.color}`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", fontFamily: "Roboto Mono, monospace", fontWeight: 700, color: config.color, fontSize: "1.1rem" }}>
+                  <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: `${config.color}20`, border: `2px solid ${config.color}`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, color: config.color, fontSize: "1.1rem" }}>
                     {p.step}
                   </div>
-                  <h3 style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--g2a-text)", marginBottom: "0.75rem", fontFamily: "Roboto Mono, monospace" }}>{p.title}</h3>
+                  <h3 style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--g2a-text)", marginBottom: "0.75rem", fontFamily: "'JetBrains Mono', monospace" }}>{p.title}</h3>
                   <p style={{ color: "var(--g2a-text-muted)", lineHeight: 1.6, fontSize: "0.9rem" }}>{p.desc}</p>
                 </div>
               ))}
@@ -399,13 +399,13 @@ export default function NewServicePage({ params }: Props) {
         {/* FAQ */}
         <section style={{ padding: "5rem 0" }}>
           <div className="container" style={{ maxWidth: "800px", margin: "0 auto", padding: "0 2rem" }}>
-            <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "Roboto Mono, monospace", textAlign: "center", marginBottom: "3rem" }}>
+            <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "'JetBrains Mono', monospace", textAlign: "center", marginBottom: "3rem" }}>
               Gyakori kérdések
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               {config.faq.map((f, i) => (
                 <div key={i} style={{ background: "var(--g2a-surface)", border: "1px solid var(--g2a-border)", borderRadius: "0.75rem", overflow: "hidden" }}>
-                  <button onClick={() => setOpenFaq(openFaq === i ? null : i)} style={{ width: "100%", padding: "1.25rem 1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "var(--g2a-text)", fontFamily: "Roboto Mono, monospace", fontWeight: 600, textAlign: "left", fontSize: "0.95rem" }}>
+                  <button onClick={() => setOpenFaq(openFaq === i ? null : i)} style={{ width: "100%", padding: "1.25rem 1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "var(--g2a-text)", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, textAlign: "left", fontSize: "0.95rem" }}>
                     {f.q}
                     {openFaq === i ? <ChevronUp size={18} style={{ color: config.color, flexShrink: 0 }} /> : <ChevronDown size={18} style={{ color: "var(--g2a-text-muted)", flexShrink: 0 }} />}
                   </button>
@@ -425,7 +425,7 @@ export default function NewServicePage({ params }: Props) {
           <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 2rem" }}>
             <div style={{ display: "grid", gridTemplateColumns: "clamp(1fr, 50%, 1fr) 1fr", gap: "4rem", alignItems: "start" }} className="g2a-layout-sidebar">
               <div>
-                <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "Roboto Mono, monospace", marginBottom: "1.5rem" }}>
+                <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "1.5rem" }}>
                   Vegyük fel a kapcsolatot!
                 </h2>
                 <p style={{ color: "var(--g2a-text-muted)", lineHeight: 1.7, marginBottom: "2rem" }}>
@@ -433,15 +433,15 @@ export default function NewServicePage({ params }: Props) {
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", color: "var(--g2a-text-muted)" }}>
-                    <Phone size={16} style={{ color: "#e91130" }} />
+                    <Phone size={16} style={{ color: "var(--g2a-amber)" }} />
                     <a href="tel:+36301902575" style={{ color: "var(--g2a-text)", textDecoration: "none" }}>+36 30 190 2575</a>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", color: "var(--g2a-text-muted)" }}>
-                    <Mail size={16} style={{ color: "#e91130" }} />
+                    <Mail size={16} style={{ color: "var(--g2a-amber)" }} />
                     <a href="mailto:info@g2amarketing.hu" style={{ color: "var(--g2a-text)", textDecoration: "none" }}>info@g2amarketing.hu</a>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", color: "var(--g2a-text-muted)" }}>
-                    <Clock size={16} style={{ color: "#e91130" }} />
+                    <Clock size={16} style={{ color: "var(--g2a-amber)" }} />
                     <span style={{ color: "var(--g2a-text)" }}>H–P: 08:00–17:00</span>
                   </div>
                 </div>
@@ -450,7 +450,7 @@ export default function NewServicePage({ params }: Props) {
                 {status === "success" ? (
                   <div style={{ textAlign: "center", padding: "2rem" }}>
                     <CheckCircle size={48} style={{ color: "#22c55e", margin: "0 auto 1rem", display: "block" }} />
-                    <h3 style={{ color: "var(--g2a-text)", fontFamily: "Roboto Mono, monospace", marginBottom: "0.5rem" }}>Köszönjük!</h3>
+                    <h3 style={{ color: "var(--g2a-text)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "0.5rem" }}>Köszönjük!</h3>
                     <p style={{ color: "var(--g2a-text-muted)" }}>Hamarosan felvesszük veled a kapcsolatot.</p>
                   </div>
                 ) : (

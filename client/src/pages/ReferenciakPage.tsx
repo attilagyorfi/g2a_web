@@ -89,7 +89,7 @@ export default function ReferenciakPage() {
                 { icon: <Globe size={16} />, text: "10+ ország" },
               ].map((b, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--g2a-text-secondary)", fontSize: "0.9rem" }}>
-                  <span style={{ color: "#e91130" }}>{b.icon}</span>
+                  <span style={{ color: "var(--g2a-amber)" }}>{b.icon}</span>
                   {b.text}
                 </div>
               ))}
@@ -113,9 +113,9 @@ export default function ReferenciakPage() {
                     fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s",
-                    backgroundColor: activeIndustry === ind ? "#e91130" : "var(--g2a-bg-card)",
+                    backgroundColor: activeIndustry === ind ? "var(--g2a-amber)" : "var(--g2a-bg-card)",
                     color: activeIndustry === ind ? "#fff" : "var(--g2a-text-secondary)",
-                    border: `1px solid ${activeIndustry === ind ? "#e91130" : "var(--g2a-border)"}`,
+                    border: `1px solid ${activeIndustry === ind ? "var(--g2a-amber)" : "var(--g2a-border)"}`,
                   }}
                 >
                   {ind === "osszes" ? "Összes" : (INDUSTRY_LABELS[ind] || ind)}
@@ -136,7 +136,7 @@ export default function ReferenciakPage() {
             {!isLoading && (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.75rem" }}>
                 {filtered.map((cs, i) => {
-                      const color = INDUSTRY_COLORS[(cs.industry ?? "")] || "#e91130";
+                      const color = INDUSTRY_COLORS[(cs.industry ?? "")] || "var(--g2a-amber)";
                   let tags: string[] = [];
                   try { tags = JSON.parse(cs.tags || "[]"); } catch { tags = []; }
                   const resultLines = cs.results ? cs.results.split(",").map(r => r.trim()).filter(Boolean) : [];
@@ -175,7 +175,7 @@ export default function ReferenciakPage() {
                           fontSize: "2.5rem",
                           fontWeight: 800,
                           color: `${color}18`,
-                          fontFamily: "Roboto Mono, monospace",
+                          fontFamily: "'JetBrains Mono', monospace",
                           lineHeight: 1,
                           flexShrink: 0,
                           marginLeft: "0.5rem",
@@ -187,7 +187,7 @@ export default function ReferenciakPage() {
                       {/* Challenge */}
                       {cs.challenge && (
                         <div style={{ marginBottom: "1rem" }}>
-                          <div style={{ fontSize: "0.7rem", color: "var(--g2a-text-muted)", fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.375rem" }}>
+                          <div style={{ fontSize: "0.7rem", color: "var(--g2a-text-muted)", fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.375rem" }}>
                             Kihívás
                           </div>
                           <p style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)", margin: 0, lineHeight: "1.6" }}>
@@ -206,7 +206,7 @@ export default function ReferenciakPage() {
                           marginBottom: "1.25rem",
                           marginTop: "auto",
                         }}>
-                          <div style={{ fontSize: "0.7rem", color: color, fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.625rem" }}>
+                          <div style={{ fontSize: "0.7rem", color: color, fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.625rem" }}>
                             Eredmények
                           </div>
                           <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
@@ -260,7 +260,7 @@ export default function ReferenciakPage() {
           <div className="g2a-container">
             <div style={{ textAlign: "center", marginBottom: "3rem" }}>
               <div className="g2a-section-label">Számokban</div>
-              <h2 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "Roboto Mono, monospace" }}>
+              <h2 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace" }}>
                 Eredményeink összesítve
               </h2>
             </div>
@@ -272,7 +272,7 @@ export default function ReferenciakPage() {
                 { value: "4,2x", label: "Átlagos ROAS" },
               ].map((stat, i) => (
                 <div key={i} className="g2a-card" style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "2.5rem", fontWeight: 800, color: "#e91130", fontFamily: "Roboto Mono, monospace", marginBottom: "0.5rem" }}>
+                  <div style={{ fontSize: "2.5rem", fontWeight: 800, color: "var(--g2a-amber)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "0.5rem" }}>
                     {stat.value}
                   </div>
                   <div style={{ color: "var(--g2a-text-secondary)", fontSize: "0.9rem" }}>
@@ -287,7 +287,7 @@ export default function ReferenciakPage() {
         {/* CTA */}
         <section className="g2a-section g2a-cta-gradient">
           <div className="g2a-container" style={{ textAlign: "center" }}>
-            <h2 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 700, color: "#fff", fontFamily: "Roboto Mono, monospace", marginBottom: "1rem" }}>
+            <h2 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "1rem" }}>
               Te lehetsz a következő sikertörténet
             </h2>
             <p style={{ color: "rgba(255,255,255,0.8)", maxWidth: "500px", margin: "0 auto 2.5rem", lineHeight: 1.7 }}>
@@ -296,16 +296,16 @@ export default function ReferenciakPage() {
             <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
               <a href="/ingyenes-audit" style={{
                 display: "inline-flex", alignItems: "center", gap: "0.5rem",
-                backgroundColor: "#fff", color: "#e91130",
+                backgroundColor: "#fff", color: "var(--g2a-amber)",
                 padding: "0.875rem 2rem", borderRadius: "6px",
                 fontWeight: 700, textDecoration: "none",
-                fontFamily: "Roboto Mono, monospace",
+                fontFamily: "'JetBrains Mono', monospace",
               }}>
                 Ingyenes Audit kérése <ArrowRight size={16} />
               </a>
               <Link href="/kapcsolat" style={{
                 display: "inline-flex", alignItems: "center", gap: "0.5rem",
-                backgroundColor: "transparent", color: "#fff",
+                backgroundColor: "transparent", color: "var(--g2a-text-primary)",
                 padding: "0.875rem 2rem", borderRadius: "6px",
                 fontWeight: 600, textDecoration: "none",
                 border: "2px solid rgba(255,255,255,0.4)",

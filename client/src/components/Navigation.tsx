@@ -84,12 +84,12 @@ export default function Navigation() {
         <div className="g2a-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
             <a href="tel:+36301902575" style={{ display: "flex", alignItems: "center", gap: "0.375rem", color: "var(--g2a-text-muted)", textDecoration: "none", fontSize: "0.8rem", fontFamily: "Inter, sans-serif", transition: "color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#e91130")}
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")}
               onMouseLeave={e => (e.currentTarget.style.color = "var(--g2a-text-muted)")}>
               <Phone size={11} /> +36 30 190 2575
             </a>
             <a href="mailto:info@g2amarketing.hu" style={{ display: "flex", alignItems: "center", gap: "0.375rem", color: "var(--g2a-text-muted)", textDecoration: "none", fontSize: "0.8rem", fontFamily: "Inter, sans-serif", transition: "color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#e91130")}
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")}
               onMouseLeave={e => (e.currentTarget.style.color = "var(--g2a-text-muted)")}>
               <Mail size={11} /> info@g2amarketing.hu
             </a>
@@ -106,7 +106,7 @@ export default function Navigation() {
               ].map((s, i) => (
                 <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
                   style={{ color: "var(--g2a-text-muted)", transition: "color 0.2s" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "#e91130")}
+                  onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")}
                   onMouseLeave={e => (e.currentTarget.style.color = "var(--g2a-text-muted)")}>
                   {s.icon}
                 </a>
@@ -141,7 +141,7 @@ export default function Navigation() {
                   display: "flex", alignItems: "center", gap: "0.25rem",
                   padding: "0.5rem 0.875rem", borderRadius: "6px",
                   fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: 500,
-                  color: servicesOpen ? "#e91130" : "var(--g2a-text-secondary)",
+                  color: servicesOpen ? "var(--g2a-amber)" : "var(--g2a-text-secondary)",
                   background: "none", border: "none", cursor: "pointer", transition: "color 0.2s",
                 }}>
                 Szolgáltatások
@@ -168,7 +168,7 @@ export default function Navigation() {
                     </Link>
                   ))}
                   <div style={{ gridColumn: "1/-1", borderTop: `1px solid ${dropdownBorder}`, marginTop: "0.5rem", paddingTop: "0.75rem" }}>
-                    <Link href="/szolgaltatasok" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "0.375rem", color: "#e91130", fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: 600 }}>
+                    <Link href="/szolgaltatasok" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "0.375rem", color: "var(--g2a-amber)", fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: 600 }}>
                       Összes szolgáltatás megtekintése <ArrowRight size={14} />
                     </Link>
                   </div>
@@ -183,7 +183,7 @@ export default function Navigation() {
                   display: "flex", alignItems: "center", gap: "0.25rem",
                   padding: "0.5rem 0.875rem", borderRadius: "6px",
                   fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: 500,
-                  color: industriesOpen ? "#e91130" : "var(--g2a-text-secondary)",
+                  color: industriesOpen ? "var(--g2a-amber)" : "var(--g2a-text-secondary)",
                   background: "none", border: "none", cursor: "pointer", transition: "color 0.2s",
                 }}>
                 Iparágak
@@ -205,7 +205,7 @@ export default function Navigation() {
                         fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: 500,
                         color: "var(--g2a-text-secondary)", transition: "all 0.15s", cursor: "pointer",
                       }}
-                        onMouseEnter={e => { e.currentTarget.style.backgroundColor = isLight ? "#f5f5f5" : "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "#e91130"; }}
+                        onMouseEnter={e => { e.currentTarget.style.backgroundColor = isLight ? "#f5f5f5" : "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "var(--g2a-amber)"; }}
                         onMouseLeave={e => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "var(--g2a-text-secondary)"; }}>
                         {ind.label}
                       </div>
@@ -231,7 +231,7 @@ export default function Navigation() {
                   display: "flex", alignItems: "center", justifyContent: "center",
                   color: "var(--g2a-text-secondary)", cursor: "pointer", transition: "all 0.2s",
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = "#e91130"; e.currentTarget.style.color = "#e91130"; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--g2a-amber)"; e.currentTarget.style.color = "var(--g2a-amber)"; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--g2a-border)"; e.currentTarget.style.color = "var(--g2a-text-secondary)"; }}>
                 {isLight ? <Moon size={15} /> : <Sun size={15} />}
               </button>
@@ -245,9 +245,9 @@ export default function Navigation() {
                 padding: "0.35rem 0.625rem", borderRadius: "6px",
                 backgroundColor: "var(--g2a-bg-card)", border: "1px solid var(--g2a-border)",
                 color: "var(--g2a-text-secondary)", cursor: "pointer", transition: "all 0.2s",
-                fontFamily: "Roboto Mono, monospace", fontSize: "0.75rem", fontWeight: 600,
+                fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", fontWeight: 600,
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = "#e91130"; e.currentTarget.style.color = "#e91130"; }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--g2a-amber)"; e.currentTarget.style.color = "var(--g2a-amber)"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--g2a-border)"; e.currentTarget.style.color = "var(--g2a-text-secondary)"; }}
             >
               <span style={{ fontSize: "1rem", lineHeight: 1 }}>{lang === "hu" ? "🇬🇧" : "🇭🇺"}</span>
@@ -291,7 +291,7 @@ export default function Navigation() {
                   {services.map(s => <MobileNavLink key={s.slug} href={`/szolgaltatasok/${s.slug}`} label={s.title} isLight={isLight} />)}
                 </div>
               )}
-              <div style={{ padding: "0.375rem 0.75rem", color: "var(--g2a-text-muted)", fontSize: "0.7rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "Roboto Mono, monospace", marginTop: "0.25rem" }}>Iparágak</div>
+              <div style={{ padding: "0.375rem 0.75rem", color: "var(--g2a-text-muted)", fontSize: "0.7rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "'JetBrains Mono', monospace", marginTop: "0.25rem" }}>Iparágak</div>
               <div style={{ paddingLeft: "1rem", display: "flex", flexDirection: "column", gap: "0.125rem" }}>
                 {industries.map(ind => <MobileNavLink key={ind.slug} href={`/iparagi/${ind.slug}`} label={ind.label} isLight={isLight} />)}
               </div>
@@ -321,14 +321,14 @@ function NavLink({ href, label, current, isLight }: { href: string; label: strin
       <span style={{
         display: "block", padding: "0.5rem 0.875rem", borderRadius: "6px",
         fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: isActive ? 600 : 500,
-        color: isActive ? "#e91130" : "var(--g2a-text-secondary)",
+        color: isActive ? "var(--g2a-amber)" : "var(--g2a-text-secondary)",
         transition: "color 0.2s, background-color 0.2s",
         position: "relative",
       }}
         onMouseEnter={e => { e.currentTarget.style.color = "var(--g2a-text-primary)"; e.currentTarget.style.backgroundColor = isLight ? "rgba(0,0,0,0.04)" : "rgba(255,255,255,0.04)"; }}
-        onMouseLeave={e => { e.currentTarget.style.color = isActive ? "#e91130" : "var(--g2a-text-secondary)"; e.currentTarget.style.backgroundColor = "transparent"; }}>
+        onMouseLeave={e => { e.currentTarget.style.color = isActive ? "var(--g2a-amber)" : "var(--g2a-text-secondary)"; e.currentTarget.style.backgroundColor = "transparent"; }}>
         {label}
-        {isActive && <span style={{ position: "absolute", bottom: "2px", left: "50%", transform: "translateX(-50%)", width: "18px", height: "2px", backgroundColor: "#e91130", borderRadius: "1px" }} />}
+        {isActive && <span style={{ position: "absolute", bottom: "2px", left: "50%", transform: "translateX(-50%)", width: "18px", height: "2px", backgroundColor: "var(--g2a-amber)", borderRadius: "1px" }} />}
       </span>
     </Link>
   );
@@ -342,7 +342,7 @@ function MobileNavLink({ href, label, isLight }: { href: string; label: string; 
         fontFamily: "Inter, sans-serif", fontSize: "0.9rem", fontWeight: 500,
         color: "var(--g2a-text-secondary)", transition: "all 0.15s", cursor: "pointer",
       }}
-        onMouseEnter={e => { e.currentTarget.style.backgroundColor = isLight ? "rgba(0,0,0,0.04)" : "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "#e91130"; }}
+        onMouseEnter={e => { e.currentTarget.style.backgroundColor = isLight ? "rgba(0,0,0,0.04)" : "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "var(--g2a-amber)"; }}
         onMouseLeave={e => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "var(--g2a-text-secondary)"; }}>
         {label}
       </div>

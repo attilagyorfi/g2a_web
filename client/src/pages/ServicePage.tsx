@@ -36,7 +36,7 @@ export default function ServicePage() {
       <>
         <Navigation />
         <div style={{ minHeight: "100vh", paddingTop: "100px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ color: "#888" }}>Betöltés...</div>
+          <div style={{ color: "var(--g2a-text-muted)" }}>Betöltés...</div>
         </div>
         <Footer />
       </>
@@ -48,7 +48,7 @@ export default function ServicePage() {
       <>
         <Navigation />
         <div style={{ minHeight: "100vh", paddingTop: "100px", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "1rem" }}>
-          <h1 style={{ color: "#ffffff" }}>Szolgáltatás nem található</h1>
+          <h1 style={{ color: "var(--g2a-text-primary)" }}>Szolgáltatás nem található</h1>
           <Link href="/szolgaltatasok" className="g2a-btn-primary">Vissza a szolgáltatásokhoz</Link>
         </div>
         <Footer />
@@ -72,17 +72,17 @@ export default function ServicePage() {
           )}
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.6))" }} />
           <div className="g2a-container" style={{ position: "relative", zIndex: 1 }}>
-            <Link href="/szolgaltatasok" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "#888", fontSize: "0.875rem", textDecoration: "none", marginBottom: "1.5rem", transition: "color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#e91130")}
+            <Link href="/szolgaltatasok" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "var(--g2a-text-muted)", fontSize: "0.875rem", textDecoration: "none", marginBottom: "1.5rem", transition: "color 0.2s" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")}
               onMouseLeave={e => (e.currentTarget.style.color = "#888")}>
               <ArrowLeft size={14} /> Vissza a szolgáltatásokhoz
             </Link>
             <div className="g2a-section-label">Szolgáltatás {service.number}</div>
-            <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "#ffffff", fontFamily: "Roboto Mono, monospace", marginBottom: "1.25rem", maxWidth: "700px" }}>
+            <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "1.25rem", maxWidth: "700px" }}>
               {service.heroTitle || service.title}
             </h1>
             {service.heroSubtitle && (
-              <p style={{ color: "#b0b0b0", fontSize: "1.125rem", lineHeight: 1.7, maxWidth: "600px" }}>
+              <p style={{ color: "var(--g2a-text-secondary)", fontSize: "1.125rem", lineHeight: 1.7, maxWidth: "600px" }}>
                 {service.heroSubtitle}
               </p>
             )}
@@ -90,7 +90,7 @@ export default function ServicePage() {
         </section>
 
         {/* Content + Form */}
-        <section className="g2a-section" style={{ backgroundColor: "#1a1a1a" }}>
+        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
           <div className="g2a-container">
             <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "4rem", alignItems: "start" }}>
               {/* Content */}
@@ -98,17 +98,17 @@ export default function ServicePage() {
                 {service.content ? (
                   <div className="g2a-prose" dangerouslySetInnerHTML={{ __html: service.content }} />
                 ) : (
-                  <p style={{ color: "#888" }}>Tartalom hamarosan elérhető.</p>
+                  <p style={{ color: "var(--g2a-text-muted)" }}>Tartalom hamarosan elérhető.</p>
                 )}
               </div>
 
               {/* Contact Form */}
               <div style={{ position: "sticky", top: "120px" }}>
                 <div className="g2a-card">
-                  <h3 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.125rem", fontWeight: 600, marginBottom: "0.5rem" }}>
+                  <h3 style={{ color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", fontSize: "1.125rem", fontWeight: 600, marginBottom: "0.5rem" }}>
                     Érdeklődjön most!
                   </h3>
-                  <p style={{ color: "#888", fontSize: "0.875rem", marginBottom: "1.5rem" }}>
+                  <p style={{ color: "var(--g2a-text-muted)", fontSize: "0.875rem", marginBottom: "1.5rem" }}>
                     Ingyenes konzultáció a {service.title} szolgáltatásról.
                   </p>
                   <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -133,11 +133,11 @@ export default function ServicePage() {
                     </button>
                   </form>
                   <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", flexDirection: "column", gap: "0.625rem" }}>
-                    <a href="tel:+36301902575" style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#888", fontSize: "0.8125rem", textDecoration: "none" }}>
-                      <Phone size={13} style={{ color: "#e91130" }} /> +36301902575
+                    <a href="tel:+36301902575" style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--g2a-text-muted)", fontSize: "0.8125rem", textDecoration: "none" }}>
+                      <Phone size={13} style={{ color: "var(--g2a-amber)" }} /> +36301902575
                     </a>
-                    <a href="mailto:info@g2amarketing.hu" style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#888", fontSize: "0.8125rem", textDecoration: "none" }}>
-                      <Mail size={13} style={{ color: "#e91130" }} /> info@g2amarketing.hu
+                    <a href="mailto:info@g2amarketing.hu" style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--g2a-text-muted)", fontSize: "0.8125rem", textDecoration: "none" }}>
+                      <Mail size={13} style={{ color: "var(--g2a-amber)" }} /> info@g2amarketing.hu
                     </a>
                   </div>
                 </div>
@@ -149,12 +149,12 @@ export default function ServicePage() {
         {/* Other Services */}
         <section className="g2a-section-sm" style={{ backgroundColor: "#161616" }}>
           <div className="g2a-container">
-            <h3 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.25rem", fontWeight: 600, marginBottom: "1.5rem" }}>
+            <h3 style={{ color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", fontSize: "1.25rem", fontWeight: 600, marginBottom: "1.5rem" }}>
               Egyéb szolgáltatásaink
             </h3>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
               {(services || []).filter(s => s.slug !== slug).map(s => (
-                <Link key={s.id} href={`/szolgaltatasok/${s.slug}`} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", backgroundColor: "#1e1e1e", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", padding: "0.625rem 1rem", color: "#b0b0b0", fontSize: "0.875rem", textDecoration: "none", transition: "all 0.2s" }}
+                <Link key={s.id} href={`/szolgaltatasok/${s.slug}`} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", backgroundColor: "#1e1e1e", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", padding: "0.625rem 1rem", color: "var(--g2a-text-secondary)", fontSize: "0.875rem", textDecoration: "none", transition: "all 0.2s" }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(233,17,48,0.4)"; (e.currentTarget as HTMLElement).style.color = "#ffffff"; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)"; (e.currentTarget as HTMLElement).style.color = "#b0b0b0"; }}>
                   {s.title} <ArrowRight size={12} />

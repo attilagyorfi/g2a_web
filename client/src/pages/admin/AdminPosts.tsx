@@ -53,7 +53,7 @@ export default function AdminPosts() {
                     </button>
                     <button onClick={() => { if (confirm("Biztosan törli?")) deleteMutation.mutate({ id: post.id }); }}
                       style={{ background: "none", border: "none", color: "#888", cursor: "pointer", display: "flex", transition: "color 0.2s" }}
-                      onMouseEnter={e => (e.currentTarget.style.color = "#e91130")}
+                      onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")}
                       onMouseLeave={e => (e.currentTarget.style.color = "#888")}>
                       <Trash2 size={15} />
                     </button>

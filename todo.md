@@ -221,3 +221,18 @@
 - [x] Nyelvválasztó gomb a navigációban
 - [x] Angol fordítások az összes főbb oldalhoz
 - [x] URL struktúra: /en/* és /hu/* (vagy lang paraméter – LanguageContext alapon)
+
+## V6 – Teljes Rebranding (Slate & Amber Design System)
+
+- [x] Új "Slate & Amber" design system létrehozva (index.css CSS változók)
+- [x] Plus Jakarta Sans + Inter + JetBrains Mono tipográfia (Roboto Mono eltávolítva)
+- [x] Sötét/világos mód váltó engedélyezve (ThemeProvider switchable=true)
+- [x] .dark CSS osztály megfelelően definiálva
+- [x] Home.tsx teljes újraírása – announcement bar, aszimmetrikus hero, stat counter animáció, trust bar, problem-solution szekció, services grid, process steps, case studies, industries, why us, testimonials, audit CTA, FAQ accordion, newsletter, final CTA
+- [x] Navigation.tsx frissítve – amber akcentus, JetBrains Mono, dark/light mód kompatibilis
+- [x] Footer.tsx teljes újraírása – Slate & Amber design, CSS változók, JetBrains Mono
+- [x] StickyCTA.tsx frissítve – amber design, Inter font, régi piros árnyék eltávolítva
+- [x] Összes publikus oldal frissítve – Roboto Mono → JetBrains Mono, #e91130 → var(--g2a-amber)
+- [x] Hardkódolt fehér/fekete/szürke színek → CSS változókra cserélve
+- [x] 21/21 teszt zöld
+- [x] TypeScript 0 hiba

@@ -38,7 +38,7 @@ export default function AdminSeoPages() {
         {/* Sidebar */}
         <div style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", overflow: "hidden" }}>
           {PAGES.map(p => (
-            <button key={p.slug} onClick={() => setSelectedSlug(p.slug)} style={{ width: "100%", padding: "0.875rem 1rem", textAlign: "left", background: selectedSlug === p.slug ? "rgba(233,17,48,0.1)" : "none", border: "none", borderBottom: "1px solid rgba(255,255,255,0.05)", color: selectedSlug === p.slug ? "#e91130" : "#aaa", fontFamily: "Roboto Mono, monospace", fontSize: "0.8rem", cursor: "pointer", transition: "all 0.15s" }}>
+            <button key={p.slug} onClick={() => setSelectedSlug(p.slug)} style={{ width: "100%", padding: "0.875rem 1rem", textAlign: "left", background: selectedSlug === p.slug ? "rgba(233,17,48,0.1)" : "none", border: "none", borderBottom: "1px solid rgba(255,255,255,0.05)", color: selectedSlug === p.slug ? "var(--g2a-amber)" : "#aaa", fontFamily: "Roboto Mono, monospace", fontSize: "0.8rem", cursor: "pointer", transition: "all 0.15s" }}>
               {p.label}
               <span style={{ display: "block", color: "#555", fontSize: "0.7rem", marginTop: "0.2rem" }}>{p.slug}</span>
             </button>
@@ -54,14 +54,14 @@ export default function AdminSeoPages() {
                 <label style={ls}>Meta cím <span style={{ color: "#555" }}>(max 60 karakter)</span></label>
                 <input value={form.metaTitle} onChange={e => setForm(p => ({ ...p, metaTitle: e.target.value }))} style={is} maxLength={60} />
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.25rem" }}>
-                  <span style={{ color: form.metaTitle.length > 55 ? "#e91130" : "#555", fontSize: "0.7rem" }}>{form.metaTitle.length}/60</span>
+                  <span style={{ color: form.metaTitle.length > 55 ? "var(--g2a-amber)" : "#555", fontSize: "0.7rem" }}>{form.metaTitle.length}/60</span>
                   {form.metaTitle.length > 0 && <span style={{ color: "#555", fontSize: "0.7rem" }}>Google keresési megjelenítés</span>}
                 </div>
               </div>
               <div>
                 <label style={ls}>Meta leírás <span style={{ color: "#555" }}>(max 160 karakter)</span></label>
                 <textarea value={form.metaDescription} onChange={e => setForm(p => ({ ...p, metaDescription: e.target.value }))} style={{ ...is, resize: "vertical" }} rows={3} maxLength={160} />
-                <span style={{ color: form.metaDescription.length > 150 ? "#e91130" : "#555", fontSize: "0.7rem" }}>{form.metaDescription.length}/160</span>
+                <span style={{ color: form.metaDescription.length > 150 ? "var(--g2a-amber)" : "#555", fontSize: "0.7rem" }}>{form.metaDescription.length}/160</span>
               </div>
               <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "1rem" }}>
                 <p style={{ color: "#666", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Open Graph (közösségi média)</p>

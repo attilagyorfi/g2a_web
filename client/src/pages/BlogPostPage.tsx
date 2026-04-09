@@ -15,7 +15,7 @@ export default function BlogPostPage() {
       <>
         <Navigation />
         <div style={{ minHeight: "100vh", paddingTop: "100px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ color: "#888" }}>Betöltés...</div>
+          <div style={{ color: "var(--g2a-text-muted)" }}>Betöltés...</div>
         </div>
         <Footer />
       </>
@@ -27,7 +27,7 @@ export default function BlogPostPage() {
       <>
         <Navigation />
         <div style={{ minHeight: "100vh", paddingTop: "100px", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "1rem" }}>
-          <h1 style={{ color: "#ffffff" }}>Cikk nem található</h1>
+          <h1 style={{ color: "var(--g2a-text-primary)" }}>Cikk nem található</h1>
           <Link href="/hirek" className="g2a-btn-primary">Vissza a bloghoz</Link>
         </div>
         <Footer />
@@ -63,11 +63,11 @@ export default function BlogPostPage() {
           </div>
         )}
 
-        <article style={{ backgroundColor: "#1a1a1a", paddingBottom: "5rem" }}>
+        <article style={{ backgroundColor: "var(--g2a-bg-2)", paddingBottom: "5rem" }}>
           <div className="g2a-container" style={{ maxWidth: "800px" }}>
             <div style={{ paddingTop: post.featuredImage ? "0" : "3rem" }}>
-              <Link href="/hirek" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "#888", fontSize: "0.875rem", textDecoration: "none", marginBottom: "1.5rem", transition: "color 0.2s" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "#e91130")}
+              <Link href="/hirek" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "var(--g2a-text-muted)", fontSize: "0.875rem", textDecoration: "none", marginBottom: "1.5rem", transition: "color 0.2s" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")}
                 onMouseLeave={e => (e.currentTarget.style.color = "#888")}>
                 <ArrowLeft size={14} /> Vissza a bloghoz
               </Link>
@@ -77,23 +77,23 @@ export default function BlogPostPage() {
                   <span className="g2a-tag"><Tag size={10} style={{ display: "inline", marginRight: "4px" }} />Kategória</span>
                 )}
                 {post.publishedAt && (
-                  <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "#666", fontSize: "0.8125rem" }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "var(--g2a-text-muted)", fontSize: "0.8125rem" }}>
                     <Calendar size={12} /> {new Date(post.publishedAt).toLocaleDateString("hu-HU", { year: "numeric", month: "long", day: "numeric" })}
                   </span>
                 )}
                 {post.authorName && (
-                  <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "#666", fontSize: "0.8125rem" }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "var(--g2a-text-muted)", fontSize: "0.8125rem" }}>
                     <User size={12} /> {post.authorName}
                   </span>
                 )}
               </div>
 
-              <h1 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 700, color: "#ffffff", fontFamily: "Roboto Mono, monospace", lineHeight: 1.3, marginBottom: "2rem" }}>
+              <h1 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", lineHeight: 1.3, marginBottom: "2rem" }}>
                 {post.title}
               </h1>
 
               {post.excerpt && (
-                <p style={{ fontSize: "1.125rem", color: "#b0b0b0", lineHeight: 1.7, marginBottom: "2rem", borderLeft: "3px solid #e91130", paddingLeft: "1.25rem", fontStyle: "italic" }}>
+                <p style={{ fontSize: "1.125rem", color: "var(--g2a-text-secondary)", lineHeight: 1.7, marginBottom: "2rem", borderLeft: "3px solid var(--g2a-amber)", paddingLeft: "1.25rem", fontStyle: "italic" }}>
                   {post.excerpt}
                 </p>
               )}

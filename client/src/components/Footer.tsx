@@ -1,4 +1,4 @@
-import { Phone, Mail, Clock, MapPin, Facebook, Youtube, Linkedin } from "lucide-react";
+import { Phone, Mail, Clock, MapPin, Facebook, Youtube, Linkedin, ArrowRight } from "lucide-react";
 
 const LOGO_URL = "https://g2amarketing.hu/wp-content/uploads/2022/06/g2a_512x512_transparent_feher.png";
 
@@ -28,24 +28,25 @@ const company = [
   { href: "/kapcsolat", label: "Kapcsolat" },
 ];
 
-const linkStyle: React.CSSProperties = {
-  color: "#888",
-  fontSize: "0.875rem",
-  textDecoration: "none",
-  display: "block",
-  padding: "0.2rem 0",
-  transition: "color 0.2s",
-  cursor: "pointer",
-};
-
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <li>
       <a
         href={href}
-        style={linkStyle}
-        onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#e91130"; }}
-        onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#888"; }}
+        style={{
+          color: "var(--g2a-text-muted)",
+          fontSize: "0.875rem",
+          textDecoration: "none",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.375rem",
+          padding: "0.25rem 0",
+          transition: "color 0.2s",
+          fontFamily: "'Inter', sans-serif",
+          lineHeight: 1.5,
+        }}
+        onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-amber)"; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-muted)"; }}
       >
         {children}
       </a>
@@ -53,9 +54,23 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
   );
 }
 
+const headingStyle: React.CSSProperties = {
+  color: "var(--g2a-text-primary)",
+  fontFamily: "'JetBrains Mono', monospace",
+  fontSize: "0.75rem",
+  fontWeight: 700,
+  textTransform: "uppercase",
+  letterSpacing: "0.1em",
+  marginBottom: "1.25rem",
+};
+
 export default function Footer() {
   return (
-    <footer style={{ backgroundColor: "#111111", borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "4rem" }}>
+    <footer style={{
+      background: "var(--g2a-bg)",
+      borderTop: "1px solid var(--g2a-border)",
+      paddingTop: "4rem",
+    }}>
       <div className="g2a-container">
         <div style={{
           display: "grid",
@@ -69,18 +84,25 @@ export default function Footer() {
               <img
                 src={LOGO_URL}
                 alt="G2A Marketing logó"
-                style={{ height: "44px", width: "auto" }}
+                style={{ height: "40px", width: "auto" }}
                 loading="lazy"
               />
             </a>
-            <p style={{ color: "#888", fontSize: "0.875rem", lineHeight: "1.7", marginBottom: "1.5rem", maxWidth: "260px" }}>
+            <p style={{
+              color: "var(--g2a-text-muted)",
+              fontSize: "0.875rem",
+              lineHeight: "1.7",
+              marginBottom: "1.5rem",
+              maxWidth: "260px",
+              fontFamily: "'Inter', sans-serif",
+            }}>
               Adatvezérelt, kreatív online marketing ügynökség. Segítünk márkájának kiemelkedni a digitális térben.
             </p>
-            <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "0.625rem", flexWrap: "wrap" }}>
               {[
-                { href: "https://www.facebook.com/g2amarketing", icon: <Facebook size={16} />, label: "Facebook" },
-                { href: "https://www.youtube.com/g2amarketing", icon: <Youtube size={16} />, label: "YouTube" },
-                { href: "https://www.linkedin.com/company/g2amarketing", icon: <Linkedin size={16} />, label: "LinkedIn" },
+                { href: "https://www.facebook.com/g2amarketing", icon: <Facebook size={15} />, label: "Facebook" },
+                { href: "https://www.youtube.com/g2amarketing", icon: <Youtube size={15} />, label: "YouTube" },
+                { href: "https://www.linkedin.com/company/g2amarketing", icon: <Linkedin size={15} />, label: "LinkedIn" },
               ].map(s => (
                 <a
                   key={s.label}
@@ -91,17 +113,22 @@ export default function Footer() {
                   style={{
                     display: "flex", alignItems: "center", justifyContent: "center",
                     width: "36px", height: "36px",
-                    backgroundColor: "rgba(255,255,255,0.06)",
-                    borderRadius: "6px", color: "#b0b0b0",
+                    background: "var(--g2a-bg-card)",
+                    border: "1px solid var(--g2a-border)",
+                    borderRadius: "8px", color: "var(--g2a-text-muted)",
                     transition: "all 0.2s", textDecoration: "none",
                   }}
                   onMouseEnter={e => {
-                    (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#e91130";
-                    (e.currentTarget as HTMLAnchorElement).style.color = "#fff";
+                    const el = e.currentTarget as HTMLAnchorElement;
+                    el.style.background = "var(--g2a-amber)";
+                    el.style.borderColor = "var(--g2a-amber)";
+                    el.style.color = "#000";
                   }}
                   onMouseLeave={e => {
-                    (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "rgba(255,255,255,0.06)";
-                    (e.currentTarget as HTMLAnchorElement).style.color = "#b0b0b0";
+                    const el = e.currentTarget as HTMLAnchorElement;
+                    el.style.background = "var(--g2a-bg-card)";
+                    el.style.borderColor = "var(--g2a-border)";
+                    el.style.color = "var(--g2a-text-muted)";
                   }}
                 >
                   {s.icon}
@@ -112,15 +139,8 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h4 style={{
-              color: "#ffffff", fontFamily: "Roboto Mono, monospace",
-              fontSize: "0.8125rem", fontWeight: 600,
-              textTransform: "uppercase", letterSpacing: "0.1em",
-              marginBottom: "1.25rem",
-            }}>
-              Szolgáltatások
-            </h4>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+            <h4 style={headingStyle}>Szolgáltatások</h4>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.125rem" }}>
               {services.map(s => (
                 <FooterLink key={s.href} href={s.href}>{s.title}</FooterLink>
               ))}
@@ -129,15 +149,8 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h4 style={{
-              color: "#ffffff", fontFamily: "Roboto Mono, monospace",
-              fontSize: "0.8125rem", fontWeight: 600,
-              textTransform: "uppercase", letterSpacing: "0.1em",
-              marginBottom: "1.25rem",
-            }}>
-              Vállalat
-            </h4>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+            <h4 style={headingStyle}>Vállalat</h4>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.125rem" }}>
               {company.map(l => (
                 <FooterLink key={l.href} href={l.href}>{l.label}</FooterLink>
               ))}
@@ -146,39 +159,32 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 style={{
-              color: "#ffffff", fontFamily: "Roboto Mono, monospace",
-              fontSize: "0.8125rem", fontWeight: 600,
-              textTransform: "uppercase", letterSpacing: "0.1em",
-              marginBottom: "1.25rem",
-            }}>
-              Elérhetőség
-            </h4>
+            <h4 style={headingStyle}>Elérhetőség</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
               <a
                 href="tel:+36301902575"
-                style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "#888", fontSize: "0.875rem", textDecoration: "none" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#e91130"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#888"; }}
+                style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "var(--g2a-text-muted)", fontSize: "0.875rem", textDecoration: "none", fontFamily: "'Inter', sans-serif", transition: "color 0.2s" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-amber)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-muted)"; }}
               >
-                <Phone size={14} style={{ color: "#e91130", flexShrink: 0 }} />
+                <Phone size={14} style={{ color: "var(--g2a-amber)", flexShrink: 0 }} />
                 +36 30 190 2575
               </a>
               <a
                 href="mailto:info@g2amarketing.hu"
-                style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "#888", fontSize: "0.875rem", textDecoration: "none" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#e91130"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#888"; }}
+                style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "var(--g2a-text-muted)", fontSize: "0.875rem", textDecoration: "none", fontFamily: "'Inter', sans-serif", transition: "color 0.2s" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-amber)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-muted)"; }}
               >
-                <Mail size={14} style={{ color: "#e91130", flexShrink: 0 }} />
+                <Mail size={14} style={{ color: "var(--g2a-amber)", flexShrink: 0 }} />
                 info@g2amarketing.hu
               </a>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "#888", fontSize: "0.875rem" }}>
-                <Clock size={14} style={{ color: "#e91130", flexShrink: 0 }} />
+              <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "var(--g2a-text-muted)", fontSize: "0.875rem", fontFamily: "'Inter', sans-serif" }}>
+                <Clock size={14} style={{ color: "var(--g2a-amber)", flexShrink: 0 }} />
                 H–P: 08:00 – 17:00
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "#888", fontSize: "0.875rem" }}>
-                <MapPin size={14} style={{ color: "#e91130", flexShrink: 0 }} />
+              <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "var(--g2a-text-muted)", fontSize: "0.875rem", fontFamily: "'Inter', sans-serif" }}>
+                <MapPin size={14} style={{ color: "var(--g2a-amber)", flexShrink: 0 }} />
                 Pécs, Magyarország
               </div>
             </div>
@@ -189,16 +195,16 @@ export default function Footer() {
                 href="/ingyenes-audit"
                 style={{
                   display: "inline-flex", alignItems: "center", gap: "0.5rem",
-                  backgroundColor: "#e91130", color: "#fff",
-                  padding: "0.625rem 1.25rem", borderRadius: "6px",
-                  fontSize: "0.8125rem", fontWeight: 600,
-                  textDecoration: "none", fontFamily: "Roboto Mono, monospace",
-                  transition: "background-color 0.2s",
+                  background: "var(--g2a-amber)", color: "#000",
+                  padding: "0.625rem 1.25rem", borderRadius: "8px",
+                  fontSize: "0.8125rem", fontWeight: 700,
+                  textDecoration: "none", fontFamily: "'Inter', sans-serif",
+                  transition: "background 0.2s",
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#c40e28"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#e91130"; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = "var(--g2a-amber-hover)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = "var(--g2a-amber)"; }}
               >
-                Ingyenes Audit
+                Ingyenes Audit <ArrowRight size={13} />
               </a>
             </div>
           </div>
@@ -206,7 +212,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div style={{
-          borderTop: "1px solid rgba(255,255,255,0.08)",
+          borderTop: "1px solid var(--g2a-border)",
           padding: "1.5rem 0",
           display: "flex",
           alignItems: "center",
@@ -214,23 +220,23 @@ export default function Footer() {
           flexWrap: "wrap",
           gap: "1rem",
         }}>
-          <p style={{ color: "#666", fontSize: "0.8125rem", margin: 0 }}>
+          <p style={{ color: "var(--g2a-text-muted)", fontSize: "0.8125rem", margin: 0, fontFamily: "'Inter', sans-serif" }}>
             © {new Date().getFullYear()} G2A Marketing. Minden jog fenntartva.
           </p>
           <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
             <a
               href="/adatvedelmi-iranyelvek"
-              style={{ color: "#666", fontSize: "0.8125rem", textDecoration: "none" }}
-              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#e91130"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#666"; }}
+              style={{ color: "var(--g2a-text-muted)", fontSize: "0.8125rem", textDecoration: "none", fontFamily: "'Inter', sans-serif", transition: "color 0.2s" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-amber)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-muted)"; }}
             >
               Adatvédelmi Irányelvek
             </a>
             <a
               href="/admin"
-              style={{ color: "#444", fontSize: "0.8125rem", textDecoration: "none" }}
-              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#888"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#444"; }}
+              style={{ color: "var(--g2a-text-muted)", fontSize: "0.8125rem", textDecoration: "none", fontFamily: "'Inter', sans-serif", transition: "color 0.2s", opacity: 0.5 }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = "1"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = "0.5"; }}
             >
               Admin
             </a>

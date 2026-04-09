@@ -44,7 +44,7 @@ export default function AdminIndustries() {
               <td style={{ padding:"0.875rem 1rem",color:"#888",fontSize:"0.875rem" }}>{item.sortOrder}</td>
               <td style={{ padding:"0.875rem 1rem" }}><div style={{ display:"flex",gap:"0.5rem" }}>
                 <button onClick={()=>{ setEditing(item.id); setForm({name:item.name,slug:item.slug||"",icon:item.icon||"",description:item.description||"",sortOrder:item.sortOrder||0}); setShowForm(true); }} style={{ background:"none",border:"none",color:"#888",cursor:"pointer" }} onMouseEnter={e=>(e.currentTarget.style.color="#fff")} onMouseLeave={e=>(e.currentTarget.style.color="#888")}><Edit size={15}/></button>
-                <button onClick={()=>{ if(confirm("Biztosan törli?")) deleteMutation.mutate({id:item.id}); }} style={{ background:"none",border:"none",color:"#888",cursor:"pointer" }} onMouseEnter={e=>(e.currentTarget.style.color="#e91130")} onMouseLeave={e=>(e.currentTarget.style.color="#888")}><Trash2 size={15}/></button>
+                <button onClick={()=>{ if(confirm("Biztosan törli?")) deleteMutation.mutate({id:item.id}); }} style={{ background:"none",border:"none",color:"#888",cursor:"pointer" }} onMouseEnter={e=>(e.currentTarget.style.color="var(--g2a-amber)")} onMouseLeave={e=>(e.currentTarget.style.color="#888")}><Trash2 size={15}/></button>
               </div></td>
             </tr>
           ))}</tbody>

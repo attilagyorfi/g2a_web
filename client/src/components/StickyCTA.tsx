@@ -33,25 +33,27 @@ export default function StickyCTA() {
         display: "flex",
         alignItems: "center",
         gap: "0.625rem",
-        background: "#e91130",
-        color: "#ffffff",
+        background: "var(--g2a-amber)",
+        color: "#000",
         padding: "0.875rem 1.5rem",
         borderRadius: "3rem",
-        fontFamily: "Roboto Mono, monospace",
-        fontWeight: 600,
+        fontFamily: "'Inter', sans-serif",
+        fontWeight: 700,
         fontSize: "0.875rem",
         textDecoration: "none",
-        boxShadow: "0 8px 32px rgba(233, 17, 48, 0.4)",
+        boxShadow: "0 8px 32px var(--g2a-amber-glow)",
         transition: "all 0.2s ease",
-        letterSpacing: "0.02em",
+        letterSpacing: "0.01em",
       }}
         onMouseEnter={e => {
           (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(233, 17, 48, 0.5)";
+          (e.currentTarget as HTMLElement).style.background = "var(--g2a-amber-hover)";
+          (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(245,158,11,0.5)";
         }}
         onMouseLeave={e => {
           (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(233, 17, 48, 0.4)";
+          (e.currentTarget as HTMLElement).style.background = "var(--g2a-amber)";
+          (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px var(--g2a-amber-glow)";
         }}
       >
         <Zap size={16} />
@@ -60,8 +62,8 @@ export default function StickyCTA() {
       <button
         onClick={() => { setDismissed(true); setVisible(false); }}
         style={{
-          background: "rgba(255,255,255,0.1)",
-          border: "1px solid rgba(255,255,255,0.2)",
+          background: "var(--g2a-bg-card)",
+          border: "1px solid var(--g2a-border)",
           borderRadius: "50%",
           width: "32px",
           height: "32px",
@@ -69,9 +71,12 @@ export default function StickyCTA() {
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
-          color: "rgba(255,255,255,0.7)",
+          color: "var(--g2a-text-muted)",
           backdropFilter: "blur(8px)",
+          transition: "all 0.2s",
         }}
+        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--g2a-amber)"; (e.currentTarget as HTMLElement).style.color = "var(--g2a-amber)"; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--g2a-border)"; (e.currentTarget as HTMLElement).style.color = "var(--g2a-text-muted)"; }}
         title="Bezárás"
       >
         <X size={14} />

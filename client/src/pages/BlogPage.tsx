@@ -25,29 +25,29 @@ export default function BlogPage() {
         <section style={{ backgroundColor: "#111", padding: "5rem 0" }}>
           <div className="g2a-container">
             <div className="g2a-section-label">Blog</div>
-            <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "#ffffff", fontFamily: "Roboto Mono, monospace", marginBottom: "1.25rem" }}>
+            <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "1.25rem" }}>
               Hírek & Cikkek
             </h1>
-            <p style={{ color: "#b0b0b0", fontSize: "1.125rem", lineHeight: 1.7, maxWidth: "600px" }}>
+            <p style={{ color: "var(--g2a-text-secondary)", fontSize: "1.125rem", lineHeight: 1.7, maxWidth: "600px" }}>
               Marketing tippek, trendek és iparági hírek a G2A Marketing csapatától.
             </p>
           </div>
         </section>
 
-        <section className="g2a-section" style={{ backgroundColor: "#1a1a1a" }}>
+        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
           <div className="g2a-container">
             {/* Category Filter */}
             {categories && categories.length > 0 && (
               <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "2.5rem" }}>
                 <button
                   onClick={() => { setSelectedCategory(null); setPage(1); }}
-                  style={{ padding: "0.5rem 1rem", borderRadius: "4px", border: "1px solid", fontSize: "0.875rem", cursor: "pointer", fontFamily: "Roboto Mono, monospace", transition: "all 0.2s", backgroundColor: selectedCategory === null ? "#e91130" : "transparent", borderColor: selectedCategory === null ? "#e91130" : "rgba(255,255,255,0.2)", color: "#ffffff" }}>
+                  style={{ padding: "0.5rem 1rem", borderRadius: "4px", border: "1px solid", fontSize: "0.875rem", cursor: "pointer", fontFamily: "'JetBrains Mono', monospace", transition: "all 0.2s", backgroundColor: selectedCategory === null ? "var(--g2a-amber)" : "transparent", borderColor: selectedCategory === null ? "var(--g2a-amber)" : "rgba(255,255,255,0.2)", color: "var(--g2a-text-primary)" }}>
                   Összes
                 </button>
                 {categories.map(cat => (
                   <button key={cat.id}
                     onClick={() => { setSelectedCategory(cat.id); setPage(1); }}
-                    style={{ padding: "0.5rem 1rem", borderRadius: "4px", border: "1px solid", fontSize: "0.875rem", cursor: "pointer", fontFamily: "Roboto Mono, monospace", transition: "all 0.2s", backgroundColor: selectedCategory === cat.id ? "#e91130" : "transparent", borderColor: selectedCategory === cat.id ? "#e91130" : "rgba(255,255,255,0.2)", color: "#ffffff" }}>
+                    style={{ padding: "0.5rem 1rem", borderRadius: "4px", border: "1px solid", fontSize: "0.875rem", cursor: "pointer", fontFamily: "'JetBrains Mono', monospace", transition: "all 0.2s", backgroundColor: selectedCategory === cat.id ? "var(--g2a-amber)" : "transparent", borderColor: selectedCategory === cat.id ? "var(--g2a-amber)" : "rgba(255,255,255,0.2)", color: "var(--g2a-text-primary)" }}>
                     {cat.name}
                   </button>
                 ))}
@@ -70,27 +70,27 @@ export default function BlogPage() {
                       {post.categoryId && categories?.find(c => c.id === post.categoryId) && (
                         <span className="g2a-tag" style={{ marginBottom: "0.75rem", display: "inline-block" }}>{categories.find(c => c.id === post.categoryId)?.name}</span>
                       )}
-                      <h2 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.0625rem", fontWeight: 600, marginBottom: "0.75rem", lineHeight: 1.4 }}>
+                      <h2 style={{ color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", fontSize: "1.0625rem", fontWeight: 600, marginBottom: "0.75rem", lineHeight: 1.4 }}>
                         {post.title}
                       </h2>
                       {post.excerpt && (
-                        <p style={{ color: "#888", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: "1.25rem" }}>
+                        <p style={{ color: "var(--g2a-text-muted)", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: "1.25rem" }}>
                           {post.excerpt}
                         </p>
                       )}
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                          <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "#666", fontSize: "0.75rem" }}>
+                          <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "var(--g2a-text-muted)", fontSize: "0.75rem" }}>
                             <Calendar size={11} />
                             {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("hu-HU") : ""}
                           </span>
                           {post.authorName && (
-                            <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "#666", fontSize: "0.75rem" }}>
+                            <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "var(--g2a-text-muted)", fontSize: "0.75rem" }}>
                               <User size={11} /> {post.authorName}
                             </span>
                           )}
                         </div>
-                        <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "#e91130", fontSize: "0.8125rem", fontWeight: 500 }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "var(--g2a-amber)", fontSize: "0.8125rem", fontWeight: 500 }}>
                           Olvasás <ArrowRight size={12} />
                         </span>
                       </div>
@@ -101,7 +101,7 @@ export default function BlogPage() {
             </div>
 
             {posts.length === 0 && (
-              <div style={{ textAlign: "center", padding: "4rem 0", color: "#666" }}>
+              <div style={{ textAlign: "center", padding: "4rem 0", color: "var(--g2a-text-muted)" }}>
                 Nem találhatók cikkek ebben a kategóriában.
               </div>
             )}
@@ -111,7 +111,7 @@ export default function BlogPage() {
               <div style={{ display: "flex", justifyContent: "center", gap: "0.5rem", marginTop: "3rem" }}>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
                   <button key={p} onClick={() => setPage(p)}
-                    style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid", cursor: "pointer", fontFamily: "Roboto Mono, monospace", fontSize: "0.875rem", transition: "all 0.2s", backgroundColor: p === page ? "#e91130" : "transparent", borderColor: p === page ? "#e91130" : "rgba(255,255,255,0.2)", color: "#ffffff" }}>
+                    style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid", cursor: "pointer", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.875rem", transition: "all 0.2s", backgroundColor: p === page ? "var(--g2a-amber)" : "transparent", borderColor: p === page ? "var(--g2a-amber)" : "rgba(255,255,255,0.2)", color: "var(--g2a-text-primary)" }}>
                     {p}
                   </button>
                 ))}

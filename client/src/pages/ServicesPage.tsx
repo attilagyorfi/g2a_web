@@ -43,10 +43,10 @@ export default function ServicesPage() {
             <div className="g2a-section-label">
               {lang === "en" ? "What we offer" : "Amit kínálunk"}
             </div>
-            <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "#ffffff", fontFamily: "Roboto Mono, monospace", marginBottom: "1.25rem", maxWidth: "700px" }}>
+            <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "1.25rem", maxWidth: "700px" }}>
               {lang === "en" ? "Full-service digital marketing solutions" : "Teljes körű digitális marketing megoldások"}
             </h1>
-            <p style={{ color: "#b0b0b0", fontSize: "1.125rem", lineHeight: 1.7, maxWidth: "600px" }}>
+            <p style={{ color: "var(--g2a-text-secondary)", fontSize: "1.125rem", lineHeight: 1.7, maxWidth: "600px" }}>
               {lang === "en"
                 ? "Everything your business needs for digital success – all in one place."
                 : "Minden, amire vállalkozásodnak szüksége van a digitális sikerhez – egy helyen."}
@@ -54,27 +54,27 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="g2a-section" style={{ backgroundColor: "#1a1a1a" }}>
+        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
           <div className="g2a-container">
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1.5rem" }}>
               {(services || []).map(service => (
                 <Link key={service.id} href={`/szolgaltatasok/${service.slug}`} style={{ textDecoration: "none" }}>
                   <div className="g2a-card" style={{ height: "100%", cursor: "pointer" }}>
                     <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "1.25rem" }}>
-                      <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "48px", height: "48px", borderRadius: "10px", background: "rgba(233,17,48,0.1)", color: "#e91130" }}>
+                      <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "48px", height: "48px", borderRadius: "10px", background: "rgba(233,17,48,0.1)", color: "var(--g2a-amber)" }}>
                         {serviceIconMap[service.slug] || <Target size={24} />}
                       </span>
-                      <span style={{ fontFamily: "Roboto Mono, monospace", fontSize: "3rem", fontWeight: 700, color: "rgba(233,17,48,0.12)", lineHeight: 1 }}>
+                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "3rem", fontWeight: 700, color: "rgba(233,17,48,0.12)", lineHeight: 1 }}>
                         {service.number || "01"}
                       </span>
                     </div>
-                    <h2 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.125rem", fontWeight: 600, marginBottom: "0.75rem" }}>
+                    <h2 style={{ color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", fontSize: "1.125rem", fontWeight: 600, marginBottom: "0.75rem" }}>
                       {service.title}
                     </h2>
-                    <p style={{ color: "#888", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1.5rem" }}>
+                    <p style={{ color: "var(--g2a-text-muted)", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1.5rem" }}>
                       {service.shortDescription}
                     </p>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", color: "#e91130", fontSize: "0.875rem", fontWeight: 500 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", color: "var(--g2a-amber)", fontSize: "0.875rem", fontWeight: 500 }}>
                       {lang === "en" ? "Details" : "Részletek"} <ArrowRight size={14} />
                     </div>
                   </div>
@@ -84,12 +84,12 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section style={{ backgroundColor: "#e91130", padding: "4rem 0" }}>
+        <section style={{ backgroundColor: "var(--g2a-amber)", padding: "4rem 0" }}>
           <div className="g2a-container" style={{ textAlign: "center" }}>
-            <h2 style={{ color: "#fff", fontFamily: "Roboto Mono, monospace", fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 700, marginBottom: "1rem" }}>
+            <h2 style={{ color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 700, marginBottom: "1rem" }}>
               {lang === "en" ? "Request a free consultation!" : "Kérj ingyenes konzultációt!"}
             </h2>
-            <Link href="/kapcsolat" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", backgroundColor: "#fff", color: "#e91130", padding: "0.875rem 2rem", borderRadius: "5px", fontWeight: 600, textDecoration: "none" }}>
+            <Link href="/kapcsolat" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", backgroundColor: "#fff", color: "var(--g2a-amber)", padding: "0.875rem 2rem", borderRadius: "5px", fontWeight: 600, textDecoration: "none" }}>
               {lang === "en" ? "Contact Us" : "Kapcsolatfelvétel"} <ArrowRight size={16} />
             </Link>
           </div>

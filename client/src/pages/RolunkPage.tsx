@@ -120,11 +120,11 @@ export default function RolunkPage() {
                 {MILESTONES.map((m, i) => (
                   <div key={i} className={`reveal reveal-delay-${(i % 4) + 1}`} style={{ display: "flex", gap: "1.25rem", paddingBottom: "1.25rem", position: "relative" }}>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
-                      <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "#e91130", flexShrink: 0, marginTop: "0.35rem" }} />
+                      <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "var(--g2a-amber)", flexShrink: 0, marginTop: "0.35rem" }} />
                       {i < MILESTONES.length - 1 && <div style={{ width: "2px", flex: 1, backgroundColor: "var(--g2a-border)", marginTop: "4px" }} />}
                     </div>
                     <div style={{ paddingBottom: "0.5rem" }}>
-                      <span style={{ fontFamily: "Roboto Mono, monospace", fontSize: "0.75rem", color: "#e91130", fontWeight: 600, letterSpacing: "0.08em" }}>{m.year}</span>
+                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", color: "var(--g2a-amber)", fontWeight: 600, letterSpacing: "0.08em" }}>{m.year}</span>
                       <p style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)", margin: "0.25rem 0 0" }}>{m.event}</p>
                     </div>
                   </div>
@@ -170,12 +170,12 @@ export default function RolunkPage() {
                     backgroundColor: "rgba(233,17,48,0.12)", border: "2px solid rgba(233,17,48,0.3)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     margin: "0 auto 1.25rem",
-                    fontFamily: "Outfit, sans-serif", fontWeight: 800, fontSize: "1.75rem", color: "#e91130",
+                    fontFamily: "Outfit, sans-serif", fontWeight: 800, fontSize: "1.75rem", color: "var(--g2a-amber)",
                   }}>
                     {member.initial}
                   </div>
                   <div style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "1.1rem", color: "var(--g2a-text-primary)", marginBottom: "0.25rem" }}>{member.name}</div>
-                  <div style={{ fontFamily: "Roboto Mono, monospace", fontSize: "0.75rem", color: "#e91130", letterSpacing: "0.06em", marginBottom: "0.75rem" }}>{member.role}</div>
+                  <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", color: "var(--g2a-amber)", letterSpacing: "0.06em", marginBottom: "0.75rem" }}>{member.role}</div>
                   <div style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)", lineHeight: "1.6" }}>{member.desc}</div>
                 </div>
               ))}

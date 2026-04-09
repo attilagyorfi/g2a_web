@@ -140,7 +140,7 @@ export default function AuditPage() {
                     backgroundColor: "rgba(233,17,48,0.12)", border: "2px solid rgba(233,17,48,0.4)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     margin: "0 auto 1rem", position: "relative", zIndex: 1,
-                    fontFamily: "Roboto Mono, monospace", fontWeight: 700, fontSize: "0.875rem", color: "#e91130",
+                    fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: "0.875rem", color: "var(--g2a-amber)",
                   }}>
                     {p.step}
                   </div>
@@ -207,9 +207,9 @@ export default function AuditPage() {
                     <button type="submit" className="g2a-btn-primary" disabled={status === "loading"} style={{ width: "100%", justifyContent: "center", padding: "1rem" }}>
                       {status === "loading" ? "Küldés folyamatban..." : "Audit kérése – Teljesen Ingyenes"}
                     </button>
-                    {status === "error" && <p style={{ color: "#e91130", fontSize: "0.875rem", textAlign: "center" }}>Hiba történt. Kérjük, próbáld újra vagy írj nekünk emailt.</p>}
+                    {status === "error" && <p style={{ color: "var(--g2a-amber)", fontSize: "0.875rem", textAlign: "center" }}>Hiba történt. Kérjük, próbáld újra vagy írj nekünk emailt.</p>}
                     <p style={{ fontSize: "0.8rem", color: "var(--g2a-text-muted)", textAlign: "center" }}>
-                      Az adataidat bizalmasan kezeljük. Részletek az <Link href="/adatvedelmi-iranyelvek" style={{ color: "#e91130" }}>Adatvédelmi irányelvekben</Link>.
+                      Az adataidat bizalmasan kezeljük. Részletek az <Link href="/adatvedelmi-iranyelvek" style={{ color: "var(--g2a-amber)" }}>Adatvédelmi irányelvekben</Link>.
                     </p>
                   </form>
                 </div>
@@ -222,7 +222,7 @@ export default function AuditPage() {
                   { icon: <Clock size={14} />, text: "08:00 – 17:00" },
                 ].map((c, i) => (
                   <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--g2a-text-muted)", fontSize: "0.875rem" }}>
-                    <span style={{ color: "#e91130" }}>{c.icon}</span> {c.text}
+                    <span style={{ color: "var(--g2a-amber)" }}>{c.icon}</span> {c.text}
                   </div>
                 ))}
               </div>

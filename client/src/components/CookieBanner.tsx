@@ -31,7 +31,7 @@ export default function CookieBanner() {
       <div className="g2a-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1.5rem", flexWrap: "wrap" }}>
         <p style={{ color: "#b0b0b0", fontSize: "0.875rem", margin: 0, flex: 1 }}>
           Weboldalunk sütiket (cookie-kat) használ a jobb felhasználói élmény érdekében.{" "}
-          <Link href="/adatvedelmi-iranyelvek" style={{ color: "#e91130", textDecoration: "underline" }}>
+          <Link href="/adatvedelmi-iranyelvek" style={{ color: "var(--g2a-amber)", textDecoration: "underline" }}>
             Adatvédelmi irányelvek
           </Link>
         </p>

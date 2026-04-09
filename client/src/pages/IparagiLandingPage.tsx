@@ -271,7 +271,7 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     metaTitle: "Marketing B2B Cégeknek – G2A Marketing | Lead Generálás, LinkedIn, SEO",
     metaDesc: "Speciális B2B marketing megoldások vállalati ügyfeleket kiszolgáló cégeknek. Lead generálás, LinkedIn Ads, SEO és marketing automatizáció.",
     icon: <Building2 size={32} />,
-    color: "#e91130",
+    color: "var(--g2a-amber)",
     heroDesc: "A B2B marketingben a hosszú értékesítési ciklus, a döntéshozók elérése és a mérhető ROI a legfontosabb. LinkedIn-től marketing automatizációig – mindezt értjük.",
     challenges: [
       "Döntéshozók elérése és megszólítása",
@@ -346,7 +346,7 @@ export default function IparagiLandingPage() {
             <h1 className="g2a-headline-xl animate-fadeInUp" style={{ animationDelay: "0.15s", maxWidth: "750px" }}>
               {data.title}
             </h1>
-            <p className="animate-fadeInUp" style={{ animationDelay: "0.25s", fontSize: "1rem", color: data.color, fontFamily: "Roboto Mono, monospace", marginBottom: "1rem" }}>
+            <p className="animate-fadeInUp" style={{ animationDelay: "0.25s", fontSize: "1rem", color: data.color, fontFamily: "'JetBrains Mono', monospace", marginBottom: "1rem" }}>
               {data.subtitle}
             </p>
             <p className="animate-fadeInUp" style={{ animationDelay: "0.35s", fontSize: "1.1rem", color: "var(--g2a-text-secondary)", maxWidth: "580px", lineHeight: "1.7", fontFamily: "Inter, sans-serif", marginBottom: "2.5rem" }}>
@@ -421,20 +421,20 @@ export default function IparagiLandingPage() {
                 <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "4px", backgroundColor: data.color }} />
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1.5rem" }}>
                   <div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--g2a-text-muted)", fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>Ügyfél</div>
+                    <div style={{ fontSize: "0.75rem", color: "var(--g2a-text-muted)", fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>Ügyfél</div>
                     <div style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--g2a-text-primary)" }}>{data.caseStudy.client}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--g2a-text-muted)", fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>Kihívás</div>
+                    <div style={{ fontSize: "0.75rem", color: "var(--g2a-text-muted)", fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>Kihívás</div>
                     <div style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)" }}>{data.caseStudy.problem}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--g2a-text-muted)", fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>Megoldás</div>
+                    <div style={{ fontSize: "0.75rem", color: "var(--g2a-text-muted)", fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>Megoldás</div>
                     <div style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)" }}>{data.caseStudy.solution}</div>
                   </div>
                 </div>
                 <div style={{ marginTop: "1.5rem", padding: "1rem 1.25rem", borderRadius: "10px", backgroundColor: `${data.color}10`, border: `1px solid ${data.color}25` }}>
-                  <div style={{ fontSize: "0.75rem", color: data.color, fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.375rem" }}>Eredmény</div>
+                  <div style={{ fontSize: "0.75rem", color: data.color, fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.375rem" }}>Eredmény</div>
                   <div style={{ fontFamily: "Outfit, sans-serif", fontWeight: 800, fontSize: "1.25rem", color: data.color }}>{data.caseStudy.result}</div>
                 </div>
               </div>
