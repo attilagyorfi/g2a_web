@@ -7,6 +7,7 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { notifyOwner } from "./_core/notification";
 import { storagePut } from "./storage";
 import * as db from "./db";
+import { sendWelcomeEmail, syncToBrevoList } from "./emailService";
 
 // Admin guard middleware
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -111,10 +112,15 @@ const newsletterRouter = router({
       const exists = await db.checkNewsletterSubscriberExists(input.email);
       if (exists) return { success: true, alreadySubscribed: true };
       await db.createNewsletterSubscriber({ email: input.email, name: input.name });
+      // Notify owner
       await notifyOwner({
         title: `Új hírlevél feliratkozó`,
         content: `**Email:** ${input.email}\n**Név:** ${input.name || "–"}`,
       });
+      // Send welcome email (non-blocking – fails gracefully if Brevo not configured)
+      sendWelcomeEmail(input.email, input.name).catch(console.warn);
+      // Sync to Brevo contact list (non-blocking)
+      syncToBrevoList(input.email, input.name).catch(console.warn);
       return { success: true, alreadySubscribed: false };
     }),
 });

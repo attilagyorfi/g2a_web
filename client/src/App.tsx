@@ -36,6 +36,9 @@ import RolunkPage from "./pages/RolunkPage";
 import NewServicePage from "./pages/NewServicePage";
 import StickyCTA from "./components/StickyCTA";
 import { RouteScrollToTop, BackToTopButton } from "./components/ScrollToTop";
+import WhatsAppButton from "./components/WhatsAppButton";
+import ExitIntentPopup from "./components/ExitIntentPopup";
+import ThirdPartyScripts from "./components/ThirdPartyScripts";
 import AuditPage from "./pages/AuditPage";
 import ReferenciakPage from "./pages/ReferenciakPage";
 import IparagiLandingPage from "./pages/IparagiLandingPage";
@@ -117,6 +120,9 @@ function App() {
           <Router />
           <StickyCTA />
           <BackToTopButton />
+          <WhatsAppButton />
+          <ExitIntentPopup />
+          <ThirdPartyScripts />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

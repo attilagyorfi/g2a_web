@@ -18,6 +18,9 @@ const SETTING_FIELDS = [
   { key: "ga4_id", label: "Google Analytics 4 Mérési azonosító", placeholder: "G-XXXXXXXXXX" },
   { key: "meta_pixel_id", label: "Meta Pixel ID", placeholder: "1234567890" },
   { key: "google_search_console", label: "Google Search Console verifikációs kód", placeholder: "google-site-verification=..." },
+  { key: "crisp_website_id", label: "Crisp Live Chat Website ID", placeholder: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" },
+  { key: "brevo_api_key", label: "Brevo (Sendinblue) API kulcs – Ügyfeletértesítő email", placeholder: "xkeysib-..." },
+  { key: "brevo_list_id", label: "Brevo lista ID (opcionális)", placeholder: "3" },
 ];
 
 export default function AdminSettings() {

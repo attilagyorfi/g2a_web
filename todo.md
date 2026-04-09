@@ -251,3 +251,16 @@
 - [x] Multi-step Marketing Audit form (iparág → budget → célok → kapcsolat)
 - [x] Blog fejlesztés: olvasási idő, tartalomjegyzék, kapcsolódó cikkek
 - [x] Framer Motion scroll-triggered animációk
+
+## V8 – 10 Fejlesztési Javaslat Implementálása
+
+- [x] Partner logók: admin feltöltési UI javítása, placeholder megjelenítés fejlesztése
+- [x] WhatsApp CTA lebegő gomb hozzáadása (mobil-barát, +36 30 190 2575)
+- [x] Live chat widget: Crisp integráció admin beállításból (Chat Widget ID mező)
+- [x] Exit-intent popup komponens (audit CTA, 5s delay + exit trigger)
+- [x] GA4 / GTM aktiválás: admin Settings GTM ID mező bekötése index.html-be dinamikusan
+- [x] Programmatic SEO: 10 új iparági landing oldal (fodrászat, fitness, jogi, ingatlan, oktatás, vendéglátás, logisztika, pénzügy, sport, divat)
+- [x] Newsletter automatizáció: feliratkozáskor üdvözlő email küldése (notifyOwner + Brevo webhook előkészítés)
+- [x] Blog SEO cikkek: 3 minta SEO cikk feltöltése az adatbázisba (seed)
+- [x] Testimonials: admin panel útmutató a valódi vélemények feltöltéséhez (placeholder frissítés)
+- [x] Esettanulmányok: valódi adatokkal feltöltött seed adatok az adatbázisba
