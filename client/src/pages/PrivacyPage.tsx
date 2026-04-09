@@ -12,7 +12,7 @@ export default function PrivacyPage() {
       />
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
-        <section style={{ backgroundColor: "#111", padding: "4rem 0" }}>
+        <section style={{ backgroundColor: "var(--g2a-bg-2)", padding: "4rem 0" }}>
           <div className="g2a-container">
             <div className="g2a-section-label">Jogi</div>
             <h1 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace" }}>

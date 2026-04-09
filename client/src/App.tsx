@@ -40,6 +40,7 @@ import WhatsAppButton from "./components/WhatsAppButton";
 import ExitIntentPopup from "./components/ExitIntentPopup";
 import ThirdPartyScripts from "./components/ThirdPartyScripts";
 import AuditPage from "./pages/AuditPage";
+import SeoAuditPage from "./pages/SeoAuditPage";
 import ReferenciakPage from "./pages/ReferenciakPage";
 import IparagiLandingPage from "./pages/IparagiLandingPage";
 
@@ -57,6 +58,7 @@ function PublicRouter() {
       <Route path="/szolgaltatasok/employer-branding" component={() => <NewServicePage params={{ slug: "employer-branding" }} />} />
       <Route path="/szolgaltatasok/nemzetkozi-marketing" component={() => <NewServicePage params={{ slug: "nemzetkozi-marketing" }} />} />
       <Route path="/ingyenes-audit" component={AuditPage} />
+      <Route path="/ingyenes-seo-audit" component={SeoAuditPage} />
       <Route path="/referenciak" component={ReferenciakPage} />
       <Route path="/iparagi/:slug" component={IparagiLandingPage} />
       <Route path="/szolgaltatasok" component={ServicesPage} />

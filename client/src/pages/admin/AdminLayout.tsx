@@ -53,7 +53,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <p style={{ color: "#888", marginBottom: "2rem" }}>
             Az admin felület eléréséhez be kell jelentkeznie.
           </p>
-          <a href={getLoginUrl()} className="g2a-btn-primary" style={{ display: "inline-flex" }}>
+          <a href={getLoginUrl("/admin")} className="g2a-btn-primary" style={{ display: "inline-flex" }}>
             Bejelentkezés
           </a>
         </div>
@@ -111,7 +111,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 padding: collapsed ? "0.75rem 0" : "0.625rem 1.25rem",
                 justifyContent: collapsed ? "center" : "flex-start",
                 color: isActive ? "var(--g2a-amber)" : "#888",
-                backgroundColor: isActive ? "rgba(233,17,48,0.08)" : "transparent",
+                backgroundColor: isActive ? "rgba(217,119,6,0.08)" : "transparent",
                 borderRight: isActive ? "2px solid var(--g2a-amber)" : "2px solid transparent",
                 textDecoration: "none", fontSize: "0.875rem",
                 transition: "all 0.15s", whiteSpace: "nowrap",

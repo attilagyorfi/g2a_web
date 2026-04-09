@@ -9,6 +9,24 @@ function getQueryParam(req: Request, key: string): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
+function parseReturnPath(state: string): string {
+  try {
+    const decoded = atob(state);
+    // New format: JSON with { redirectUri, returnPath }
+    const parsed = JSON.parse(decoded);
+    if (parsed && typeof parsed.returnPath === "string") {
+      // Validate returnPath – must be a relative path starting with /
+      const rp = parsed.returnPath;
+      if (rp.startsWith("/") && !rp.startsWith("//")) {
+        return rp;
+      }
+    }
+  } catch {
+    // Legacy format: state was just btoa(redirectUri) – redirect to /
+  }
+  return "/";
+}
+
 export function registerOAuthRoutes(app: Express) {
   app.get("/api/oauth/callback", async (req: Request, res: Response) => {
     const code = getQueryParam(req, "code");
@@ -44,7 +62,9 @@ export function registerOAuthRoutes(app: Express) {
       const cookieOptions = getSessionCookieOptions(req);
       res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
 
-      res.redirect(302, "/");
+      // Redirect to the returnPath encoded in state (e.g. /admin)
+      const returnPath = parseReturnPath(state);
+      res.redirect(302, returnPath);
     } catch (error) {
       console.error("[OAuth] Callback failed", error);
       res.status(500).json({ error: "OAuth callback failed" });

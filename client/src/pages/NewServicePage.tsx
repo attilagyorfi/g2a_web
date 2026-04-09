@@ -6,6 +6,8 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { Link } from "wouter";
 import { ArrowRight, CheckCircle, Phone, Mail, Clock, ChevronDown, ChevronUp } from "lucide-react";
+import { serviceImages } from "@/lib/images";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type ServiceConfig = {
   slug: string;
@@ -280,6 +282,8 @@ type Props = {
 
 export default function NewServicePage({ params }: Props) {
   const config = SERVICE_CONFIGS[params.slug];
+  const { lang } = useLanguage();
+  const heroImage = serviceImages[params.slug];
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -314,9 +318,14 @@ export default function NewServicePage({ params }: Props) {
         <Navigation />
 
         {/* Hero */}
-        <section style={{ padding: "8rem 0 5rem", background: "linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%)", position: "relative", overflow: "hidden" }}>
+        <section style={{ padding: "8rem 0 5rem", background: "linear-gradient(135deg, var(--g2a-bg) 0%, var(--g2a-bg-2) 100%)", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse at 30% 50%, ${config.color}15 0%, transparent 60%)` }} />
           <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 2rem", position: "relative" }}>
+            {heroImage && (
+              <div style={{ position: "absolute", right: 0, top: 0, width: "40%", height: "100%", overflow: "hidden", borderRadius: "0 0 0 2rem", opacity: 0.15, pointerEvents: "none" }}>
+                <img src={heroImage} alt={config.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+            )}
             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
               <Link href="/szolgaltatasok" style={{ color: "var(--g2a-text-muted)", textDecoration: "none", fontSize: "0.875rem", fontFamily: "'JetBrains Mono', monospace" }}>
                 Szolgáltatások
@@ -341,7 +350,7 @@ export default function NewServicePage({ params }: Props) {
                 {config.cta} <ArrowRight size={16} />
               </Link>
               <a href="tel:+36301902575" className="g2a-btn-secondary" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
-                <Phone size={16} /> Hívj minket
+                <Phone size={16} /> {lang === "en" ? "Call Us" : "Hívj minket"}
               </a>
             </div>
           </div>
@@ -360,7 +369,7 @@ export default function NewServicePage({ params }: Props) {
         <section style={{ padding: "5rem 0" }}>
           <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 2rem" }}>
             <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "'JetBrains Mono', monospace", textAlign: "center", marginBottom: "3rem" }}>
-              Mit kapunk tőlünk?
+              {lang === "en" ? "What Do You Get?" : "Mit kapunk tőlünk?"}
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
               {config.benefits.map((b, i) => (
@@ -380,7 +389,7 @@ export default function NewServicePage({ params }: Props) {
         <section style={{ padding: "5rem 0", background: "var(--g2a-surface)" }}>
           <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 2rem" }}>
             <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "'JetBrains Mono', monospace", textAlign: "center", marginBottom: "3rem" }}>
-              Hogyan dolgozunk?
+              {lang === "en" ? "How Do We Work?" : "Hogyan dolgozunk?"}
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: "2rem" }}>
               {config.process.map((p, i) => (
@@ -400,7 +409,7 @@ export default function NewServicePage({ params }: Props) {
         <section style={{ padding: "5rem 0" }}>
           <div className="container" style={{ maxWidth: "800px", margin: "0 auto", padding: "0 2rem" }}>
             <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "'JetBrains Mono', monospace", textAlign: "center", marginBottom: "3rem" }}>
-              Gyakori kérdések
+              {lang === "en" ? "Frequently Asked Questions" : "Gyakori kérdések"}
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               {config.faq.map((f, i) => (
@@ -426,10 +435,10 @@ export default function NewServicePage({ params }: Props) {
             <div style={{ display: "grid", gridTemplateColumns: "clamp(1fr, 50%, 1fr) 1fr", gap: "4rem", alignItems: "start" }} className="g2a-layout-sidebar">
               <div>
                 <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "var(--g2a-text)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "1.5rem" }}>
-                  Vegyük fel a kapcsolatot!
+                  {lang === "en" ? "Let's Get in Touch!" : "Vegyük fel a kapcsolatot!"}
                 </h2>
                 <p style={{ color: "var(--g2a-text-muted)", lineHeight: 1.7, marginBottom: "2rem" }}>
-                  Töltsd ki az alábbi űrlapot, és 24 órán belül felvesszük veled a kapcsolatot egy ingyenes konzultáció egyeztetéséhez.
+                  {lang === "en" ? "Fill out the form below and we'll contact you within 24 hours to arrange a free consultation." : "Töltsd ki az alábbi űrlapot, és 24 órán belül felvesszük veled a kapcsolatot egy ingyenes konzultáció egyeztetéséhez."}
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", color: "var(--g2a-text-muted)" }}>

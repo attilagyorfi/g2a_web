@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
@@ -55,7 +56,7 @@ export default function ReferenciakPage() {
           minHeight: "45vh",
           display: "flex",
           alignItems: "center",
-          background: "radial-gradient(ellipse at 60% 40%, rgba(233,17,48,0.08) 0%, transparent 55%), var(--g2a-bg)",
+          background: "radial-gradient(ellipse at 60% 40%, rgba(217,119,6,0.08) 0%, transparent 55%), var(--g2a-bg)",
           padding: "5rem 0",
           position: "relative",
           overflow: "hidden",
@@ -296,7 +297,7 @@ export default function ReferenciakPage() {
             <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
               <a href="/ingyenes-audit" style={{
                 display: "inline-flex", alignItems: "center", gap: "0.5rem",
-                backgroundColor: "#fff", color: "var(--g2a-amber)",
+                backgroundColor: "var(--g2a-bg-card)", color: "var(--g2a-amber)",
                 padding: "0.875rem 2rem", borderRadius: "6px",
                 fontWeight: 700, textDecoration: "none",
                 fontFamily: "'JetBrains Mono', monospace",

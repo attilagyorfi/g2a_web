@@ -32,9 +32,9 @@ export function BackToTopButton() {
       aria-label="Vissza a tetejére"
       style={{
         position: "fixed",
-        bottom: "5.5rem",
-        right: "2rem",
-        zIndex: 998,
+        bottom: "9rem",
+        right: "1.5rem",
+        zIndex: 1001,
         width: "44px",
         height: "44px",
         borderRadius: "50%",

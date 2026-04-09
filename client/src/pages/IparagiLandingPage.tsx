@@ -31,10 +31,12 @@ type IndustryData = {
   solutions: { title: string; desc: string }[];
   results: { num: string; label: string }[];
   caseStudy: { client: string; problem: string; solution: string; result: string };
+  heroImage?: string;
 };
 
 const INDUSTRY_DATA: Record<string, IndustryData> = {
   "marketing-egeszsegugyi-cegeknek": {
+    heroImage: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
     title: "Marketing egészségügyi cégeknek",
     subtitle: "Klinikák, magánorvosok és egészségügyi vállalkozások számára",
     metaTitle: "Marketing Egészségügyi Cégeknek – G2A Marketing | SEO, Google Ads, Webfejlesztés",
@@ -68,6 +70,7 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     },
   },
   "marketing-szepsegipari-cegeknek": {
+    heroImage: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80&auto=format&fit=crop",
     title: "Marketing szépségipari cégeknek",
     subtitle: "Szépségszalonok, kozmetikusok és wellness vállalkozások számára",
     metaTitle: "Marketing Szépségipari Cégeknek – G2A Marketing | Social Media, Instagram, Meta Ads",
@@ -101,7 +104,8 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     },
   },
   "marketing-mernoki-irodaknak": {
-    title: "Marketing mérnöki irodáknak",
+    heroImage: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&q=80&auto=format&fit=crop",
+    title: "Marketing mérnöki iródáknak",
     subtitle: "Tervező irodák, mérnöki vállalkozások és műszaki cégek számára",
     metaTitle: "Marketing Mérnöki Irodáknak – G2A Marketing | B2B Lead Generálás, SEO, LinkedIn",
     metaDesc: "Speciális B2B marketing mérnöki irodáknak és tervező vállalkozásoknak. SEO, LinkedIn, webfejlesztés és lead generálás.",
@@ -134,6 +138,7 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     },
   },
   "marketing-autoipari-cegeknek": {
+    heroImage: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&q=80&auto=format&fit=crop",
     title: "Marketing autóipari cégeknek",
     subtitle: "Autókereskedők, szervizek és autóipari vállalkozások számára",
     metaTitle: "Marketing Autóipari Cégeknek – G2A Marketing | Google Ads, Meta Ads, SEO",
@@ -167,7 +172,8 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     },
   },
   "marketing-ugyvedii-irodaknak": {
-    title: "Marketing ügyvédi irodáknak",
+    heroImage: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80&auto=format&fit=crop",
+    title: "Marketing ügyvédi iródáknak",
     subtitle: "Ügyvédi irodák és jogi vállalkozások számára",
     metaTitle: "Marketing Ügyvédi Irodáknak – G2A Marketing | SEO, Google Ads, Brand Design",
     metaDesc: "Speciális marketing ügyvédi irodáknak. SEO, Google Ads, prémium brand design és tartalommarketing.",
@@ -200,6 +206,7 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     },
   },
   "marketing-technologiai-cegeknek": {
+    heroImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80&auto=format&fit=crop",
     title: "Marketing technológiai cégeknek",
     subtitle: "SaaS vállalatok, tech startupok és IT cégek számára",
     metaTitle: "Marketing Technológiai Cégeknek – G2A Marketing | B2B SaaS, LinkedIn, SEO",
@@ -232,8 +239,9 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
       result: "+5 új piac, +280% demo foglalás 12 hónap alatt",
     },
   },
-  "marketing-onkormanyzati-projekteknek": {
-    title: "Marketing önkormányzati projekteknek",
+   "marketing-onkormanyzatoknak": {
+    heroImage: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&q=80&auto=format&fit=crop",
+    title: "Marketing önkormányzatoknak",
     subtitle: "Önkormányzatok, közintézmények és közösségi projektek számára",
     metaTitle: "Marketing Önkormányzati Projekteknek – G2A Marketing | Közösségi Kommunikáció",
     metaDesc: "Speciális marketing önkormányzatoknak és közintézményeknek. Közösségi kommunikáció, webfejlesztés, social media és tájékoztatási kampányok.",
@@ -266,6 +274,7 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     },
   },
   "marketing-b2b-cegeknek": {
+    heroImage: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&q=80&auto=format&fit=crop",
     title: "Marketing B2B cégeknek",
     subtitle: "Vállalati ügyfeleket kiszolgáló cégek és B2B vállalkozások számára",
     metaTitle: "Marketing B2B Cégeknek – G2A Marketing | Lead Generálás, LinkedIn, SEO",
@@ -514,31 +523,48 @@ export default function IparagiLandingPage() {
           minHeight: "60vh", display: "flex", alignItems: "center",
           background: `radial-gradient(ellipse at 60% 40%, ${data.color}15 0%, transparent 55%), var(--g2a-bg)`,
           paddingTop: "6rem",
+          position: "relative",
+          overflow: "hidden",
         }}>
           <div className="g2a-grid-pattern" style={{ position: "absolute", inset: 0, opacity: 0.4 }} />
           <div className="g2a-container" style={{ position: "relative", zIndex: 1, padding: "4rem 1.5rem" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
-              <div style={{ color: data.color, backgroundColor: `${data.color}15`, padding: "0.75rem", borderRadius: "12px", border: `1px solid ${data.color}30` }}>
-                {data.icon}
+            <div style={{ display: "grid", gridTemplateColumns: data.heroImage ? "1fr 1fr" : "1fr", gap: "4rem", alignItems: "center" }}>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+                  <div style={{ color: data.color, backgroundColor: `${data.color}15`, padding: "0.75rem", borderRadius: "12px", border: `1px solid ${data.color}30` }}>
+                    {data.icon}
+                  </div>
+                </div>
+                <div className="g2a-section-label animate-fadeIn">Iparági specializáció</div>
+                <h1 className="g2a-headline-xl animate-fadeInUp" style={{ animationDelay: "0.15s", maxWidth: "750px" }}>
+                  {data.title}
+                </h1>
+                <p className="animate-fadeInUp" style={{ animationDelay: "0.25s", fontSize: "1rem", color: data.color, fontFamily: "'JetBrains Mono', monospace", marginBottom: "1rem" }}>
+                  {data.subtitle}
+                </p>
+                <p className="animate-fadeInUp" style={{ animationDelay: "0.35s", fontSize: "1.1rem", color: "var(--g2a-text-secondary)", maxWidth: "580px", lineHeight: "1.7", fontFamily: "Inter, sans-serif", marginBottom: "2.5rem" }}>
+                  {data.heroDesc}
+                </p>
+                <div className="animate-fadeInUp" style={{ animationDelay: "0.5s", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+                  <Link href="/ingyenes-audit" style={{ textDecoration: "none" }}>
+                    <span className="g2a-btn-primary">Ingyenes Audit <ArrowRight size={16} /></span>
+                  </Link>
+                  <Link href="/kapcsolat" style={{ textDecoration: "none" }}>
+                    <span className="g2a-btn-secondary">Kapcsolatfelvétel</span>
+                  </Link>
+                </div>
               </div>
-            </div>
-            <div className="g2a-section-label animate-fadeIn">Iparági specializáció</div>
-            <h1 className="g2a-headline-xl animate-fadeInUp" style={{ animationDelay: "0.15s", maxWidth: "750px" }}>
-              {data.title}
-            </h1>
-            <p className="animate-fadeInUp" style={{ animationDelay: "0.25s", fontSize: "1rem", color: data.color, fontFamily: "'JetBrains Mono', monospace", marginBottom: "1rem" }}>
-              {data.subtitle}
-            </p>
-            <p className="animate-fadeInUp" style={{ animationDelay: "0.35s", fontSize: "1.1rem", color: "var(--g2a-text-secondary)", maxWidth: "580px", lineHeight: "1.7", fontFamily: "Inter, sans-serif", marginBottom: "2.5rem" }}>
-              {data.heroDesc}
-            </p>
-            <div className="animate-fadeInUp" style={{ animationDelay: "0.5s", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-              <Link href="/ingyenes-audit" style={{ textDecoration: "none" }}>
-                <span className="g2a-btn-primary">Ingyenes Audit <ArrowRight size={16} /></span>
-              </Link>
-              <Link href="/kapcsolat" style={{ textDecoration: "none" }}>
-                <span className="g2a-btn-secondary">Kapcsolatfelvétel</span>
-              </Link>
+              {data.heroImage && (
+                <div className="animate-fadeIn" style={{ animationDelay: "0.2s" }}>
+                  <div style={{ borderRadius: "20px", overflow: "hidden", boxShadow: "0 32px 80px rgba(0,0,0,0.4)", border: `1px solid ${data.color}30` }}>
+                    <img
+                      src={data.heroImage}
+                      alt={`${data.title} – G2A Marketing`}
+                      style={{ width: "100%", height: "380px", objectFit: "cover", display: "block" }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>

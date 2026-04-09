@@ -6,10 +6,12 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
 import { images } from "@/lib/images";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [page, setPage] = useState(1);
+  const { t, lang } = useLanguage();
   const { data: postsData } = trpc.content.posts.useQuery({ page, limit: 9, categoryId: selectedCategory || undefined });
   const { data: categories } = trpc.content.categories.useQuery();
   const { data: pageSeo } = trpc.content.pageSeo.useQuery({ slug: "/hirek" });
@@ -20,7 +22,10 @@ export default function BlogPage() {
 
   return (
     <>
-      <SeoHead title={pageSeo?.metaTitle || "Hírek & Blog – G2A Marketing Pécs"} description={pageSeo?.metaDescription || "Marketing tippek, trendek és iparági hírek a G2A Marketing csapatától."} />
+      <SeoHead
+        title={pageSeo?.metaTitle || (lang === "en" ? "News & Blog – G2A Marketing" : "Hírek & Blog – G2A Marketing Pécs")}
+        description={pageSeo?.metaDescription || (lang === "en" ? "Marketing tips, trends and industry news from the G2A Marketing team." : "Marketing tippek, trendek és iparági hírek a G2A Marketing csapatától.")}
+      />
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
         <section style={{ backgroundColor: "var(--g2a-bg)", padding: "5rem 0", borderBottom: "1px solid var(--g2a-border)" }}>
@@ -29,10 +34,10 @@ export default function BlogPage() {
               <div>
                 <div className="g2a-section-label">Blog</div>
                 <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: "1.25rem" }}>
-                  Hírek & Cikkek
+                  {lang === "en" ? "News & Articles" : "Hírek & Cikkek"}
                 </h1>
                 <p style={{ color: "var(--g2a-text-secondary)", fontSize: "1.125rem", lineHeight: 1.7 }}>
-                  Marketing tippek, trendek és iparági hírek a G2A Marketing csatájától.
+                  {t("blog.subtitle")}
                 </p>
               </div>
               <div>
@@ -50,7 +55,7 @@ export default function BlogPage() {
                 <button
                   onClick={() => { setSelectedCategory(null); setPage(1); }}
                   style={{ padding: "0.5rem 1rem", borderRadius: "4px", border: "1px solid", fontSize: "0.875rem", cursor: "pointer", fontFamily: "'JetBrains Mono', monospace", transition: "all 0.2s", backgroundColor: selectedCategory === null ? "var(--g2a-amber)" : "transparent", borderColor: selectedCategory === null ? "var(--g2a-amber)" : "rgba(255,255,255,0.2)", color: "var(--g2a-text-primary)" }}>
-                  Összes
+                  {t("blog.allCategories")}
                 </button>
                 {categories.map(cat => (
                   <button key={cat.id}
@@ -88,7 +93,7 @@ export default function BlogPage() {
                         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                           <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "var(--g2a-text-muted)", fontSize: "0.75rem" }}>
                             <Calendar size={11} />
-                            {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("hu-HU") : ""}
+                            {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString(lang === "en" ? "en-GB" : "hu-HU") : ""}
                           </span>
                           {post.authorName && (
                             <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "var(--g2a-text-muted)", fontSize: "0.75rem" }}>
@@ -97,7 +102,7 @@ export default function BlogPage() {
                           )}
                         </div>
                         <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "var(--g2a-amber)", fontSize: "0.8125rem", fontWeight: 500 }}>
-                          Olvasás <ArrowRight size={12} />
+                          {t("blog.readMore")} <ArrowRight size={12} />
                         </span>
                       </div>
                     </div>
@@ -108,7 +113,7 @@ export default function BlogPage() {
 
             {posts.length === 0 && (
               <div style={{ textAlign: "center", padding: "4rem 0", color: "var(--g2a-text-muted)" }}>
-                Nem találhatók cikkek ebben a kategóriában.
+                {t("blog.noPosts")}
               </div>
             )}
 

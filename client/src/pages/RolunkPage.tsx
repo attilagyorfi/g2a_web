@@ -6,6 +6,7 @@ import { Link } from "wouter";
 import { ArrowRight, Target, Brain, Globe, Zap, Shield, Award, Users, TrendingUp, CheckCircle } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { images } from "@/lib/images";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function useReveal(ref: React.RefObject<HTMLDivElement | null>) {
   useEffect(() => {
@@ -48,6 +49,7 @@ const MILESTONES = [
 
 export default function RolunkPage() {
   const pageRef = useRef<HTMLDivElement>(null);
+  const { t, lang } = useLanguage();
   useReveal(pageRef);
 
   return (
@@ -69,7 +71,7 @@ export default function RolunkPage() {
           <div className="g2a-grid-pattern" style={{ position: "absolute", inset: 0, opacity: 0.4 }} />
           <div className="g2a-container" style={{ position: "relative", zIndex: 1, padding: "4rem 1.5rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
             <div>
-              <div className="g2a-section-label animate-fadeIn">Rólunk</div>
+              <div className="g2a-section-label animate-fadeIn">{t("about.title")}</div>
               <h1 className="g2a-headline-xl animate-fadeInUp" style={{ animationDelay: "0.15s" }}>
                 Stratégiai partnerek a <span className="g2a-gradient-text">növekedésedben</span>
               </h1>
@@ -108,8 +110,8 @@ export default function RolunkPage() {
           <div className="g2a-container">
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "center" }}>
               <div>
-                <div className="g2a-section-label reveal">Történetünk</div>
-                <h2 className="g2a-section-title reveal reveal-delay-1">Hogyan kezdődött?</h2>
+                <div className="g2a-section-label reveal">{t("about.story")}</div>
+                <h2 className="g2a-section-title reveal reveal-delay-1">{lang === "en" ? "How did it start?" : "Hogyan kezdődött?"}</h2>
                 <p className="reveal reveal-delay-2" style={{ color: "var(--g2a-text-secondary)", lineHeight: "1.8", marginBottom: "1.5rem", fontFamily: "Inter, sans-serif" }}>
                   A G2A Marketing 2018-ban alakult Pécsett, azzal a céllal, hogy a kis- és középvállalkozásoknak is elérhető legyen a prémium minőségű, adatvezérelt marketing.
                 </p>
@@ -144,8 +146,8 @@ export default function RolunkPage() {
         <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
           <div className="g2a-container">
             <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-              <div className="g2a-section-label reveal">Értékeink</div>
-              <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>Amiben hiszünk</h2>
+              <div className="g2a-section-label reveal">{t("about.values")}</div>
+              <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>{lang === "en" ? "What We Believe In" : "Amiben hiszünk"}</h2>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.25rem" }}>
               {VALUES_LIST.map((v, i) => (
@@ -165,8 +167,8 @@ export default function RolunkPage() {
         <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg)" }}>
           <div className="g2a-container">
             <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-              <div className="g2a-section-label reveal">Csapat</div>
-              <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>Kik vagyunk?</h2>
+              <div className="g2a-section-label reveal">{t("about.team")}</div>
+              <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>{lang === "en" ? "Who Are We?" : "Kik vagyunk?"}</h2>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.5rem" }}>
               {TEAM.map((member, i) => (
@@ -192,19 +194,19 @@ export default function RolunkPage() {
         {/* CTA */}
         <section className="g2a-section g2a-cta-gradient">
           <div className="g2a-container" style={{ textAlign: "center" }}>
-            <h2 className="g2a-headline-lg reveal" style={{ marginBottom: "1.25rem" }}>Dolgozzunk együtt!</h2>
+            <h2 className="g2a-headline-lg reveal" style={{ marginBottom: "1.25rem" }}>{lang === "en" ? "Let's Work Together!" : "Dolgozzunk együtt!"}</h2>
             <p className="g2a-section-subtitle reveal reveal-delay-1" style={{ margin: "0 auto 2.5rem", textAlign: "center" }}>
-              Vedd fel velünk a kapcsolatot és indítsuk el a közös munkát egy ingyenes konzultációval.
+              {lang === "en" ? "Contact us and let's start our collaboration with a free consultation." : "Vedd fel velünk a kapcsolatot és indítsük el a közös munkát egy ingyenes konzultációval."}
             </p>
             <div className="reveal reveal-delay-2" style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
               <Link href="/ingyenes-audit" style={{ textDecoration: "none" }}>
                 <span className="g2a-btn-primary" style={{ fontSize: "1rem", padding: "1rem 2rem" }}>
-                  Ingyenes Audit <ArrowRight size={18} />
+                  {t("common.freeAudit")} <ArrowRight size={18} />
                 </span>
               </Link>
               <Link href="/kapcsolat" style={{ textDecoration: "none" }}>
                 <span className="g2a-btn-secondary" style={{ fontSize: "1rem", padding: "1rem 2rem" }}>
-                  Kapcsolatfelvétel
+                  {t("common.contactUs")}
                 </span>
               </Link>
             </div>

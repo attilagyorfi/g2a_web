@@ -65,7 +65,7 @@ export default function ServicePage() {
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
         {/* Hero */}
-        <section style={{ position: "relative", padding: "5rem 0", backgroundColor: "#111", overflow: "hidden" }}>
+        <section style={{ position: "relative", padding: "5rem 0", backgroundColor: "var(--g2a-bg-2)", overflow: "hidden" }}>
           {service.heroImage && (
             <img src={service.heroImage} alt={service.heroImageAlt || service.title}
               style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.2 }} />
@@ -77,7 +77,6 @@ export default function ServicePage() {
               onMouseLeave={e => (e.currentTarget.style.color = "#888")}>
               <ArrowLeft size={14} /> Vissza a szolgáltatásokhoz
             </Link>
-            <div className="g2a-section-label">Szolgáltatás {service.number}</div>
             <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "1.25rem", maxWidth: "700px" }}>
               {service.heroTitle || service.title}
             </h1>
@@ -147,7 +146,7 @@ export default function ServicePage() {
         </section>
 
         {/* Other Services */}
-        <section className="g2a-section-sm" style={{ backgroundColor: "#161616" }}>
+        <section className="g2a-section-sm" style={{ backgroundColor: "var(--g2a-bg-3)" }}>
           <div className="g2a-container">
             <h3 style={{ color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", fontSize: "1.25rem", fontWeight: 600, marginBottom: "1.5rem" }}>
               Egyéb szolgáltatásaink
@@ -155,7 +154,7 @@ export default function ServicePage() {
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
               {(services || []).filter(s => s.slug !== slug).map(s => (
                 <Link key={s.id} href={`/szolgaltatasok/${s.slug}`} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", backgroundColor: "#1e1e1e", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", padding: "0.625rem 1rem", color: "var(--g2a-text-secondary)", fontSize: "0.875rem", textDecoration: "none", transition: "all 0.2s" }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(233,17,48,0.4)"; (e.currentTarget as HTMLElement).style.color = "#ffffff"; }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(217,119,6,0.4)"; (e.currentTarget as HTMLElement).style.color = "#ffffff"; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)"; (e.currentTarget as HTMLElement).style.color = "#b0b0b0"; }}>
                   {s.title} <ArrowRight size={12} />
                 </Link>

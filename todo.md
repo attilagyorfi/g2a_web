@@ -264,3 +264,16 @@
 - [x] Blog SEO cikkek: 3 minta SEO cikk feltöltése az adatbázisba (seed)
 - [x] Testimonials: admin panel útmutató a valódi vélemények feltöltéséhez (placeholder frissítés)
 - [x] Esettanulmányok: valódi adatokkal feltöltött seed adatok az adatbázisba
+
+## V9 – Hibajavítások és Tartalom Bővítés
+
+- [x] Admin belépés javítása (bejelentkezés után admin panelbe irányítson, ne a főoldalra)
+- [x] Back-to-top gomb visszahelyezése
+- [x] "Szolgáltatás 01" placeholder szövegek eltávolítása az egyedi szolgáltatás oldalakon
+- [x] Dark/light kontraszt egységesítése az összes oldalon (CSS változók következetes alkalmazása)
+- [x] Nyelvválasztó javítása: minden tartalom fordítása (szolgáltatások, blog, esettanulmányok, partnerek)
+- [x] Szolgáltatások leírásának bővítése (SEO-optimalizált, részletes szövegek)
+- [x] Hero képek hozzáadása minden aloldalhoz és szolgáltatáshoz
+- [x] Valódi referenciák összegyűjtése a g2amarketing.hu/partnereink oldalról és feltöltése
+- [x] Partner leírások bővítése SEO és marketing szempontok alapján
+- [x] Dedikált ingyenes SEO audit landing oldal létrehozása interaktív eszközzel

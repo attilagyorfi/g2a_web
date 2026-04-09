@@ -218,6 +218,7 @@ export default function Navigation() {
             <NavLink href="/rolunk" label={t("nav.about")} current={location} isLight={isLight} />
             <NavLink href="/referenciak" label={t("nav.references")} current={location} isLight={isLight} />
             <NavLink href="/hirek" label={t("nav.blog")} current={location} isLight={isLight} />
+            <NavLink href="/ingyenes-seo-audit" label={lang === "hu" ? "SEO Audit" : "SEO Audit"} current={location} isLight={isLight} />
             <NavLink href="/kapcsolat" label={t("nav.contact")} current={location} isLight={isLight} />
           </div>
 
