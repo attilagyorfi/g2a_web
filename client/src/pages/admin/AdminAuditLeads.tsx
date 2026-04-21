@@ -37,7 +37,7 @@ export default function AdminAuditLeads() {
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             {leads.map((lead: any) => (
               <div key={lead.id} style={{
-                background: "var(--g2a-surface)", border: `1px solid ${lead.isContacted ? "var(--g2a-border)" : "var(--g2a-amber)"}`,
+                background: "var(--g2a-surface)", border: `1px solid ${lead.isContacted ? "var(--g2a-border)" : "#e91130"}`,
                 borderRadius: "0.75rem", padding: "1.5rem",
                 opacity: lead.isContacted ? 0.7 : 1,
               }}>
@@ -48,7 +48,7 @@ export default function AdminAuditLeads() {
                       {lead.isContacted ? (
                         <span style={{ fontSize: "0.7rem", background: "#22c55e20", color: "#22c55e", padding: "0.2rem 0.5rem", borderRadius: "0.25rem" }}>Kapcsolatba léptek</span>
                       ) : (
-                        <span style={{ fontSize: "0.7rem", background: "var(--g2a-amber)20", color: "var(--g2a-amber)", padding: "0.2rem 0.5rem", borderRadius: "0.25rem" }}>Új kérés</span>
+                        <span style={{ fontSize: "0.7rem", background: "#e9113020", color: "#e91130", padding: "0.2rem 0.5rem", borderRadius: "0.25rem" }}>Új kérés</span>
                       )}
                     </div>
                     <p style={{ fontSize: "0.8rem", color: "var(--g2a-text-muted)", marginTop: "0.25rem" }}>
@@ -61,7 +61,7 @@ export default function AdminAuditLeads() {
                         <CheckCircle size={14} /> Kapcsolatba léptek
                       </button>
                     )}
-                    <button onClick={() => { if (confirm("Biztosan törlöd?")) deleteMutation.mutate({ id: lead.id }); }} style={{ background: "none", border: "1px solid var(--g2a-amber)", borderRadius: "0.5rem", padding: "0.5rem", cursor: "pointer", color: "var(--g2a-amber)" }}>
+                    <button onClick={() => { if (confirm("Biztosan törlöd?")) deleteMutation.mutate({ id: lead.id }); }} style={{ background: "none", border: "1px solid #e91130", borderRadius: "0.5rem", padding: "0.5rem", cursor: "pointer", color: "#e91130" }}>
                       <Trash2 size={16} />
                     </button>
                   </div>
@@ -69,8 +69,8 @@ export default function AdminAuditLeads() {
 
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "0.75rem", marginBottom: "1rem" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.875rem", color: "var(--g2a-text)" }}>
-                    <Mail size={14} style={{ color: "var(--g2a-amber)" }} />
-                    <a href={`mailto:${lead.email}`} style={{ color: "var(--g2a-amber)" }}>{lead.email}</a>
+                    <Mail size={14} style={{ color: "#e91130" }} />
+                    <a href={`mailto:${lead.email}`} style={{ color: "#e91130" }}>{lead.email}</a>
                   </div>
                   {lead.phone && (
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.875rem", color: "var(--g2a-text)" }}>
@@ -87,7 +87,7 @@ export default function AdminAuditLeads() {
                   {lead.website && (
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.875rem", color: "var(--g2a-text)" }}>
                       <Globe size={14} style={{ color: "var(--g2a-text-muted)" }} />
-                      <a href={lead.website} target="_blank" rel="noopener noreferrer" style={{ color: "var(--g2a-amber)" }}>{lead.website}</a>
+                      <a href={lead.website} target="_blank" rel="noopener noreferrer" style={{ color: "#e91130" }}>{lead.website}</a>
                     </div>
                   )}
                 </div>

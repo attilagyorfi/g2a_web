@@ -6,7 +6,7 @@ export default function AdminDashboard() {
   const { data: stats } = trpc.admin.stats.useQuery();
 
   const statCards = [
-    { label: "Kapcsolatfelvételek", value: stats?.totalContacts || 0, sub: `${stats?.unreadContacts || 0} olvasatlan`, icon: <Mail size={20} />, href: "/admin/contacts", color: "var(--g2a-amber)" },
+    { label: "Kapcsolatfelvételek", value: stats?.totalContacts || 0, sub: `${stats?.unreadContacts || 0} olvasatlan`, icon: <Mail size={20} />, href: "/admin/contacts", color: "#e91130" },
     { label: "Hírlevél feliratkozók", value: stats?.totalSubscribers || 0, sub: "aktív feliratkozó", icon: <Users size={20} />, href: "/admin/newsletter", color: "#3b82f6" },
     { label: "Blog cikkek", value: stats?.totalPosts || 0, sub: `${stats?.publishedPosts || 0} közzétett`, icon: <FileText size={20} />, href: "/admin/posts", color: "#10b981" },
     { label: "Partnerek", value: stats?.totalPartners || 0, sub: "aktív partner", icon: <Briefcase size={20} />, href: "/admin/partners", color: "#f59e0b" },

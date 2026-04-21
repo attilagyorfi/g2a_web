@@ -53,7 +53,7 @@ export default function AdminHeroSlides() {
               <div><label style={ls}>CTA 2 URL</label><input value={form.ctaSecondaryUrl} onChange={e => setForm(p => ({ ...p, ctaSecondaryUrl: e.target.value }))} style={is} placeholder="/szolgaltatasok" /></div>
               <div><label style={ls}>Sorrend</label><input type="number" value={form.sortOrder} onChange={e => setForm(p => ({ ...p, sortOrder: parseInt(e.target.value) || 0 }))} style={is} /></div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", paddingTop: "1.5rem" }}>
-                <input type="checkbox" id="isActive" checked={form.isActive} onChange={e => setForm(p => ({ ...p, isActive: e.target.checked }))} style={{ width: "16px", height: "16px", accentColor: "var(--g2a-amber)" }} />
+                <input type="checkbox" id="isActive" checked={form.isActive} onChange={e => setForm(p => ({ ...p, isActive: e.target.checked }))} style={{ width: "16px", height: "16px", accentColor: "#e91130" }} />
                 <label htmlFor="isActive" style={{ color: "#ccc", fontSize: "0.875rem", cursor: "pointer" }}>Aktív (megjelenik a weboldalon)</label>
               </div>
             </div>
@@ -72,14 +72,14 @@ export default function AdminHeroSlides() {
                   <p style={{ color: "#fff", fontWeight: 700, fontSize: "0.9rem", fontFamily: "Roboto Mono, monospace", marginBottom: "0.375rem" }}>{slide.title}</p>
                   {slide.subtitle && <p style={{ color: "#888", fontSize: "0.8rem", marginBottom: "0.5rem" }}>{slide.subtitle.slice(0, 80)}{slide.subtitle.length > 80 ? "..." : ""}</p>}
                   <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                    {slide.ctaPrimaryText && <span style={{ backgroundColor: "rgba(233,17,48,0.15)", border: "1px solid rgba(233,17,48,0.3)", borderRadius: "4px", padding: "0.2rem 0.5rem", color: "var(--g2a-amber)", fontSize: "0.7rem" }}>{slide.ctaPrimaryText}</span>}
+                    {slide.ctaPrimaryText && <span style={{ backgroundColor: "rgba(233,17,48,0.15)", border: "1px solid rgba(233,17,48,0.3)", borderRadius: "4px", padding: "0.2rem 0.5rem", color: "#e91130", fontSize: "0.7rem" }}>{slide.ctaPrimaryText}</span>}
                     {slide.ctaSecondaryText && <span style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "4px", padding: "0.2rem 0.5rem", color: "#888", fontSize: "0.7rem" }}>{slide.ctaSecondaryText}</span>}
                     {!slide.isActive && <span style={{ backgroundColor: "rgba(255,100,0,0.15)", border: "1px solid rgba(255,100,0,0.3)", borderRadius: "4px", padding: "0.2rem 0.5rem", color: "#ff6400", fontSize: "0.7rem" }}>Inaktív</span>}
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                   <button onClick={() => startEdit(slide)} style={{ background: "none", border: "none", color: "#888", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.color = "#888")}><Edit size={15} /></button>
-                  <button onClick={() => { if (confirm("Biztosan törli?")) deleteMutation.mutate({ id: slide.id }); }} style={{ background: "none", border: "none", color: "#888", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")} onMouseLeave={e => (e.currentTarget.style.color = "#888")}><Trash2 size={15} /></button>
+                  <button onClick={() => { if (confirm("Biztosan törli?")) deleteMutation.mutate({ id: slide.id }); }} style={{ background: "none", border: "none", color: "#888", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color = "#e91130")} onMouseLeave={e => (e.currentTarget.style.color = "#888")}><Trash2 size={15} /></button>
                 </div>
               </div>
             </div>

@@ -39,6 +39,7 @@ export const pages = mysqlTable("pages", {
   ogImage: text("ogImage"),
   canonicalUrl: text("canonicalUrl"),
   schemaJson: text("schemaJson"),
+  keywords: text("keywords"),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
@@ -183,9 +184,11 @@ export const newsletterSubscribers = mysqlTable("newsletter_subscribers", {
   email: varchar("email", { length: 320 }).notNull().unique(),
   name: varchar("name", { length: 256 }),
   isActive: boolean("isActive").default(true).notNull(),
+  segment: varchar("segment", { length: 128 }),
+  source: varchar("source", { length: 128 }),
+  tags: text("tags"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
-
 export const caseStudies = mysqlTable("case_studies", {
   id: int("id").autoincrement().primaryKey(),
   title: varchar("title", { length: 512 }).notNull(),

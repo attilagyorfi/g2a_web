@@ -35,14 +35,15 @@ import AdminAuditLeads from "./pages/admin/AdminAuditLeads";
 import RolunkPage from "./pages/RolunkPage";
 import NewServicePage from "./pages/NewServicePage";
 import StickyCTA from "./components/StickyCTA";
-import { RouteScrollToTop, BackToTopButton } from "./components/ScrollToTop";
 import WhatsAppButton from "./components/WhatsAppButton";
 import ExitIntentPopup from "./components/ExitIntentPopup";
 import ThirdPartyScripts from "./components/ThirdPartyScripts";
+import { RouteScrollToTop, BackToTopButton } from "./components/ScrollToTop";
 import AuditPage from "./pages/AuditPage";
-import SeoAuditPage from "./pages/SeoAuditPage";
 import ReferenciakPage from "./pages/ReferenciakPage";
 import IparagiLandingPage from "./pages/IparagiLandingPage";
+import SeoAuditPage from "./pages/SeoAuditPage";
+import CaseStudyDetailPage from "./pages/CaseStudyDetailPage";
 
 function PublicRouter() {
   return (
@@ -58,8 +59,8 @@ function PublicRouter() {
       <Route path="/szolgaltatasok/employer-branding" component={() => <NewServicePage params={{ slug: "employer-branding" }} />} />
       <Route path="/szolgaltatasok/nemzetkozi-marketing" component={() => <NewServicePage params={{ slug: "nemzetkozi-marketing" }} />} />
       <Route path="/ingyenes-audit" component={AuditPage} />
-      <Route path="/ingyenes-seo-audit" component={SeoAuditPage} />
       <Route path="/referenciak" component={ReferenciakPage} />
+      <Route path="/referenciak/:id" component={CaseStudyDetailPage} />
       <Route path="/iparagi/:slug" component={IparagiLandingPage} />
       <Route path="/szolgaltatasok" component={ServicesPage} />
       <Route path="/szolgaltatasok/:slug" component={ServicePage} />
@@ -70,6 +71,7 @@ function PublicRouter() {
       <Route path="/hirek/:slug" component={BlogPostPage} />
       <Route path="/kapcsolat" component={ContactPage} />
       <Route path="/adatvedelmi-iranyelvek" component={PrivacyPage} />
+      <Route path="/ingyenes-seo-audit" component={SeoAuditPage} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
@@ -115,16 +117,16 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="dark" switchable={true}>
+      <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
           <RouteScrollToTop />
+          <ThirdPartyScripts />
           <Router />
           <StickyCTA />
-          <BackToTopButton />
           <WhatsAppButton />
+          <BackToTopButton />
           <ExitIntentPopup />
-          <ThirdPartyScripts />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

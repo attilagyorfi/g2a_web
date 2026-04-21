@@ -58,12 +58,12 @@ export default function AdminPartners() {
               <tr key={item.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                 <td style={{ padding: "0.875rem 1rem" }}>{item.logo && <img src={item.logo} alt={item.logoAlt || item.name} style={{ height: "32px", objectFit: "contain", filter: "brightness(0) invert(1)" }} />}</td>
                 <td style={{ padding: "0.875rem 1rem", color: "#fff", fontSize: "0.875rem", fontWeight: 600 }}>{item.name}</td>
-                <td style={{ padding: "0.875rem 1rem" }}>{item.website && <a href={item.website} target="_blank" rel="noopener noreferrer" style={{ color: "var(--g2a-amber)", fontSize: "0.8rem", textDecoration: "none" }}>{item.website}</a>}</td>
+                <td style={{ padding: "0.875rem 1rem" }}>{item.website && <a href={item.website} target="_blank" rel="noopener noreferrer" style={{ color: "#e91130", fontSize: "0.8rem", textDecoration: "none" }}>{item.website}</a>}</td>
                 <td style={{ padding: "0.875rem 1rem", color: "#888", fontSize: "0.875rem" }}>{item.sortOrder}</td>
                 <td style={{ padding: "0.875rem 1rem" }}>
                   <div style={{ display: "flex", gap: "0.5rem" }}>
                     <button onClick={() => { setEditing(item.id); setForm({ name: item.name, slug: item.slug || "", logo: item.logo || "", logoAlt: item.logoAlt || "", website: item.website || "", description: item.description || "", sortOrder: item.sortOrder || 0 }); setShowForm(true); }} style={{ background: "none", border: "none", color: "#888", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.color = "#888")}><Edit size={15} /></button>
-                    <button onClick={() => { if (confirm("Biztosan törli ezt a partnert?")) deleteMutation.mutate({ id: item.id }); }} style={{ background: "none", border: "none", color: "#888", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")} onMouseLeave={e => (e.currentTarget.style.color = "#888")}><Trash2 size={15} /></button>
+                    <button onClick={() => { if (confirm("Biztosan törli ezt a partnert?")) deleteMutation.mutate({ id: item.id }); }} style={{ background: "none", border: "none", color: "#888", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color = "#e91130")} onMouseLeave={e => (e.currentTarget.style.color = "#888")}><Trash2 size={15} /></button>
                   </div>
                 </td>
               </tr>

@@ -18,9 +18,6 @@ const SETTING_FIELDS = [
   { key: "ga4_id", label: "Google Analytics 4 Mérési azonosító", placeholder: "G-XXXXXXXXXX" },
   { key: "meta_pixel_id", label: "Meta Pixel ID", placeholder: "1234567890" },
   { key: "google_search_console", label: "Google Search Console verifikációs kód", placeholder: "google-site-verification=..." },
-  { key: "crisp_website_id", label: "Crisp Live Chat Website ID", placeholder: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" },
-  { key: "brevo_api_key", label: "Brevo (Sendinblue) API kulcs – Ügyfeletértesítő email", placeholder: "xkeysib-..." },
-  { key: "brevo_list_id", label: "Brevo lista ID (opcionális)", placeholder: "3" },
 ];
 
 export default function AdminSettings() {
@@ -77,7 +74,7 @@ export default function AdminSettings() {
               <button
                 onClick={() => handleSave(field.key)}
                 disabled={saving === field.key}
-                style={{ backgroundColor: "rgba(233,17,48,0.15)", border: "1px solid rgba(233,17,48,0.3)", borderRadius: "5px", color: "var(--g2a-amber)", cursor: "pointer", padding: "0 0.875rem", flexShrink: 0, opacity: saving === field.key ? 0.7 : 1 }}
+                style={{ backgroundColor: "rgba(233,17,48,0.15)", border: "1px solid rgba(233,17,48,0.3)", borderRadius: "5px", color: "#e91130", cursor: "pointer", padding: "0 0.875rem", flexShrink: 0, opacity: saving === field.key ? 0.7 : 1 }}
                 title="Mentés"
               >
                 <Save size={14} />

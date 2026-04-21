@@ -7,7 +7,6 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { notifyOwner } from "./_core/notification";
 import { storagePut } from "./storage";
 import * as db from "./db";
-import { sendWelcomeEmail, syncToBrevoList } from "./emailService";
 
 // Admin guard middleware
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -112,15 +111,10 @@ const newsletterRouter = router({
       const exists = await db.checkNewsletterSubscriberExists(input.email);
       if (exists) return { success: true, alreadySubscribed: true };
       await db.createNewsletterSubscriber({ email: input.email, name: input.name });
-      // Notify owner
       await notifyOwner({
         title: `Új hírlevél feliratkozó`,
         content: `**Email:** ${input.email}\n**Név:** ${input.name || "–"}`,
       });
-      // Send welcome email (non-blocking – fails gracefully if Brevo not configured)
-      sendWelcomeEmail(input.email, input.name).catch(console.warn);
-      // Sync to Brevo contact list (non-blocking)
-      syncToBrevoList(input.email, input.name).catch(console.warn);
       return { success: true, alreadySubscribed: false };
     }),
 });
@@ -373,6 +367,12 @@ const adminRouter = router({
   // Newsletter
   newsletter: router({
     list: adminProcedure.query(() => db.getAllNewsletterSubscribers()),
+    updateSegment: adminProcedure.input(z.object({
+      id: z.number(),
+      segment: z.string().optional(),
+      source: z.string().optional(),
+      tags: z.string().optional(),
+    })).mutation(({ input }) => db.updateNewsletterSubscriberSegment(input)),
     delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteNewsletterSubscriber(input.id)),
   }),
 
@@ -389,6 +389,7 @@ const adminRouter = router({
       ogImage: z.string().optional(),
       canonicalUrl: z.string().optional(),
       schemaJson: z.string().optional(),
+      keywords: z.string().optional(),
     })).mutation(({ input }) => db.upsertPageSeo(input)),
   }),
 

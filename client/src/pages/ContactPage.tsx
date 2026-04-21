@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { images } from "@/lib/images";
 
 export default function ContactPage() {
   const { lang, t } = useLanguage();
@@ -66,50 +65,43 @@ export default function ContactPage() {
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
         {/* Hero */}
-        <section style={{ backgroundColor: "var(--g2a-bg)", padding: "5rem 0", borderBottom: "1px solid var(--g2a-border)" }}>
+        <section style={{ backgroundColor: "#111", padding: "5rem 0" }}>
           <div className="g2a-container">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
-              <div>
-                <div className="g2a-section-label">{lang === "en" ? "Contact" : "Kapcsolat"}</div>
-                <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: "1.25rem" }}>
-                  {t("contact.title")}
-                </h1>
-                <p style={{ color: "var(--g2a-text-secondary)", fontSize: "1.125rem", lineHeight: 1.7 }}>
-                  {t("contact.subtitle")}
-                </p>
-              </div>
-              <div>
-                <img src={images.contactOffice} alt="G2A Marketing iroda" style={{ width: "100%", borderRadius: "16px", objectFit: "cover", height: "300px", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }} />
-              </div>
-            </div>
+            <div className="g2a-section-label">{lang === "en" ? "Contact" : "Kapcsolat"}</div>
+            <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "#ffffff", fontFamily: "Roboto Mono, monospace", marginBottom: "1.25rem" }}>
+              {t("contact.title")}
+            </h1>
+            <p style={{ color: "#b0b0b0", fontSize: "1.125rem", lineHeight: 1.7, maxWidth: "600px" }}>
+              {t("contact.subtitle")}
+            </p>
           </div>
         </section>
 
         {/* Main content */}
-        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
+        <section className="g2a-section" style={{ backgroundColor: "#1a1a1a" }}>
           <div className="g2a-container">
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "3rem", alignItems: "start" }}>
               {/* Contact Info */}
               <div>
-                <h2 style={{ color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", fontSize: "1.25rem", fontWeight: 600, marginBottom: "2rem" }}>
+                <h2 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.25rem", fontWeight: 600, marginBottom: "2rem" }}>
                   {lang === "en" ? "Contact Information" : "Elérhetőségeink"}
                 </h2>
                 <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
                   {contactItems.map(item => (
                     <div key={item.label} style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
-                      <div style={{ width: "44px", height: "44px", backgroundColor: "var(--g2a-amber-light)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--g2a-amber)", flexShrink: 0 }}>
+                      <div style={{ width: "44px", height: "44px", backgroundColor: "rgba(233,17,48,0.12)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", color: "#e91130", flexShrink: 0 }}>
                         {item.icon}
                       </div>
                       <div>
-                        <div style={{ color: "var(--g2a-text-muted)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.25rem", fontFamily: "'JetBrains Mono', monospace" }}>{item.label}</div>
+                        <div style={{ color: "#666", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.25rem", fontFamily: "Roboto Mono, monospace" }}>{item.label}</div>
                         {item.href ? (
-                          <a href={item.href} style={{ color: "var(--g2a-text-primary)", fontSize: "0.9375rem", textDecoration: "none" }}
-                            onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")}
+                          <a href={item.href} style={{ color: "#ffffff", fontSize: "0.9375rem", textDecoration: "none" }}
+                            onMouseEnter={e => (e.currentTarget.style.color = "#e91130")}
                             onMouseLeave={e => (e.currentTarget.style.color = "#ffffff")}>
                             {item.value}
                           </a>
                         ) : (
-                          <span style={{ color: "var(--g2a-text-primary)", fontSize: "0.9375rem" }}>{item.value}</span>
+                          <span style={{ color: "#ffffff", fontSize: "0.9375rem" }}>{item.value}</span>
                         )}
                       </div>
                     </div>
@@ -119,20 +111,20 @@ export default function ContactPage() {
 
               {/* Form */}
               <div className="g2a-card">
-                <h2 style={{ color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.5rem" }}>
+                <h2 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.5rem" }}>
                   {t("contact.formTitle")}
                 </h2>
-                <p style={{ color: "var(--g2a-text-muted)", fontSize: "0.875rem", marginBottom: "2rem" }}>
+                <p style={{ color: "#888", fontSize: "0.875rem", marginBottom: "2rem" }}>
                   {lang === "en" ? "Fill out the form and we'll get back to you within 24 hours." : "Töltse ki az alábbi űrlapot és 24 órán belül visszajelzünk."}
                 </p>
 
                 {success ? (
                   <div style={{ textAlign: "center", padding: "2rem 0" }}>
                     <CheckCircle size={48} style={{ color: "#10b981", margin: "0 auto 1.5rem", display: "block" }} />
-                    <h3 style={{ color: "#4ade80", fontFamily: "'JetBrains Mono', monospace", marginBottom: "0.5rem" }}>
+                    <h3 style={{ color: "#4ade80", fontFamily: "Roboto Mono, monospace", marginBottom: "0.5rem" }}>
                       {lang === "en" ? "Message sent!" : "Üzenet elküldve!"}
                     </h3>
-                    <p style={{ color: "var(--g2a-text-muted)", fontSize: "0.9rem", marginBottom: "1.5rem" }}>
+                    <p style={{ color: "#888", fontSize: "0.9rem", marginBottom: "1.5rem" }}>
                       {lang === "en" ? "We'll contact you soon." : "Hamarosan felvesszük Önnel a kapcsolatot."}
                     </p>
                     <button onClick={() => setSuccess(false)} className="g2a-btn-primary">

@@ -6,44 +6,49 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const LOGO_URL = "https://g2amarketing.hu/wp-content/uploads/2022/06/g2a_512x512_transparent_feher.png";
 
-const services = [
-  { title: "Lokalizáció", slug: "lokalizacio", desc: "Többnyelvű marketing" },
-  { title: "Arculattervezés", slug: "arculattervezes", desc: "Brand identitás" },
-  { title: "Hirdetéskezelés", slug: "hirdeteskezeles", desc: "PPC & Meta Ads" },
-  { title: "Közösségi Média", slug: "kozossegi-media", desc: "Social media menedzsment" },
-  { title: "Stratégiai Marketing", slug: "strategiai-marketing", desc: "Teljes marketing stratégia" },
-  { title: "Keresőoptimalizálás", slug: "seo", desc: "SEO & tartalommarketing" },
-  { title: "Webfejlesztés", slug: "webfejlesztes", desc: "Modern weboldalak" },
-  { title: "AI Marketing", slug: "ai-marketing", desc: "AI-alapú megoldások" },
-  { title: "Marketing Automatizáció", slug: "marketing-automatizacio", desc: "Workflow automatizálás" },
-  { title: "ESG Kommunikáció", slug: "esg-kommunikacio", desc: "Fenntarthatósági marketing" },
-  { title: "Employer Branding", slug: "employer-branding", desc: "Munkáltatói márkaépítés" },
-  { title: "Nemzetközi Marketing", slug: "nemzetkozi-marketing", desc: "Globális jelenlét" },
-];
-
-const industries = [
-  { label: "Egészségügy", slug: "marketing-egeszsegugyi-cegeknek" },
-  { label: "Szépségipar", slug: "marketing-szepsegipari-cegeknek" },
-  { label: "Mérnöki irodák", slug: "marketing-mernoki-irodaknak" },
-  { label: "Autóipar", slug: "marketing-autoipari-cegeknek" },
-  { label: "Ügyvédi irodák", slug: "marketing-ugyvedii-irodaknak" },
-  { label: "Technológia", slug: "marketing-technologiai-cegeknek" },
-  { label: "Önkormányzat", slug: "marketing-onkormanyzati-projekteknek" },
-  { label: "B2B cégek", slug: "marketing-b2b-cegeknek" },
-];
-
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [servicesOpen, setServicesOpen] = useState(false);
-  const [industriesOpen, setIndustriesOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [mobileIndustriesOpen, setMobileIndustriesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [servicesHovered, setServicesHovered] = useState(false);
+  const [industriesHovered, setIndustriesHovered] = useState(false);
   const [location] = useLocation();
   const { theme, toggleTheme, switchable } = useTheme();
   const { lang, setLang, t } = useLanguage();
   const servicesRef = useRef<HTMLDivElement>(null);
   const industriesRef = useRef<HTMLDivElement>(null);
+  const servicesTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const industriesTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isLight = theme === "light";
+
+  const services = [
+    { title: lang === "en" ? "Localization" : "Lokalizáció", slug: "lokalizacio", desc: lang === "en" ? "Multilingual marketing" : "Többnyelvű marketing" },
+    { title: lang === "en" ? "Brand Design" : "Arculattervezés", slug: "arculattervezes", desc: lang === "en" ? "Brand identity" : "Brand identitás" },
+    { title: lang === "en" ? "Ad Management" : "Hirdetéskezelés", slug: "hirdeteskezeles", desc: lang === "en" ? "PPC & Meta Ads" : "PPC & Meta Ads" },
+    { title: lang === "en" ? "Social Media" : "Közösségi Média", slug: "kozossegi-media", desc: lang === "en" ? "Social media management" : "Social media menedzsment" },
+    { title: lang === "en" ? "Strategic Marketing" : "Stratégiai Marketing", slug: "strategiai-marketing", desc: lang === "en" ? "Full marketing strategy" : "Teljes marketing stratégia" },
+    { title: lang === "en" ? "SEO" : "Keresőoptimalizálás", slug: "seo", desc: lang === "en" ? "SEO & content marketing" : "SEO & tartalommarketing" },
+    { title: lang === "en" ? "Web Development" : "Webfejlesztés", slug: "webfejlesztes", desc: lang === "en" ? "Modern websites" : "Modern weboldalak" },
+    { title: lang === "en" ? "AI Marketing" : "AI Marketing", slug: "ai-marketing", desc: lang === "en" ? "AI-powered solutions" : "AI-alapú megoldások" },
+    { title: lang === "en" ? "Marketing Automation" : "Marketing Automatizáció", slug: "marketing-automatizacio", desc: lang === "en" ? "Workflow automation" : "Workflow automatizálás" },
+    { title: lang === "en" ? "ESG Communication" : "ESG Kommunikáció", slug: "esg-kommunikacio", desc: lang === "en" ? "Sustainability marketing" : "Fenntarthatósági marketing" },
+    { title: lang === "en" ? "Employer Branding" : "Employer Branding", slug: "employer-branding", desc: lang === "en" ? "Employer brand building" : "Munkáltatói márkaépítés" },
+    { title: lang === "en" ? "International Marketing" : "Nemzetközi Marketing", slug: "nemzetkozi-marketing", desc: lang === "en" ? "Global presence" : "Globális jelenlét" },
+  ];
+
+  const industries = [
+    { label: lang === "en" ? "Healthcare" : "Egészségügy", slug: "marketing-egeszsegugyi-cegeknek" },
+    { label: lang === "en" ? "Beauty Industry" : "Szépségipar", slug: "marketing-szepsegipari-cegeknek" },
+    { label: lang === "en" ? "Engineering Firms" : "Mérnöki irodák", slug: "marketing-mernoki-irodaknak" },
+    { label: lang === "en" ? "Automotive" : "Autóipar", slug: "marketing-autoipari-cegeknek" },
+    { label: lang === "en" ? "Law Firms" : "Ügyvédi irodák", slug: "marketing-ugyvedii-irodaknak" },
+    { label: lang === "en" ? "Technology" : "Technológia", slug: "marketing-technologiai-cegeknek" },
+    { label: lang === "en" ? "Municipality" : "Önkormányzat", slug: "marketing-onkormanyzati-projekteknek" },
+    { label: lang === "en" ? "B2B Companies" : "B2B cégek", slug: "marketing-b2b-cegeknek" },
+    { label: lang === "en" ? "Hairdressers" : "Fodrászat", slug: "marketing-fodrasszatnak" },
+    { label: lang === "en" ? "Fitness" : "Fitness", slug: "marketing-fitness-cegeknek" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -53,18 +58,26 @@ export default function Navigation() {
 
   useEffect(() => {
     setMobileOpen(false);
-    setServicesOpen(false);
-    setIndustriesOpen(false);
+    setServicesHovered(false);
+    setIndustriesHovered(false);
   }, [location]);
 
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (servicesRef.current && !servicesRef.current.contains(e.target as Node)) setServicesOpen(false);
-      if (industriesRef.current && !industriesRef.current.contains(e.target as Node)) setIndustriesOpen(false);
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
+  const handleServicesEnter = () => {
+    if (servicesTimeout.current) clearTimeout(servicesTimeout.current);
+    setServicesHovered(true);
+    setIndustriesHovered(false);
+  };
+  const handleServicesLeave = () => {
+    servicesTimeout.current = setTimeout(() => setServicesHovered(false), 120);
+  };
+  const handleIndustriesEnter = () => {
+    if (industriesTimeout.current) clearTimeout(industriesTimeout.current);
+    setIndustriesHovered(true);
+    setServicesHovered(false);
+  };
+  const handleIndustriesLeave = () => {
+    industriesTimeout.current = setTimeout(() => setIndustriesHovered(false), 120);
+  };
 
   const navBg = scrolled
     ? isLight ? "rgba(255,255,255,0.96)" : "rgba(10,10,10,0.96)"
@@ -84,12 +97,12 @@ export default function Navigation() {
         <div className="g2a-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
             <a href="tel:+36301902575" style={{ display: "flex", alignItems: "center", gap: "0.375rem", color: "var(--g2a-text-muted)", textDecoration: "none", fontSize: "0.8rem", fontFamily: "Inter, sans-serif", transition: "color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")}
+              onMouseEnter={e => (e.currentTarget.style.color = "#e91130")}
               onMouseLeave={e => (e.currentTarget.style.color = "var(--g2a-text-muted)")}>
               <Phone size={11} /> +36 30 190 2575
             </a>
             <a href="mailto:info@g2amarketing.hu" style={{ display: "flex", alignItems: "center", gap: "0.375rem", color: "var(--g2a-text-muted)", textDecoration: "none", fontSize: "0.8rem", fontFamily: "Inter, sans-serif", transition: "color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")}
+              onMouseEnter={e => (e.currentTarget.style.color = "#e91130")}
               onMouseLeave={e => (e.currentTarget.style.color = "var(--g2a-text-muted)")}>
               <Mail size={11} /> info@g2amarketing.hu
             </a>
@@ -106,7 +119,7 @@ export default function Navigation() {
               ].map((s, i) => (
                 <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
                   style={{ color: "var(--g2a-text-muted)", transition: "color 0.2s" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")}
+                  onMouseEnter={e => (e.currentTarget.style.color = "#e91130")}
                   onMouseLeave={e => (e.currentTarget.style.color = "var(--g2a-text-muted)")}>
                   {s.icon}
                 </a>
@@ -132,24 +145,29 @@ export default function Navigation() {
 
           {/* Desktop nav */}
           <div style={{ display: "flex", alignItems: "center", gap: "0.125rem" }} className="hidden md:flex">
-            <NavLink href="/" label={lang === "hu" ? "Főoldal" : "Home"} current={location} isLight={isLight} />
+            <NavLink href="/" label={lang === "en" ? "Home" : "Főoldal"} current={location} isLight={isLight} />
 
-            {/* Services mega dropdown */}
-            <div ref={servicesRef} style={{ position: "relative" }}>
-              <button onClick={() => { setServicesOpen(p => !p); setIndustriesOpen(false); }}
+            {/* Services mega dropdown – hover triggered */}
+            <div
+              ref={servicesRef}
+              style={{ position: "relative" }}
+              onMouseEnter={handleServicesEnter}
+              onMouseLeave={handleServicesLeave}
+            >
+              <button
                 style={{
                   display: "flex", alignItems: "center", gap: "0.25rem",
                   padding: "0.5rem 0.875rem", borderRadius: "6px",
                   fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: 500,
-                  color: servicesOpen ? "var(--g2a-amber)" : "var(--g2a-text-secondary)",
+                  color: servicesHovered ? "#e91130" : "var(--g2a-text-secondary)",
                   background: "none", border: "none", cursor: "pointer", transition: "color 0.2s",
                 }}>
-                {t("nav.services")}
-                <ChevronDown size={13} style={{ transform: servicesOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+                {lang === "en" ? "Services" : "Szolgáltatások"}
+                <ChevronDown size={13} style={{ transform: servicesHovered ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
               </button>
-              {servicesOpen && (
+              {servicesHovered && (
                 <div style={{
-                  position: "absolute", top: "calc(100% + 8px)", left: "50%", transform: "translateX(-40%)",
+                  position: "absolute", top: "calc(100% + 2px)", left: "50%", transform: "translateX(-40%)",
                   width: "640px", backgroundColor: dropdownBg,
                   border: `1px solid ${dropdownBorder}`,
                   borderRadius: "14px", padding: "1.25rem",
@@ -168,30 +186,35 @@ export default function Navigation() {
                     </Link>
                   ))}
                   <div style={{ gridColumn: "1/-1", borderTop: `1px solid ${dropdownBorder}`, marginTop: "0.5rem", paddingTop: "0.75rem" }}>
-                    <Link href="/szolgaltatasok" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "0.375rem", color: "var(--g2a-amber)", fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: 600 }}>
-                      {lang === "hu" ? "Összes szolgáltatás megtekintése" : "View all services"} <ArrowRight size={14} />
+                    <Link href="/szolgaltatasok" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "0.375rem", color: "#e91130", fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: 600 }}>
+                      {lang === "en" ? "View all services" : "Összes szolgáltatás megtekintése"} <ArrowRight size={14} />
                     </Link>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Industries dropdown */}
-            <div ref={industriesRef} style={{ position: "relative" }}>
-              <button onClick={() => { setIndustriesOpen(p => !p); setServicesOpen(false); }}
+            {/* Industries dropdown – hover triggered */}
+            <div
+              ref={industriesRef}
+              style={{ position: "relative" }}
+              onMouseEnter={handleIndustriesEnter}
+              onMouseLeave={handleIndustriesLeave}
+            >
+              <button
                 style={{
                   display: "flex", alignItems: "center", gap: "0.25rem",
                   padding: "0.5rem 0.875rem", borderRadius: "6px",
                   fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: 500,
-                  color: industriesOpen ? "var(--g2a-amber)" : "var(--g2a-text-secondary)",
+                  color: industriesHovered ? "#e91130" : "var(--g2a-text-secondary)",
                   background: "none", border: "none", cursor: "pointer", transition: "color 0.2s",
                 }}>
-                {t("nav.industries")}
-                <ChevronDown size={13} style={{ transform: industriesOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+                {lang === "en" ? "Industries" : "Iparágak"}
+                <ChevronDown size={13} style={{ transform: industriesHovered ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
               </button>
-              {industriesOpen && (
+              {industriesHovered && (
                 <div style={{
-                  position: "absolute", top: "calc(100% + 8px)", left: "50%", transform: "translateX(-50%)",
+                  position: "absolute", top: "calc(100% + 2px)", left: "50%", transform: "translateX(-50%)",
                   width: "260px", backgroundColor: dropdownBg,
                   border: `1px solid ${dropdownBorder}`,
                   borderRadius: "12px", padding: "0.75rem",
@@ -202,10 +225,10 @@ export default function Navigation() {
                     <Link key={ind.slug} href={`/iparagi/${ind.slug}`} style={{ textDecoration: "none" }}>
                       <div style={{
                         padding: "0.625rem 0.75rem", borderRadius: "6px",
-                        fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: 500,
+                        fontFamily: "Inter, sans-serif", fontSize: "0.875rem",
                         color: "var(--g2a-text-secondary)", transition: "all 0.15s", cursor: "pointer",
                       }}
-                        onMouseEnter={e => { e.currentTarget.style.backgroundColor = isLight ? "#f5f5f5" : "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "var(--g2a-amber)"; }}
+                        onMouseEnter={e => { e.currentTarget.style.backgroundColor = isLight ? "#f5f5f5" : "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "#e91130"; }}
                         onMouseLeave={e => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "var(--g2a-text-secondary)"; }}>
                         {ind.label}
                       </div>
@@ -215,11 +238,10 @@ export default function Navigation() {
               )}
             </div>
 
-            <NavLink href="/rolunk" label={t("nav.about")} current={location} isLight={isLight} />
-            <NavLink href="/referenciak" label={t("nav.references")} current={location} isLight={isLight} />
-            <NavLink href="/hirek" label={t("nav.blog")} current={location} isLight={isLight} />
-            <NavLink href="/ingyenes-seo-audit" label={lang === "hu" ? "SEO Audit" : "SEO Audit"} current={location} isLight={isLight} />
-            <NavLink href="/kapcsolat" label={t("nav.contact")} current={location} isLight={isLight} />
+            <NavLink href="/rolunk" label={lang === "en" ? "About Us" : "Rólunk"} current={location} isLight={isLight} />
+            <NavLink href="/referenciak" label={lang === "en" ? "References" : "Referenciák"} current={location} isLight={isLight} />
+            <NavLink href="/hirek" label={lang === "en" ? "Blog" : "Blog"} current={location} isLight={isLight} />
+            <NavLink href="/kapcsolat" label={lang === "en" ? "Contact" : "Kapcsolat"} current={location} isLight={isLight} />
           </div>
 
           {/* Right actions */}
@@ -233,7 +255,7 @@ export default function Navigation() {
                   display: "flex", alignItems: "center", justifyContent: "center",
                   color: "var(--g2a-text-secondary)", cursor: "pointer", transition: "all 0.2s",
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--g2a-amber)"; e.currentTarget.style.color = "var(--g2a-amber)"; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "#e91130"; e.currentTarget.style.color = "#e91130"; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--g2a-border)"; e.currentTarget.style.color = "var(--g2a-text-secondary)"; }}>
                 {isLight ? <Moon size={15} /> : <Sun size={15} />}
               </button>
@@ -247,9 +269,9 @@ export default function Navigation() {
                 padding: "0.35rem 0.625rem", borderRadius: "6px",
                 backgroundColor: "var(--g2a-bg-card)", border: "1px solid var(--g2a-border)",
                 color: "var(--g2a-text-secondary)", cursor: "pointer", transition: "all 0.2s",
-                fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", fontWeight: 600,
+                fontFamily: "Roboto Mono, monospace", fontSize: "0.75rem", fontWeight: 600,
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--g2a-amber)"; e.currentTarget.style.color = "var(--g2a-amber)"; }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "#e91130"; e.currentTarget.style.color = "#e91130"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--g2a-border)"; e.currentTarget.style.color = "var(--g2a-text-secondary)"; }}
             >
               <span style={{ fontSize: "1rem", lineHeight: 1 }}>{lang === "hu" ? "🇬🇧" : "🇭🇺"}</span>
@@ -257,7 +279,7 @@ export default function Navigation() {
             </button>
             <Link href="/ingyenes-audit" style={{ textDecoration: "none" }} className="hidden md:inline-flex">
               <span className="g2a-btn-primary" style={{ padding: "0.625rem 1.25rem", fontSize: "0.875rem" }}>
-                {t("nav.freeAudit")}
+                {lang === "en" ? "Free Audit" : "Ingyenes Audit"}
               </span>
             </Link>
             <button onClick={() => setMobileOpen(!mobileOpen)}
@@ -277,7 +299,7 @@ export default function Navigation() {
             maxHeight: "80vh", overflowY: "auto",
           }}>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.125rem" }}>
-              <MobileNavLink href="/" label={lang === "hu" ? "Főoldal" : "Home"} isLight={isLight} />
+              <MobileNavLink href="/" label={lang === "en" ? "Home" : "Főoldal"} isLight={isLight} />
               <button onClick={() => setMobileServicesOpen(p => !p)}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -285,7 +307,7 @@ export default function Navigation() {
                   fontFamily: "Inter, sans-serif", fontSize: "0.9rem", fontWeight: 500,
                   color: "var(--g2a-text-secondary)", background: "none", border: "none", cursor: "pointer",
                 }}>
-                {t("nav.services")}
+                {lang === "en" ? "Services" : "Szolgáltatások"}
                 <ChevronDown size={14} style={{ transform: mobileServicesOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
               </button>
               {mobileServicesOpen && (
@@ -293,19 +315,30 @@ export default function Navigation() {
                   {services.map(s => <MobileNavLink key={s.slug} href={`/szolgaltatasok/${s.slug}`} label={s.title} isLight={isLight} />)}
                 </div>
               )}
-              <div style={{ padding: "0.375rem 0.75rem", color: "var(--g2a-text-muted)", fontSize: "0.7rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "'JetBrains Mono', monospace", marginTop: "0.25rem" }}>{t("nav.industries")}</div>
-              <div style={{ paddingLeft: "1rem", display: "flex", flexDirection: "column", gap: "0.125rem" }}>
-                {industries.map(ind => <MobileNavLink key={ind.slug} href={`/iparagi/${ind.slug}`} label={ind.label} isLight={isLight} />)}
-              </div>
+              <button onClick={() => setMobileIndustriesOpen(p => !p)}
+                style={{
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  padding: "0.625rem 0.75rem", borderRadius: "8px",
+                  fontFamily: "Inter, sans-serif", fontSize: "0.9rem", fontWeight: 500,
+                  color: "var(--g2a-text-secondary)", background: "none", border: "none", cursor: "pointer",
+                }}>
+                {lang === "en" ? "Industries" : "Iparágak"}
+                <ChevronDown size={14} style={{ transform: mobileIndustriesOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+              </button>
+              {mobileIndustriesOpen && (
+                <div style={{ paddingLeft: "1rem", display: "flex", flexDirection: "column", gap: "0.125rem" }}>
+                  {industries.map(ind => <MobileNavLink key={ind.slug} href={`/iparagi/${ind.slug}`} label={ind.label} isLight={isLight} />)}
+                </div>
+              )}
               <div style={{ height: "1px", backgroundColor: "var(--g2a-border)", margin: "0.75rem 0" }} />
-              <MobileNavLink href="/rolunk" label={t("nav.about")} isLight={isLight} />
-              <MobileNavLink href="/referenciak" label={t("nav.references")} isLight={isLight} />
-              <MobileNavLink href="/hirek" label={t("nav.blog")} isLight={isLight} />
-              <MobileNavLink href="/kapcsolat" label={t("nav.contact")} isLight={isLight} />
+              <MobileNavLink href="/rolunk" label={lang === "en" ? "About Us" : "Rólunk"} isLight={isLight} />
+              <MobileNavLink href="/referenciak" label={lang === "en" ? "References" : "Referenciák"} isLight={isLight} />
+              <MobileNavLink href="/hirek" label={lang === "en" ? "Blog" : "Blog"} isLight={isLight} />
+              <MobileNavLink href="/kapcsolat" label={lang === "en" ? "Contact" : "Kapcsolat"} isLight={isLight} />
               <div style={{ marginTop: "1rem" }}>
                 <Link href="/ingyenes-audit" style={{ textDecoration: "none" }}>
                   <span className="g2a-btn-primary" style={{ width: "100%", justifyContent: "center", display: "flex" }}>
-                    {t("nav.freeAudit")}
+                    {lang === "en" ? "Free Marketing Audit" : "Ingyenes Marketing Audit"}
                   </span>
                 </Link>
               </div>
@@ -324,14 +357,14 @@ function NavLink({ href, label, current, isLight }: { href: string; label: strin
       <span style={{
         display: "block", padding: "0.5rem 0.875rem", borderRadius: "6px",
         fontFamily: "Inter, sans-serif", fontSize: "0.875rem", fontWeight: isActive ? 600 : 500,
-        color: isActive ? "var(--g2a-amber)" : "var(--g2a-text-secondary)",
+        color: isActive ? "#e91130" : "var(--g2a-text-secondary)",
         transition: "color 0.2s, background-color 0.2s",
         position: "relative",
       }}
         onMouseEnter={e => { e.currentTarget.style.color = "var(--g2a-text-primary)"; e.currentTarget.style.backgroundColor = isLight ? "rgba(0,0,0,0.04)" : "rgba(255,255,255,0.04)"; }}
-        onMouseLeave={e => { e.currentTarget.style.color = isActive ? "var(--g2a-amber)" : "var(--g2a-text-secondary)"; e.currentTarget.style.backgroundColor = "transparent"; }}>
+        onMouseLeave={e => { e.currentTarget.style.color = isActive ? "#e91130" : "var(--g2a-text-secondary)"; e.currentTarget.style.backgroundColor = "transparent"; }}>
         {label}
-        {isActive && <span style={{ position: "absolute", bottom: "2px", left: "50%", transform: "translateX(-50%)", width: "18px", height: "2px", backgroundColor: "var(--g2a-amber)", borderRadius: "1px" }} />}
+        {isActive && <span style={{ position: "absolute", bottom: "2px", left: "50%", transform: "translateX(-50%)", width: "18px", height: "2px", backgroundColor: "#e91130", borderRadius: "1px" }} />}
       </span>
     </Link>
   );
@@ -345,7 +378,7 @@ function MobileNavLink({ href, label, isLight }: { href: string; label: string; 
         fontFamily: "Inter, sans-serif", fontSize: "0.9rem", fontWeight: 500,
         color: "var(--g2a-text-secondary)", transition: "all 0.15s", cursor: "pointer",
       }}
-        onMouseEnter={e => { e.currentTarget.style.backgroundColor = isLight ? "rgba(0,0,0,0.04)" : "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "var(--g2a-amber)"; }}
+        onMouseEnter={e => { e.currentTarget.style.backgroundColor = isLight ? "rgba(0,0,0,0.04)" : "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "#e91130"; }}
         onMouseLeave={e => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "var(--g2a-text-secondary)"; }}>
         {label}
       </div>

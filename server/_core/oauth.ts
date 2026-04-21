@@ -9,24 +9,6 @@ function getQueryParam(req: Request, key: string): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
-function parseReturnPath(state: string): string {
-  try {
-    const decoded = atob(state);
-    // New format: JSON with { redirectUri, returnPath }
-    const parsed = JSON.parse(decoded);
-    if (parsed && typeof parsed.returnPath === "string") {
-      // Validate returnPath – must be a relative path starting with /
-      const rp = parsed.returnPath;
-      if (rp.startsWith("/") && !rp.startsWith("//")) {
-        return rp;
-      }
-    }
-  } catch {
-    // Legacy format: state was just btoa(redirectUri) – redirect to /
-  }
-  return "/";
-}
-
 export function registerOAuthRoutes(app: Express) {
   app.get("/api/oauth/callback", async (req: Request, res: Response) => {
     const code = getQueryParam(req, "code");
@@ -62,9 +44,28 @@ export function registerOAuthRoutes(app: Express) {
       const cookieOptions = getSessionCookieOptions(req);
       res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
 
-      // Redirect to the returnPath encoded in state (e.g. /admin)
-      const returnPath = parseReturnPath(state);
-      res.redirect(302, returnPath);
+      // Parse returnPath from state if present
+      let redirectTo = "/";
+      try {
+        const decoded = Buffer.from(state, "base64").toString("utf-8");
+        // Try JSON format first (new format with returnPath)
+        if (decoded.startsWith("{")) {
+          const parsed = JSON.parse(decoded);
+          if (parsed.returnPath) {
+            redirectTo = parsed.returnPath;
+          } else if (parsed.redirectUri) {
+            const url = new URL(parsed.redirectUri);
+            redirectTo = url.pathname || "/";
+          }
+        } else {
+          // Legacy format: plain redirectUri
+          const url = new URL(decoded);
+          redirectTo = url.pathname || "/";
+        }
+      } catch {
+        redirectTo = "/";
+      }
+      res.redirect(302, redirectTo);
     } catch (error) {
       console.error("[OAuth] Callback failed", error);
       res.status(500).json({ error: "OAuth callback failed" });

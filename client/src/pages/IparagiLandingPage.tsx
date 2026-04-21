@@ -31,12 +31,10 @@ type IndustryData = {
   solutions: { title: string; desc: string }[];
   results: { num: string; label: string }[];
   caseStudy: { client: string; problem: string; solution: string; result: string };
-  heroImage?: string;
 };
 
 const INDUSTRY_DATA: Record<string, IndustryData> = {
   "marketing-egeszsegugyi-cegeknek": {
-    heroImage: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop",
     title: "Marketing egészségügyi cégeknek",
     subtitle: "Klinikák, magánorvosok és egészségügyi vállalkozások számára",
     metaTitle: "Marketing Egészségügyi Cégeknek – G2A Marketing | SEO, Google Ads, Webfejlesztés",
@@ -70,7 +68,6 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     },
   },
   "marketing-szepsegipari-cegeknek": {
-    heroImage: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80&auto=format&fit=crop",
     title: "Marketing szépségipari cégeknek",
     subtitle: "Szépségszalonok, kozmetikusok és wellness vállalkozások számára",
     metaTitle: "Marketing Szépségipari Cégeknek – G2A Marketing | Social Media, Instagram, Meta Ads",
@@ -104,8 +101,7 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     },
   },
   "marketing-mernoki-irodaknak": {
-    heroImage: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&q=80&auto=format&fit=crop",
-    title: "Marketing mérnöki iródáknak",
+    title: "Marketing mérnöki irodáknak",
     subtitle: "Tervező irodák, mérnöki vállalkozások és műszaki cégek számára",
     metaTitle: "Marketing Mérnöki Irodáknak – G2A Marketing | B2B Lead Generálás, SEO, LinkedIn",
     metaDesc: "Speciális B2B marketing mérnöki irodáknak és tervező vállalkozásoknak. SEO, LinkedIn, webfejlesztés és lead generálás.",
@@ -138,7 +134,6 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     },
   },
   "marketing-autoipari-cegeknek": {
-    heroImage: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&q=80&auto=format&fit=crop",
     title: "Marketing autóipari cégeknek",
     subtitle: "Autókereskedők, szervizek és autóipari vállalkozások számára",
     metaTitle: "Marketing Autóipari Cégeknek – G2A Marketing | Google Ads, Meta Ads, SEO",
@@ -172,8 +167,7 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     },
   },
   "marketing-ugyvedii-irodaknak": {
-    heroImage: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80&auto=format&fit=crop",
-    title: "Marketing ügyvédi iródáknak",
+    title: "Marketing ügyvédi irodáknak",
     subtitle: "Ügyvédi irodák és jogi vállalkozások számára",
     metaTitle: "Marketing Ügyvédi Irodáknak – G2A Marketing | SEO, Google Ads, Brand Design",
     metaDesc: "Speciális marketing ügyvédi irodáknak. SEO, Google Ads, prémium brand design és tartalommarketing.",
@@ -206,7 +200,6 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     },
   },
   "marketing-technologiai-cegeknek": {
-    heroImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80&auto=format&fit=crop",
     title: "Marketing technológiai cégeknek",
     subtitle: "SaaS vállalatok, tech startupok és IT cégek számára",
     metaTitle: "Marketing Technológiai Cégeknek – G2A Marketing | B2B SaaS, LinkedIn, SEO",
@@ -239,9 +232,8 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
       result: "+5 új piac, +280% demo foglalás 12 hónap alatt",
     },
   },
-   "marketing-onkormanyzatoknak": {
-    heroImage: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&q=80&auto=format&fit=crop",
-    title: "Marketing önkormányzatoknak",
+  "marketing-onkormanyzati-projekteknek": {
+    title: "Marketing önkormányzati projekteknek",
     subtitle: "Önkormányzatok, közintézmények és közösségi projektek számára",
     metaTitle: "Marketing Önkormányzati Projekteknek – G2A Marketing | Közösségi Kommunikáció",
     metaDesc: "Speciális marketing önkormányzatoknak és közintézményeknek. Közösségi kommunikáció, webfejlesztés, social media és tájékoztatási kampányok.",
@@ -274,13 +266,12 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
     },
   },
   "marketing-b2b-cegeknek": {
-    heroImage: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&q=80&auto=format&fit=crop",
     title: "Marketing B2B cégeknek",
     subtitle: "Vállalati ügyfeleket kiszolgáló cégek és B2B vállalkozások számára",
     metaTitle: "Marketing B2B Cégeknek – G2A Marketing | Lead Generálás, LinkedIn, SEO",
     metaDesc: "Speciális B2B marketing megoldások vállalati ügyfeleket kiszolgáló cégeknek. Lead generálás, LinkedIn Ads, SEO és marketing automatizáció.",
     icon: <Building2 size={32} />,
-    color: "var(--g2a-amber)",
+    color: "#e91130",
     heroDesc: "A B2B marketingben a hosszú értékesítési ciklus, a döntéshozók elérése és a mérhető ROI a legfontosabb. LinkedIn-től marketing automatizációig – mindezt értjük.",
     challenges: [
       "Döntéshozók elérése és megszólítása",
@@ -306,186 +297,6 @@ const INDUSTRY_DATA: Record<string, IndustryData> = {
       solution: "LinkedIn + marketing automatizáció + ABM",
       result: "+180% qualified lead, -40% sales ciklus 6 hónap alatt",
     },
-  },
-  "marketing-fodraszatoknak": {
-    title: "Marketing fodrászatoknak és szépségszalonoknak",
-    subtitle: "Fodrászatok, körömszalonok és szépségszalonok számára",
-    metaTitle: "Marketing Fodrászatoknak – G2A Marketing | Helyi SEO, Instagram, Google Ads",
-    metaDesc: "Fodrászatok és szépségszalonok marketing megoldásai: helyi SEO, Instagram marketing, online foglalás, Google Ads kampanyok.",
-    icon: <span style={{fontSize:'1.75rem'}}>✂️</span>,
-    color: "#f472b6",
-    heroDesc: "A szépségipar a vizualitásról szól. Segítünk, hogy az Instagram-feed, a Google-profil és az online foglalási rendszer egyetlen erős márkává álljon össze.",
-    challenges: ["Helyi verseny – több szalon ugyanazon a területen","Visszatérő vendégek megőrzése","Online foglalás növelése","Instagram és TikTok jelenlét építése","Szezonális kampanyok kezelése"],
-    solutions: [
-      { title: "Helyi SEO & Google My Business", desc: "Körzetes keresések, értékelések kezelése, térkép-optimalizalás" },
-      { title: "Instagram & TikTok marketing", desc: "Before/after tartalmak, Reels, influencer egyuttműködés" },
-      { title: "Online foglalási rendszer", desc: "Automatikus emlékeztetők, visszajelzés kérés, hűségprogramok" },
-      { title: "Google Ads", desc: "Helyi hirdetések, akció-kampanyok, üj vendég akvizíció" },
-    ],
-    results: [{num:"+220%",label:"Online foglalás"},{num:"+180%",label:"Instagram követők"},{num:"+95%",label:"Visszatérő vendégek"}],
-    caseStudy: { client: "Budapest belvárosi fodrászat", problem: "Alacsony online jelenlét, kevés új vendég", solution: "Instagram marketing + Google My Business + online foglalás", result: "+220% online foglalás 4 hónap alatt" },
-  },
-  "marketing-fitnesz-studionak": {
-    title: "Marketing fitnesz studióknak és edzőtermeknek",
-    subtitle: "Edzőtermek, jóga studiók, crossfit box-ok számára",
-    metaTitle: "Marketing Fitnesz Studióknak – G2A Marketing | Tagság növelés, Facebook Ads",
-    metaDesc: "Fitnesz studiók és edzőtermek marketing megoldásai: tagság növelés, Facebook Ads, email marketing, hűségprogramok.",
-    icon: <span style={{fontSize:'1.75rem'}}>🏋️</span>,
-    color: "#f59e0b",
-    heroDesc: "A fitneszipar az eredményekről szól. Segítünk új tagokat szerezni, a meglévőket megőrizni és a márkádat az edzőtermen túl is építeni.",
-    challenges: ["Magas tagság lemorzsólódás","Új tagok szerzése versenyés piacon","Szezonális ingadozás","Online vs. offline verseny","Közösség építése"],
-    solutions: [
-      { title: "Facebook & Instagram Ads", desc: "Tagság akciók, trial ajánlatok, retargeting kampanyok" },
-      { title: "Email marketing automatizáció", desc: "Onboarding sorozat, reaktiválás, hűségprogramok" },
-      { title: "Közösségi média menedzsment", desc: "Eredmény-sztori, edző bemutató, challenge kampanyok" },
-      { title: "Weboldal & SEO", desc: "Helyi SEO, online órarend, online bérlet vásárlás" },
-    ],
-    results: [{num:"+310%",label:"Új tagok"},{num:"-45%",label:"Lemorzsólódás"},{num:"3.2x",label:"ROI"}],
-    caseStudy: { client: "Budapest CrossFit Box", problem: "Magas churn, alacsony új tag szerzés", solution: "Facebook Ads + email automatizáció", result: "+310% új tag, -45% lemorzsólódás 5 hónap alatt" },
-  },
-  "marketing-jogi-irodaknak": {
-    title: "Marketing jogi irodaknak és ügyvédeknek",
-    subtitle: "Jogi irodak, ügyvédek és jogi tanácsadók számára",
-    metaTitle: "Marketing Jogi Irodaknak – G2A Marketing | SEO, Google Ads, Bizalomépítés",
-    metaDesc: "Jogi irodak és ügyvédek marketing megoldásai: SEO, Google Ads, bizalomépítés, tartalommarketing, lead gen.",
-    icon: <span style={{fontSize:'1.75rem'}}>⚖️</span>,
-    color: "#6366f1",
-    heroDesc: "A jogi szektor marketingében a bizalom az első. Segítünk, hogy a potenciális ügyfelek megtaláljanak és azonnal megbízzának benned.",
-    challenges: ["Etikai korlátok a jogi reklámozásban","Bizalomépítés online környezetben","Verseny a nagy irodakkal","Szakterület-specifikus kulcsszavak","Lead minőség"],
-    solutions: [
-      { title: "Jogi SEO", desc: "Szakterület-specifikus kulcsszavak, helyi keresések, Google My Business" },
-      { title: "Tartalommarketing", desc: "Jogi blog, GYIK oldalak, ügyvédi cikkek – bizalomépítés" },
-      { title: "Google Ads", desc: "Célzott kampanyok, minősített leadek, etikai megfelelés" },
-      { title: "Weboldal fejlesztés", desc: "Professzionális megjelenés, ügyvéd bemutató, kapcsolatfelvétel" },
-    ],
-    results: [{num:"+280%",label:"Organikus forgalom"},{num:"+190%",label:"Kapcsolatfelvétel"},{num:"+150%",label:"Minősített lead"}],
-    caseStudy: { client: "Budapest-i ügyvédi iroda", problem: "Alacsony online láthatóság", solution: "SEO + tartalommarketing + Google Ads", result: "+280% organikus forgalom 6 hónap alatt" },
-  },
-  "marketing-ingatlan-cegeknek": {
-    title: "Marketing ingatlan cégeknek és ügynökségeknek",
-    subtitle: "Ingatlaniroda, fejlesztő és ingatlanügynök számára",
-    metaTitle: "Marketing Ingatlan Cégeknek – G2A Marketing | SEO, Facebook Ads, Lead Gen",
-    metaDesc: "Ingatlan cégek marketing megoldásai: Facebook Ads, Google Ads, SEO, lead gen, ingatlan portál integráció.",
-    icon: <span style={{fontSize:'1.75rem'}}>🏠</span>,
-    color: "#0ea5e9",
-    heroDesc: "Az ingatlanpiac versenyében az első benyomás dönt. Segítünk, hogy a vevők és bérlők megtaláljanak és azonnal cselekedjenek.",
-    challenges: ["Magas verseny az ingatlanpiacon","Hosszú értékesítési ciklus","Minősített vevők vs. érdeklődők","Vizuális tartalom igény","Szezonális piac"],
-    solutions: [
-      { title: "Facebook & Instagram Ads", desc: "Ingatlan hirdetések, retargeting, lookalike közönség" },
-      { title: "Google Ads", desc: "Keresési kampanyok, Display, YouTube videó hirdetések" },
-      { title: "SEO & tartalommarketing", desc: "Ingatlanpiac blog, helyi SEO, portál integráció" },
-      { title: "CRM & lead menedzsment", desc: "Automatikus követés, lead minősítés, értékesítési tölcsér" },
-    ],
-    results: [{num:"+340%",label:"Minősített lead"},{num:"-30%",label:"Lead költség"},{num:"4.2x",label:"ROI"}],
-    caseStudy: { client: "Budapest-i ingatlaniroda", problem: "Drága, alacsony minőségű leadek", solution: "Facebook Ads + CRM automatizáció + SEO", result: "+340% minősített lead 4 hónap alatt" },
-  },
-  "marketing-oktatas-cegeknek": {
-    title: "Marketing oktatási intézményeknek és kurzusoknak",
-    subtitle: "Iskolák, tanfolyamok, online kurzusok és oktatási cégek számára",
-    metaTitle: "Marketing Oktatási Cégeknek – G2A Marketing | SEO, Facebook Ads, Bejratkozás",
-    metaDesc: "Oktatási intézmények és kurzusok marketing megoldásai: SEO, Facebook Ads, email marketing, bejratkozás növelés.",
-    icon: <span style={{fontSize:'1.75rem'}}>🎓</span>,
-    color: "#8b5cf6",
-    heroDesc: "Az oktatási szektor marketingében a bizalom és a hitelesség az első. Segítünk, hogy a diákok megtaláljanak és beiratkozzanak.",
-    challenges: ["Szezonális bejratkozási időszakok","Verseny az online kurzusplatformokkal","Szülők és diákok egyszerre","Hosszú döntési folyamat","Akkreditáció kommunikációja"],
-    solutions: [
-      { title: "SEO & tartalommarketing", desc: "Kurzus-specifikus kulcsszavak, oktatási blog, FAQ oldalak" },
-      { title: "Facebook & Instagram Ads", desc: "Célzott kampanyok diákoknak és szülőknek" },
-      { title: "Email marketing", desc: "Bejratkozási sorozat, open house meghívók, alumni kommunikáció" },
-      { title: "Weboldal fejlesztés", desc: "Online bejratkozás, kurzus katalógus, eredmény-bemutató" },
-    ],
-    results: [{num:"+290%",label:"Bejratkozás"},{num:"+220%",label:"Weboldal forgalom"},{num:"3.8x",label:"ROI"}],
-    caseStudy: { client: "Budapest-i nyelviskolai hálózat", problem: "Alacsony online bejratkozás", solution: "SEO + Facebook Ads + email automatizáció", result: "+290% bejratkozás 5 hónap alatt" },
-  },
-  "marketing-vendeglatas-cegeknek": {
-    title: "Marketing vendéglátóhelyek és éttermek számára",
-    subtitle: "Éttermek, kávézók, bárok és vendéglátó láncok számára",
-    metaTitle: "Marketing Éttermeknek – G2A Marketing | Helyi SEO, Instagram, Google Ads",
-    metaDesc: "Vendéglátóhelyek és éttermek marketing megoldásai: helyi SEO, Instagram, Google Ads, asztalfoglalás növelés.",
-    icon: <span style={{fontSize:'1.75rem'}}>🍽️</span>,
-    color: "#ef4444",
-    heroDesc: "A vendéglátás az élményekről szól. Segítünk, hogy az éttermed tele legyen vendégekkel – hétköznap és hétvégén egyaránt.",
-    challenges: ["Helyi verseny","Hétköznapi forgalom növelése","Online értékelések kezelése","Szezonális kampanyok","Delivery és elvitel forgalom"],
-    solutions: [
-      { title: "Helyi SEO & Google My Business", desc: "Térkép-optimalizalás, értékelések, nyíltártás" },
-      { title: "Instagram & TikTok marketing", desc: "Ételfotók, Reels, influencer egyuttműködés" },
-      { title: "Google Ads", desc: "Helyi keresési kampanyok, akciók, hétköznapi promociók" },
-      { title: "Email & SMS marketing", desc: "Hűségprogramok, születésnap kampanyok, foglalás emlékeztetők" },
-    ],
-    results: [{num:"+260%",label:"Online foglalás"},{num:"+190%",label:"Instagram követők"},{num:"+140%",label:"Hétköznapi forgalom"}],
-    caseStudy: { client: "Budapest belvárosi étterem", problem: "Alacsony hétköznapi forgalom", solution: "Instagram + Google My Business + Google Ads", result: "+260% online foglalás 3 hónap alatt" },
-  },
-  "marketing-logisztikai-cegeknek": {
-    title: "Marketing logisztikai és szállítmányozási cégeknek",
-    subtitle: "Logisztikai vállalatok, futárszolgálatok és szállítmányozók számára",
-    metaTitle: "Marketing Logisztikai Cégeknek – G2A Marketing | B2B Lead Gen, SEO, LinkedIn",
-    metaDesc: "Logisztikai cégek marketing megoldásai: B2B lead gen, LinkedIn marketing, SEO, tartalommarketing.",
-    icon: <span style={{fontSize:'1.75rem'}}>🚚</span>,
-    color: "#f97316",
-    heroDesc: "A logisztika a megbízhatóságról szól. Segítünk, hogy a potenciális üzleti partnerek megtaláljanak és megbízzának benned.",
-    challenges: ["B2B értékesítési ciklus","Verseny a nagy logisztikai láncokkal","Szakember hiány – toborzás","Komplex portfólió kommunikáció","Nemzetközi terjeszkedés"],
-    solutions: [
-      { title: "LinkedIn B2B marketing", desc: "Cégdöntéshozók elérése, thought leadership tartalmak" },
-      { title: "SEO & tartalommarketing", desc: "Logisztikai blog, esettanulmányok, iparági cikkek" },
-      { title: "Google Ads B2B", desc: "Keresési kampanyok, remarketing, lead gen formátumok" },
-      { title: "Email marketing", desc: "Nurturing sorozat, ügyfél hírlével, partnerprogramok" },
-    ],
-    results: [{num:"+240%",label:"B2B lead"},{num:"+180%",label:"LinkedIn követők"},{num:"3.5x",label:"ROI"}],
-    caseStudy: { client: "Magyar logisztikai vállalat", problem: "Alacsony B2B lead szám", solution: "LinkedIn + SEO + Google Ads", result: "+240% B2B lead 5 hónap alatt" },
-  },
-  "marketing-penzugyi-cegeknek": {
-    title: "Marketing pénzügyi szolgáltatóknak és tanácsadóknak",
-    subtitle: "Befektetési tanácsadók, biztosítók és pénzügyi tervezők számára",
-    metaTitle: "Marketing Pénzügyi Cégeknek – G2A Marketing | Bizalomépítés, SEO, Lead Gen",
-    metaDesc: "Pénzügyi szolgáltatók marketing megoldásai: bizalomépítés, SEO, Google Ads, GDPR-kompatibilis lead gen.",
-    icon: <span style={{fontSize:'1.75rem'}}>💰</span>,
-    color: "#22c55e",
-    heroDesc: "A pénzügyi szektorban a bizalom és a hitelesség az első. Segítünk, hogy a potenciális ügyfelek megtaláljanak és megbízzának benned.",
-    challenges: ["Szigorú szabályozási környezet","Bizalomépítés online","Komplex termékek kommunikációja","Minősített leadek","Verseny a bankokkal"],
-    solutions: [
-      { title: "SEO & tartalommarketing", desc: "Pénzügyi blog, GYIK, kalkulátorok – bizalomépítés" },
-      { title: "Google Ads", desc: "GDPR-kompatibilis, minősített lead gen kampanyok" },
-      { title: "LinkedIn marketing", desc: "B2B pénzügyi tanácsadás, thought leadership" },
-      { title: "Email marketing", desc: "Nurturing sorozat, piaci hírek, ügyfél kommunikáció" },
-    ],
-    results: [{num:"+270%",label:"Minősített lead"},{num:"+200%",label:"Organikus forgalom"},{num:"4.1x",label:"ROI"}],
-    caseStudy: { client: "Magyar befektetési tanácsadó iroda", problem: "Alacsony minőségű leadek", solution: "SEO + tartalommarketing + Google Ads", result: "+270% minősített lead 6 hónap alatt" },
-  },
-  "marketing-sport-cegeknek": {
-    title: "Marketing sport cégeknek és sportkluboknak",
-    subtitle: "Sportklubbok, sportszer boltók és sport rendezvények számára",
-    metaTitle: "Marketing Sport Cégeknek – G2A Marketing | Social Media, Szponzoráció, Jegyeladás",
-    metaDesc: "Sport cégek és sportklubbok marketing megoldásai: social media, szponzoráció, jegyeladás növelés.",
-    icon: <span style={{fontSize:'1.75rem'}}>⚽</span>,
-    color: "#3b82f6",
-    heroDesc: "A sport a szenvedélyekről szól. Segítünk, hogy a rajongók elkötelezettekké váljanak és a szponzorok megtalálják a klubot.",
-    challenges: ["Szurkolói elkötelezettség","Szponzorzációs érték kommunikáció","Jegyeladás növelése","Fiatal szurkolók elérése","Szezonális tartalom"],
-    solutions: [
-      { title: "Social media menedzsment", desc: "TikTok, Instagram, Facebook – szurkolói tartalmak" },
-      { title: "Szponzorációs anyagok", desc: "Szponzori csomag, média kit, ROI riport" },
-      { title: "Jegyeladás kampanyok", desc: "Facebook Ads, email marketing, early bird akciók" },
-      { title: "Weboldal & SEO", desc: "Eredmények, játékosok, jegy vásárlás" },
-    ],
-    results: [{num:"+350%",label:"Social elérés"},{num:"+230%",label:"Jegyeladás"},{num:"+180%",label:"Szponzorációs bevétel"}],
-    caseStudy: { client: "Magyar labdarúgó klub", problem: "Alacsony szurkolói elkötelezettség", solution: "Social media + jegyeladás kampanyok", result: "+350% social elérés, +230% jegyeladás 4 hónap alatt" },
-  },
-  "marketing-divat-cegeknek": {
-    title: "Marketing divat márkáknak és ruházati cégeknek",
-    subtitle: "Divat márkák, ruházati boltok és online divat áruházak számára",
-    metaTitle: "Marketing Divat Cégeknek – G2A Marketing | Instagram, TikTok, E-commerce",
-    metaDesc: "Divat márkák és ruházati cégek marketing megoldásai: Instagram, TikTok, e-commerce SEO, influencer marketing.",
-    icon: <span style={{fontSize:'1.75rem'}}>👗</span>,
-    color: "#ec4899",
-    heroDesc: "A divat a vizualitásról és az identitásról szól. Segítünk, hogy a márkád kitűnjön a zaj közül és hű követőkre tegyen szert.",
-    challenges: ["Magas verseny az e-commerce piacon","Szezonális kampanyok","Influencer hitelesség","Visszaküldési ráta","Márkaépítés vs. azonnali eladás"],
-    solutions: [
-      { title: "Instagram & TikTok marketing", desc: "Kollekció bemutató, Reels, influencer egyuttműködés" },
-      { title: "E-commerce SEO", desc: "Termék oldal optimalizalás, kategória SEO, blog" },
-      { title: "Facebook & Instagram Ads", desc: "Dinamikus termék hirdetések, retargeting, lookalike" },
-      { title: "Email marketing", desc: "Kollekció launch, elhagyott kosár, hűségprogramok" },
-    ],
-    results: [{num:"+380%",label:"E-commerce forgalom"},{num:"+290%",label:"Instagram követők"},{num:"4.5x",label:"ROAS"}],
-    caseStudy: { client: "Magyar divat márka", problem: "Alacsony online eladás", solution: "Instagram + TikTok + Facebook Ads + email", result: "+380% e-commerce forgalom 5 hónap alatt" },
   },
 };
 
@@ -523,48 +334,31 @@ export default function IparagiLandingPage() {
           minHeight: "60vh", display: "flex", alignItems: "center",
           background: `radial-gradient(ellipse at 60% 40%, ${data.color}15 0%, transparent 55%), var(--g2a-bg)`,
           paddingTop: "6rem",
-          position: "relative",
-          overflow: "hidden",
         }}>
           <div className="g2a-grid-pattern" style={{ position: "absolute", inset: 0, opacity: 0.4 }} />
           <div className="g2a-container" style={{ position: "relative", zIndex: 1, padding: "4rem 1.5rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: data.heroImage ? "1fr 1fr" : "1fr", gap: "4rem", alignItems: "center" }}>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
-                  <div style={{ color: data.color, backgroundColor: `${data.color}15`, padding: "0.75rem", borderRadius: "12px", border: `1px solid ${data.color}30` }}>
-                    {data.icon}
-                  </div>
-                </div>
-                <div className="g2a-section-label animate-fadeIn">Iparági specializáció</div>
-                <h1 className="g2a-headline-xl animate-fadeInUp" style={{ animationDelay: "0.15s", maxWidth: "750px" }}>
-                  {data.title}
-                </h1>
-                <p className="animate-fadeInUp" style={{ animationDelay: "0.25s", fontSize: "1rem", color: data.color, fontFamily: "'JetBrains Mono', monospace", marginBottom: "1rem" }}>
-                  {data.subtitle}
-                </p>
-                <p className="animate-fadeInUp" style={{ animationDelay: "0.35s", fontSize: "1.1rem", color: "var(--g2a-text-secondary)", maxWidth: "580px", lineHeight: "1.7", fontFamily: "Inter, sans-serif", marginBottom: "2.5rem" }}>
-                  {data.heroDesc}
-                </p>
-                <div className="animate-fadeInUp" style={{ animationDelay: "0.5s", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-                  <Link href="/ingyenes-audit" style={{ textDecoration: "none" }}>
-                    <span className="g2a-btn-primary">Ingyenes Audit <ArrowRight size={16} /></span>
-                  </Link>
-                  <Link href="/kapcsolat" style={{ textDecoration: "none" }}>
-                    <span className="g2a-btn-secondary">Kapcsolatfelvétel</span>
-                  </Link>
-                </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ color: data.color, backgroundColor: `${data.color}15`, padding: "0.75rem", borderRadius: "12px", border: `1px solid ${data.color}30` }}>
+                {data.icon}
               </div>
-              {data.heroImage && (
-                <div className="animate-fadeIn" style={{ animationDelay: "0.2s" }}>
-                  <div style={{ borderRadius: "20px", overflow: "hidden", boxShadow: "0 32px 80px rgba(0,0,0,0.4)", border: `1px solid ${data.color}30` }}>
-                    <img
-                      src={data.heroImage}
-                      alt={`${data.title} – G2A Marketing`}
-                      style={{ width: "100%", height: "380px", objectFit: "cover", display: "block" }}
-                    />
-                  </div>
-                </div>
-              )}
+            </div>
+            <div className="g2a-section-label animate-fadeIn">Iparági specializáció</div>
+            <h1 className="g2a-headline-xl animate-fadeInUp" style={{ animationDelay: "0.15s", maxWidth: "750px" }}>
+              {data.title}
+            </h1>
+            <p className="animate-fadeInUp" style={{ animationDelay: "0.25s", fontSize: "1rem", color: data.color, fontFamily: "Roboto Mono, monospace", marginBottom: "1rem" }}>
+              {data.subtitle}
+            </p>
+            <p className="animate-fadeInUp" style={{ animationDelay: "0.35s", fontSize: "1.1rem", color: "var(--g2a-text-secondary)", maxWidth: "580px", lineHeight: "1.7", fontFamily: "Inter, sans-serif", marginBottom: "2.5rem" }}>
+              {data.heroDesc}
+            </p>
+            <div className="animate-fadeInUp" style={{ animationDelay: "0.5s", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+              <Link href="/ingyenes-audit" style={{ textDecoration: "none" }}>
+                <span className="g2a-btn-primary">Ingyenes Audit <ArrowRight size={16} /></span>
+              </Link>
+              <Link href="/kapcsolat" style={{ textDecoration: "none" }}>
+                <span className="g2a-btn-secondary">Kapcsolatfelvétel</span>
+              </Link>
             </div>
           </div>
         </section>
@@ -627,20 +421,20 @@ export default function IparagiLandingPage() {
                 <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "4px", backgroundColor: data.color }} />
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1.5rem" }}>
                   <div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--g2a-text-muted)", fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>Ügyfél</div>
+                    <div style={{ fontSize: "0.75rem", color: "var(--g2a-text-muted)", fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>Ügyfél</div>
                     <div style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--g2a-text-primary)" }}>{data.caseStudy.client}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--g2a-text-muted)", fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>Kihívás</div>
+                    <div style={{ fontSize: "0.75rem", color: "var(--g2a-text-muted)", fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>Kihívás</div>
                     <div style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)" }}>{data.caseStudy.problem}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--g2a-text-muted)", fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>Megoldás</div>
+                    <div style={{ fontSize: "0.75rem", color: "var(--g2a-text-muted)", fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>Megoldás</div>
                     <div style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)" }}>{data.caseStudy.solution}</div>
                   </div>
                 </div>
                 <div style={{ marginTop: "1.5rem", padding: "1rem 1.25rem", borderRadius: "10px", backgroundColor: `${data.color}10`, border: `1px solid ${data.color}25` }}>
-                  <div style={{ fontSize: "0.75rem", color: data.color, fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.375rem" }}>Eredmény</div>
+                  <div style={{ fontSize: "0.75rem", color: data.color, fontFamily: "Roboto Mono, monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.375rem" }}>Eredmény</div>
                   <div style={{ fontFamily: "Outfit, sans-serif", fontWeight: 800, fontSize: "1.25rem", color: data.color }}>{data.caseStudy.result}</div>
                 </div>
               </div>

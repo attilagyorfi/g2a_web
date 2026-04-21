@@ -15,25 +15,12 @@ export default function AdminTestimonials() {
   const ls = { display: "block", color: "#888", fontSize: "0.75rem", textTransform: "uppercase" as const, letterSpacing: "0.05em", marginBottom: "0.375rem", fontFamily: "Roboto Mono, monospace" };
   return (
     <div>
-      {/* Upload guide banner */}
-      <div style={{ backgroundColor: "rgba(217,119,6,0.08)", border: "1px solid rgba(217,119,6,0.3)", borderRadius: "8px", padding: "1rem 1.25rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
-        <span style={{ fontSize: "1.25rem", flexShrink: 0 }}>&#128161;</span>
-        <div>
-          <p style={{ margin: "0 0 0.25rem", color: "#d97706", fontWeight: 600, fontSize: "0.875rem" }}>Hogyan adjon hozzá valódi ügyfélvéleményeket?</p>
-          <p style={{ margin: 0, color: "#a0a0a0", fontSize: "0.8rem", lineHeight: 1.5 }}>
-            1. Kérjen Google / Facebook értékelést az ügyfelektől &nbsp;→&nbsp;
-            2. Másolja be az idézetet az "Idézet" mezőbe &nbsp;→&nbsp;
-            3. Töltse fel az ügyfél profilképét (CDN URL az admin Képek menüből) &nbsp;→&nbsp;
-            4. Adja meg a nevet, céget, beosztást. Az értékelések a főoldalon és a referenciák oldalon jelennek meg.
-          </p>
-        </div>
-      </div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem" }}>
         <h1 style={{ color: "#fff", fontFamily: "Roboto Mono, monospace", fontSize: "1.5rem", fontWeight: 700 }}>Vélemények</h1>
         <button onClick={() => { setForm({ quote: "", authorName: "", authorTitle: "", authorCompany: "", authorImage: "", authorImageAlt: "", sortOrder: 0 }); setEditing(null); setShowForm(true); }} className="g2a-btn-primary" style={{ padding: "0.625rem 1.25rem", fontSize: "0.875rem", display: "flex", alignItems: "center", gap: "0.5rem" }}><Plus size={16} /> Új vélemény</button>
       </div>
       {showForm && (
-        <div style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(217,119,6,0.3)", borderRadius: "8px", padding: "1.5rem", marginBottom: "1.5rem" }}>
+        <div style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(233,17,48,0.3)", borderRadius: "8px", padding: "1.5rem", marginBottom: "1.5rem" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
             <h2 style={{ color: "#fff", fontFamily: "Roboto Mono, monospace", fontSize: "1rem" }}>{editing ? "Szerkesztés" : "Új vélemény"}</h2>
             <button onClick={() => { setShowForm(false); setEditing(null); }} style={{ background: "none", border: "none", color: "#888", cursor: "pointer" }}><X size={18} /></button>
@@ -63,7 +50,7 @@ export default function AdminTestimonials() {
               </div>
               <div style={{ display: "flex", gap: "0.5rem", marginLeft: "1rem" }}>
                 <button onClick={() => { setEditing(item.id); setForm({ quote: item.quote, authorName: item.authorName, authorTitle: item.authorTitle || "", authorCompany: item.authorCompany || "", authorImage: item.authorImage || "", authorImageAlt: item.authorImageAlt || "", sortOrder: item.sortOrder || 0 }); setShowForm(true); }} style={{ background: "none", border: "none", color: "#888", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.color = "#888")}><Edit size={15} /></button>
-                <button onClick={() => { if (confirm("Biztosan törli?")) deleteMutation.mutate({ id: item.id }); }} style={{ background: "none", border: "none", color: "#888", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")} onMouseLeave={e => (e.currentTarget.style.color = "#888")}><Trash2 size={15} /></button>
+                <button onClick={() => { if (confirm("Biztosan törli?")) deleteMutation.mutate({ id: item.id }); }} style={{ background: "none", border: "none", color: "#888", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color = "#e91130")} onMouseLeave={e => (e.currentTarget.style.color = "#888")}><Trash2 size={15} /></button>
               </div>
             </div>
           </div>

@@ -15,12 +15,10 @@ const navItems = [
   { href: "/admin/posts", icon: Newspaper, label: "Blog cikkek" },
   { href: "/admin/categories", icon: Tag, label: "Kategóriák" },
   { href: "/admin/services", icon: Briefcase, label: "Szolgáltatások" },
-  { href: "/admin/hero-slides", icon: Image, label: "Hero Slideshow" },
   { href: "/admin/partners", icon: Globe, label: "Partnerek" },
   { href: "/admin/testimonials", icon: Star, label: "Vélemények" },
   { href: "/admin/industries", icon: FileText, label: "Iparágak" },
   { href: "/admin/technologies", icon: Cpu, label: "Technológiák" },
-  { href: "/admin/values", icon: Heart, label: "Értékek" },
   { href: "/admin/case-studies", icon: BookOpen, label: "Esettanulmányok" },
   { href: "/admin/audit-leads", icon: ClipboardList, label: "Audit Kérések" },
   { href: "/admin/contacts", icon: Mail, label: "Kapcsolatfelvételek" },
@@ -46,7 +44,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "#0f0f0f", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center", maxWidth: "400px", padding: "2rem" }}>
-          <Shield size={48} style={{ color: "var(--g2a-amber)", margin: "0 auto 1.5rem", display: "block" }} />
+          <Shield size={48} style={{ color: "#e91130", margin: "0 auto 1.5rem", display: "block" }} />
           <h1 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.5rem", marginBottom: "1rem" }}>
             Admin Belépés
           </h1>
@@ -65,7 +63,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "#0f0f0f", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
-          <h1 style={{ color: "var(--g2a-amber)", fontFamily: "Roboto Mono, monospace", fontSize: "1.5rem", marginBottom: "1rem" }}>
+          <h1 style={{ color: "#e91130", fontFamily: "Roboto Mono, monospace", fontSize: "1.5rem", marginBottom: "1rem" }}>
             Hozzáférés megtagadva
           </h1>
           <p style={{ color: "#888", marginBottom: "1.5rem" }}>Nincs admin jogosultsága.</p>
@@ -110,9 +108,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 display: "flex", alignItems: "center", gap: "0.75rem",
                 padding: collapsed ? "0.75rem 0" : "0.625rem 1.25rem",
                 justifyContent: collapsed ? "center" : "flex-start",
-                color: isActive ? "var(--g2a-amber)" : "#888",
-                backgroundColor: isActive ? "rgba(217,119,6,0.08)" : "transparent",
-                borderRight: isActive ? "2px solid var(--g2a-amber)" : "2px solid transparent",
+                color: isActive ? "#e91130" : "#888",
+                backgroundColor: isActive ? "rgba(233,17,48,0.08)" : "transparent",
+                borderRight: isActive ? "2px solid #e91130" : "2px solid transparent",
                 textDecoration: "none", fontSize: "0.875rem",
                 transition: "all 0.15s", whiteSpace: "nowrap",
               }}
@@ -136,7 +134,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           )}
           <button onClick={() => logout()}
             style={{ display: "flex", alignItems: "center", gap: "0.5rem", background: "none", border: "none", color: "#666", cursor: "pointer", fontSize: "0.8125rem", padding: collapsed ? "0.25rem 0" : "0.25rem", justifyContent: collapsed ? "center" : "flex-start", width: "100%", transition: "color 0.2s" }}
-            onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")}
+            onMouseEnter={e => (e.currentTarget.style.color = "#e91130")}
             onMouseLeave={e => (e.currentTarget.style.color = "#666")}>
             <LogOut size={15} />
             {!collapsed && "Kijelentkezés"}
@@ -152,7 +150,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             G2A Admin Panel
           </div>
           <Link href="/" style={{ color: "#888", fontSize: "0.8125rem", textDecoration: "none", transition: "color 0.2s" }}
-            onMouseEnter={e => (e.currentTarget.style.color = "var(--g2a-amber)")}
+            onMouseEnter={e => (e.currentTarget.style.color = "#e91130")}
             onMouseLeave={e => (e.currentTarget.style.color = "#888")}>
             ← Weboldal megtekintése
           </Link>

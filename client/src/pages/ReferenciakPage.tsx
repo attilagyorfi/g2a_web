@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
@@ -7,6 +6,7 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import { Link } from "wouter";
 import { ArrowRight, TrendingUp, Target, Globe, BarChart3, CheckCircle } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const INDUSTRY_LABELS: Record<string, string> = {
   egeszsegugy: "Egészségügy",
@@ -31,6 +31,7 @@ const INDUSTRY_COLORS: Record<string, string> = {
 };
 
 export default function ReferenciakPage() {
+  const { t, lang } = useLanguage();
   const { data: caseStudies, isLoading } = trpc.content.caseStudies.useQuery();
   const { data: pageSeo } = trpc.content.pageSeo.useQuery({ slug: "/referenciak" });
   const [activeIndustry, setActiveIndustry] = useState("osszes");
@@ -53,15 +54,15 @@ export default function ReferenciakPage() {
       <main style={{ paddingTop: "100px" }}>
         {/* Hero */}
         <section style={{
-          minHeight: "45vh",
+          minHeight: "40vh",
           display: "flex",
           alignItems: "center",
-          background: "radial-gradient(ellipse at 60% 40%, rgba(217,119,6,0.08) 0%, transparent 55%), var(--g2a-bg)",
+          background: "linear-gradient(135deg, var(--g2a-bg-1) 0%, var(--g2a-bg-2) 100%)",
           padding: "5rem 0",
           position: "relative",
           overflow: "hidden",
         }}>
-          <div className="g2a-grid-pattern" style={{ position: "absolute", inset: 0, opacity: 0.4 }} />
+          <div className="g2a-grid-pattern" style={{ position: "absolute", inset: 0, opacity: 0.04, pointerEvents: "none" }} />
           <div className="g2a-container" style={{ position: "relative", zIndex: 1 }}>
             <div className="g2a-section-label animate-fadeIn">Referenciák</div>
             <h1 className="g2a-headline-xl animate-fadeInUp" style={{ animationDelay: "0.15s", maxWidth: "700px" }}>
@@ -85,9 +86,9 @@ export default function ReferenciakPage() {
               flexWrap: "wrap",
             }}>
               {[
-                { icon: <TrendingUp size={16} />, text: "150+ sikeres projekt" },
+                { icon: <TrendingUp size={16} />, text: "23+ partner" },
                 { icon: <Target size={16} />, text: "8+ iparág" },
-                { icon: <Globe size={16} />, text: "10+ ország" },
+                { icon: <Globe size={16} />, text: "Mérhető eredmények" },
               ].map((b, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--g2a-text-secondary)", fontSize: "0.9rem" }}>
                   <span style={{ color: "var(--g2a-amber)" }}>{b.icon}</span>
@@ -115,7 +116,7 @@ export default function ReferenciakPage() {
                     cursor: "pointer",
                     transition: "all 0.2s",
                     backgroundColor: activeIndustry === ind ? "var(--g2a-amber)" : "var(--g2a-bg-card)",
-                    color: activeIndustry === ind ? "#fff" : "var(--g2a-text-secondary)",
+                    color: activeIndustry === ind ? "#000" : "var(--g2a-text-secondary)",
                     border: `1px solid ${activeIndustry === ind ? "var(--g2a-amber)" : "var(--g2a-border)"}`,
                   }}
                 >
@@ -128,98 +129,75 @@ export default function ReferenciakPage() {
             {isLoading && (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.75rem" }}>
                 {[1, 2, 3].map(i => (
-                  <div key={i} className="g2a-card" style={{ height: "380px", animation: "pulse 1.5s infinite" }} />
+                  <div key={i} className="g2a-card" style={{ height: "280px", animation: "pulse 1.5s infinite" }} />
                 ))}
               </div>
             )}
 
-            {/* Case Studies Grid */}
+            {/* Case Studies Grid – short summary cards */}
             {!isLoading && (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.75rem" }}>
-                {filtered.map((cs, i) => {
-                      const color = INDUSTRY_COLORS[(cs.industry ?? "")] || "var(--g2a-amber)";
+                {filtered.map((cs) => {
+                  const color = INDUSTRY_COLORS[(cs.industry ?? "")] || "var(--g2a-amber)";
                   let tags: string[] = [];
                   try { tags = JSON.parse(cs.tags || "[]"); } catch { tags = []; }
                   const resultLines = cs.results ? cs.results.split(",").map(r => r.trim()).filter(Boolean) : [];
+                  const summaryText = cs.challenge
+                    ? (cs.challenge.length > 140 ? cs.challenge.slice(0, 140) + "…" : cs.challenge)
+                    : "";
 
                   return (
                     <div
                       key={cs.id}
                       className="g2a-card"
-                      style={{ position: "relative", overflow: "hidden", display: "flex", flexDirection: "column" }}
+                      style={{ position: "relative", overflow: "hidden", display: "flex", flexDirection: "column", gap: "1rem" }}
                     >
                       {/* Color top bar */}
                       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", backgroundColor: color }} />
 
-                      {/* Header */}
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.25rem", paddingTop: "0.5rem" }}>
-                        <div>
-                          <span style={{
-                            display: "inline-block",
-                            padding: "0.2rem 0.625rem",
-                            borderRadius: "4px",
-                            fontSize: "0.7rem",
-                            fontWeight: 600,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.08em",
-                            backgroundColor: `${color}18`,
-                            color: color,
-                            marginBottom: "0.5rem",
-                          }}>
-                            {INDUSTRY_LABELS[(cs.industry ?? "")] || cs.industry}
-                          </span>
-                          <h3 style={{ fontWeight: 700, fontSize: "1.1rem", color: "var(--g2a-text-primary)", margin: 0, lineHeight: 1.3 }}>
-                            {cs.client || cs.title}
-                          </h3>
-                        </div>
+                      {/* Industry badge + client name */}
+                      <div style={{ paddingTop: "0.5rem" }}>
                         <span style={{
-                          fontSize: "2.5rem",
-                          fontWeight: 800,
-                          color: `${color}18`,
-                          fontFamily: "'JetBrains Mono', monospace",
-                          lineHeight: 1,
-                          flexShrink: 0,
-                          marginLeft: "0.5rem",
+                          display: "inline-block",
+                          padding: "0.2rem 0.625rem",
+                          borderRadius: "4px",
+                          fontSize: "0.7rem",
+                          fontWeight: 600,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.08em",
+                          backgroundColor: `${color}18`,
+                          color: color,
+                          marginBottom: "0.5rem",
                         }}>
-                          {String(i + 1).padStart(2, "0")}
+                          {INDUSTRY_LABELS[(cs.industry ?? "")] || cs.industry || "Marketing"}
                         </span>
+                        <h3 style={{ fontWeight: 700, fontSize: "1.1rem", color: "var(--g2a-text-primary)", margin: 0, lineHeight: 1.3 }}>
+                          {cs.client || cs.title}
+                        </h3>
                       </div>
 
-                      {/* Challenge */}
-                      {cs.challenge && (
-                        <div style={{ marginBottom: "1rem" }}>
-                          <div style={{ fontSize: "0.7rem", color: "var(--g2a-text-muted)", fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.375rem" }}>
-                            Kihívás
-                          </div>
-                          <p style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)", margin: 0, lineHeight: "1.6" }}>
-                            {cs.challenge.length > 120 ? cs.challenge.slice(0, 120) + "…" : cs.challenge}
-                          </p>
-                        </div>
+                      {/* Short summary */}
+                      {summaryText && (
+                        <p style={{ fontSize: "0.875rem", color: "var(--g2a-text-secondary)", margin: 0, lineHeight: "1.6", flexGrow: 1 }}>
+                          {summaryText}
+                        </p>
                       )}
 
-                      {/* Results */}
+                      {/* Key result highlight */}
                       {resultLines.length > 0 && (
                         <div style={{
-                          padding: "1rem",
-                          borderRadius: "8px",
-                          backgroundColor: `${color}10`,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          padding: "0.625rem 0.875rem",
+                          borderRadius: "6px",
+                          backgroundColor: `${color}12`,
                           border: `1px solid ${color}25`,
-                          marginBottom: "1.25rem",
-                          marginTop: "auto",
                         }}>
-                          <div style={{ fontSize: "0.7rem", color: color, fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.625rem" }}>
-                            Eredmények
-                          </div>
-                          <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
-                            {resultLines.slice(0, 3).map((r, j) => (
-                              <div key={j} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                                <CheckCircle size={13} style={{ color, flexShrink: 0 }} />
-                                <span style={{ fontWeight: 700, fontSize: "0.9rem", color }}>
-                                  {r}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
+                          <CheckCircle size={14} style={{ color, flexShrink: 0 }} />
+                          <span style={{ fontWeight: 700, fontSize: "0.875rem", color }}>
+                            {resultLines[0]}
+                          </span>
                         </div>
                       )}
 
@@ -231,7 +209,7 @@ export default function ReferenciakPage() {
                               padding: "0.2rem 0.625rem",
                               borderRadius: "4px",
                               fontSize: "0.7rem",
-                              backgroundColor: "var(--g2a-bg)",
+                              backgroundColor: "var(--g2a-bg-1)",
                               color: "var(--g2a-text-muted)",
                               border: "1px solid var(--g2a-border)",
                             }}>
@@ -240,6 +218,23 @@ export default function ReferenciakPage() {
                           ))}
                         </div>
                       )}
+
+                      {/* Read more button */}
+                      <Link href={`/referenciak/${cs.id}`}>
+                        <span style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          color: "var(--g2a-amber)",
+                          fontSize: "0.875rem",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          textDecoration: "none",
+                          transition: "gap 0.2s",
+                        }}>
+                          Részletek megtekintése <ArrowRight size={14} />
+                        </span>
+                      </Link>
                     </div>
                   );
                 })}
@@ -257,23 +252,21 @@ export default function ReferenciakPage() {
         </section>
 
         {/* Stats Section */}
-        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg)" }}>
+        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-1)" }}>
           <div className="g2a-container">
             <div style={{ textAlign: "center", marginBottom: "3rem" }}>
               <div className="g2a-section-label">Számokban</div>
-              <h2 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace" }}>
-                Eredményeink összesítve
-              </h2>
+              <h2 className="g2a-section-title">Eredményeink összesítve</h2>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "2rem" }}>
               {[
-                { value: "150+", label: "Sikeres projekt" },
+                { value: "23+", label: "Aktív partner" },
                 { value: "8+", label: "Iparág" },
                 { value: "340%", label: "Átlagos forgalom növekedés" },
                 { value: "4,2x", label: "Átlagos ROAS" },
               ].map((stat, i) => (
                 <div key={i} className="g2a-card" style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "2.5rem", fontWeight: 800, color: "var(--g2a-amber)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "0.5rem" }}>
+                  <div style={{ fontSize: "2.5rem", fontWeight: 800, color: "var(--g2a-amber)", marginBottom: "0.5rem" }}>
                     {stat.value}
                   </div>
                   <div style={{ color: "var(--g2a-text-secondary)", fontSize: "0.9rem" }}>
@@ -288,30 +281,33 @@ export default function ReferenciakPage() {
         {/* CTA */}
         <section className="g2a-section g2a-cta-gradient">
           <div className="g2a-container" style={{ textAlign: "center" }}>
-            <h2 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace", marginBottom: "1rem" }}>
+            <h2 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 700, color: "#fff", marginBottom: "1rem" }}>
               Te lehetsz a következő sikertörténet
             </h2>
             <p style={{ color: "rgba(255,255,255,0.8)", maxWidth: "500px", margin: "0 auto 2.5rem", lineHeight: 1.7 }}>
               Kérj ingyenes marketing auditot és megmutatjuk, hogyan érhetünk el hasonló eredményeket a te vállalkozásodban.
             </p>
             <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
-              <a href="/ingyenes-audit" style={{
-                display: "inline-flex", alignItems: "center", gap: "0.5rem",
-                backgroundColor: "var(--g2a-bg-card)", color: "var(--g2a-amber)",
-                padding: "0.875rem 2rem", borderRadius: "6px",
-                fontWeight: 700, textDecoration: "none",
-                fontFamily: "'JetBrains Mono', monospace",
-              }}>
-                Ingyenes Audit kérése <ArrowRight size={16} />
-              </a>
-              <Link href="/kapcsolat" style={{
-                display: "inline-flex", alignItems: "center", gap: "0.5rem",
-                backgroundColor: "transparent", color: "var(--g2a-text-primary)",
-                padding: "0.875rem 2rem", borderRadius: "6px",
-                fontWeight: 600, textDecoration: "none",
-                border: "2px solid rgba(255,255,255,0.4)",
-              }}>
-                Kapcsolatfelvétel
+              <Link href="/ingyenes-audit">
+                <span style={{
+                  display: "inline-flex", alignItems: "center", gap: "0.5rem",
+                  backgroundColor: "#fff", color: "#000",
+                  padding: "0.875rem 2rem", borderRadius: "6px",
+                  fontWeight: 700, textDecoration: "none", cursor: "pointer",
+                }}>
+                  Ingyenes Audit kérése <ArrowRight size={16} />
+                </span>
+              </Link>
+              <Link href="/kapcsolat">
+                <span style={{
+                  display: "inline-flex", alignItems: "center", gap: "0.5rem",
+                  backgroundColor: "transparent", color: "#fff",
+                  padding: "0.875rem 2rem", borderRadius: "6px",
+                  fontWeight: 600, textDecoration: "none",
+                  border: "2px solid rgba(255,255,255,0.4)", cursor: "pointer",
+                }}>
+                  Kapcsolatfelvétel
+                </span>
               </Link>
             </div>
           </div>

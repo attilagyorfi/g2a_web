@@ -123,6 +123,7 @@ export async function upsertPageSeo(data: {
   ogImage?: string;
   canonicalUrl?: string;
   schemaJson?: string;
+  keywords?: string;
 }) {
   const db = await getDb();
   if (!db) return;
@@ -488,7 +489,12 @@ export async function deleteNewsletterSubscriber(id: number) {
   if (!db) return;
   await db.delete(newsletterSubscribers).where(eq(newsletterSubscribers.id, id));
 }
-
+export async function updateNewsletterSubscriberSegment(data: { id: number; segment?: string; source?: string; tags?: string }) {
+  const db = await getDb();
+  if (!db) return;
+  const { id, ...rest } = data;
+  await db.update(newsletterSubscribers).set(rest).where(eq(newsletterSubscribers.id, id));
+}
 // ─── Case Studies ─────────────────────────────────────────────────────────────
 export async function getAllCaseStudies() {
   const db = await getDb();

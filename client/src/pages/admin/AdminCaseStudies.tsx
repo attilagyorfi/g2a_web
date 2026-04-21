@@ -175,7 +175,7 @@ export default function AdminCaseStudies() {
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.5rem" }}>
                     <h3 style={{ fontWeight: 600, color: "var(--g2a-text)" }}>{s.title}</h3>
-                    {!s.isActive && <span style={{ fontSize: "0.7rem", background: "var(--g2a-amber)20", color: "var(--g2a-amber)", padding: "0.2rem 0.5rem", borderRadius: "0.25rem" }}>Inaktív</span>}
+                    {!s.isActive && <span style={{ fontSize: "0.7rem", background: "#e9113020", color: "#e91130", padding: "0.2rem 0.5rem", borderRadius: "0.25rem" }}>Inaktív</span>}
                   </div>
                   <div style={{ display: "flex", gap: "1.5rem", fontSize: "0.8rem", color: "var(--g2a-text-muted)" }}>
                     {s.client && <span>Ügyfél: {s.client}</span>}
@@ -187,7 +187,7 @@ export default function AdminCaseStudies() {
                   <button onClick={() => handleEdit(s)} style={{ background: "none", border: "1px solid var(--g2a-border)", borderRadius: "0.5rem", padding: "0.5rem", cursor: "pointer", color: "var(--g2a-text-muted)" }}>
                     <Edit size={16} />
                   </button>
-                  <button onClick={() => { if (confirm("Biztosan törlöd?")) deleteMutation.mutate({ id: s.id }); }} style={{ background: "none", border: "1px solid var(--g2a-amber)", borderRadius: "0.5rem", padding: "0.5rem", cursor: "pointer", color: "var(--g2a-amber)" }}>
+                  <button onClick={() => { if (confirm("Biztosan törlöd?")) deleteMutation.mutate({ id: s.id }); }} style={{ background: "none", border: "1px solid #e91130", borderRadius: "0.5rem", padding: "0.5rem", cursor: "pointer", color: "#e91130" }}>
                     <Trash2 size={16} />
                   </button>
                 </div>

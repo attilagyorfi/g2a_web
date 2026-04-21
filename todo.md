@@ -222,58 +222,14 @@
 - [x] Angol fordítások az összes főbb oldalhoz
 - [x] URL struktúra: /en/* és /hu/* (vagy lang paraméter – LanguageContext alapon)
 
-## V6 – Teljes Rebranding (Slate & Amber Design System)
+## V10 – Kritikus Hibajavítások
 
-- [x] Új "Slate & Amber" design system létrehozva (index.css CSS változók)
-- [x] Plus Jakarta Sans + Inter + JetBrains Mono tipográfia (Roboto Mono eltávolítva)
-- [x] Sötét/világos mód váltó engedélyezve (ThemeProvider switchable=true)
-- [x] .dark CSS osztály megfelelően definiálva
-- [x] Home.tsx teljes újraírása – announcement bar, aszimmetrikus hero, stat counter animáció, trust bar, problem-solution szekció, services grid, process steps, case studies, industries, why us, testimonials, audit CTA, FAQ accordion, newsletter, final CTA
-- [x] Navigation.tsx frissítve – amber akcentus, JetBrains Mono, dark/light mód kompatibilis
-- [x] Footer.tsx teljes újraírása – Slate & Amber design, CSS változók, JetBrains Mono
-- [x] StickyCTA.tsx frissítve – amber design, Inter font, régi piros árnyék eltávolítva
-- [x] Összes publikus oldal frissítve – Roboto Mono → JetBrains Mono, #e91130 → var(--g2a-amber)
-- [x] Hardkódolt fehér/fekete/szürke színek → CSS változókra cserélve
-- [x] 21/21 teszt zöld
-- [x] TypeScript 0 hiba
-
-## V7 – Hibajavítások és Új Funkciók
-
-- [x] Főmenü megjelenítés javítása a főoldalon
-- [x] Téma váltó (dark/light) az egész weboldalt változtassa, ne csak a menüt
-- [x] Banner "Kérd most" link 404 javítása
-- [x] Aloldalak tetejétől töltsenek be (scroll-to-top route változáskor)
-- [x] Back-to-top gomb hozzáadása
-- [x] Angol menüpontok fordítása (részben még magyarul vannak)
-- [x] Referenciák külön menüpont a navigációban
-- [x] Partnerek: csak valódi G2A partnerek jelenjenek meg, fiktívek eltávolítása
-- [x] Minden oldalhoz releváns képek hozzáadása
-- [x] Multi-step Marketing Audit form (iparág → budget → célok → kapcsolat)
-- [x] Blog fejlesztés: olvasási idő, tartalomjegyzék, kapcsolódó cikkek
-- [x] Framer Motion scroll-triggered animációk
-
-## V8 – 10 Fejlesztési Javaslat Implementálása
-
-- [x] Partner logók: admin feltöltési UI javítása, placeholder megjelenítés fejlesztése
-- [x] WhatsApp CTA lebegő gomb hozzáadása (mobil-barát, +36 30 190 2575)
-- [x] Live chat widget: Crisp integráció admin beállításból (Chat Widget ID mező)
-- [x] Exit-intent popup komponens (audit CTA, 5s delay + exit trigger)
-- [x] GA4 / GTM aktiválás: admin Settings GTM ID mező bekötése index.html-be dinamikusan
-- [x] Programmatic SEO: 10 új iparági landing oldal (fodrászat, fitness, jogi, ingatlan, oktatás, vendéglátás, logisztika, pénzügy, sport, divat)
-- [x] Newsletter automatizáció: feliratkozáskor üdvözlő email küldése (notifyOwner + Brevo webhook előkészítés)
-- [x] Blog SEO cikkek: 3 minta SEO cikk feltöltése az adatbázisba (seed)
-- [x] Testimonials: admin panel útmutató a valódi vélemények feltöltéséhez (placeholder frissítés)
-- [x] Esettanulmányok: valódi adatokkal feltöltött seed adatok az adatbázisba
-
-## V9 – Hibajavítások és Tartalom Bővítés
-
-- [x] Admin belépés javítása (bejelentkezés után admin panelbe irányítson, ne a főoldalra)
-- [x] Back-to-top gomb visszahelyezése
-- [x] "Szolgáltatás 01" placeholder szövegek eltávolítása az egyedi szolgáltatás oldalakon
-- [x] Dark/light kontraszt egységesítése az összes oldalon (CSS változók következetes alkalmazása)
-- [x] Nyelvválasztó javítása: minden tartalom fordítása (szolgáltatások, blog, esettanulmányok, partnerek)
-- [x] Szolgáltatások leírásának bővítése (SEO-optimalizált, részletes szövegek)
-- [x] Hero képek hozzáadása minden aloldalhoz és szolgáltatáshoz
-- [x] Valódi referenciák összegyűjtése a g2amarketing.hu/partnereink oldalról és feltöltése
-- [x] Partner leírások bővítése SEO és marketing szempontok alapján
-- [x] Dedikált ingyenes SEO audit landing oldal létrehozása interaktív eszközzel
+- [ ] Gombok bal kattintás javítása (navigáció nem működik left-click-re)
+- [ ] Navigáció: hover-es dropdown (ne kelljen kattintani a megnyitáshoz)
+- [ ] Rólunk oldal: 2022-es alapítási év, valóságos növekedési adatok
+- [ ] Admin panel: popup/WhatsApp/chatbot eltávolítása admin nézetből
+- [ ] Admin panel: SEO oldalak kezelése kulcsszó mezőkkel
+- [ ] Admin panel: hírlevél szegmentálás
+- [ ] Admin panel: Értékek és Hero Slideshow menüpontok eltávolítása
+- [ ] Referenciák oldal: rövid összefoglaló kártyák + külön részletes oldal
+- [ ] Nyelvválasztó: az összes oldal tartalmát fordítsa le (ne csak a menüt)

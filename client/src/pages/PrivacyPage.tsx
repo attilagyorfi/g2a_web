@@ -12,15 +12,15 @@ export default function PrivacyPage() {
       />
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
-        <section style={{ backgroundColor: "var(--g2a-bg-2)", padding: "4rem 0" }}>
+        <section style={{ backgroundColor: "#111", padding: "4rem 0" }}>
           <div className="g2a-container">
             <div className="g2a-section-label">Jogi</div>
-            <h1 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "'JetBrains Mono', monospace" }}>
+            <h1 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 700, color: "#ffffff", fontFamily: "Roboto Mono, monospace" }}>
               Adatvédelmi Irányelvek
             </h1>
           </div>
         </section>
-        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
+        <section className="g2a-section" style={{ backgroundColor: "#1a1a1a" }}>
           <div className="g2a-container" style={{ maxWidth: "800px" }}>
             <div className="g2a-prose">
               <p><strong>Utolsó frissítés:</strong> 2024. január 1.</p>
