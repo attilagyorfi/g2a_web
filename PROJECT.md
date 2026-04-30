@@ -6,7 +6,7 @@
 
 ## 1. A projekt célja
 
-A G2A Marketing weboldal egy **teljes körű, adatvezérelt marketing ügynökségi platform**, amelynek célja, hogy a pécsi székhelyű G2A Marketing Kft. digitális jelenlétét professzionálisan és hatékonyan képviselje. A projekt három fő pillérre épül:
+A G2A Marketing weboldal egy **teljes körű, adatvezérelt marketing ügynökségi platform**, amelynek célja, hogy a pécsi székhelyű G2A Marketing Bt. digitális jelenlétét professzionálisan és hatékonyan képviselje (a weboldalon a rövid "G2A Marketing" forma jelenik meg, jogi forma nélkül). A projekt három fő pillérre épül:
 
 **Ügyfélszerzés és lead generálás.** Az oldal elsődleges funkciója, hogy potenciális ügyfeleket vonzzon és konvertáljon – ingyenes marketing audit kéréseken, SEO audit eszközön és kapcsolatfelvételi űrlapokon keresztül. Minden oldal CTA-vezérelt, és az üzleti célokat helyezi előtérbe.
 
@@ -222,7 +222,7 @@ g2a-marketing/
 
 | Szerep | Név | Elérhetőség |
 |---|---|---|
-| Ügyfél / Tulajdonos | Győrfi Attila | attila@g2amarketing.hu |
+| Ügyfél / Tulajdonos | Győrfi Attila | info@g2amarketing.hu |
 | Fejlesztés | Manus AI | — |
 | GitHub repo | attilagyorfi/g2a_web | https://github.com/attilagyorfi/g2a_web |
 | Élő oldal | g2amarketing.manus.space | https://g2amarketing.manus.space |

@@ -1,9 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { ENV } from "./env";
+import { isEmailConfigured, renderNotificationHtml, sendEmail } from "./email";
 
 export type NotificationPayload = {
   title: string;
   content: string;
+  /** Optional: visitor email — set as Reply-To so admin can reply directly. */
+  replyTo?: string;
 };
 
 const TITLE_MAX_LENGTH = 1200;
@@ -54,36 +57,12 @@ const validatePayload = (input: NotificationPayload): NotificationPayload => {
     });
   }
 
-  return { title, content };
+  return { title, content, replyTo: input.replyTo };
 };
 
-/**
- * Dispatches a project-owner notification through the Manus Notification Service.
- * Returns `true` if the request was accepted, `false` when the upstream service
- * cannot be reached (callers can fall back to email/slack). Validation errors
- * bubble up as TRPC errors so callers can fix the payload.
- */
-export async function notifyOwner(
-  payload: NotificationPayload
-): Promise<boolean> {
-  const { title, content } = validatePayload(payload);
-
-  if (!ENV.forgeApiUrl) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Notification service URL is not configured.",
-    });
-  }
-
-  if (!ENV.forgeApiKey) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Notification service API key is not configured.",
-    });
-  }
-
+async function sendViaForge(title: string, content: string): Promise<boolean> {
+  if (!ENV.forgeApiUrl || !ENV.forgeApiKey) return false;
   const endpoint = buildEndpointUrl(ENV.forgeApiUrl);
-
   try {
     const response = await fetch(endpoint, {
       method: "POST",
@@ -99,16 +78,72 @@ export async function notifyOwner(
     if (!response.ok) {
       const detail = await response.text().catch(() => "");
       console.warn(
-        `[Notification] Failed to notify owner (${response.status} ${response.statusText})${
+        `[Notification] Forge failed (${response.status} ${response.statusText})${
           detail ? `: ${detail}` : ""
         }`
       );
       return false;
     }
-
     return true;
   } catch (error) {
-    console.warn("[Notification] Error calling notification service:", error);
+    console.warn("[Notification] Forge error:", error);
     return false;
   }
+}
+
+async function sendViaResend(
+  title: string,
+  content: string,
+  replyTo?: string,
+): Promise<boolean> {
+  if (!isEmailConfigured()) return false;
+  return sendEmail({
+    subject: title,
+    html: renderNotificationHtml(content),
+    text: content,
+    replyTo,
+  });
+}
+
+/**
+ * Dispatches an owner notification using whatever transports are configured.
+ *
+ * Order of preference:
+ *   1. Manus Forge (if BUILT_IN_FORGE_API_URL/_KEY set) — kept for compatibility
+ *   2. Resend email (if RESEND_API_KEY + RESEND_NOTIFY_EMAIL set)
+ *
+ * If at least one transport succeeds, returns true. If all configured transports
+ * fail (or none are configured), returns false — callers should NOT throw, as
+ * the lead has already been persisted to the DB and admin can review there.
+ *
+ * Configuration is deliberately fail-soft so a misconfigured email setup never
+ * blocks a contact form submission.
+ */
+export async function notifyOwner(
+  payload: NotificationPayload
+): Promise<boolean> {
+  const { title, content, replyTo } = validatePayload(payload);
+
+  const hasForge = Boolean(ENV.forgeApiUrl && ENV.forgeApiKey);
+  const hasResend = isEmailConfigured();
+
+  if (!hasForge && !hasResend) {
+    console.warn(
+      "[Notification] No transport configured (set BUILT_IN_FORGE_API_KEY or RESEND_API_KEY+RESEND_NOTIFY_EMAIL). Lead saved to DB only."
+    );
+    return false;
+  }
+
+  // Try Forge first if available (existing behavior), then fall back to Resend.
+  if (hasForge) {
+    const ok = await sendViaForge(title, content);
+    if (ok) return true;
+    if (hasResend) {
+      console.warn("[Notification] Forge failed, retrying via Resend");
+      return sendViaResend(title, content, replyTo);
+    }
+    return false;
+  }
+
+  return sendViaResend(title, content, replyTo);
 }

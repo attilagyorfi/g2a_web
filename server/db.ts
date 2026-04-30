@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, like, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, like, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser,
@@ -9,6 +9,7 @@ import {
   heroSlides,
   industries,
   newsletterSubscribers,
+  emailCampaigns,
   pages,
   partners,
   posts,
@@ -495,6 +496,69 @@ export async function updateNewsletterSubscriberSegment(data: { id: number; segm
   const { id, ...rest } = data;
   await db.update(newsletterSubscribers).set(rest).where(eq(newsletterSubscribers.id, id));
 }
+
+/** Active subscribers with optional segment filter — recipients for a campaign send. */
+export async function getActiveSubscribersForCampaign(segment?: string | null) {
+  const db = await getDb();
+  if (!db) return [];
+  const where = segment
+    ? and(eq(newsletterSubscribers.isActive, true), eq(newsletterSubscribers.segment, segment))
+    : eq(newsletterSubscribers.isActive, true);
+  return db
+    .select({
+      id: newsletterSubscribers.id,
+      email: newsletterSubscribers.email,
+      name: newsletterSubscribers.name,
+      unsubscribeToken: newsletterSubscribers.unsubscribeToken,
+    })
+    .from(newsletterSubscribers)
+    .where(where);
+}
+
+/** Email campaigns CRUD */
+export async function createEmailCampaign(data: {
+  subject: string; html: string; text?: string; segment?: string | null; sentByUserId?: number | null;
+}) {
+  const db = await getDb();
+  if (!db) return null;
+  const [result] = await db.insert(emailCampaigns).values({
+    subject: data.subject,
+    html: data.html,
+    text: data.text,
+    segment: data.segment,
+    sentByUserId: data.sentByUserId ?? null,
+    status: "draft",
+  });
+  return (result as { insertId: number }).insertId;
+}
+export async function updateEmailCampaign(id: number, data: Partial<typeof emailCampaigns.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(emailCampaigns).set(data).where(eq(emailCampaigns.id, id));
+}
+export async function listEmailCampaigns() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(emailCampaigns).orderBy(desc(emailCampaigns.createdAt));
+}
+
+/** One-click unsubscribe by token. Returns the deactivated subscriber's email
+ *  (for the confirmation page), or null if the token doesn't match anyone. */
+export async function unsubscribeByToken(token: string): Promise<string | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const found = await db
+    .select({ id: newsletterSubscribers.id, email: newsletterSubscribers.email })
+    .from(newsletterSubscribers)
+    .where(eq(newsletterSubscribers.unsubscribeToken, token))
+    .limit(1);
+  if (found.length === 0) return null;
+  await db
+    .update(newsletterSubscribers)
+    .set({ isActive: false })
+    .where(eq(newsletterSubscribers.id, found[0].id));
+  return found[0].email;
+}
 // ─── Case Studies ─────────────────────────────────────────────────────────────
 export async function getAllCaseStudies() {
   const db = await getDb();
@@ -549,4 +613,48 @@ export async function deleteAuditLead(id: number) {
   const db = await getDb();
   if (!db) return;
   await db.delete(auditLeads).where(eq(auditLeads.id, id));
+}
+
+// ─── Bulk delete helpers ──────────────────────────────────────────────────────
+// Each accepts an array of ids; uses Drizzle `inArray` for a single SQL DELETE.
+// All return the number of rows requested (DB doesn't reliably return affected
+// rows for some MySQL configs — caller cares more about "did it succeed").
+
+async function bulkDeleteByIds(table: import("drizzle-orm/mysql-core").MySqlTable, idCol: any, ids: number[]) {
+  if (ids.length === 0) return 0;
+  const db = await getDb();
+  if (!db) return 0;
+  await db.delete(table).where(inArray(idCol, ids));
+  return ids.length;
+}
+
+export async function deletePostsBulk(ids: number[]) {
+  return bulkDeleteByIds(posts, posts.id, ids);
+}
+export async function deleteCaseStudiesBulk(ids: number[]) {
+  return bulkDeleteByIds(caseStudies, caseStudies.id, ids);
+}
+export async function deleteContactSubmissionsBulk(ids: number[]) {
+  return bulkDeleteByIds(contactSubmissions, contactSubmissions.id, ids);
+}
+export async function deleteNewsletterSubscribersBulk(ids: number[]) {
+  return bulkDeleteByIds(newsletterSubscribers, newsletterSubscribers.id, ids);
+}
+export async function deleteAuditLeadsBulk(ids: number[]) {
+  return bulkDeleteByIds(auditLeads, auditLeads.id, ids);
+}
+export async function deleteCategoriesBulk(ids: number[]) {
+  return bulkDeleteByIds(categories, categories.id, ids);
+}
+export async function deleteTestimonialsBulk(ids: number[]) {
+  return bulkDeleteByIds(testimonials, testimonials.id, ids);
+}
+export async function deletePartnersBulk(ids: number[]) {
+  return bulkDeleteByIds(partners, partners.id, ids);
+}
+export async function deleteIndustriesBulk(ids: number[]) {
+  return bulkDeleteByIds(industries, industries.id, ids);
+}
+export async function deleteTechnologiesBulk(ids: number[]) {
+  return bulkDeleteByIds(technologies, technologies.id, ids);
 }

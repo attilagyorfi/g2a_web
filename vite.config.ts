@@ -150,7 +150,16 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
+// Manus runtime + debug collector inline a ~367KB script blob into index.html.
+// They're development-only (Manus Cloud preview iframe + debug log forwarding),
+// so omit them in production builds. This alone shrinks index.html ~37×.
+const isProd = process.env.NODE_ENV === "production";
+const plugins = [
+  react(),
+  tailwindcss(),
+  jsxLocPlugin(),
+  ...(isProd ? [] : [vitePluginManusRuntime(), vitePluginManusDebugCollector()]),
+];
 
 export default defineConfig({
   plugins,
@@ -167,6 +176,34 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    // Manual vendor chunk split — separates rarely-changing vendor code from
+    // app code so the browser cache can keep it across deploys.
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (!id.includes("node_modules")) return undefined;
+          // React core: tiny + critical, keep separate so it stays cached
+          if (/[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/.test(id)) {
+            return "vendor-react";
+          }
+          // Framer-motion is the heaviest single dep — own chunk
+          if (id.includes("framer-motion")) {
+            return "vendor-motion";
+          }
+          // tRPC + tanstack query bundle
+          if (id.includes("@trpc") || id.includes("@tanstack")) {
+            return "vendor-trpc";
+          }
+          // Lucide icons — large but tree-shakable, keep with vendor catch-all
+          if (id.includes("lucide-react")) {
+            return "vendor-icons";
+          }
+          // Everything else — small libs grouped
+          return "vendor-misc";
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
   },
   server: {
     host: true,
@@ -178,6 +215,12 @@ export default defineConfig({
       ".manusvm.computer",
       "localhost",
       "127.0.0.1",
+      // Public preview tunnels (temporary staging URLs)
+      ".trycloudflare.com",   // cloudflared
+      ".loca.lt",             // localtunnel
+      ".ngrok-free.app",      // ngrok
+      ".ngrok.io",
+      ".serveo.net",
     ],
     fs: {
       strict: true,

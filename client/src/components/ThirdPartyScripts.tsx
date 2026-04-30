@@ -2,11 +2,41 @@ import { useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
 
+const ANALYTICS_ENDPOINT = import.meta.env.VITE_ANALYTICS_ENDPOINT ?? "";
+const ANALYTICS_WEBSITE_ID = import.meta.env.VITE_ANALYTICS_WEBSITE_ID ?? "";
+// Plausible domain (use your site domain; defaults to g2amarketing.hu in prod)
+const PLAUSIBLE_DOMAIN = import.meta.env.VITE_PLAUSIBLE_DOMAIN ?? "";
+
 export default function ThirdPartyScripts() {
   const [location] = useLocation();
   const { data: settings } = trpc.content.siteSettings.useQuery(undefined, {
     staleTime: 5 * 60 * 1000,
   });
+
+  // Inject analytics scripts ONCE on mount (don't depend on tRPC settings)
+  useEffect(() => {
+    if (location.startsWith("/admin")) return;
+
+    // Plausible (preferred — privacy-friendly, no cookies)
+    if (PLAUSIBLE_DOMAIN && !document.getElementById("g2a-plausible")) {
+      const script = document.createElement("script");
+      script.id = "g2a-plausible";
+      script.defer = true;
+      script.src = "https://plausible.io/js/script.js";
+      script.setAttribute("data-domain", PLAUSIBLE_DOMAIN);
+      document.head.appendChild(script);
+    }
+
+    // Umami (alternative — also privacy-friendly)
+    if (ANALYTICS_ENDPOINT && ANALYTICS_WEBSITE_ID && !document.getElementById("g2a-umami")) {
+      const script = document.createElement("script");
+      script.id = "g2a-umami";
+      script.defer = true;
+      script.src = `${ANALYTICS_ENDPOINT.replace(/\/$/, "")}/umami`;
+      script.setAttribute("data-website-id", ANALYTICS_WEBSITE_ID);
+      document.head.appendChild(script);
+    }
+  }, [location]);
 
   useEffect(() => {
     if (!settings) return;

@@ -10,6 +10,44 @@ function getQueryParam(req: Request, key: string): string | undefined {
 }
 
 export function registerOAuthRoutes(app: Express) {
+  /**
+   * Diagnostic endpoint — returns the current authenticated user's openId
+   * (and basic info) so the operator can copy it into OWNER_OPEN_ID after
+   * their first successful Manus login. Returns 401 if no valid session.
+   *
+   * Production-safe: never exposes secrets, only the openId of the caller.
+   */
+  app.get("/api/_diag/me", async (req: Request, res: Response) => {
+    let user;
+    try {
+      user = await sdk.authenticateRequest(req);
+    } catch {
+      // sdk.authenticateRequest throws ForbiddenError when there's no valid
+      // session — that's the expected "not logged in" path here, not a 500.
+      res.status(401).json({
+        authenticated: false,
+        hint:
+          "Nincs aktív session. Lépj be: nyisd meg /admin-t, jelentkezz be " +
+          "Manus-szal, majd hívd újra ezt az endpointot.",
+      });
+      return;
+    }
+
+    res.json({
+      authenticated: true,
+      openId: user.openId,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      loginMethod: user.loginMethod,
+      hint:
+        user.role === "admin"
+          ? `Ez a user már admin. OWNER_OPEN_ID=${user.openId}`
+          : `Másold ezt az openId-t az .env OWNER_OPEN_ID változóba, ` +
+            `majd indítsd újra a szervert — ez a user automatikusan admin lesz.`,
+    });
+  });
+
   app.get("/api/oauth/callback", async (req: Request, res: Response) => {
     const code = getQueryParam(req, "code");
     const state = getQueryParam(req, "state");

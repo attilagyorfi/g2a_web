@@ -3,18 +3,27 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
+import { pickLocalized } from "@/../../shared/i18n";
 
-const categoryLabelsHu: Record<string, string> = {
-  marketing: "Marketing Eszközök",
-  ai: "Mesterséges Intelligencia",
-  analytics: "Analitika",
-  other: "Egyéb",
-};
-const categoryLabelsEn: Record<string, string> = {
-  marketing: "Marketing Tools",
-  ai: "Artificial Intelligence",
-  analytics: "Analytics",
-  other: "Other",
+const CATEGORY_LABELS: Record<"hu" | "en" | "zh", Record<string, string>> = {
+  hu: {
+    marketing: "Marketing Eszközök",
+    ai: "Mesterséges Intelligencia",
+    analytics: "Analitika",
+    other: "Egyéb",
+  },
+  en: {
+    marketing: "Marketing Tools",
+    ai: "Artificial Intelligence",
+    analytics: "Analytics",
+    other: "Other",
+  },
+  zh: {
+    marketing: "营销工具",
+    ai: "人工智能",
+    analytics: "分析工具",
+    other: "其他",
+  },
 };
 
 export default function TechnologyPage() {
@@ -22,7 +31,7 @@ export default function TechnologyPage() {
   const { data: technologies } = trpc.content.technologies.useQuery();
   const { data: pageSeo } = trpc.content.pageSeo.useQuery({ slug: "/technologia" });
 
-  const categoryLabels = lang === "en" ? categoryLabelsEn : categoryLabelsHu;
+  const categoryLabels = CATEGORY_LABELS[lang];
 
   const grouped = (technologies || []).reduce((acc, tech) => {
     const cat = tech.category || "other";
@@ -33,41 +42,45 @@ export default function TechnologyPage() {
 
   return (
     <>
-      <SeoHead title={pageSeo?.metaTitle || (lang === "en" ? "Technology – G2A Marketing" : "Technológia – G2A Marketing Pécs")} description={pageSeo?.metaDescription || ""} />
+      <SeoHead title={pickLocalized(pageSeo, "metaTitle", lang) || t("technology.seoTitle")} description={pickLocalized(pageSeo, "metaDescription", lang) || t("technology.seoDesc")} />
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
-        <section style={{ backgroundColor: "#111", padding: "5rem 0" }}>
+        <section style={{ backgroundColor: "var(--g2a-bg)", padding: "5rem 0" }}>
           <div className="g2a-container">
             <div className="g2a-section-label">{t("technology.sectionLabel")}</div>
-            <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "#ffffff", fontFamily: "Roboto Mono, monospace", marginBottom: "1.25rem" }}>
+            <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "Geist Mono, monospace", marginBottom: "1.25rem" }}>
               {t("technology.title")}
             </h1>
-            <p style={{ color: "#b0b0b0", fontSize: "1.125rem", lineHeight: 1.7, maxWidth: "600px" }}>
+            <p style={{ color: "var(--g2a-text-secondary)", fontSize: "1.125rem", lineHeight: 1.7, maxWidth: "600px" }}>
               {t("technology.desc")}
             </p>
           </div>
         </section>
-        <section className="g2a-section" style={{ backgroundColor: "#1a1a1a" }}>
+        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
           <div className="g2a-container">
             {Object.entries(grouped).map(([cat, techs]) => (
               <div key={cat} style={{ marginBottom: "3rem" }}>
-                <h2 style={{ color: "#ffffff", fontFamily: "Roboto Mono, monospace", fontSize: "1.25rem", fontWeight: 600, marginBottom: "1.5rem", paddingBottom: "0.75rem", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-                  <span style={{ color: "#e91130" }}>// </span>{categoryLabels[cat] || cat}
+                <h2 style={{ color: "var(--g2a-text-primary)", fontFamily: "Geist Mono, monospace", fontSize: "1.25rem", fontWeight: 600, marginBottom: "1.5rem", paddingBottom: "0.75rem", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                  <span style={{ color: "var(--g2a-brand-teal)" }}>// </span>{categoryLabels[cat] || cat}
                 </h2>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "1rem" }}>
                   {(techs || []).map(tech => (
-                    <div key={tech.id} style={{ backgroundColor: "#1e1e1e", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "1.25rem", display: "flex", flexDirection: "column", gap: "0.5rem", transition: "border-color 0.2s" }}
-                      onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(233,17,48,0.3)")}
+                    <div key={tech.id} style={{ backgroundColor: "var(--g2a-bg-card)", border: "1px solid var(--g2a-border)", borderRadius: "8px", padding: "1.25rem", display: "flex", flexDirection: "column", gap: "0.5rem", transition: "border-color 0.2s" }}
+                      onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(20,184,166,0.3)")}
                       onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)")}>
                       {tech.logo ? (
                         <img src={tech.logo} alt={tech.logoAlt || `${tech.name} logó`} style={{ height: "32px", objectFit: "contain", objectPosition: "left" }} />
                       ) : (
-                        <div style={{ width: "32px", height: "32px", backgroundColor: "rgba(233,17,48,0.15)", borderRadius: "6px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                          <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "#e91130" }} />
+                        <div style={{ width: "32px", height: "32px", backgroundColor: "rgba(20,184,166,0.15)", borderRadius: "6px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "var(--g2a-brand-teal)" }} />
                         </div>
                       )}
-                      <div style={{ color: "#ffffff", fontWeight: 600, fontSize: "0.9rem" }}>{tech.name}</div>
-                      {tech.description && <div style={{ color: "#666", fontSize: "0.8125rem", lineHeight: 1.5 }}>{tech.description}</div>}
+                      <div style={{ color: "var(--g2a-text-primary)", fontWeight: 600, fontSize: "0.9rem" }}>{tech.name}</div>
+                      {pickLocalized(tech, "description", lang) && (
+                        <div style={{ color: "#666", fontSize: "0.8125rem", lineHeight: 1.5 }}>
+                          {pickLocalized(tech, "description", lang)}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

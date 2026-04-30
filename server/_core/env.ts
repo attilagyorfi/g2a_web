@@ -7,4 +7,14 @@ export const ENV = {
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
+  // Resend — transactional email (contact/audit lead notifications)
+  resendApiKey: process.env.RESEND_API_KEY ?? "",
+  resendFromEmail: process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev",
+  resendNotifyEmail: process.env.RESEND_NOTIFY_EMAIL ?? "",
+  // Cloudinary — image hosting + auto WebP/AVIF
+  cloudinaryUrl: process.env.CLOUDINARY_URL ?? "",
+  cloudinaryCloudName: process.env.VITE_CLOUDINARY_CLOUD_NAME ?? "",
+  // OpenAI — admin AI assist (blog draft, SEO meta, text improve)
+  openaiApiKey: process.env.OPENAI_API_KEY ?? "",
+  openaiModel: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
 };

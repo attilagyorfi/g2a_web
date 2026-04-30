@@ -12,7 +12,7 @@ export default function WhatsAppButton() {
       aria-label="WhatsApp kapcsolat"
       style={{
         position: "fixed",
-        bottom: "5.5rem",
+        bottom: "10rem",
         right: "1.5rem",
         zIndex: 999,
         width: "52px",

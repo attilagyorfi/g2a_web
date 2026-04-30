@@ -49,13 +49,13 @@ export default function AdminSettings() {
     toast.success("Összes beállítás mentve");
   };
 
-  const is = { width: "100%", backgroundColor: "#222", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "5px", padding: "0.75rem 1rem", color: "#fff", fontFamily: "Roboto Mono, monospace", fontSize: "0.875rem", outline: "none", boxSizing: "border-box" as const };
-  const ls = { display: "block", color: "#888", fontSize: "0.75rem", textTransform: "uppercase" as const, letterSpacing: "0.05em", marginBottom: "0.375rem", fontFamily: "Roboto Mono, monospace" };
+  const is = { width: "100%", backgroundColor: "#222", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "5px", padding: "0.75rem 1rem", color: "#fff", fontFamily: "Geist Mono, monospace", fontSize: "0.875rem", outline: "none", boxSizing: "border-box" as const };
+  const ls = { display: "block", color: "#888", fontSize: "0.75rem", textTransform: "uppercase" as const, letterSpacing: "0.05em", marginBottom: "0.375rem", fontFamily: "Geist Mono, monospace" };
 
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem" }}>
-        <h1 style={{ color: "#fff", fontFamily: "Roboto Mono, monospace", fontSize: "1.5rem", fontWeight: 700 }}>Weboldal beállítások</h1>
+        <h1 style={{ color: "#fff", fontFamily: "Geist Mono, monospace", fontSize: "1.5rem", fontWeight: 700 }}>Weboldal beállítások</h1>
         <button onClick={handleSaveAll} disabled={saving === "all"} className="g2a-btn-primary" style={{ display: "flex", alignItems: "center", gap: "0.5rem", opacity: saving === "all" ? 0.7 : 1 }}>
           <Save size={16} /> {saving === "all" ? "Mentés..." : "Összes mentése"}
         </button>
@@ -74,7 +74,7 @@ export default function AdminSettings() {
               <button
                 onClick={() => handleSave(field.key)}
                 disabled={saving === field.key}
-                style={{ backgroundColor: "rgba(233,17,48,0.15)", border: "1px solid rgba(233,17,48,0.3)", borderRadius: "5px", color: "#e91130", cursor: "pointer", padding: "0 0.875rem", flexShrink: 0, opacity: saving === field.key ? 0.7 : 1 }}
+                style={{ backgroundColor: "rgba(20,184,166,0.15)", border: "1px solid rgba(20,184,166,0.3)", borderRadius: "5px", color: "var(--g2a-brand-teal)", cursor: "pointer", padding: "0 0.875rem", flexShrink: 0, opacity: saving === field.key ? 0.7 : 1 }}
                 title="Mentés"
               >
                 <Save size={14} />

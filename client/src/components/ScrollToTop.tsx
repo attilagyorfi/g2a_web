@@ -27,20 +27,20 @@ export function BackToTopButton() {
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="Vissza a tetejere"
       style={{
-        position: "fixed", bottom: "9rem", right: "1.5rem", zIndex: 998,
+        position: "fixed", bottom: "1.5rem", right: "1.5rem", zIndex: 998,
         width: "44px", height: "44px", borderRadius: "50%",
-        backgroundColor: "var(--g2a-amber)", border: "none", cursor: "pointer",
+        backgroundColor: "var(--g2a-accent)", border: "none", cursor: "pointer",
         display: "flex", alignItems: "center", justifyContent: "center",
-        boxShadow: "0 4px 16px rgba(245,158,11,0.4)",
-        transition: "transform 0.2s, box-shadow 0.2s", color: "#000",
+        boxShadow: "0 4px 16px rgba(20,184,166,0.4)",
+        transition: "transform 0.2s, box-shadow 0.2s", color: "#fff",
       }}
       onMouseEnter={e => {
         (e.currentTarget as HTMLElement).style.transform = "scale(1.1)";
-        (e.currentTarget as HTMLElement).style.boxShadow = "0 6px 24px rgba(245,158,11,0.6)";
+        (e.currentTarget as HTMLElement).style.boxShadow = "0 6px 24px rgba(20,184,166,0.6)";
       }}
       onMouseLeave={e => {
         (e.currentTarget as HTMLElement).style.transform = "scale(1)";
-        (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 16px rgba(245,158,11,0.4)";
+        (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 16px rgba(20,184,166,0.4)";
       }}
     >
       <ChevronUp size={20} strokeWidth={2.5} />

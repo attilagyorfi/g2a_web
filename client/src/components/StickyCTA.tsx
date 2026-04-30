@@ -25,8 +25,11 @@ export default function StickyCTA() {
   return (
     <div style={{
       position: "fixed",
-      bottom: "2rem",
-      right: "2rem",
+      // Bottom-LEFT stack — vertically aligned with the Calendly badge (which
+      // mounts at left: 20px from the viewport edge). Same `left` so the two
+      // pills share a left edge.
+      bottom: "90px",   // ~70-80px clearance above Calendly badge
+      left: "20px",
       zIndex: 999,
       display: "flex",
       alignItems: "center",
@@ -37,25 +40,25 @@ export default function StickyCTA() {
         display: "flex",
         alignItems: "center",
         gap: "0.625rem",
-        background: "#e91130",
+        background: "var(--g2a-brand-teal)",
         color: "#ffffff",
         padding: "0.875rem 1.5rem",
         borderRadius: "3rem",
-        fontFamily: "Roboto Mono, monospace",
+        fontFamily: "Geist Mono, monospace",
         fontWeight: 600,
         fontSize: "0.875rem",
         textDecoration: "none",
-        boxShadow: "0 8px 32px rgba(233, 17, 48, 0.4)",
+        boxShadow: "0 8px 32px rgba(20,184,166, 0.4)",
         transition: "all 0.2s ease",
         letterSpacing: "0.02em",
       }}
         onMouseEnter={e => {
           (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(233, 17, 48, 0.5)";
+          (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(20,184,166, 0.5)";
         }}
         onMouseLeave={e => {
           (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(233, 17, 48, 0.4)";
+          (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(20,184,166, 0.4)";
         }}
       >
         <Zap size={16} />

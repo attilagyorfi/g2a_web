@@ -1,0 +1,37 @@
+# Files / folders excluded from the Vercel deploy upload.
+# Reduces upload size, hides PII (DB backups), avoids leaking dev artifacts.
+
+# Dev server logs (run_in_background output)
+.devserver.log
+.devserver.err
+
+# DB backups — contain PII
+backups/
+
+# Local dev / IDE
+.vscode/
+.idea/
+
+# Tests + coverage
+coverage/
+*.tsbuildinfo
+
+# Documentation source files (Markdown stays, .docx + build script don't)
+docs/.build-brand-brief-docx.mjs
+docs/brand-brief.docx
+
+# Migration scripts (the schema is already applied to TiDB; we don't run them on Vercel)
+scripts/migrate-*.mjs
+scripts/translate-portfolios.mjs
+scripts/upload-team-portraits.mjs
+scripts/seed*.mjs
+scripts/run-migrations.mjs
+scripts/backup-db.mjs
+scripts/check_tables.mjs
+scripts/create_new_tables*.mjs
+scripts/git-hooks-*.sh
+scripts/install-git-hooks.mjs
+
+# OS junk
+.DS_Store
+Thumbs.db

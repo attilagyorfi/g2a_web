@@ -28,10 +28,26 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-    <!-- Google Fonts: Roboto Mono -->
+    <!-- Pre-hydration theme set: prevents flash of wrong theme on page load.
+         Reads "g2a-theme" from localStorage and applies the matching class to
+         <html> before React mounts. Defaults to "dark" if nothing stored. -->
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("g2a-theme");
+          var theme = (stored === "light" || stored === "dark") ? stored : "dark";
+          document.documentElement.classList.add(theme);
+          document.documentElement.style.colorScheme = theme;
+        } catch (e) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+
+    <!-- Google Fonts: Geist (sans + mono) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
 
     <!-- Google Tag Manager – ID az admin Beállítások oldalon konfigurálható -->
     <!-- GTM_PLACEHOLDER_START -->
@@ -83,10 +99,9 @@
 
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
+    <!-- Analytics (Umami / Plausible) is injected at runtime by ThirdPartyScripts.tsx
+         only when VITE_ANALYTICS_ENDPOINT is configured. This avoids requesting a
+         literal "%VITE_ANALYTICS_ENDPOINT%/umami" URL when the env var is empty. -->
   </body>
 
 </html>

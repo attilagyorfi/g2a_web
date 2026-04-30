@@ -2,7 +2,12 @@ import mysql from "mysql2/promise";
 
 const db = await mysql.createConnection(process.env.DATABASE_URL);
 
-const caseStudies = [
+// Case studies: NO seed data — kitöltés kizárólag az admin felületen valós projektek alapján.
+// Korábbi fiktív minta-adat törölve 2026-04-21.
+const caseStudies = [];
+
+// (alábbi blokk megőrizve referenciaként, de nem aktív)
+const _SAMPLE_CASE_STUDIES_REFERENCE_ONLY = [
   {
     title: "Egészségügyi klinika – 340% organikus forgalom növekedés",
     slug: "egeszsegugyi-klinika-seo",

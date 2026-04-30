@@ -1,6 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -46,10 +46,10 @@
 /* ─── DARK MODE (default) ─────────────────────────────────────────────────── */
 :root {
   /* G2A Brand Colors */
-  --g2a-red: #e91130;
-  --g2a-red-hover: #c40e28;
-  --g2a-red-light: rgba(233,17,48,0.12);
-  --g2a-red-border: rgba(233,17,48,0.3);
+  --g2a-accent: #14B8A6;
+  --g2a-accent-hover: #0D9488;
+  --g2a-accent-light: rgba(20,184,166,0.12);
+  --g2a-accent-border: rgba(20,184,166,0.3);
 
   /* Dark theme surfaces */
   --g2a-bg: #0f0f0f;
@@ -64,18 +64,41 @@
   --g2a-text-primary: #ffffff;
   --g2a-text-secondary: #b0b0b0;
   --g2a-text-muted: #666666;
-  --g2a-text-accent: #e91130;
+  --g2a-text-accent: #14B8A6;
 
-  /* Tailwind tokens */
-  --primary: oklch(0.50 0.22 25);
+  /* Legacy aliases — unified with current teal accent (old code referenced amber/bg-1) */
+  --g2a-amber: #14B8A6;
+  --g2a-bg-1: #0f0f0f;
+
+  /* Theme-aware "glass" surfaces used by hero mini-demo cards.
+     These keep the obsidian feel in dark mode and become a soft frosted
+     white in light mode — so the demos don't stay dark on light pages.
+     Most demos compose their backdrop as a radial-gradient + this base
+     color; only the base color is swapped per theme. */
+  /* Canonical brand colors — use these via JS as `var(--g2a-brand-teal)` so a
+     future rebrand only touches this file. SVG attributes that don't accept
+     CSS vars (stroke/fill="...") still need the literal hex. */
+  --g2a-brand-teal: #14B8A6;
+  --g2a-brand-teal-dark: #0D9488;
+  --g2a-card-glass-base: rgba(20,20,22,0.75);
+  --g2a-card-glass-border: rgba(255,255,255,0.08);
+  --g2a-card-glass-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 30px 60px -20px rgba(0,0,0,0.5), 0 0 40px -10px rgba(20,184,166,0.18);
+  --g2a-card-glass-bg: radial-gradient(120% 80% at 50% 0%, rgba(20,184,166,0.10), transparent 55%), var(--g2a-card-glass-base);
+  --g2a-tile: rgba(255,255,255,0.03);
+  --g2a-tile-border: rgba(255,255,255,0.06);
+  /* Hero radial accent overlay strength */
+  --g2a-hero-tint: rgba(20,184,166,0.10);
+
+  /* Tailwind tokens — teal-500 alapon, hue 184 */
+  --primary: oklch(0.71 0.13 184);
   --primary-foreground: oklch(0.98 0 0);
-  --sidebar-primary: oklch(0.50 0.22 25);
+  --sidebar-primary: oklch(0.71 0.13 184);
   --sidebar-primary-foreground: oklch(0.98 0 0);
-  --chart-1: oklch(0.50 0.22 25);
-  --chart-2: oklch(0.40 0.18 25);
-  --chart-3: oklch(0.35 0.15 25);
-  --chart-4: oklch(0.30 0.12 25);
-  --chart-5: oklch(0.25 0.10 25);
+  --chart-1: oklch(0.79 0.13 184);
+  --chart-2: oklch(0.71 0.13 184);
+  --chart-3: oklch(0.61 0.12 184);
+  --chart-4: oklch(0.51 0.11 184);
+  --chart-5: oklch(0.42 0.09 184);
   --radius: 0.375rem;
   --background: oklch(0.09 0 0);
   --foreground: oklch(0.96 0 0);
@@ -87,47 +110,80 @@
   --secondary-foreground: oklch(0.96 0 0);
   --muted: oklch(0.20 0 0);
   --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.50 0.22 25);
+  --accent: oklch(0.71 0.13 184);
   --accent-foreground: oklch(0.98 0 0);
-  --destructive: oklch(0.50 0.22 25);
+  /* Destructive pirosra marad (delete / error szemantika) */
+  --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.22 0 0);
   --input: oklch(0.18 0 0);
-  --ring: oklch(0.50 0.22 25);
+  --ring: oklch(0.71 0.13 184);
   --sidebar: oklch(0.08 0 0);
   --sidebar-foreground: oklch(0.96 0 0);
   --sidebar-accent: oklch(0.16 0 0);
   --sidebar-accent-foreground: oklch(0.96 0 0);
   --sidebar-border: oklch(0.20 0 0);
-  --sidebar-ring: oklch(0.50 0.22 25);
+  --sidebar-ring: oklch(0.71 0.13 184);
 }
 
 /* ─── LIGHT MODE ──────────────────────────────────────────────────────────── */
-.light {
-  --g2a-bg: #f8f8f8;
-  --g2a-bg-2: #f0f0f0;
-  --g2a-bg-3: #e8e8e8;
+/* Activated by toggling `html.light` (see ThemeContext). Surfaces are
+   monochrome warm-white + ink, accent stays teal so the brand identity is
+   preserved across themes. */
+html.light {
+  --g2a-bg: #f8f9fa;
+  --g2a-bg-2: #ffffff;
+  --g2a-bg-3: #f0f1f3;
   --g2a-bg-card: #ffffff;
-  --g2a-bg-card-hover: #f5f5f5;
-  --g2a-border: rgba(0,0,0,0.08);
-  --g2a-border-hover: rgba(0,0,0,0.15);
-  --g2a-text-primary: #0f0f0f;
-  --g2a-text-secondary: #444444;
-  --g2a-text-muted: #888888;
+  --g2a-bg-card-hover: #f5f6f8;
+  --g2a-border: rgba(15,15,15,0.08);
+  --g2a-border-hover: rgba(15,15,15,0.16);
+  --g2a-text-primary: #0f172a;
+  --g2a-text-secondary: #475569;
+  --g2a-text-muted: #94a3b8;
+  --g2a-text-accent: #0d9488;
 
-  --background: oklch(0.97 0 0);
-  --foreground: oklch(0.10 0 0);
+  /* Accent — slightly darker teal for AA contrast on light surfaces */
+  --g2a-accent: #0d9488;
+  --g2a-accent-hover: #0f766e;
+  --g2a-accent-light: rgba(13,148,136,0.10);
+  --g2a-accent-border: rgba(13,148,136,0.28);
+
+  /* Legacy aliases */
+  --g2a-amber: #0d9488;
+  --g2a-bg-1: #f8f9fa;
+
+  /* Light-mode glass surfaces — frosted white over the page bg, with a
+     subtle teal tint corner. Drop shadow softened to keep it airy. */
+  --g2a-card-glass-base: rgba(255,255,255,0.78);
+  --g2a-card-glass-border: rgba(15,23,42,0.10);
+  --g2a-card-glass-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 18px 40px -16px rgba(15,23,42,0.18), 0 0 28px -8px rgba(13,148,136,0.18);
+  --g2a-card-glass-bg: radial-gradient(120% 80% at 50% 0%, rgba(13,148,136,0.07), transparent 55%), var(--g2a-card-glass-base);
+  --g2a-tile: rgba(15,23,42,0.04);
+  --g2a-tile-border: rgba(15,23,42,0.08);
+  --g2a-hero-tint: rgba(13,148,136,0.08);
+
+  --background: oklch(0.98 0 0);
+  --foreground: oklch(0.18 0 0);
   --card: oklch(1.0 0 0);
-  --card-foreground: oklch(0.10 0 0);
+  --card-foreground: oklch(0.18 0 0);
   --popover: oklch(1.0 0 0);
-  --popover-foreground: oklch(0.10 0 0);
-  --secondary: oklch(0.93 0 0);
-  --secondary-foreground: oklch(0.10 0 0);
-  --muted: oklch(0.94 0 0);
-  --muted-foreground: oklch(0.45 0 0);
-  --border: oklch(0.88 0 0);
-  --input: oklch(0.93 0 0);
+  --popover-foreground: oklch(0.18 0 0);
+  --secondary: oklch(0.95 0 0);
+  --secondary-foreground: oklch(0.18 0 0);
+  --muted: oklch(0.95 0 0);
+  --muted-foreground: oklch(0.50 0 0);
+  --border: oklch(0.90 0 0);
+  --input: oklch(0.95 0 0);
 }
+
+html.light body {
+  background-color: var(--g2a-bg);
+  color: var(--g2a-text-primary);
+}
+
+/* Light-mode-specific scrollbar tone */
+html.light ::-webkit-scrollbar-track { background: var(--g2a-bg-3); }
 
 .dark {
   /* Same as :root - dark is default */
@@ -144,21 +200,22 @@
     @apply bg-background text-foreground;
     background-color: var(--g2a-bg);
     color: var(--g2a-text-primary);
-    font-family: "Inter", "Roboto Mono", monospace;
+    font-family: "Geist", system-ui, -apple-system, sans-serif;
+    font-feature-settings: "ss01", "cv11";
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: "Outfit", "Roboto Mono", monospace;
+    font-family: "Geist", system-ui, -apple-system, sans-serif;
     font-weight: 700;
     color: var(--g2a-text-primary);
     line-height: 1.15;
     letter-spacing: -0.02em;
   }
   p { color: var(--g2a-text-secondary); line-height: 1.7; }
-  ::selection { background-color: #e91130; color: #ffffff; }
+  ::selection { background-color: #14B8A6; color: #ffffff; }
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: var(--g2a-bg); }
-  ::-webkit-scrollbar-thumb { background: #e91130; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: #14B8A6; border-radius: 3px; }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
   [type="button"]:not(:disabled),
@@ -200,17 +257,17 @@
 /* Buttons */
 .g2a-btn-primary {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  background-color: #e91130; color: #ffffff;
+  background-color: #14B8A6; color: #ffffff;
   padding: 0.9rem 1.875rem; border-radius: 6px;
-  font-family: "Inter", sans-serif; font-size: 0.9375rem; font-weight: 600;
+  font-family: "Geist", sans-serif; font-size: 0.9375rem; font-weight: 600;
   transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
   cursor: pointer; border: none; text-decoration: none; letter-spacing: 0.01em;
-  box-shadow: 0 4px 15px rgba(233,17,48,0.25);
+  box-shadow: 0 4px 15px rgba(20,184,166,0.25);
 }
 .g2a-btn-primary:hover {
-  background-color: #c40e28;
+  background-color: #0D9488;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(233,17,48,0.35);
+  box-shadow: 0 6px 20px rgba(20,184,166,0.35);
 }
 .g2a-btn-primary:active { transform: translateY(0); }
 
@@ -218,7 +275,7 @@
   display: inline-flex; align-items: center; gap: 0.5rem;
   background-color: transparent; color: var(--g2a-text-primary);
   padding: 0.9rem 1.875rem; border-radius: 6px;
-  font-family: "Inter", sans-serif; font-size: 0.9375rem; font-weight: 600;
+  font-family: "Geist", sans-serif; font-size: 0.9375rem; font-weight: 600;
   transition: all 0.2s ease; cursor: pointer;
   border: 1.5px solid var(--g2a-border-hover); text-decoration: none;
 }
@@ -229,61 +286,139 @@
 
 .g2a-btn-ghost {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  background-color: transparent; color: #e91130;
+  background-color: transparent; color: #14B8A6;
   padding: 0.75rem 1.25rem; border-radius: 6px;
-  font-family: "Inter", sans-serif; font-size: 0.9rem; font-weight: 600;
+  font-family: "Geist", sans-serif; font-size: 0.9rem; font-weight: 600;
   transition: all 0.2s ease; cursor: pointer; border: none; text-decoration: none;
 }
-.g2a-btn-ghost:hover { background-color: var(--g2a-red-light); }
+.g2a-btn-ghost:hover { background-color: var(--g2a-accent-light); }
 
 /* Typography */
 .g2a-section-label {
-  font-family: "Roboto Mono", monospace; font-size: 0.7rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.2em; color: #e91130;
+  font-family: "Geist Mono", monospace; font-size: 0.7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.2em; color: #14B8A6;
   margin-bottom: 1rem; display: block;
 }
 .g2a-section-title {
-  font-family: "Outfit", monospace; font-size: clamp(2rem, 3.5vw, 3rem);
+  font-family: "Geist", monospace; font-size: clamp(2rem, 3.5vw, 3rem);
   font-weight: 800; color: var(--g2a-text-primary); margin-bottom: 1.5rem;
   letter-spacing: -0.03em; line-height: 1.1;
 }
 .g2a-section-subtitle {
-  font-family: "Inter", sans-serif; font-size: clamp(1rem, 1.5vw, 1.125rem);
+  font-family: "Geist", sans-serif; font-size: clamp(1rem, 1.5vw, 1.125rem);
   color: var(--g2a-text-secondary); line-height: 1.7; max-width: 600px;
 }
 .g2a-headline-xl {
-  font-family: "Outfit", monospace; font-size: clamp(2.5rem, 6vw, 5rem);
+  font-family: "Geist", monospace; font-size: clamp(2.5rem, 6vw, 5rem);
   font-weight: 900; color: var(--g2a-text-primary);
   letter-spacing: -0.04em; line-height: 1.0;
 }
 .g2a-headline-lg {
-  font-family: "Outfit", monospace; font-size: clamp(2rem, 4vw, 3.5rem);
+  font-family: "Geist", monospace; font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 800; color: var(--g2a-text-primary);
   letter-spacing: -0.03em; line-height: 1.1;
 }
 
-/* Cards */
+/* ─── Cards (Obsidian-style) ─────────────────────────────────────────────────
+   Layered composition:
+   • Base: dark card surface
+   • Top-corner radial glow (subtle teal bleed, mimics light-from-above)
+   • Top-edge inner highlight (1px pseudo-bevel, like physical material)
+   • Outer drop shadow (depth) + on hover, soft teal aura
+   • ::before pseudo for the glow so card content can layer cleanly above
+*/
 .g2a-card {
-  background-color: var(--g2a-bg-card);
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(20,184,166,0.05), transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0) 60%),
+    var(--g2a-bg-card);
   border: 1px solid var(--g2a-border);
-  border-radius: 12px; padding: 2rem;
-  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 1px 2px rgba(0,0,0,0.25);
+  transition:
+    border-color 0.3s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease;
+}
+.g2a-card::before {
+  /* Soft teal glow that bleeds in from top-left, intensifies on hover */
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -25%;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(circle, rgba(20,184,166,0.12) 0%, transparent 65%);
+  filter: blur(36px);
+  pointer-events: none;
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+.g2a-card > * {
+  position: relative;
+  z-index: 1;
 }
 .g2a-card:hover {
-  border-color: var(--g2a-border-hover);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  border-color: rgba(20,184,166,0.32);
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 24px 48px -16px rgba(0,0,0,0.55),
+    0 0 32px -10px rgba(20,184,166,0.22);
 }
-.g2a-card-red {
-  background: linear-gradient(135deg, rgba(233,17,48,0.12) 0%, rgba(233,17,48,0.05) 100%);
-  border: 1px solid rgba(233,17,48,0.25);
-  border-radius: 12px; padding: 2rem;
-  transition: all 0.25s ease;
+.g2a-card:hover::before { opacity: 1; }
+
+.light .g2a-card {
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(20,184,166,0.06), transparent 55%),
+    linear-gradient(180deg, rgba(0,0,0,0.015), rgba(0,0,0,0) 60%),
+    var(--g2a-bg-card);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    0 1px 2px rgba(0,0,0,0.06);
 }
-.g2a-card-red:hover {
-  border-color: rgba(233,17,48,0.45);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(233,17,48,0.15);
+.light .g2a-card:hover {
+  border-color: rgba(20,184,166,0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    0 18px 40px -14px rgba(20,184,166,0.18),
+    0 6px 16px rgba(0,0,0,0.08);
+}
+
+.g2a-card-accent {
+  position: relative;
+  overflow: hidden;
+  /* Layered: teal glow at top-right + subtle teal sweep + solid theme-aware base.
+     Without the base layer the card was transparent on light mode → titles
+     blended with the page background. */
+  background:
+    radial-gradient(120% 90% at 100% 0%, var(--g2a-accent-light), transparent 60%),
+    linear-gradient(135deg, var(--g2a-accent-light) 0%, transparent 100%),
+    var(--g2a-bg-card);
+  border: 1px solid var(--g2a-accent-border);
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 1px 2px rgba(0,0,0,0.25);
+  transition:
+    border-color 0.3s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease;
+}
+.g2a-card-accent:hover {
+  border-color: rgba(20,184,166,0.5);
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 24px 48px -16px rgba(0,0,0,0.55),
+    0 0 36px -8px rgba(20,184,166,0.32);
 }
 
 /* Form inputs */
@@ -291,48 +426,48 @@
   width: 100%; background-color: var(--g2a-bg-card);
   border: 1.5px solid var(--g2a-border);
   border-radius: 8px; padding: 0.9rem 1.1rem; color: var(--g2a-text-primary);
-  font-family: "Inter", sans-serif; font-size: 0.9375rem;
+  font-family: "Geist", sans-serif; font-size: 0.9375rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease; outline: none;
   box-sizing: border-box;
 }
 .g2a-input:focus {
-  border-color: #e91130;
-  box-shadow: 0 0 0 3px rgba(233,17,48,0.12);
+  border-color: #14B8A6;
+  box-shadow: 0 0 0 3px rgba(20,184,166,0.12);
 }
 .g2a-input::placeholder { color: var(--g2a-text-muted); }
 
 .g2a-label {
-  display: block; font-family: "Inter", sans-serif; font-size: 0.875rem;
+  display: block; font-family: "Geist", sans-serif; font-size: 0.875rem;
   font-weight: 500; color: var(--g2a-text-secondary); margin-bottom: 0.5rem;
 }
 
 /* Tags / Badges */
 .g2a-tag {
-  display: inline-block; background: var(--g2a-red-light); color: #e91130;
-  border: 1px solid var(--g2a-red-border); padding: 0.3rem 0.875rem;
+  display: inline-block; background: var(--g2a-accent-light); color: #14B8A6;
+  border: 1px solid var(--g2a-accent-border); padding: 0.3rem 0.875rem;
   border-radius: 4px; font-size: 0.7rem; font-weight: 600;
-  letter-spacing: 0.1em; text-transform: uppercase; font-family: "Roboto Mono", monospace;
+  letter-spacing: 0.1em; text-transform: uppercase; font-family: "Geist Mono", monospace;
 }
 .g2a-tag-neutral {
   display: inline-block; background: var(--g2a-bg-card); color: var(--g2a-text-secondary);
   border: 1px solid var(--g2a-border); padding: 0.3rem 0.875rem;
   border-radius: 4px; font-size: 0.7rem; font-weight: 600;
-  letter-spacing: 0.08em; text-transform: uppercase; font-family: "Roboto Mono", monospace;
+  letter-spacing: 0.08em; text-transform: uppercase; font-family: "Geist Mono", monospace;
 }
 
 /* Prose / Blog content */
-.g2a-prose { color: var(--g2a-text-secondary); line-height: 1.85; font-family: "Inter", sans-serif; }
+.g2a-prose { color: var(--g2a-text-secondary); line-height: 1.85; font-family: "Geist", sans-serif; }
 .g2a-prose h1, .g2a-prose h2, .g2a-prose h3, .g2a-prose h4 {
   color: var(--g2a-text-primary); margin-top: 2.5rem; margin-bottom: 1rem;
-  font-family: "Outfit", sans-serif;
+  font-family: "Geist", sans-serif;
 }
 .g2a-prose p { margin-bottom: 1.5rem; }
 .g2a-prose ul, .g2a-prose ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
 .g2a-prose li { margin-bottom: 0.625rem; }
-.g2a-prose a { color: #e91130; text-decoration: underline; text-underline-offset: 3px; }
+.g2a-prose a { color: #14B8A6; text-decoration: underline; text-underline-offset: 3px; }
 .g2a-prose strong { color: var(--g2a-text-primary); font-weight: 600; }
 .g2a-prose blockquote {
-  border-left: 3px solid #e91130; padding-left: 1.5rem; margin: 2rem 0;
+  border-left: 3px solid #14B8A6; padding-left: 1.5rem; margin: 2rem 0;
   color: var(--g2a-text-secondary); font-style: italic; font-size: 1.05rem;
 }
 
@@ -340,14 +475,14 @@
 .g2a-divider {
   height: 1px; background: var(--g2a-border); margin: 0;
 }
-.g2a-divider-red {
-  height: 2px; background: linear-gradient(90deg, #e91130, transparent);
+.g2a-divider-accent {
+  height: 2px; background: linear-gradient(90deg, #14B8A6, transparent);
   margin: 0;
 }
 
 /* Gradient text */
 .g2a-gradient-text {
-  background: linear-gradient(135deg, #e91130, #ff4d6d);
+  background: linear-gradient(135deg, #14B8A6, #2DD4BF);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
@@ -367,9 +502,9 @@
 /* Scroll progress indicator */
 .scroll-progress-bar {
   position: fixed; top: 0; left: 0; height: 3px;
-  background: linear-gradient(90deg, #e91130, #ff4d6d);
+  background: linear-gradient(90deg, #14B8A6, #2DD4BF);
   z-index: 9999; transition: width 0.1s linear;
-  box-shadow: 0 0 8px rgba(233,17,48,0.5);
+  box-shadow: 0 0 8px rgba(20,184,166,0.5);
 }
 
 /* Sticky CTA */
@@ -381,8 +516,96 @@
   .sticky-cta { bottom: 1.25rem; right: 1.25rem; }
 }
 
+/* Floating dashboard collage – only on wide viewports */
+.g2a-floating-dashboard { display: block; }
+@media (max-width: 1180px) {
+  .g2a-floating-dashboard { display: none; }
+}
+
+/* Service hero 2-col grid collapses to 1 col on mobile (demo hides on narrow) */
+@media (max-width: 900px) {
+  .g2a-service-hero-grid { grid-template-columns: 1fr !important; }
+  .g2a-service-hero-demo { display: none; }
+}
+
+/* Process pipeline — horizontal on desktop, stacked on tablet/mobile */
+.g2a-process-pipeline {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: stretch;
+  width: 100%;
+}
+@media (max-width: 980px) {
+  .g2a-process-pipeline { flex-direction: column; gap: 1rem; }
+  .g2a-process-connector { display: none !important; }
+}
+
+/* Custom cursor: hide default when active (desktop fine pointer only) */
+@media (pointer: fine) {
+  html.custom-cursor-active,
+  html.custom-cursor-active * {
+    cursor: none !important;
+  }
+}
+
+/* Marquee item dim/grayscale, lights up on hover */
+.g2a-marquee-item {
+  opacity: 0.55;
+  filter: grayscale(1);
+  transition: opacity 0.25s ease, filter 0.25s ease;
+}
+.g2a-marquee-item:hover { opacity: 1; filter: grayscale(0); }
+
 /* Animations */
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes g2a-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* AI section background — theme-aware. Dark mode gets a deep violet/teal
+   gradient (matches the "AI/innovation" mood); light mode uses a soft teal
+   tint over the surface so the section still differs visually from neighbours. */
+.g2a-ai-section {
+  background: linear-gradient(135deg, #0a0005 0%, #0f0f0f 40%, #050010 100%);
+}
+.light .g2a-ai-section,
+[data-theme="light"] .g2a-ai-section {
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(20,184,166,0.10), transparent 55%),
+    radial-gradient(120% 80% at 0% 100%, rgba(168,85,247,0.06), transparent 55%),
+    var(--g2a-bg-2);
+}
+
+/* ─── Calendly badge widget — force bottom-left placement + brand styling.
+   Calendly injects `.calendly-badge-widget` (and inner `.calendly-badge-content`)
+   with default bottom-right styling. We override here so it never collides with
+   the WhatsApp / WeChat buttons in the bottom-right corner, AND so the pill
+   visually matches the StickyCTA pill above it (same teal, same shadow). */
+.calendly-badge-widget {
+  right: auto !important;
+  left: 20px !important;
+  bottom: 20px !important;
+}
+.calendly-badge-widget .calendly-badge-content {
+  /* Match the StickyCTA primary pill: solid teal, white text, soft glow. */
+  background-color: #14B8A6 !important;
+  color: #ffffff !important;
+  font-family: "Geist Mono", monospace !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.02em !important;
+  border-radius: 3rem !important;
+  padding: 0.875rem 1.5rem !important;
+  box-shadow: 0 8px 32px rgba(20,184,166, 0.4) !important;
+  border: none !important;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease !important;
+}
+.calendly-badge-widget .calendly-badge-content:hover {
+  background-color: #0D9488 !important;
+  box-shadow: 0 12px 40px rgba(20,184,166, 0.5) !important;
+  transform: translateY(-2px);
+}
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
@@ -404,8 +627,8 @@
   to { opacity: 1; transform: scale(1); }
 }
 @keyframes pulse-red {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(233,17,48,0.4); }
-  50% { box-shadow: 0 0 0 8px rgba(233,17,48,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(20,184,166,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(20,184,166,0); }
 }
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
@@ -444,17 +667,89 @@
 
 /* Gradient backgrounds */
 .g2a-hero-gradient {
-  background: radial-gradient(ellipse at 70% 50%, rgba(233,17,48,0.08) 0%, transparent 60%),
-              radial-gradient(ellipse at 20% 80%, rgba(233,17,48,0.05) 0%, transparent 50%),
+  background: radial-gradient(ellipse at 70% 50%, rgba(20,184,166,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 80%, rgba(20,184,166,0.05) 0%, transparent 50%),
               var(--g2a-bg);
 }
 .g2a-section-gradient {
   background: linear-gradient(180deg, var(--g2a-bg) 0%, var(--g2a-bg-2) 50%, var(--g2a-bg) 100%);
 }
 .g2a-cta-gradient {
-  background: linear-gradient(135deg, #1a0508 0%, #0f0f0f 40%, #1a0508 100%);
-  border-top: 1px solid rgba(233,17,48,0.2);
-  border-bottom: 1px solid rgba(233,17,48,0.2);
+  background: linear-gradient(135deg, #0a1f1d 0%, #0f0f0f 40%, #0a1f1d 100%);
+  border-top: 1px solid rgba(20,184,166,0.2);
+  border-bottom: 1px solid rgba(20,184,166,0.2);
+}
+html.light .g2a-cta-gradient {
+  background:
+    radial-gradient(ellipse at 80% 30%, rgba(13,148,136,0.10), transparent 55%),
+    linear-gradient(135deg, #f0fdfa 0%, #f8f9fa 50%, #ecfdf5 100%);
+  border-top: 1px solid rgba(13,148,136,0.22);
+  border-bottom: 1px solid rgba(13,148,136,0.22);
+}
+
+/* Hero image veil — overlays a service hero image to keep title text legible.
+   Dark mode: dark→transparent gradient (white text on near-black overlay).
+   Light mode: white→transparent gradient (dark text on near-white overlay). */
+.g2a-hero-image-veil {
+  background: linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.55));
+  pointer-events: none;
+}
+html.light .g2a-hero-image-veil {
+  background: linear-gradient(to right, rgba(248,249,250,0.92), rgba(248,249,250,0.65));
+}
+
+/* Footer logo is the "feher" (white) brand asset — invisible on light bg.
+   In light mode, recolor it to the brand teal via filter math. The matrix
+   below converts white pixels → #0d9488 while keeping transparency intact. */
+html.light .g2a-footer-logo {
+  filter: brightness(0) saturate(100%) invert(48%) sepia(76%) saturate(434%) hue-rotate(132deg) brightness(94%) contrast(91%);
+}
+
+/* ─── THEME-SWITCH BRUSH WIPE ─────────────────────────────────────────────── */
+/* Uses the View Transitions API (Chrome/Edge/Safari). Triggered from
+   ThemeContext.toggleTheme() which sets --theme-toggle-{x,y,r} to the
+   click origin and the radius needed to reach the farthest viewport corner.
+   Firefox and reduced-motion users fall back to an instant swap (handled
+   in JS), so this CSS only applies when the API is actually used. */
+
+@keyframes g2a-brush-reveal {
+  from {
+    clip-path: circle(0px at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
+    filter: blur(8px);
+  }
+  60% {
+    filter: blur(2px);
+  }
+  to {
+    clip-path: circle(var(--theme-toggle-r, 150%) at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
+    filter: blur(0);
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Old state stays put as a base — the new state expands over it */
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2;
+  animation: g2a-brush-reveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Safety net: if the user prefers reduced motion AND the View Transitions
+   API still fires (some Chromium versions ignore the JS check), neutralise
+   the animation so we never violate the accessibility preference. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(root) {
+    animation: none;
+    clip-path: none;
+    filter: none;
+  }
 }
 
 /* Grid patterns */
@@ -473,26 +768,38 @@
 
 /* Stat numbers */
 .g2a-stat-number {
-  font-family: "Outfit", monospace; font-size: clamp(2.5rem, 4vw, 3.5rem);
-  font-weight: 900; color: #e91130; letter-spacing: -0.04em; line-height: 1;
+  font-family: "Geist", monospace; font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 900; color: #14B8A6; letter-spacing: -0.04em; line-height: 1;
 }
 .g2a-stat-label {
-  font-family: "Inter", sans-serif; font-size: 0.875rem;
+  font-family: "Geist", sans-serif; font-size: 0.875rem;
   color: var(--g2a-text-secondary); margin-top: 0.375rem;
 }
 
-/* Icon containers */
+/* Icon containers — soft glow behind icon for the Obsidian feel */
 .g2a-icon-box {
+  position: relative;
   width: 48px; height: 48px; border-radius: 10px;
-  background: var(--g2a-red-light); border: 1px solid var(--g2a-red-border);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(20,184,166,0.22), rgba(20,184,166,0.08) 65%, transparent 100%);
+  border: 1px solid var(--g2a-accent-border);
   display: flex; align-items: center; justify-content: center;
-  color: #e91130; flex-shrink: 0;
+  color: #14B8A6; flex-shrink: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 0 18px -6px rgba(20,184,166,0.35);
 }
 .g2a-icon-box-lg {
+  position: relative;
   width: 64px; height: 64px; border-radius: 14px;
-  background: var(--g2a-red-light); border: 1px solid var(--g2a-red-border);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(20,184,166,0.25), rgba(20,184,166,0.08) 65%, transparent 100%);
+  border: 1px solid var(--g2a-accent-border);
   display: flex; align-items: center; justify-content: center;
-  color: #e91130; flex-shrink: 0;
+  color: #14B8A6; flex-shrink: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.07),
+    0 0 24px -6px rgba(20,184,166,0.4);
 }
 
 /* Responsive */

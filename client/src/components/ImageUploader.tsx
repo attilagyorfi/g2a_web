@@ -92,7 +92,7 @@ export default function ImageUploader({
     border: "1px solid rgba(255,255,255,0.15)",
     borderRadius: "6px",
     color: "#ffffff",
-    fontFamily: "Roboto Mono, monospace",
+    fontFamily: "Geist Mono, monospace",
     fontSize: "0.875rem",
     outline: "none",
     boxSizing: "border-box",
@@ -103,7 +103,7 @@ export default function ImageUploader({
     color: "#b0b0b0",
     fontSize: "0.8125rem",
     marginBottom: "0.375rem",
-    fontFamily: "Roboto Mono, monospace",
+    fontFamily: "Geist Mono, monospace",
   };
 
   return (
@@ -130,13 +130,13 @@ export default function ImageUploader({
             backgroundColor: "#222",
             border: "1px solid rgba(255,255,255,0.15)",
             borderRadius: "6px",
-            color: uploading ? "#666" : "#e91130",
+            color: uploading ? "#666" : "var(--g2a-brand-teal)",
             cursor: uploading ? "not-allowed" : "pointer",
             display: "flex",
             alignItems: "center",
             gap: "0.375rem",
             fontSize: "0.8125rem",
-            fontFamily: "Roboto Mono, monospace",
+            fontFamily: "Geist Mono, monospace",
             whiteSpace: "nowrap",
             transition: "all 0.2s",
           }}
@@ -163,7 +163,7 @@ export default function ImageUploader({
               alignItems: "center",
               transition: "all 0.2s",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#e91130")}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#14B8A6")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#666")}
           >
             <X size={14} />
@@ -182,7 +182,7 @@ export default function ImageUploader({
 
       {/* Error message */}
       {error && (
-        <p style={{ color: "#e91130", fontSize: "0.8125rem", margin: 0 }}>{error}</p>
+        <p style={{ color: "var(--g2a-brand-teal)", fontSize: "0.8125rem", margin: 0 }}>{error}</p>
       )}
 
       {/* Alt text field */}
