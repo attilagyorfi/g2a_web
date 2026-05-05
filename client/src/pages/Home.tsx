@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import CookieBanner from "@/components/CookieBanner";
+import NewsletterForm from "@/components/NewsletterForm";
 import SeoHead from "@/components/SeoHead";
 import Marquee from "@/components/Marquee";
 import RevealText from "@/components/RevealText";
@@ -282,22 +283,7 @@ export default function Home() {
     .slice(0, 3);
 
   const { lang, t } = useLanguage();
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterHoneypot, setNewsletterHoneypot] = useState(""); // bots-only
-  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  const newsletterMutation = trpc.newsletter.subscribe.useMutation({
-    onSuccess: () => { setNewsletterStatus("success"); setNewsletterEmail(""); },
-    onError: () => setNewsletterStatus("error"),
-  });
-
-  const handleNewsletter = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newsletterEmail) return;
-    setNewsletterStatus("loading");
-    newsletterMutation.mutate({ email: newsletterEmail, website: newsletterHoneypot });
-  };
 
   // Lokalizált adatok a kiválasztott nyelv alapján
   const problems = PROBLEMS[lang];
@@ -780,35 +766,25 @@ export default function Home() {
               <p className="reveal reveal-delay-2" style={{ color: "var(--g2a-text-secondary)", marginBottom: "1.75rem", fontSize: "0.95rem" }}>
                 {t("home.newsletter.desc")}
               </p>
-              <form onSubmit={handleNewsletter} className="reveal reveal-delay-3" style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", position: "relative" }}>
-                {/* Honeypot — bots only */}
-                <input
-                  type="text"
-                  name="website"
-                  tabIndex={-1}
-                  autoComplete="off"
-                  value={newsletterHoneypot}
-                  onChange={e => setNewsletterHoneypot(e.target.value)}
-                  aria-hidden="true"
-                  style={{ position: "absolute", left: "-9999px", top: "-9999px", width: 1, height: 1, opacity: 0, pointerEvents: "none" }}
-                />
-                <input
-                  type="email" required value={newsletterEmail}
-                  onChange={e => setNewsletterEmail(e.target.value)}
-                  placeholder={t("home.newsletter.emailPlaceholder")}
-                  className="g2a-input"
-                  style={{ flex: 1, minWidth: "220px" }}
-                />
-                <button type="submit" className="g2a-btn-primary" disabled={newsletterStatus === "loading"} style={{ flexShrink: 0 }}>
-                  {newsletterStatus === "loading" ? t("home.newsletter.submitting") : t("home.newsletter.submit")}
-                </button>
-              </form>
-              {newsletterStatus === "success" && (
-                <p style={{ color: "#10b981", marginTop: "0.75rem", fontSize: "0.875rem" }}>{t("home.newsletter.success")}</p>
-              )}
-              {newsletterStatus === "error" && (
-                <p style={{ color: "var(--g2a-brand-teal)", marginTop: "0.75rem", fontSize: "0.875rem" }}>{t("common.tryAgainError")}</p>
-              )}
+              <div className="reveal reveal-delay-3">
+                <NewsletterForm variant="compact" />
+                <p
+                  style={{
+                    color: "var(--g2a-text-muted)",
+                    fontSize: "0.75rem",
+                    marginTop: "0.875rem",
+                    fontFamily: "Geist Mono, monospace",
+                  }}
+                >
+                  {t("newsletter.bandFinePrint")}{" "}
+                  <a
+                    href="/hirlevel"
+                    style={{ color: "var(--g2a-brand-teal)", textDecoration: "underline" }}
+                  >
+                    {t("home.newsletter.morePrefs")}
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
         </section>

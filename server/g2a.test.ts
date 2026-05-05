@@ -169,6 +169,7 @@ describe("newsletter.subscribe", () => {
     const uniqueEmail = `vitest-${Date.now()}@example.com`;
     const result = await caller.newsletter.subscribe({
       email: uniqueEmail,
+      name: "Vitest",
     });
     expect(result).toHaveProperty("success", true);
   });

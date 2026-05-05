@@ -1972,8 +1972,16 @@ function renderWelcomeEmailHtml(name, unsubscribeUrl) {
 var newsletterRouter = router({
   subscribe: publicProcedure.input(z2.object({
     email: z2.string().email("\xC9rv\xE9nyes email c\xEDm sz\xFCks\xE9ges"),
-    name: z2.string().optional(),
+    // Name is now required (the signup forms enforce it client-side too).
+    // Compact one-line forms — like the footer band — bypass with a placeholder
+    // name "(footer)" since they only collect the email; admin can fix later.
+    name: z2.string().min(1, "Keresztn\xE9v megad\xE1sa k\xF6telez\u0151").max(256),
     source: z2.string().optional(),
+    // Topics the subscriber chose. Stored as comma-separated `tags` so the
+    // existing admin segment/filter UI keeps working without a migration.
+    // Allowed values are validated client-side; server accepts any string
+    // (the admin can also add tags manually).
+    topics: z2.array(z2.string().max(64)).max(10).optional(),
     [HONEYPOT_FIELD]: z2.string().optional()
   })).mutation(async ({ input, ctx }) => {
     const guard = await guardPublicFormOrSilent(ctx, input, "newsletter", { success: true, alreadySubscribed: false });
@@ -1985,12 +1993,14 @@ var newsletterRouter = router({
       email: input.email,
       name: input.name,
       source: input.source ?? "website",
+      tags: input.topics && input.topics.length > 0 ? input.topics.join(",") : null,
       unsubscribeToken
     });
     await notifyOwner({
       title: `\xDAj h\xEDrlev\xE9l feliratkoz\xF3`,
       content: `**Email:** ${input.email}
-**N\xE9v:** ${input.name || "\u2013"}
+**N\xE9v:** ${input.name}
+**T\xE9m\xE1k:** ${input.topics?.join(", ") || "\u2013"}
 **Forr\xE1s:** ${input.source || "website"}`,
       replyTo: input.email
     });

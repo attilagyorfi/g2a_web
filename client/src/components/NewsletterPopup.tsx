@@ -165,7 +165,7 @@ export default function NewsletterPopup() {
         </p>
 
         <NewsletterForm
-          variant="stacked"
+          variant="full"
           showBenefits={false}
           surface="transparent"
           onSuccess={() => {

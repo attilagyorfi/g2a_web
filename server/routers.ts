@@ -245,8 +245,16 @@ const newsletterRouter = router({
   subscribe: publicProcedure
     .input(z.object({
       email: z.string().email("Érvényes email cím szükséges"),
-      name: z.string().optional(),
+      // Name is now required (the signup forms enforce it client-side too).
+      // Compact one-line forms — like the footer band — bypass with a placeholder
+      // name "(footer)" since they only collect the email; admin can fix later.
+      name: z.string().min(1, "Keresztnév megadása kötelező").max(256),
       source: z.string().optional(),
+      // Topics the subscriber chose. Stored as comma-separated `tags` so the
+      // existing admin segment/filter UI keeps working without a migration.
+      // Allowed values are validated client-side; server accepts any string
+      // (the admin can also add tags manually).
+      topics: z.array(z.string().max(64)).max(10).optional(),
       [HONEYPOT_FIELD]: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
@@ -261,13 +269,14 @@ const newsletterRouter = router({
         email: input.email,
         name: input.name,
         source: input.source ?? "website",
+        tags: input.topics && input.topics.length > 0 ? input.topics.join(",") : null,
         unsubscribeToken,
       });
 
       // Notify admin
       await notifyOwner({
         title: `Új hírlevél feliratkozó`,
-        content: `**Email:** ${input.email}\n**Név:** ${input.name || "–"}\n**Forrás:** ${input.source || "website"}`,
+        content: `**Email:** ${input.email}\n**Név:** ${input.name}\n**Témák:** ${input.topics?.join(", ") || "–"}\n**Forrás:** ${input.source || "website"}`,
         replyTo: input.email,
       });
 

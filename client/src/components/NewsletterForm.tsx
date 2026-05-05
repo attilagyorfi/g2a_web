@@ -1,21 +1,20 @@
 /**
  * Reusable newsletter signup form.
  *
- * Renders one of three layouts:
- *   - "compact"  → single-row email + button (footer band, popup)
- *   - "full"     → two-column name + email + GDPR consent box (dedicated page)
- *   - "stacked"  → vertically stacked, ideal for narrow popups / sidebars
+ * Two layouts:
+ *   - "compact" — horizontal row: name + email + submit (footer band)
+ *   - "full"    — stacked: name, email, topic chooser, consent (popup, /hirlevel)
  *
  * Contract:
  *   - Honeypot (hidden `website` input) — bots fill it, humans don't.
- *   - GDPR consent — required for full + stacked. Compact assumes the user is
- *     reading the privacy line shown next to the input (Grtv. 6. § (1) +
- *     GDPR Art. 6(1)(a) compliant).
- *   - Disabled while in-flight; success / error shown inline below the form.
- *   - Email is the only required field — name is optional but encouraged.
+ *   - First name is REQUIRED on every variant (server-side enforced too).
+ *   - Compact: implicit privacy notice line below the row, no checkbox.
+ *   - Full: explicit GDPR consent checkbox + topic multi-select. Topics
+ *     get serialised into the `tags` column on the server for filtering.
+ *   - Disabled while in-flight; success/error shown inline.
  *
- * The server (newsletter.subscribe tRPC) handles deduplication, welcome email
- * with one-click unsubscribe, and rate-limiting.
+ * The server (newsletter.subscribe tRPC) handles deduplication, welcome
+ * email with one-click unsubscribe, and rate limiting.
  */
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
@@ -23,13 +22,18 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
 import { Mail, Loader2, Check } from "lucide-react";
 
-type Variant = "compact" | "full" | "stacked";
+type Variant = "compact" | "full";
+
+// Topic codes are stable strings — they end up in the DB tags column and the
+// admin uses them to filter/segment. Don't rename without a data migration.
+export const NEWSLETTER_TOPICS = ["strategy", "ai", "paid", "case_studies"] as const;
+export type NewsletterTopic = (typeof NEWSLETTER_TOPICS)[number];
 
 type Props = {
   variant?: Variant;
   /** Override CTA label (e.g. popup might use "Igen, feliratkozom"). */
   ctaLabel?: string;
-  /** Show the small benefits checklist next to the form (full/stacked only). */
+  /** Show the small benefits checklist next to the form (full only). */
   showBenefits?: boolean;
   /** Light-mode card surface (footer band uses dark, popup uses card). */
   surface?: "transparent" | "card";
@@ -49,6 +53,11 @@ export default function NewsletterForm({
   const [name, setName] = useState("");
   const [website, setWebsite] = useState(""); // honeypot
   const [consent, setConsent] = useState(false);
+  // Default to all topics — better conversion than starting empty. The user
+  // can untick the ones they don't want before submitting.
+  const [topics, setTopics] = useState<Set<NewsletterTopic>>(
+    () => new Set(NEWSLETTER_TOPICS),
+  );
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
     "idle",
   );
@@ -66,28 +75,38 @@ export default function NewsletterForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-    if (variant !== "compact" && !consent) return;
+    if (!email || !name) return;
+    if (variant === "full" && !consent) return;
+    if (variant === "full" && topics.size === 0) return;
     setStatus("loading");
-    subscribe.mutate({ email, name: name || undefined, website });
+    subscribe.mutate({
+      email,
+      name,
+      website,
+      topics:
+        variant === "full" ? Array.from(topics) : Array.from(NEWSLETTER_TOPICS),
+    });
   };
 
-  const requiresConsent = variant !== "compact";
-  const submitDisabled =
-    status === "loading" || (requiresConsent && !consent);
+  const toggleTopic = (key: NewsletterTopic) => {
+    setTopics((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
 
-  // ─── Compact (single-row email + submit) ────────────────────────────────
+  const allChecked = topics.size === NEWSLETTER_TOPICS.length;
+  const toggleAll = () => {
+    if (allChecked) setTopics(new Set());
+    else setTopics(new Set(NEWSLETTER_TOPICS));
+  };
+
+  // ─── Compact (single-row name + email + submit) ────────────────────────
   if (variant === "compact") {
     return (
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          gap: "0.625rem",
-          flexWrap: "wrap",
-          position: "relative",
-        }}
-      >
+      <form onSubmit={handleSubmit} style={{ position: "relative" }}>
         <input
           type="text"
           name="website"
@@ -98,36 +117,63 @@ export default function NewsletterForm({
           aria-hidden="true"
           style={honeypotStyle}
         />
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder={t("newsletter.emailPlaceholder")}
-          className="g2a-input"
-          style={{ flex: 1, minWidth: "220px" }}
-          aria-label={t("newsletter.emailLabel")}
-        />
-        <button
-          type="submit"
-          className="g2a-btn-primary"
-          disabled={status === "loading"}
-          style={{ flexShrink: 0 }}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(140px, 1fr) minmax(220px, 2fr) auto",
+            gap: "0.625rem",
+          }}
+          className="g2a-newsletter-compact-grid"
         >
-          {status === "loading" ? (
-            <Loader2 size={14} style={{ marginRight: 6, animation: "spin 0.8s linear infinite" }} />
-          ) : null}
-          {ctaLabel ??
-            (status === "loading"
-              ? t("newsletter.submitting")
-              : t("newsletter.submit"))}
-        </button>
+          <input
+            type="text"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder={t("newsletter.namePlaceholderRequired")}
+            className="g2a-input"
+            aria-label={t("newsletter.nameLabel")}
+          />
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t("newsletter.emailPlaceholder")}
+            className="g2a-input"
+            aria-label={t("newsletter.emailLabel")}
+          />
+          <button
+            type="submit"
+            className="g2a-btn-primary"
+            disabled={status === "loading"}
+            style={{ flexShrink: 0, whiteSpace: "nowrap" }}
+          >
+            {status === "loading" ? (
+              <Loader2
+                size={14}
+                style={{ marginRight: 6, animation: "spin 0.8s linear infinite" }}
+              />
+            ) : null}
+            {ctaLabel ??
+              (status === "loading"
+                ? t("newsletter.submitting")
+                : t("newsletter.submit"))}
+          </button>
+        </div>
         <StatusLine status={status} />
+        <style>{`
+          @media (max-width: 600px) {
+            .g2a-newsletter-compact-grid {
+              grid-template-columns: 1fr !important;
+            }
+          }
+        `}</style>
       </form>
     );
   }
 
-  // ─── Full / stacked layout with consent + optional benefits ────────────
+  // ─── Full layout: name + email + topics + consent ──────────────────────
   const cardStyle: React.CSSProperties =
     surface === "card"
       ? {
@@ -140,10 +186,7 @@ export default function NewsletterForm({
 
   return (
     <div style={cardStyle}>
-      <form
-        onSubmit={handleSubmit}
-        style={{ position: "relative" }}
-      >
+      <form onSubmit={handleSubmit} style={{ position: "relative" }}>
         <input
           type="text"
           name="website"
@@ -158,14 +201,16 @@ export default function NewsletterForm({
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: variant === "full" ? "1fr 1fr" : "1fr",
+            gridTemplateColumns: "1fr 1fr",
             gap: "0.75rem",
-            marginBottom: "0.875rem",
+            marginBottom: "1rem",
           }}
+          className="g2a-newsletter-full-fields"
         >
-          <FieldGroup label={t("newsletter.nameLabel")}>
+          <FieldGroup label={t("newsletter.nameLabel")} required>
             <input
               type="text"
+              required
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder={t("newsletter.namePlaceholder")}
@@ -186,6 +231,75 @@ export default function NewsletterForm({
           </FieldGroup>
         </div>
 
+        {/* Topic multi-select — at least one required */}
+        <fieldset
+          style={{
+            border: "1px solid var(--g2a-border)",
+            borderRadius: 10,
+            padding: "1rem 1.1rem 1.1rem",
+            margin: "0 0 1rem",
+          }}
+        >
+          <legend
+            style={{
+              padding: "0 0.5rem",
+              fontFamily: "Geist Mono, monospace",
+              fontSize: "0.7rem",
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              color: "var(--g2a-text-muted)",
+            }}
+          >
+            {t("newsletter.topics.legend")} *
+          </legend>
+          <p
+            style={{
+              color: "var(--g2a-text-secondary)",
+              fontSize: "0.78rem",
+              margin: "0 0 0.625rem",
+              lineHeight: 1.5,
+            }}
+          >
+            {t("newsletter.topics.help")}
+          </p>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: "0.4rem",
+            }}
+          >
+            {NEWSLETTER_TOPICS.map((key) => (
+              <TopicCheckbox
+                key={key}
+                checked={topics.has(key)}
+                onToggle={() => toggleTopic(key)}
+                label={t(`newsletter.topics.${key}.label`)}
+                desc={t(`newsletter.topics.${key}.desc`)}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={toggleAll}
+            style={{
+              marginTop: "0.625rem",
+              background: "none",
+              border: "none",
+              color: "var(--g2a-brand-teal)",
+              fontFamily: "Geist Mono, monospace",
+              fontSize: "0.75rem",
+              textDecoration: "underline",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          >
+            {allChecked
+              ? t("newsletter.topics.deselectAll")
+              : t("newsletter.topics.selectAll")}
+          </button>
+        </fieldset>
+
         <label
           style={{
             display: "flex",
@@ -203,13 +317,20 @@ export default function NewsletterForm({
             checked={consent}
             onChange={(e) => setConsent(e.target.checked)}
             required
-            style={{ marginTop: "0.18rem", accentColor: "var(--g2a-brand-teal)", flexShrink: 0 }}
+            style={{
+              marginTop: "0.18rem",
+              accentColor: "var(--g2a-brand-teal)",
+              flexShrink: 0,
+            }}
           />
           <span>
             {t("newsletter.consent.before")}{" "}
             <Link
               href="/adatvedelmi-iranyelvek"
-              style={{ color: "var(--g2a-brand-teal)", textDecoration: "underline" }}
+              style={{
+                color: "var(--g2a-brand-teal)",
+                textDecoration: "underline",
+              }}
             >
               {t("newsletter.consent.linkText")}
             </Link>{" "}
@@ -220,7 +341,7 @@ export default function NewsletterForm({
         <button
           type="submit"
           className="g2a-btn-primary"
-          disabled={submitDisabled}
+          disabled={status === "loading" || !consent || topics.size === 0}
           style={{
             width: "100%",
             justifyContent: "center",
@@ -272,13 +393,24 @@ export default function NewsletterForm({
             >
               <Check
                 size={14}
-                style={{ color: "var(--g2a-brand-teal)", flexShrink: 0, marginTop: "0.2rem" }}
+                style={{
+                  color: "var(--g2a-brand-teal)",
+                  flexShrink: 0,
+                  marginTop: "0.2rem",
+                }}
               />
               <span>{b}</span>
             </li>
           ))}
         </ul>
       )}
+      <style>{`
+        @media (max-width: 480px) {
+          .g2a-newsletter-full-fields {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
@@ -313,7 +445,74 @@ function FieldGroup({
   );
 }
 
-function StatusLine({ status }: { status: "idle" | "loading" | "success" | "error" }) {
+function TopicCheckbox({
+  checked,
+  onToggle,
+  label,
+  desc,
+}: {
+  checked: boolean;
+  onToggle: () => void;
+  label: string;
+  desc: string;
+}) {
+  return (
+    <label
+      style={{
+        display: "flex",
+        gap: "0.5rem",
+        alignItems: "flex-start",
+        cursor: "pointer",
+        padding: "0.5rem 0.625rem",
+        borderRadius: 8,
+        border: `1px solid ${checked ? "var(--g2a-brand-teal)" : "var(--g2a-border)"}`,
+        background: checked ? "rgba(20,184,166,0.08)" : "transparent",
+        transition: "background 0.15s, border-color 0.15s",
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onToggle}
+        style={{
+          marginTop: "0.18rem",
+          accentColor: "var(--g2a-brand-teal)",
+          flexShrink: 0,
+        }}
+      />
+      <span style={{ display: "block" }}>
+        <span
+          style={{
+            display: "block",
+            color: "var(--g2a-text-primary)",
+            fontFamily: "Geist Mono, monospace",
+            fontSize: "0.78rem",
+            fontWeight: 600,
+            marginBottom: "0.15rem",
+          }}
+        >
+          {label}
+        </span>
+        <span
+          style={{
+            display: "block",
+            color: "var(--g2a-text-secondary)",
+            fontSize: "0.72rem",
+            lineHeight: 1.45,
+          }}
+        >
+          {desc}
+        </span>
+      </span>
+    </label>
+  );
+}
+
+function StatusLine({
+  status,
+}: {
+  status: "idle" | "loading" | "success" | "error";
+}) {
   const { t } = useLanguage();
   if (status === "success") {
     return (
