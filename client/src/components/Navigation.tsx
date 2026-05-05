@@ -271,11 +271,11 @@ export default function Navigation() {
             {/* Language switcher — HU / EN / ZH dropdown */}
             <LanguageSwitcher lang={lang} setLang={setLang} />
 
-            <Link href="/ingyenes-audit" style={{ textDecoration: "none" }} className="hidden md:inline-flex">
-              <span className="g2a-btn-primary" style={{ padding: "0.625rem 1.25rem", fontSize: "0.875rem" }}>
-                {t("nav.freeAudit")}
-              </span>
-            </Link>
+            {/* Desktop top-right "Ingyenes audit" pill removed — the floating
+                StickyCTA on the bottom-left already drives the same conversion,
+                and having one on each side felt over-pushy. The mobile menu
+                still includes the button so smartphone users have a clear CTA
+                inside the hamburger flyout. */}
             <button onClick={() => setMobileOpen(!mobileOpen)}
               style={{ background: "none", border: "none", color: "var(--g2a-text-primary)", cursor: "pointer", padding: "0.375rem" }}
               className="flex md:hidden" aria-label={t("nav.openMenu")}>

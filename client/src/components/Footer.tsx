@@ -1,6 +1,8 @@
 import { Phone, Mail, Clock, MapPin, Facebook, Youtube, Linkedin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CalendlyTextLink } from "@/components/CalendlyEmbed";
+import NewsletterSection from "@/components/NewsletterSection";
+import { useLocation } from "wouter";
 
 const LOGO_URL = "https://g2amarketing.hu/wp-content/uploads/2022/06/g2a_512x512_transparent_feher.png";
 
@@ -28,6 +30,7 @@ const COMPANY = [
   { key: "nav.references", href: "/referenciak" },
   { key: "nav.blog", href: "/hirek" },
   { key: "nav.freeAudit", href: "/ingyenes-audit" },
+  { key: "nav.newsletter", href: "/hirlevel" },
   { key: "nav.contact", href: "/kapcsolat" },
 ];
 
@@ -56,9 +59,29 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
   );
 }
 
-export default function Footer() {
+/**
+ * Site-wide footer. Automatically renders the newsletter signup band above
+ * the link-grid, except on:
+ *   - the Home page (which has its own newsletter section in the page flow)
+ *   - the /hirlevel landing page (the page IS the form)
+ *   - the /admin area (no public chrome)
+ *
+ * Pass `hideNewsletter` explicitly when a page wants to suppress the band
+ * (e.g. /hirlevel does this even though the location check would also
+ * catch it — belt-and-braces).
+ */
+export default function Footer({ hideNewsletter = false }: { hideNewsletter?: boolean } = {}) {
   const { t } = useLanguage();
+  const [location] = useLocation();
+  const skipNewsletter =
+    hideNewsletter ||
+    location === "/" ||
+    location === "/hirlevel" ||
+    location.startsWith("/admin");
+
   return (
+    <>
+    {!skipNewsletter && <NewsletterSection />}
     <footer style={{ backgroundColor: "var(--g2a-bg-2)", borderTop: "1px solid var(--g2a-border)", paddingTop: "4rem" }}>
       <div className="g2a-container">
         <div style={{
@@ -303,5 +326,6 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+    </>
   );
 }

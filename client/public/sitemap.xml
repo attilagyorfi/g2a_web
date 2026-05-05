@@ -377,6 +377,37 @@
   </url>
 
   <url>
+    <loc>https://g2amarketing.hu/hirlevel</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/hirlevel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://g2amarketing.hu/en/hirlevel" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://g2amarketing.hu/zh/hirlevel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://g2amarketing.hu/hirlevel" />
+  </url>
+  <url>
+    <loc>https://g2amarketing.hu/en/hirlevel</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/hirlevel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://g2amarketing.hu/en/hirlevel" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://g2amarketing.hu/zh/hirlevel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://g2amarketing.hu/hirlevel" />
+  </url>
+  <url>
+    <loc>https://g2amarketing.hu/zh/hirlevel</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/hirlevel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://g2amarketing.hu/en/hirlevel" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://g2amarketing.hu/zh/hirlevel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://g2amarketing.hu/hirlevel" />
+  </url>
+
+  <url>
     <loc>https://g2amarketing.hu/szolgaltatasok</loc>
     <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>

@@ -28,6 +28,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.contact": "Kapcsolat",
     "nav.freeAudit": "Ingyenes Audit",
     "nav.industries": "Iparágak",
+    "nav.newsletter": "Hírlevél",
 
     // Services
     "service.localization": "Lokalizáció",
@@ -110,6 +111,30 @@ const translations: Record<Language, Record<string, string>> = {
     "cookie.cat.marketing": "Marketing",
     "cookie.cat.marketing.desc": "Hirdetési, célzási és statisztikai sütik. Jelenleg nem használunk ilyet, de a beállítást előre tudod jelezni.",
     "common.required": "Kötelező mező",
+
+    // Newsletter (shared across <NewsletterForm/>, footer band, popup, /hirlevel)
+    "newsletter.emailLabel": "E-mail cím",
+    "newsletter.emailPlaceholder": "te@cegeden.hu",
+    "newsletter.nameLabel": "Keresztnév",
+    "newsletter.namePlaceholder": "Keresztnév (opcionális)",
+    "newsletter.submit": "Feliratkozom",
+    "newsletter.submitting": "Feliratkozás...",
+    "newsletter.success": "Sikeres feliratkozás! Hamarosan kapsz egy üdvözlő emailt.",
+    "newsletter.error": "Hiba történt a feliratkozás során. Próbáld újra később!",
+    "newsletter.consent.before": "Hozzájárulok, hogy a G2A Marketing Bt. e-mailen marketing tartalmakat küldjön. Részleteket találsz az",
+    "newsletter.consent.linkText": "adatvédelmi tájékoztatóban",
+    "newsletter.consent.after": "; bármikor leiratkozhatok egy kattintással.",
+    "newsletter.benefits.0": "Heti 1 email — sose több",
+    "newsletter.benefits.1": "Konkrét B2B taktikák, AI-eszközök, esettanulmányok",
+    "newsletter.benefits.2": "Egyetlen kattintás a leiratkozás",
+    "newsletter.benefits.3": "Adataidat sose adjuk át harmadik félnek",
+    "newsletter.bandLabel": "Hírlevél",
+    "newsletter.bandTitle": "Heti egy email a B2B marketingről",
+    "newsletter.bandSubtitle": "Pénteken reggel 1 stratégiai gondolat + 1 konkrét taktika + 1 használható eszköz. Spam-mentes.",
+    "newsletter.bandFinePrint": "A feliratkozással elfogadod az Adatvédelmi tájékoztatót. Egy kattintással leiratkozhatsz.",
+    "newsletter.popup.title": "Maradj naprakész",
+    "newsletter.popup.subtitle": "Heti 1 email a B2B marketing trendekről, AI-eszközökről és gyakorlati tippekről. Spam-mentes — egy kattintással leiratkozhatsz.",
+    "newsletter.popup.dismiss": "Most nem",
 
     // Footer
     "footer.rights": "Minden jog fenntartva.",
@@ -543,6 +568,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.contact": "Contact",
     "nav.freeAudit": "Free Audit",
     "nav.industries": "Industries",
+    "nav.newsletter": "Newsletter",
 
     // Services
     "service.localization": "Localization",
@@ -625,6 +651,30 @@ const translations: Record<Language, Record<string, string>> = {
     "cookie.cat.marketing": "Marketing",
     "cookie.cat.marketing.desc": "Advertising, targeting and statistics cookies. We don't use any currently, but you can pre-set your preference.",
     "common.required": "Required field",
+
+    // Newsletter
+    "newsletter.emailLabel": "Email",
+    "newsletter.emailPlaceholder": "you@company.com",
+    "newsletter.nameLabel": "First name",
+    "newsletter.namePlaceholder": "First name (optional)",
+    "newsletter.submit": "Subscribe",
+    "newsletter.submitting": "Subscribing...",
+    "newsletter.success": "Subscribed! Check your inbox for the welcome email.",
+    "newsletter.error": "Something went wrong. Please try again later.",
+    "newsletter.consent.before": "I consent to G2A Marketing Bt. sending me marketing emails. Details in the",
+    "newsletter.consent.linkText": "privacy policy",
+    "newsletter.consent.after": "; I can unsubscribe in one click anytime.",
+    "newsletter.benefits.0": "One email a week — never more",
+    "newsletter.benefits.1": "Concrete B2B tactics, AI tooling, case studies",
+    "newsletter.benefits.2": "One-click unsubscribe",
+    "newsletter.benefits.3": "We never share your data with third parties",
+    "newsletter.bandLabel": "Newsletter",
+    "newsletter.bandTitle": "One weekly email on B2B marketing",
+    "newsletter.bandSubtitle": "Friday mornings: 1 strategic thought + 1 concrete tactic + 1 usable tool. Spam-free.",
+    "newsletter.bandFinePrint": "Subscribing means you accept the privacy policy. One-click unsubscribe.",
+    "newsletter.popup.title": "Stay in the loop",
+    "newsletter.popup.subtitle": "One weekly email on B2B marketing trends, AI tooling and practical tactics. Spam-free — one-click unsubscribe.",
+    "newsletter.popup.dismiss": "Not now",
 
     // Footer
     "footer.rights": "All rights reserved.",
@@ -1048,6 +1098,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.contact": "联系我们",
     "nav.freeAudit": "免费评估",
     "nav.industries": "行业",
+    "nav.newsletter": "通讯订阅",
 
     // Services
     "service.localization": "本地化",
@@ -1130,6 +1181,30 @@ const translations: Record<Language, Record<string, string>> = {
     "cookie.cat.marketing": "营销",
     "cookie.cat.marketing.desc": "广告、定向与统计 Cookie。我们目前不使用,但您可以预先设置偏好。",
     "common.required": "必填项",
+
+    // Newsletter
+    "newsletter.emailLabel": "电子邮箱",
+    "newsletter.emailPlaceholder": "you@company.com",
+    "newsletter.nameLabel": "名字",
+    "newsletter.namePlaceholder": "名字(可选)",
+    "newsletter.submit": "订阅",
+    "newsletter.submitting": "订阅中...",
+    "newsletter.success": "订阅成功!欢迎邮件已发送到您的邮箱。",
+    "newsletter.error": "出现错误,请稍后再试。",
+    "newsletter.consent.before": "我同意 G2A Marketing Bt. 通过电子邮件向我发送营销内容。详见",
+    "newsletter.consent.linkText": "隐私政策",
+    "newsletter.consent.after": ";可随时一键退订。",
+    "newsletter.benefits.0": "每周一封 — 绝不更多",
+    "newsletter.benefits.1": "具体的 B2B 战术、AI 工具与案例研究",
+    "newsletter.benefits.2": "一键退订",
+    "newsletter.benefits.3": "绝不向第三方分享您的数据",
+    "newsletter.bandLabel": "通讯",
+    "newsletter.bandTitle": "每周一封 B2B 营销邮件",
+    "newsletter.bandSubtitle": "周五早晨:1 个战略思考 + 1 个具体战术 + 1 款可用工具。无垃圾邮件。",
+    "newsletter.bandFinePrint": "订阅即表示您接受隐私政策。一键退订。",
+    "newsletter.popup.title": "保持关注",
+    "newsletter.popup.subtitle": "每周一封关于 B2B 营销趋势、AI 工具与可操作战术的邮件。无垃圾邮件 — 一键退订。",
+    "newsletter.popup.dismiss": "暂不",
 
     // Footer
     "footer.rights": "版权所有。",
