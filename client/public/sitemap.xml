@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-  <!-- Generated 2026-04-26 — do not edit manually; re-run scripts/generate-sitemap.mjs -->
+  <!-- Generated 2026-05-05 — do not edit manually; re-run scripts/generate-sitemap.mjs -->
 
   <url>
     <loc>https://g2amarketing.hu/</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/" />
@@ -16,7 +16,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/" />
@@ -26,7 +26,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/" />
@@ -37,7 +37,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/rolunk</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/rolunk" />
@@ -47,7 +47,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/rolunk</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/rolunk" />
@@ -57,7 +57,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/rolunk</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/rolunk" />
@@ -68,7 +68,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/ingyenes-audit</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/ingyenes-audit" />
@@ -78,7 +78,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/ingyenes-audit</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/ingyenes-audit" />
@@ -88,7 +88,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/ingyenes-audit</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/ingyenes-audit" />
@@ -99,7 +99,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/ingyenes-seo-audit</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/ingyenes-seo-audit" />
@@ -109,7 +109,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/ingyenes-seo-audit</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/ingyenes-seo-audit" />
@@ -119,7 +119,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/ingyenes-seo-audit</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/ingyenes-seo-audit" />
@@ -130,7 +130,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/referenciak</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/referenciak" />
@@ -140,7 +140,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/referenciak</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/referenciak" />
@@ -150,7 +150,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/referenciak</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/referenciak" />
@@ -161,7 +161,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/kapcsolat</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/kapcsolat" />
@@ -171,7 +171,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/kapcsolat</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/kapcsolat" />
@@ -181,7 +181,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/kapcsolat</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/kapcsolat" />
@@ -192,7 +192,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szakertelem</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szakertelem" />
@@ -202,7 +202,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szakertelem</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szakertelem" />
@@ -212,7 +212,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szakertelem</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szakertelem" />
@@ -223,7 +223,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/technologia</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/technologia" />
@@ -233,7 +233,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/technologia</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/technologia" />
@@ -243,7 +243,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/technologia</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/technologia" />
@@ -254,7 +254,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/partnereink</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/partnereink" />
@@ -264,7 +264,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/partnereink</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/partnereink" />
@@ -274,7 +274,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/partnereink</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/partnereink" />
@@ -285,7 +285,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/hirek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/hirek" />
@@ -295,7 +295,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/hirek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/hirek" />
@@ -305,7 +305,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/hirek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/hirek" />
@@ -316,7 +316,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/adatvedelmi-iranyelvek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/adatvedelmi-iranyelvek" />
@@ -326,7 +326,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/adatvedelmi-iranyelvek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/adatvedelmi-iranyelvek" />
@@ -336,7 +336,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/adatvedelmi-iranyelvek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/adatvedelmi-iranyelvek" />
@@ -346,8 +346,39 @@
   </url>
 
   <url>
+    <loc>https://g2amarketing.hu/aszf</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/aszf" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://g2amarketing.hu/en/aszf" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://g2amarketing.hu/zh/aszf" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://g2amarketing.hu/aszf" />
+  </url>
+  <url>
+    <loc>https://g2amarketing.hu/en/aszf</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/aszf" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://g2amarketing.hu/en/aszf" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://g2amarketing.hu/zh/aszf" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://g2amarketing.hu/aszf" />
+  </url>
+  <url>
+    <loc>https://g2amarketing.hu/zh/aszf</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/aszf" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://g2amarketing.hu/en/aszf" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://g2amarketing.hu/zh/aszf" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://g2amarketing.hu/aszf" />
+  </url>
+
+  <url>
     <loc>https://g2amarketing.hu/szolgaltatasok</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok" />
@@ -357,7 +388,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok" />
@@ -367,7 +398,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok" />
@@ -378,7 +409,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/lokalizacio</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/lokalizacio" />
@@ -388,7 +419,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/lokalizacio</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/lokalizacio" />
@@ -398,7 +429,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/lokalizacio</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/lokalizacio" />
@@ -409,7 +440,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/arculattervezes</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/arculattervezes" />
@@ -419,7 +450,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/arculattervezes</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/arculattervezes" />
@@ -429,7 +460,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/arculattervezes</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/arculattervezes" />
@@ -440,7 +471,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/hirdeteskezeles</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/hirdeteskezeles" />
@@ -450,7 +481,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/hirdeteskezeles</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/hirdeteskezeles" />
@@ -460,7 +491,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/hirdeteskezeles</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/hirdeteskezeles" />
@@ -471,7 +502,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/kozossegi-media</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/kozossegi-media" />
@@ -481,7 +512,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/kozossegi-media</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/kozossegi-media" />
@@ -491,7 +522,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/kozossegi-media</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/kozossegi-media" />
@@ -502,7 +533,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/strategiai-marketing</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/strategiai-marketing" />
@@ -512,7 +543,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/strategiai-marketing</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/strategiai-marketing" />
@@ -522,7 +553,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/strategiai-marketing</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/strategiai-marketing" />
@@ -533,7 +564,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/keresooptimalizalas</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/keresooptimalizalas" />
@@ -543,7 +574,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/keresooptimalizalas</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/keresooptimalizalas" />
@@ -553,7 +584,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/keresooptimalizalas</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/keresooptimalizalas" />
@@ -564,7 +595,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/webfejlesztes</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/webfejlesztes" />
@@ -574,7 +605,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/webfejlesztes</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/webfejlesztes" />
@@ -584,7 +615,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/webfejlesztes</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/webfejlesztes" />
@@ -595,7 +626,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/ai-marketing</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/ai-marketing" />
@@ -605,7 +636,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/ai-marketing</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/ai-marketing" />
@@ -615,7 +646,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/ai-marketing</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/ai-marketing" />
@@ -626,7 +657,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/ppc-google-ads</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/ppc-google-ads" />
@@ -636,7 +667,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/ppc-google-ads</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/ppc-google-ads" />
@@ -646,7 +677,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/ppc-google-ads</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/ppc-google-ads" />
@@ -657,7 +688,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/meta-hirdetes</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/meta-hirdetes" />
@@ -667,7 +698,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/meta-hirdetes</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/meta-hirdetes" />
@@ -677,7 +708,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/meta-hirdetes</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/meta-hirdetes" />
@@ -688,7 +719,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/tartalommarketing</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/tartalommarketing" />
@@ -698,7 +729,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/tartalommarketing</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/tartalommarketing" />
@@ -708,7 +739,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/tartalommarketing</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/tartalommarketing" />
@@ -719,7 +750,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/marketing-automatizacio</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/marketing-automatizacio" />
@@ -729,7 +760,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/marketing-automatizacio</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/marketing-automatizacio" />
@@ -739,7 +770,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/marketing-automatizacio</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/marketing-automatizacio" />
@@ -750,7 +781,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/esg-kommunikacio</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/esg-kommunikacio" />
@@ -760,7 +791,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/esg-kommunikacio</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/esg-kommunikacio" />
@@ -770,7 +801,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/esg-kommunikacio</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/esg-kommunikacio" />
@@ -781,7 +812,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/employer-branding</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/employer-branding" />
@@ -791,7 +822,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/employer-branding</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/employer-branding" />
@@ -801,7 +832,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/employer-branding</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/employer-branding" />
@@ -812,7 +843,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/szolgaltatasok/nemzetkozi-marketing</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/nemzetkozi-marketing" />
@@ -822,7 +853,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/szolgaltatasok/nemzetkozi-marketing</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/nemzetkozi-marketing" />
@@ -832,7 +863,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/szolgaltatasok/nemzetkozi-marketing</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/szolgaltatasok/nemzetkozi-marketing" />
@@ -843,7 +874,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/iparagi/marketing-egeszsegugyi-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-egeszsegugyi-cegeknek" />
@@ -853,7 +884,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/iparagi/marketing-egeszsegugyi-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-egeszsegugyi-cegeknek" />
@@ -863,7 +894,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/iparagi/marketing-egeszsegugyi-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-egeszsegugyi-cegeknek" />
@@ -874,7 +905,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/iparagi/marketing-szepsegipari-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-szepsegipari-cegeknek" />
@@ -884,7 +915,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/iparagi/marketing-szepsegipari-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-szepsegipari-cegeknek" />
@@ -894,7 +925,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/iparagi/marketing-szepsegipari-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-szepsegipari-cegeknek" />
@@ -905,7 +936,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/iparagi/marketing-mernoki-irodaknak</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-mernoki-irodaknak" />
@@ -915,7 +946,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/iparagi/marketing-mernoki-irodaknak</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-mernoki-irodaknak" />
@@ -925,7 +956,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/iparagi/marketing-mernoki-irodaknak</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-mernoki-irodaknak" />
@@ -936,7 +967,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/iparagi/marketing-autoipari-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-autoipari-cegeknek" />
@@ -946,7 +977,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/iparagi/marketing-autoipari-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-autoipari-cegeknek" />
@@ -956,7 +987,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/iparagi/marketing-autoipari-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-autoipari-cegeknek" />
@@ -967,7 +998,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/iparagi/marketing-ugyvedii-irodaknak</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-ugyvedii-irodaknak" />
@@ -977,7 +1008,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/iparagi/marketing-ugyvedii-irodaknak</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-ugyvedii-irodaknak" />
@@ -987,7 +1018,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/iparagi/marketing-ugyvedii-irodaknak</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-ugyvedii-irodaknak" />
@@ -998,7 +1029,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/iparagi/marketing-technologiai-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-technologiai-cegeknek" />
@@ -1008,7 +1039,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/iparagi/marketing-technologiai-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-technologiai-cegeknek" />
@@ -1018,7 +1049,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/iparagi/marketing-technologiai-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-technologiai-cegeknek" />
@@ -1029,7 +1060,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/iparagi/marketing-onkormanyzati-projekteknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-onkormanyzati-projekteknek" />
@@ -1039,7 +1070,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/iparagi/marketing-onkormanyzati-projekteknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-onkormanyzati-projekteknek" />
@@ -1049,7 +1080,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/iparagi/marketing-onkormanyzati-projekteknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-onkormanyzati-projekteknek" />
@@ -1060,7 +1091,7 @@
 
   <url>
     <loc>https://g2amarketing.hu/iparagi/marketing-b2b-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-b2b-cegeknek" />
@@ -1070,7 +1101,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/en/iparagi/marketing-b2b-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-b2b-cegeknek" />
@@ -1080,7 +1111,7 @@
   </url>
   <url>
     <loc>https://g2amarketing.hu/zh/iparagi/marketing-b2b-cegeknek</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="hu" href="https://g2amarketing.hu/iparagi/marketing-b2b-cegeknek" />

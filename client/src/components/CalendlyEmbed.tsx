@@ -11,6 +11,7 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { Calendar, Loader2 } from "lucide-react";
+import { hasConsent, CONSENT_CHANGE_EVENT, type ConsentState } from "@/lib/consent";
 
 const CALENDLY_URL = import.meta.env.VITE_CALENDLY_URL ?? "";
 const CALENDLY_SCRIPT_URL = "https://assets.calendly.com/assets/external/widget.js";
@@ -257,8 +258,13 @@ export function CalendlyBadge({
       }
     };
 
-    idle(() => {
+    const initBadge = () => {
       if (initialized.current) return;
+      // Granular consent gate — Calendly drops third-party cookies when its
+      // assets load, so we wait for explicit `thirdParty` opt-in. The user
+      // can still flip the switch in the footer's "Cookie settings" link
+      // and we'll re-init via the consent-change listener below.
+      if (!hasConsent("thirdParty")) return;
       loadCalendlyScript()
         .then(() => {
           if (!window.Calendly || initialized.current) return;
@@ -273,7 +279,18 @@ export function CalendlyBadge({
           initialized.current = true;
         })
         .catch((err) => console.error("[CalendlyBadge] load failed:", err));
-    });
+    };
+
+    idle(initBadge);
+
+    // If the user grants thirdParty consent later (via footer "Cookie
+    // settings" → toggle on → save), pick it up and mount the badge.
+    const onConsent = (e: Event) => {
+      const detail = (e as CustomEvent<ConsentState>).detail;
+      if (detail?.thirdParty) idle(initBadge);
+    };
+    window.addEventListener(CONSENT_CHANGE_EVENT, onConsent);
+    return () => window.removeEventListener(CONSENT_CHANGE_EVENT, onConsent);
 
     // Cleanup: badge widget is sticky so removing the script doesn't remove
     // the DOM. We handle this by checking initialized.current on re-mount.

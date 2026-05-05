@@ -34,6 +34,7 @@ const BlogPage = lazy(() => import("./pages/BlogPage"));
 const BlogPostPage = lazy(() => import("./pages/BlogPostPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
+const AszfPage = lazy(() => import("./pages/AszfPage"));
 const RolunkPage = lazy(() => import("./pages/RolunkPage"));
 const NewServicePage = lazy(() => import("./pages/NewServicePage"));
 const AuditPage = lazy(() => import("./pages/AuditPage"));
@@ -90,6 +91,7 @@ function PublicRouter() {
       <Route path="/hirek/:slug" component={BlogPostPage} />
       <Route path="/kapcsolat" component={ContactPage} />
       <Route path="/adatvedelmi-iranyelvek" component={PrivacyPage} />
+      <Route path="/aszf" component={AszfPage} />
       <Route path="/ingyenes-seo-audit" component={SeoAuditPage} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

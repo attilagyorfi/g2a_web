@@ -215,6 +215,33 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Impressum / company identification — required by Eker. tv. 4. § c-d
+            and the Hungarian commercial law for limited partnerships (Bt.).
+            Kept compact: one line on desktop, wraps on mobile. */}
+        <div
+          style={{
+            borderTop: "1px solid var(--g2a-border)",
+            padding: "1rem 0",
+            color: "var(--g2a-text-muted)",
+            fontSize: "0.75rem",
+            lineHeight: 1.7,
+            fontFamily: "Geist Mono, monospace",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "0.25rem 1.25rem",
+          }}
+        >
+          <span>
+            <strong style={{ color: "var(--g2a-text-secondary)" }}>
+              {t("footer.impressum")}:
+            </strong>{" "}
+            G2A Marketing Bt.
+          </span>
+          <span>{t("footer.impressum.address")}: 7625 Pécs, Péter utca 1. fszt. 1.</span>
+          <span>{t("footer.impressum.regNumber")}: 02-06-075160</span>
+          <span>{t("footer.impressum.taxNumber")}: 32070325-1-02</span>
+        </div>
+
         {/* Bottom Bar */}
         <div style={{
           borderTop: "1px solid var(--g2a-border)",
@@ -237,6 +264,33 @@ export default function Footer() {
             >
               {t("footer.privacy")}
             </a>
+            <a
+              href="/aszf"
+              style={{ color: "var(--g2a-text-muted)", fontSize: "0.8125rem", textDecoration: "none" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-accent)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-muted)"; }}
+            >
+              {t("footer.terms")}
+            </a>
+            <button
+              type="button"
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent("g2a:open-cookie-settings"));
+              }}
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                color: "var(--g2a-text-muted)",
+                fontSize: "0.8125rem",
+                fontFamily: "inherit",
+                cursor: "pointer",
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = "var(--g2a-text-accent)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = "var(--g2a-text-muted)"; }}
+            >
+              {t("footer.cookieSettings")}
+            </button>
             <a
               href="/admin"
               style={{ color: "var(--g2a-text-muted)", opacity: 0.6, fontSize: "0.8125rem", textDecoration: "none" }}
