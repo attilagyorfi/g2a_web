@@ -176,38 +176,16 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
-    // Manual vendor chunk split — separates rarely-changing vendor code from
-    // app code so the browser cache can keep it across deploys.
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          if (!id.includes("node_modules")) return undefined;
-          // React core + every package that calls React.* at module-load.
-          // Splitting React into its own chunk while leaving consumers in
-          // vendor-misc creates a race: misc evaluates before React's
-          // namespace is wired up and `React.createContext` blows up.
-          // Keep them together to guarantee initialisation order.
-          if (
-            /[\\/]node_modules[\\/](react|react-dom|react-is|scheduler|use-sync-external-store|@radix-ui|@tanstack|@trpc|wouter|next-themes|sonner|vaul|cmdk|input-otp|react-hook-form|react-day-picker|react-resizable-panels|recharts|embla-carousel-react|streamdown|@hookform)[\\/]/.test(
-              id,
-            )
-          ) {
-            return "vendor-react";
-          }
-          // Framer-motion is the heaviest single dep — own chunk
-          if (id.includes("framer-motion")) {
-            return "vendor-motion";
-          }
-          // Lucide icons — large but tree-shakable
-          if (id.includes("lucide-react")) {
-            return "vendor-icons";
-          }
-          // Everything else — small libs grouped
-          return "vendor-misc";
-        },
-      },
-    },
-    chunkSizeWarningLimit: 600,
+    // No manualChunks: every attempt to split React into its own chunk while
+    // leaving its peer libs (use-isomorphic-layout-effect, react-remove-scroll,
+    // aria-hidden, …) in vendor-misc produces a runtime race — those libs read
+    // `React.useLayoutEffect` / `React.createContext` at module-load, and the
+    // split-out namespace from vendor-react doesn't expose those properties
+    // when accessed via `import * as React`. Letting Rollup decide chunking
+    // automatically keeps consumers and providers in the same chunk and ships
+    // a working build. Cache loss is small (~250 KB main bundle) compared to
+    // the cost of a non-rendering page.
+    chunkSizeWarningLimit: 800,
   },
   server: {
     host: true,
