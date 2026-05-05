@@ -7,6 +7,10 @@ dist/
 build/
 *.dist
 
+# Vercel build output (esbuild-bundled serverless function — generated at deploy)
+api/index.js
+.vercel/
+
 # Environment variables
 .env
 .env.local
