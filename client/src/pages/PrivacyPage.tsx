@@ -5,16 +5,11 @@
  * compliant. Lists every data category, every processor, retention period,
  * legal basis (Art. 6 GDPR) and data-subject rights.
  *
- * !!! ACTION REQUIRED !!!
- * Before going live with the real DNS, fill in the company-identification
- * placeholders below — these are mandatory under the Hungarian eCommerce
- * act (Ekertv. 4. § c-d) and GDPR Art. 13(1)(a):
- *   - COMPANY_FULL_ADDRESS — full street + postcode
- *   - COMPANY_REG_NUMBER  — cégjegyzékszám (e.g. "02-06-123456")
- *   - COMPANY_TAX_NUMBER  — adószám (e.g. "12345678-2-02")
- *
  * Update LAST_UPDATED whenever the underlying data flows change (new
- * processor, new cookie, retention change, etc.).
+ * processor, new cookie, retention change, etc.). Update the company
+ * identification block (address, reg number, tax number) only on a real
+ * registry change — these are required by Ekertv. 4. § c-d and GDPR
+ * Art. 13(1)(a).
  */
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -24,9 +19,9 @@ import type { Language } from "@/contexts/LanguageContext";
 
 // ─── Company identification ──────────────────────────────────────────────
 const COMPANY_NAME = "G2A Marketing Bt.";
-const COMPANY_FULL_ADDRESS = "[KITÖLTENDŐ — teljes székhelycím irányítószámmal]";
-const COMPANY_REG_NUMBER = "[KITÖLTENDŐ — cégjegyzékszám]";
-const COMPANY_TAX_NUMBER = "[KITÖLTENDŐ — adószám]";
+const COMPANY_FULL_ADDRESS = "7625 Pécs, Péter utca 1. fszt. 1.";
+const COMPANY_REG_NUMBER = "02-06-075160";
+const COMPANY_TAX_NUMBER = "32070325-1-02";
 const EMAIL = "info@g2amarketing.hu";
 const PHONE = "+36 30 190 2575";
 
