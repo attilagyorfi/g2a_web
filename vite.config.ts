@@ -182,19 +182,23 @@ export default defineConfig({
       output: {
         manualChunks: (id) => {
           if (!id.includes("node_modules")) return undefined;
-          // React core: tiny + critical, keep separate so it stays cached
-          if (/[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/.test(id)) {
+          // React core + every package that calls React.* at module-load.
+          // Splitting React into its own chunk while leaving consumers in
+          // vendor-misc creates a race: misc evaluates before React's
+          // namespace is wired up and `React.createContext` blows up.
+          // Keep them together to guarantee initialisation order.
+          if (
+            /[\\/]node_modules[\\/](react|react-dom|react-is|scheduler|use-sync-external-store|@radix-ui|@tanstack|@trpc|wouter|next-themes|sonner|vaul|cmdk|input-otp|react-hook-form|react-day-picker|react-resizable-panels|recharts|embla-carousel-react|streamdown|@hookform)[\\/]/.test(
+              id,
+            )
+          ) {
             return "vendor-react";
           }
           // Framer-motion is the heaviest single dep — own chunk
           if (id.includes("framer-motion")) {
             return "vendor-motion";
           }
-          // tRPC + tanstack query bundle
-          if (id.includes("@trpc") || id.includes("@tanstack")) {
-            return "vendor-trpc";
-          }
-          // Lucide icons — large but tree-shakable, keep with vendor catch-all
+          // Lucide icons — large but tree-shakable
           if (id.includes("lucide-react")) {
             return "vendor-icons";
           }
