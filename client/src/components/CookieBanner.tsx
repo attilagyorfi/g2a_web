@@ -26,6 +26,20 @@ export default function CookieBanner() {
     if (!accepted) setVisible(true);
   }, []);
 
+  // While the consent banner is shown, hide overlapping bottom-fixed widgets
+  // (Calendly badge, future chat bubbles). The banner spans the full bottom
+  // edge with z-index 9999 — any other floating CTA at bottom-left collides
+  // with the privacy info, which is illegal under the ePrivacy Directive
+  // (consent must be unobstructed). We re-show widgets after dismiss.
+  useEffect(() => {
+    if (visible) {
+      document.body.classList.add("g2a-has-cookie-banner");
+    } else {
+      document.body.classList.remove("g2a-has-cookie-banner");
+    }
+    return () => document.body.classList.remove("g2a-has-cookie-banner");
+  }, [visible]);
+
   const accept = () => {
     localStorage.setItem("g2a_cookie_consent", "accepted");
     setVisible(false);

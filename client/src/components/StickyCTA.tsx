@@ -23,7 +23,7 @@ export default function StickyCTA() {
   if (!visible || dismissed) return null;
 
   return (
-    <div style={{
+    <div className="g2a-sticky-cta" style={{
       position: "fixed",
       // Bottom-LEFT stack — vertically aligned with the Calendly badge (which
       // mounts at left: 20px from the viewport edge). Same `left` so the two
