@@ -31,248 +31,712 @@ const HU: Record<string, ServiceConfig> = {
   "ai-marketing": {
     slug: "ai-marketing",
     title: "AI Marketing",
-    subtitle: "Mesterséges intelligencia a marketingben",
-    heroDesc: "Automatizáld a marketingedet, személyre szabott tartalmakkal és AI-alapú elemzésekkel növeld a konverzióidat.",
-    metaTitle: "AI Marketing – Mesterséges Intelligencia a Marketingben | G2A Marketing",
-    metaDesc: "AI-alapú marketing megoldások: automatizált kampányok, személyre szabott tartalmak, prediktív elemzés. Növeld a hatékonyságot mesterséges intelligenciával.",
+    subtitle: "Mesterséges intelligencia a marketing minden szakaszában",
+    heroDesc:
+      "A mesterséges intelligencia új távlatokat nyit a marketingben: pontosabb célzás, személyre szabott tartalom, prediktív elemzés. Csökkentjük a manuális munkát, és új bevételi lehetőségeket teremtünk.",
+    metaTitle: "AI Marketing – Mesterséges intelligencia a marketingben | G2A Marketing",
+    metaDesc:
+      "Személyre szabott tartalmak, prediktív elemzés, automatizált hirdetésoptimalizáció és chatbotok. Tedd adatvezéreltté marketinged mesterséges intelligenciával.",
     icon: "bot",
     color: "#7c3aed",
-    intro: "A mesterséges intelligencia forradalmasítja a marketinget. Az AI-alapú eszközök segítségével pontosabb célzást, személyre szabott kommunikációt és automatizált folyamatokat valósíthatunk meg – mindezt töredék idő és költség alatt.",
+    intro:
+      "Az AI 2024-2026 között lett operatívan használható eszköz a marketingben — a hype-ot felváltotta a reális ROI. A G2A Marketing belső munkafolyamataiban napi szinten dolgozunk Claude, ChatGPT, Manus, Gemini, Midjourney, Runway, ElevenLabs és Cursor eszközökkel — a tartalomgyártástól az ügyfélprojektek auditjáig. Ezt a tapasztalatot hozzuk az ügyfél-projektekbe: nem ígéretként, hanem konkrét, mérhető folyamat-gyorsításként.",
     benefits: [
-      { title: "Prediktív elemzés", desc: "AI-alapú adatelemzéssel előre jelezzük a vásárlói viselkedést és optimalizáljuk a kampányokat." },
-      { title: "Személyre szabott tartalom", desc: "Minden felhasználónak releváns tartalmakat jelenítünk meg automatikusan, növelve az elköteleződést." },
-      { title: "Automatizált hirdetések", desc: "Smart bidding és automatizált kampánykezelés a maximális ROI érdekében." },
-      { title: "Chatbot integráció", desc: "24/7 ügyfélszolgálat AI chatbotokkal, amelyek valódi értéket teremtenek." },
-      { title: "Tartalomgenerálás", desc: "AI-asszisztált tartalomlétrehozás, amely gyorsítja a marketingfolyamatokat." },
-      { title: "Konverzióoptimalizálás", desc: "Gépi tanulás alapú A/B tesztelés és landing page optimalizálás." },
+      {
+        title: "Prediktív elemzés",
+        desc: "Vásárlói minták előrejelzése (mikor vásárol legközelebb, mikor lemorzsolódik), kampány-eredmények szimulálása indítás előtt — Google AI + saját modellek alapján.",
+      },
+      {
+        title: "Személyre szabott tartalom",
+        desc: "Dinamikus email- és webtartalom: minden látogató a viselkedése alapján mást lát. HubSpot Smart Content + Mutiny + saját workflow alapján.",
+      },
+      {
+        title: "Automatizált hirdetésoptimalizáció",
+        desc: "Performance Max, Smart Bidding, Meta Advantage+ kampányok mesterséges intelligenciával — a kreatívokat és a célzást a Google/Meta AI iterálja, mi a stratégiai keretet és a tiltólistákat adjuk.",
+      },
+      {
+        title: "Chatbot és AI ügynök integráció",
+        desc: "24/7 ügyfélszolgálat AI chatbotokkal (Intercom Fin, Drift, vagy custom Claude API alapú megoldás). Tipikusan 60-70%-os first-touch resolution rate az 1. hónap után.",
+      },
+      {
+        title: "AI-támogatott tartalomgyártás",
+        desc: "Blog drafts, social copy, ad creatives — Claude + Midjourney + Runway hibrid pipeline-on. Heti tartalom-output 3-5x növelhető a minőség megtartásával.",
+      },
+      {
+        title: "Konverzióoptimalizáció gépi tanulással",
+        desc: "Prediktív A/B tesztek (előre megsaccoljuk melyik variáns nyer), AI-alapú UX heatmap-elemzés, dinamikus landing page elemek látogató-szegmens szerint.",
+      },
     ],
     process: [
-      { step: "01", title: "AI Audit", desc: "Megvizsgáljuk a jelenlegi marketing folyamataidat és azonosítjuk az AI-integrációs lehetőségeket." },
-      { step: "02", title: "Stratégia", desc: "Személyre szabott AI marketing stratégiát dolgozunk ki a céljaid alapján." },
-      { step: "03", title: "Implementáció", desc: "Bevezetjük az AI eszközöket és integráljuk a meglévő rendszereiddel." },
-      { step: "04", title: "Optimalizálás", desc: "Folyamatos monitoring és finomhangolás a legjobb eredmények érdekében." },
+      {
+        step: "01",
+        title: "Igényfelmérés és AI audit",
+        desc: "Feltérképezzük a marketingfolyamataidat, megnézzük hol a legmagasabb ROI az AI-integrációnak — és hol fals barát. Konkrét javaslat-csomag KPI-okkal.",
+      },
+      {
+        step: "02",
+        title: "Adatstratégia és platform-választás",
+        desc: "Az AI csak annyira jó amennyi tiszta adatod van. Adat-pipeline-t építünk (CDP, GA4, CRM event tracking) és kiválasztjuk a feladathoz illő AI eszközöket.",
+      },
+      {
+        step: "03",
+        title: "AI megoldások integrálása",
+        desc: "Step-by-step bevezetés — egy folyamatot egyszerre. Pilot-tal kezdünk, mérünk, csak utána skálázunk. Soha nem 5 párhuzamos AI projekt egyszerre.",
+      },
+      {
+        step: "04",
+        title: "Mérés és iteráció",
+        desc: "Havi review riport: az AI által hozott idő- és költségmegtakarítás vs. a beállítási költség. Kvartális stratégiai felülvizsgálat új eszközökkel.",
+      },
     ],
     faq: [
-      { q: "Mekkora cégeknek ajánlott az AI marketing?", a: "Az AI marketing minden méretű vállalkozásnak elérhető. Kis cégeknek az automatizálás, nagyobb vállalatoknál a prediktív elemzés és személyre szabás jelenti a legnagyobb értéket." },
-      { q: "Mennyi idő alatt láthatók az eredmények?", a: "Az első eredmények általában 4-8 héten belül láthatók, de a teljes potenciál 3-6 hónap után bontakozik ki." },
-      { q: "Milyen AI eszközöket használtok?", a: "Google AI, Meta AI hirdetési rendszerek, OpenAI API, HubSpot AI, Jasper és egyéb vezető platformokat integrálunk." },
+      {
+        q: "Mekkora cégeknek ajánlott az AI marketing?",
+        a: "Minden méretnek, de más-más eszközökkel. KKV-knál a content + ad creative AI-támogatás (Claude + Midjourney + Runway) hozza a leggyorsabb megtérülést. Középvállalatnál a prediktív analitika és a CRM-AI integráció. Enterprise-nál a custom modell-fine-tuning saját adatra.",
+      },
+      {
+        q: "Mennyi idő alatt láthatók az eredmények?",
+        a: "Tartalom-pipeline gyorsítás: 2-3 hét. AI-támogatott hirdetés-optimalizáció: 4-6 hét. Prediktív analitika és személyre szabás: 3-4 hónap (mert adat kell hozzá). Custom AI ügynök: 6-9 hónap teljes ROI-hoz.",
+      },
+      {
+        q: "Milyen AI eszközöket használtok konkrétan?",
+        a: "LLM: Claude (1M token kontextushoz), ChatGPT (általános), Gemini (Workspace integráció), Manus (autonom ügynökök). Kép: Midjourney v7, DALL·E 3, Adobe Firefly. Videó: Runway Gen-4, Sora. Hang: ElevenLabs. Marketing-specifikus: HubSpot AI, Surfer, Frase, Clearscope. Részletes lista: /technologia oldal.",
+      },
+      {
+        q: "Növeli-e az AI a hirdetések költségét?",
+        a: "Rövid távon van egy beállítási költség (audit, integráció, tréning) — jellemzően egyszeri 300-800 ezer Ft. Hosszabb távon 20-40%-os hatékonyság-növekedést hoz: ugyanannyi spendből több konverzió, vagy ugyanannyi konverzió kevesebb spendből.",
+      },
+      {
+        q: "Hogyan integrálható a meglévő rendszereinkkel?",
+        a: "API-integrációval. A leggyakoribb: HubSpot/Salesforce CRM + Claude API ügyfél-emailezésre, GA4 + Google AI prediktív analitikára, Intercom + custom RAG (saját ügyféldokumentum-bázis) chatbothoz. A G2A írja meg a workflow-kat, te csak a végén kapod a kész integrációt.",
+      },
+      {
+        q: "Mi a helyzet a GDPR-ral és az adatvédelemmel?",
+        a: "Az AI eszközök közül kiválasztjuk azokat, amelyek EU-régióban dolgoznak vagy szerződéses garanciával nem használják az adataidat tréningre. OpenAI, Anthropic és Google enterprise verziói mind biztosítanak ilyen opciót. A G2A nem küld ügyfél-adatot OpenAI free tieres végpontra — kizárólag enterprise/zero-retention végpontokon.",
+      },
     ],
     cta: "Kérd az ingyenes AI marketing auditot",
   },
   "ppc-google-ads": {
     slug: "ppc-google-ads",
-    title: "PPC / Google Ads",
-    subtitle: "Fizetett keresési hirdetések szakértői kezelése",
-    heroDesc: "Maximalizáld a Google Ads befektetés megtérülését profi kampánykezeléssel, precíz célzással és folyamatos optimalizálással.",
-    metaTitle: "PPC Google Ads Kezelés – Fizetett Hirdetések | G2A Marketing",
-    metaDesc: "Professzionális Google Ads kampánykezelés. Search, Display, Shopping, YouTube hirdetések. Mérhető eredmények, maximális ROI.",
+    title: "PPC és Google Ads",
+    subtitle: "Fizetett hirdetés, ami megtérül — minden Google csatornán",
+    heroDesc:
+      "Fizetett hirdetések nélkülözhetetlenek, ha gyorsan akarsz új ügyfeleket. Adatvezérelt PPC kampányokat építünk a Google keresőben, Display Networkön, Shoppingon és YouTube-on — mindig az üzleti céljaidhoz igazítva.",
+    metaTitle: "PPC és Google Ads szakértői szolgáltatás | G2A Marketing",
+    metaDesc:
+      "Adatvezérelt PPC kampányok: Search, Display, Shopping, YouTube és Performance Max. Több platform, egyetlen stratégia — mérhető ROI a G2A Marketinggel.",
     icon: "target",
     color: "#ea4335",
-    intro: "A Google Ads az egyik leghatékonyabb eszköz az azonnali láthatóság és konverziók növelésére. Szakértő csapatunk minden kampánytípusban jártas – a keresési hirdetésektől a Shopping kampányokig.",
+    intro:
+      "A Google Ads 2026-ra szinte mindenhol „smart bidding” alapú lett — ami azt jelenti, hogy a manuális bid menedzsment kora véget ért, és helyébe a stratégia, a struktúra és a konverzió-jelek minősége lépett. A modern Google Ads ügynökség munkája ma 30%-ban kreatív, 30%-ban adat-engineering, 20%-ban tracking-setup és 20%-ban stratégia. A G2A pontosan ezt a kombinációt szállítja.",
     benefits: [
-      { title: "Google Search Ads", desc: "Célzott keresési hirdetések, amelyek pontosan akkor jelennek meg, amikor a potenciális ügyfelek keresnek." },
-      { title: "Google Display Network", desc: "Vizuális hirdetések a Google hálózatán, hatékony remarketing lehetőségekkel." },
-      { title: "Google Shopping", desc: "Termék-alapú hirdetések e-kereskedelmi vállalkozásoknak a maximális konverzióért." },
-      { title: "YouTube Ads", desc: "Videó hirdetések a világ második legnagyobb keresőjén." },
-      { title: "Performance Max", desc: "AI-vezérelt kampányok, amelyek az összes Google csatornán optimalizálnak." },
-      { title: "Remarketing", desc: "Visszahozza a weboldaladat elhagyó látogatókat célzott hirdetésekkel." },
+      {
+        title: "Search Ads",
+        desc: "Kulcsszó-alapú hirdetések kereső szándékkal. SKAG vagy SPAG kampánystruktúra, broad match + audience signal, dinamikus search ads (DSA) hosszú-tail keresésre.",
+      },
+      {
+        title: "Display Network és YouTube",
+        desc: "Vizuális hirdetések a Google partnerhálózatán + YouTube-on. TrueView for Action és Demand Gen kampányok, retargeting az egész web-en.",
+      },
+      {
+        title: "Shopping (e-kereskedelem)",
+        desc: "Termék-alapú hirdetések webshopoknak. Merchant Center feed-optimalizálás, kategória-szintű tender stratégia, custom labels szezonalitásra.",
+      },
+      {
+        title: "Performance Max",
+        desc: "Cross-channel AI-kampány. Asset group struktúra ügyfél-szegmensenként, audience signal stratégia, brand exclusion + tiltólista — hogy ne kannibalizálja a Search-öt.",
+      },
+      {
+        title: "Remarketing és audience",
+        desc: "Customer Match listák (e-mail upload), website-visitor remarketing, similar audience, lookalike. A LTV-alapú szegmens stratégia.",
+      },
+      {
+        title: "Konverziókövetés és tracking",
+        desc: "GA4 + Google Tag Manager + enhanced conversions + offline conversion import (CRM-ből visszaszinkronizálva). Pontos attribution az értékesítésig.",
+      },
     ],
     process: [
-      { step: "01", title: "Fiók audit", desc: "Megvizsgáljuk a jelenlegi kampányokat és azonosítjuk a fejlesztési lehetőségeket." },
-      { step: "02", title: "Kulcsszókutatás", desc: "Részletes kulcsszóelemzés a leghatékonyabb célzás érdekében." },
-      { step: "03", title: "Kampányfelépítés", desc: "Optimális kampánystruktúra, hirdetéscsoportok és kreatívok létrehozása." },
-      { step: "04", title: "Optimalizálás", desc: "Heti szintű optimalizálás, bid management és teljesítményjelentések." },
+      {
+        step: "01",
+        title: "PPC audit",
+        desc: "Szabad fiók-átvilágítás (vagy ha nincs, kulcsszó-térkép). Mérjük a Quality Score-t, a wasted spend %-ot, a konverzió-tracking pontosságát. Azonnal használható javaslatlista.",
+      },
+      {
+        step: "02",
+        title: "Kulcsszó- és audience-kutatás",
+        desc: "Iparág-specifikus kulcsszó-térkép, intent-szegmenseléssel. Versenytárs ad copy elemzés. Audience-listák felépítése (1st party + Customer Match + similar).",
+      },
+      {
+        step: "03",
+        title: "Kampányfelépítés és launch",
+        desc: "SKAG/SPAG struktúra, ad copy variánsok (4-6 / ad group), responsive search ads, image extension. Indulás előtt teljes tracking-validation.",
+      },
+      {
+        step: "04",
+        title: "Heti optimalizáció és riport",
+        desc: "Heti negative keyword bővítés, ad copy iteráció, audience tuning. Havi teljes riport: Search Term riport, Auction Insights, ROAS trend. Kvartálos stratégiai review.",
+      },
     ],
     faq: [
-      { q: "Mekkora büdzsével érdemes elkezdeni?", a: "Általában havi 100.000 Ft-tól érdemes Google Ads kampányokat futtatni, de ez iparágtól és céloktól függ." },
-      { q: "Mennyi az ügynökségi díj?", a: "Díjazásunk a kezelt büdzsé alapján kerül meghatározásra. Részletekért kérj ingyenes konzultációt." },
-      { q: "Milyen riportokat kapok?", a: "Havi részletes teljesítményjelentést küldünk, és hozzáférést biztosítunk a Google Ads fiókhoz." },
+      {
+        q: "Mekkora költségvetséggel érdemes kezdeni?",
+        a: "Iparágtól függ erősen. Helyi szolgáltatás (fodrász, autószerviz): 100-200 ezer Ft/hó. KKV B2B vagy webshop: 300-800 ezer Ft. Középvállalat / e-commerce: 1-3M Ft+. A magas CPC-jű iparágakban (jog, biztosítás, finanszírozás) 800 ezer Ft alatt nehéz mérhető eredményt elérni.",
+      },
+      {
+        q: "Mi a különbség a Search és a Performance Max között?",
+        a: "Search = pontos kulcsszó-célzás keresési szándékkal — több kontroll, alacsonyabb skálázhatóság. Performance Max = AI-vezérelt cross-channel — kevesebb kontroll, sokkal nagyobb skálázhatóság. Optimális stratégia: Search a brand + magas-intent kulcsszókra, Performance Max a discovery + új ügyfél-akvizícióra.",
+      },
+      {
+        q: "Kezeltek YouTube és Shopping kampányt is?",
+        a: "Igen, mind a négy fő kampánytípust (Search, Display + YouTube, Shopping, Performance Max). YouTube-ra dedikált videós kreatív partnert is tudunk hozni, Shopping-hoz Merchant Center feed optimalizálás (TecDoc/Carzone autóipari, vagy custom WooCommerce/Shopify feed).",
+      },
+      {
+        q: "Hogyan mérjük a kampány sikerét?",
+        a: "Konverziók, CPA (cost per acquisition), ROAS (return on ad spend) — alapokon. Plus: Quality Score átlag, Search Impression Share, brand vs non-brand revenue split. Webshopnak: CLV-alapú ROAS (nem csak az első vásárlás, hanem 12 hónapos érték).",
+      },
+      {
+        q: "Mennyi az ügynökségi díj?",
+        a: "Két modell: (1) fix retainer (200-600 ezer Ft/hó a kampány-méret függvényében); (2) media spend %-a (10-15%, jellemzően nagyobb kampányoknál). A G2A nem rejt el platform-számlát — minden hirdetési költés közvetlenül a te kártyádról megy a Google-nek.",
+      },
+      {
+        q: "Szükséges-e hosszú távú szerződés?",
+        a: "Nem, 30 napos felmondási idővel működünk. De őszintén: Google Ads-ben 2-3 hónap kell ahhoz hogy a smart bidding tanuljon, a Quality Score stabilizálódjon, és valódi optimalizációs munka történjen. 1-hónapos kísérletezés ritkán szállít.",
+      },
     ],
     cta: "Kérd az ingyenes Google Ads auditot",
   },
   "meta-hirdetes": {
     slug: "meta-hirdetes",
-    title: "Meta Hirdetések",
-    subtitle: "Facebook és Instagram hirdetések kezelése",
-    heroDesc: "Érd el célközönségedet a világ legnagyobb közösségi platformjain. Precíz célzás, kreatív hirdetések, mérhető eredmények.",
-    metaTitle: "Meta Hirdetések – Facebook és Instagram Ads | G2A Marketing",
-    metaDesc: "Professzionális Meta (Facebook, Instagram) hirdetéskezelés. Célzott kampányok, remarketing, konverzióoptimalizálás.",
+    title: "Meta Ads (Facebook + Instagram)",
+    subtitle: "Közösségi média hirdetés, ami konverziót szállít",
+    heroDesc:
+      "A közösségi média hirdetésekkel pontosan azt a célcsoportot érjük el, amely a legnagyobb valószínűséggel válik ügyféllé. Kreatív és adatvezérelt kampányokat tervezünk a Meta (Facebook, Instagram) és LinkedIn platformokon — amelyek nem csak elérést, hanem valódi konverziót hoznak.",
+    metaTitle: "Meta Ads és közösségi média hirdetés | G2A Marketing",
+    metaDesc:
+      "Eredményorientált Facebook, Instagram és LinkedIn hirdetéskezelés. Célközönség-szegmentálás, kreatív készítés, A/B tesztelés és ROI-optimalizálás.",
     icon: "smartphone",
     color: "#1877f2",
-    intro: "A Meta platformok (Facebook, Instagram, WhatsApp) több mint 3 milliárd aktív felhasználóval rendelkeznek. Precíz célzási lehetőségeikkel pontosan elérheted az ideális ügyfeleidet.",
+    intro:
+      "A Meta platformokon (Facebook + Instagram) magyar viszonylatban naponta 6+ millió aktív felhasználó mozog. A 2021-es Apple iOS 14.5 ATT-változás óta a célzás bizonytalanabb lett — emiatt 2026-ban a Meta Ads sikere kulcsban a kreatívra és a Conversion API-ra esik. A G2A pontosan ezekre fókuszál: gyors kreatív-iteráció + tiszta server-side conversion tracking.",
     benefits: [
-      { title: "Facebook Ads", desc: "Célzott hirdetések Facebookon – demográfia, érdeklődés és viselkedés alapján." },
-      { title: "Instagram Ads", desc: "Vizuálisan erős hirdetések Instagramon, Stories és Reels formátumban." },
-      { title: "Lookalike Audiences", desc: "Hasonló közönségek megcélzása a legjobb ügyfeleid alapján." },
-      { title: "Retargeting", desc: "Visszahozza a weboldalt elhagyó látogatókat és kosárelhagyókat." },
-      { title: "Lead Generation Ads", desc: "Direkt lead gyűjtés a platformon belül, magas konverzióval." },
-      { title: "Catalog Ads", desc: "Dinamikus termék hirdetések e-kereskedelmi vállalkozásoknak." },
+      {
+        title: "Facebook Ads (CBO + ASC)",
+        desc: "Campaign Budget Optimization vagy Advantage+ Shopping Campaigns. Audience signal stratégia, cold + warm + hot funnel-szakaszok elkülönítése.",
+      },
+      {
+        title: "Instagram Ads (Stories + Reels)",
+        desc: "Reels-first kreatív stratégia (a Reels-eken jelenleg legolcsóbb a CPM). Stories swipe-up integráció, mobil-first élmény.",
+      },
+      {
+        title: "LinkedIn Ads (B2B)",
+        desc: "Sponsored Content, Message Ads, Lead Gen Forms B2B targeting-gel. Cég-méret, szerepkör, iparág + matched audience kombinációk.",
+      },
+      {
+        title: "Lookalike és Custom Audience",
+        desc: "1%-os, 3%-os, 5%-os lookalike szegmensek, a legjobb 10% LTV-jű ügyfél seed-jén. Customer Match e-mail upload + website visitor.",
+      },
+      {
+        title: "Lead Generation Ads",
+        desc: "On-platform lead form-ok — a felhasználó nem hagyja el a Facebookot. Magasabb konverzió, alacsonyabb CPL, de gyengébb lead-minőség (pre-screening kérdések kellenek).",
+      },
+      {
+        title: "Conversion API + Pixel",
+        desc: "Server-side esemény-küldés (post-iOS14 megoldás). Stripe/HubSpot/Shopify integráció + offline conversion import a CRM-ből.",
+      },
     ],
     process: [
-      { step: "01", title: "Pixel telepítés", desc: "Meta Pixel és Conversion API beállítása a pontos méréshez." },
-      { step: "02", title: "Közönség felépítés", desc: "Célközönségek definiálása és lookalike audience-ek létrehozása." },
-      { step: "03", title: "Kreatív fejlesztés", desc: "Hatékony hirdetési kreatívok tervezése és szövegírása." },
-      { step: "04", title: "Tesztelés és optimalizálás", desc: "A/B tesztelés, kampányoptimalizálás és havi riportok." },
+      {
+        step: "01",
+        title: "Pixel + CAPI telepítés",
+        desc: "Meta Pixel + Conversion API beállítása teljes server-side eseménysorral. Event Match Quality 70%+ cél (a 30%-os átlaggal szemben) — ez 20-30%-kal javítja a kampány-teljesítményt.",
+      },
+      {
+        step: "02",
+        title: "Audience-térkép és kreatív brief",
+        desc: "Cold + warm + hot szegmens definíció. Versenytárs ad library mining (Meta Ad Library + Foreplay). Kreatív brief 5-8 koncepcióval.",
+      },
+      {
+        step: "03",
+        title: "Kreatív gyártás és launch",
+        desc: "5-8 kreatív variáns / ad set (statikus + video + carousel + UGC stílus). Indulás 50/50 cold-warm split, gyors első hét tanulása.",
+      },
+      {
+        step: "04",
+        title: "Iteráció és skálázás",
+        desc: "Heti kreatív rotáció (creative fatigue elleni stratégia), audience expansion. Skálázás CBO-n keresztül, ad set duplikáció a winning kreatívokra.",
+      },
     ],
     faq: [
-      { q: "Facebook vagy Instagram – melyik a jobb?", a: "Ez a célközönségtől függ. B2B esetén Facebook, fiatalabb közönségnél Instagram a hatékonyabb. Általában mindkét platformon érdemes jelen lenni." },
-      { q: "Kell-e saját kreatívokat készítenem?", a: "Nem – a kreatív fejlesztés részét képezi a szolgáltatásunknak. Elkészítjük a hirdetési anyagokat." },
-      { q: "Hogyan mérik az eredményeket?", a: "Meta Pixel és Conversion API segítségével pontosan mérjük a konverziókat, ROAS-t és egyéb KPI-okat." },
+      {
+        q: "Mennyi idő alatt kezdhetünk hirdetni?",
+        a: "1-2 héten belül felépítjük a struktúrát: Pixel + Conversion API setup (3-4 nap), audience-térkép (2 nap), első kreatív-batch (5-7 nap). Indulás után az első tanuló-fázis 7-14 nap.",
+      },
+      {
+        q: "Mitől függ a kampány költségvetése?",
+        a: "Iparág (CPM 600-3500 Ft, jellemzően), célcsoport-méret (kisebb = drágább kreatív kell), és a funnel-szakasz. Reális minimum: havi 200-400 ezer Ft helyi vállalkozásnak; 600 ezer–1.5M Ft webshopnak vagy B2B leadgennek.",
+      },
+      {
+        q: "Milyen kreatívokra van szükség?",
+        a: "2026-ban Reels-first: 9:16 vertikális videó (15-30 mp), feliratokkal (a 80% mute néz), gyors hook (első 1-2 mp). Mellé statikus carousel és UGC stílusú felvételek. A G2A vagy partner-stúdióval gyártjuk, vagy a saját anyagaidat optimalizáljuk.",
+      },
+      {
+        q: "Tudtok organikus social media stratégiában is segíteni?",
+        a: "Igen, dedikált közösségi média menedzsment szolgáltatás van: tartalomnaptár, content gyártás, közösség-moderáció, influencer-kapcsolatok. A két szolgáltatás (organikus + paid) együtt 2-3x hatékonyabb mint külön-külön.",
+      },
+      {
+        q: "Hogyan mérjük a sikerességet?",
+        a: "CPC (kattintási költség), CPM (ezer megjelenés ár), CTR, CPA (cost per acquisition), ROAS (return on ad spend) — alapokon. Plus: Brand Lift Study (nagyobb kampányoknál), iOS 14.5 utáni privacy-conscious attribution model.",
+      },
+      {
+        q: "Mi a helyzet az iOS 14.5 utáni nyomon-követéssel?",
+        a: "Az ATT (App Tracking Transparency) miatt a Pixel csak részleges adatot kap. Ezért fontos a Conversion API: server-side eseménykövetés, ami iOS-en is működik. A G2A minden új projekten alapból CAPI-t telepít (nem opcióként).",
+      },
     ],
     cta: "Kérd az ingyenes Meta Ads auditot",
   },
   "tartalommarketing": {
     slug: "tartalommarketing",
     title: "Tartalommarketing",
-    subtitle: "Értékes tartalmak, amelyek vonzzák az ügyfeleket",
-    heroDesc: "Építs tekintélyt és organikus forgalmat értékes tartalmakkal. Blog, videó, podcast, infografika – minden csatornán.",
-    metaTitle: "Tartalommarketing Ügynökség – Blog, SEO Tartalom | G2A Marketing",
-    metaDesc: "Professzionális tartalommarketing: SEO-optimalizált blogcikkek, videók, közösségi média tartalmak. Növeld az organikus forgalmat és az ügyfélbizalmat.",
+    subtitle: "Értékteremtő történetek, amelyek eladnak",
+    heroDesc:
+      "A tartalommarketing nem csak cikkek gyártásáról szól; stratégiát alkotunk, amely hitelesen közvetíti márkád értékeit és a közönséged problémáira kínál megoldást. Blogtól videóig, podcasttől hírlevélig — segítünk a tervezésben, gyártásban és terjesztésben.",
+    metaTitle: "Tartalommarketing és szövegírás | G2A Marketing",
+    metaDesc:
+      "Építs márkahitelességet és organikus forgalmat. Blogírás, videó- és podcast-tartalom, hírlevelek, edukatív anyagok KKV-knak és B2B cégeknek.",
     icon: "pen",
     color: "#10b981",
-    intro: "A tartalommarketing az egyik legköltséghatékonyabb módszer az organikus forgalom és az ügyfélbizalom növelésére. Értékes, SEO-optimalizált tartalmakkal vonzzuk a potenciális ügyfeleket.",
+    intro:
+      "A B2B és KKV-szegmensben a tartalommarketing a legjobb hosszú-távú befektetés: 1 jól megírt long-form cikk 3-5 évig hozhat organikus forgalmat. Ugyanakkor 2026-ban a Google AI Overviews és a ChatGPT-keresés átalakítja a játékot — most már nem elég jó tartalmat írni, hanem strukturáltan, schema-val, kérdés-választos formában kell, hogy az AI-keresés is referenciának használja.",
     benefits: [
-      { title: "SEO blogcikkek", desc: "Kulcsszóoptimalizált, hosszú formátumú cikkek, amelyek organikus forgalmat hoznak." },
-      { title: "Közösségi média tartalom", desc: "Platformra szabott tartalmak Facebookra, Instagramra és LinkedInre." },
-      { title: "Email marketing", desc: "Értékes hírlevél tartalmak, amelyek fenntartják az ügyfélkapcsolatot." },
-      { title: "Videó tartalom", desc: "Rövid és hosszú formátumú videók YouTube-ra és közösségi médiára." },
-      { title: "Infografika", desc: "Vizuálisan vonzó adatvizualizáció és infografika tervezés." },
-      { title: "Esettanulmányok", desc: "Meggyőző case study tartalmak, amelyek bizonyítják a szakértelmet." },
+      {
+        title: "Blogstratégia és long-form cikkek",
+        desc: "Kulcsszó-térkép és cluster-stratégia (pillar + cluster), 1500-3500 szavas cikkek. Schema.org Article/FAQ markup, AI Overviews-ra optimalizált formátum.",
+      },
+      {
+        title: "Videó és podcast",
+        desc: "Forgatókönyvírás, YouTube SEO (cím, leírás, fejezet-jelölők), thumbnail A/B teszt. Podcast: téma-strukturálás, gyártás, vágás, terjesztés (Spotify/Apple/YouTube).",
+      },
+      {
+        title: "Hírlevél és leadmágnes",
+        desc: "Heti/havi hírlevél stratégia (témaválasztó automatizációval), e-book és whitepaper-gyártás email-feliratkozással szemben. Resend/Mailchimp integrációval.",
+      },
+      {
+        title: "Thought leadership és LinkedIn",
+        desc: "A vezető személyiség nevén futó cikkek és LinkedIn-poszt sorozatok. Iparági trend-elemzések, vélemény-cikkek, élethelyzet-narratívák — a brandet humanizálva.",
+      },
+      {
+        title: "Tartalomterjesztés és PR",
+        desc: "Owned (saját) + earned (PR) + paid (boost) háromrétegű terjesztés. Outreach iparági médiához, vendégblogolás, performance PR.",
+      },
+      {
+        title: "Esettanulmány és portfólió",
+        desc: "Strukturált case study sablonok: kihívás → megoldás → eredmény → tanulság. Anonimizált verzió szigorú titkosítási megállapodásokhoz.",
+      },
     ],
     process: [
-      { step: "01", title: "Tartalom audit", desc: "Megvizsgáljuk a meglévő tartalmakat és azonosítjuk a fejlesztési lehetőségeket." },
-      { step: "02", title: "Stratégia", desc: "Tartalomkalendárium és témastruktúra kialakítása a célközönség alapján." },
-      { step: "03", title: "Tartalom gyártás", desc: "Minőségi tartalmak létrehozása SEO és konverzió szempontok szerint." },
-      { step: "04", title: "Terjesztés", desc: "Multichannel terjesztés és teljesítménymérés." },
+      {
+        step: "01",
+        title: "Kutatás és téma-térkép",
+        desc: "Kulcsszó-kutatás (Ahrefs/Semrush + AlsoAsked), versenytárs gap-elemzés, ICP interjú (3-5 ügyfél). Output: 6-12 hónapra szóló téma-térkép.",
+      },
+      {
+        step: "02",
+        title: "Stratégia és tartalomkalendárium",
+        desc: "Pillar-cluster struktúra, cikk-szintű brief minden témára (kulcsszó, cél, struktúra, belső link). Megkapod a tartalomnaptárt, te jóváhagyod.",
+      },
+      {
+        step: "03",
+        title: "Gyártás és optimalizáció",
+        desc: "Cikk-gyártás (AI-asszisztált, de mindig emberi végszerkesztéssel), SEO-szerkesztés (Surfer/Frase), schema markup, belső link háló. Heti 1-3 cikk.",
+      },
+      {
+        step: "04",
+        title: "Terjesztés és mérés",
+        desc: "Owned (saját csatornák), earned (PR outreach), paid (boost). Havi riport: organikus forgalom, ranking, engagement, konverzió. Kvartálos téma-pivot.",
+      },
     ],
     faq: [
-      { q: "Mennyi idő alatt láthatók az eredmények?", a: "A tartalommarketing hosszú távú befektetés. Az első organikus eredmények 3-6 hónap után jelennek meg, de az értéke idővel exponenciálisan növekszik." },
-      { q: "Hány cikket írnak havonta?", a: "Ez a csomagtól és a büdzsétől függ. Általában havi 4-8 blogcikket ajánlunk az optimális eredményekhez." },
-      { q: "Ki írja a tartalmakat?", a: "Tapasztalt copywritereink és iparági szakértőink írják a tartalmakat, amelyeket SEO specialistáink optimalizálnak." },
+      {
+        q: "Mennyi idő alatt jelennek meg az első eredmények?",
+        a: "Long-tail kulcsszavakra 3-4 hónap (Google indexelés + ranking-növekedés). Versenyzettebb kulcsszavakra 6-9 hónap. Brandépítés és authority: 12-18 hónap. Az első hónapokban a folyamatos publikálás a kritikus, nem a forgalom.",
+      },
+      {
+        q: "Tudtok videós tartalom gyártásban is segíteni?",
+        a: "Igen. Két modell: (1) full-service partner videós stúdióval (forgatókönyv → forgatás → vágás → SEO); (2) AI-asszisztált gyártás (Claude script + ElevenLabs voice + Runway visual). A választás a brand-igényen és a büdzsén múlik.",
+      },
+      {
+        q: "Milyen kulcsszó-stratégiát követtek?",
+        a: "Pillar-cluster modell. 1 fő pillar-oldal (széles téma, pl. „digitális marketing KKV-knak”) + 8-15 cluster-cikk (specifikus al-témák, pl. „lokális SEO tippek”, „Meta Ads kis cégeknek”). Belső linkkel minden cluster a pillar-ra mutat. AI Overviews-okra optimalizált FAQ-section minden cikkben.",
+      },
+      {
+        q: "Hogyan mérjük a tartalom sikerét?",
+        a: "Top-of-funnel: organikus forgalom, kulcsszó-ranking, content sharing. Middle-of-funnel: page-engagement (idő az oldalon, scroll-mélység), email-feliratkozás. Bottom-of-funnel: blog-attribution (HubSpot multi-touch) — melyik cikk hány %-ban hozzájárult a tényleges szerződéshez.",
+      },
+      {
+        q: "Mekkora befektetés szükséges?",
+        a: "Belépő szint (havi 2 cikk + tartalomnaptár): 200-300 ezer Ft/hó. Komoly tartalom-engine (heti 1-2 cikk + LinkedIn + hírlevél): 500-900 ezer Ft. Premium (heti 3 cikk + videó + podcast): 1.2-2.5M Ft.",
+      },
+      {
+        q: "Mit jelent az AI Overviews-ra optimalizálás?",
+        a: "A Google 2024-2025-ben bevezetett AI Overviews (és a ChatGPT-keresés) másféleképpen idéz cikkeket: rövid, kérdés-válasz alapú, autoritás-jelekkel ellátott szakaszokat keres. Tehát ma a long-form cikknek kell strukturáltan tartalmaznia FAQ-section-t, lépéssorrendet, és listákat — különben az AI-keresés átugrik rajta.",
+      },
     ],
     cta: "Kérd az ingyenes tartalom auditot",
   },
   "marketing-automatizacio": {
     slug: "marketing-automatizacio",
     title: "Marketing Automatizáció",
-    subtitle: "Automatizált folyamatok a hatékonyabb marketingért",
-    heroDesc: "Spórolj időt és növeld a bevételt automatizált marketing folyamatokkal. CRM integráció, email automatizálás, lead nurturing.",
-    metaTitle: "Marketing Automatizáció – CRM, Email, Lead Nurturing | G2A Marketing",
-    metaDesc: "Marketing automatizáció: CRM integráció, email automatizálás, lead nurturing, sales funnel optimalizálás. Növeld a hatékonyságot automatizált folyamatokkal.",
+    subtitle: "Hatékonyság mesterséges intelligenciával támogatva",
+    heroDesc:
+      "Időt és erőforrást takaríthatsz meg, ha ismétlődő marketingfolyamataidat automatizálod. Felépítjük az email- és CRM rendszeredet úgy, hogy minden érdeklődő a megfelelő üzenetet kapja a megfelelő pillanatban.",
+    metaTitle: "Marketing automatizáció — Email és CRM | G2A Marketing",
+    metaDesc:
+      "Építs automatizált marketingfolyamatokat: email automatizáció, CRM integráció, lead nurturing, sales funnel és szegmentálás. AI-támogatott szegmentáció.",
     icon: "zap",
     color: "#f59e0b",
-    intro: "A marketing automatizáció lehetővé teszi, hogy a megfelelő üzenetet a megfelelő időben juttasd el a megfelelő embernek – emberi beavatkozás nélkül. Ez növeli a hatékonyságot és csökkenti a manuális munkát.",
+    intro:
+      "A marketing automatizáció akkor működik, ha a teljes ügyfélút (lead → érdeklődő → vevő → ismétlődő vásárló) többszereplős workflow-ja le van modellezve. A G2A először a sales-marketing alignment-tel kezd: definiáljuk az MQL-SQL-Opportunity-Won definíciókat, és csak utána épít automatizációt — különben hiába az okos workflow, ha a sales és a marketing más nyelven beszél.",
     benefits: [
-      { title: "Email automatizálás", desc: "Trigger-alapú email sorozatok, amelyek automatikusan reagálnak a felhasználói viselkedésre." },
-      { title: "CRM integráció", desc: "HubSpot, Salesforce, ActiveCampaign és más CRM rendszerek beállítása és integrálása." },
-      { title: "Lead nurturing", desc: "Automatizált lead gondozási folyamatok, amelyek végigvezetik az érdeklődőket a vásárlási döntésig." },
-      { title: "Sales funnel", desc: "Teljes értékesítési tölcsér automatizálása a lead generálástól a konverzióig." },
-      { title: "Szegmentálás", desc: "Dinamikus szegmentálás viselkedés és demográfia alapján." },
-      { title: "Reporting", desc: "Automatizált teljesítményjelentések és dashboard-ok." },
+      {
+        title: "Email automatizáció",
+        desc: "Üdvözlő sorozatok, lead nurturing flow-k, vásárlás utáni follow-up, win-back kampányok. Trigger: weboldal-viselkedés, e-mail open, demo-igénylés, vásárlás-összeg.",
+      },
+      {
+        title: "CRM integráció",
+        desc: "HubSpot, Salesforce, ActiveCampaign, Pipedrive, Odoo, Zoho beállítás és kétirányú szinkronizáció. Custom field térkép a konkrét ügyfél igénye szerint.",
+      },
+      {
+        title: "Lead scoring és minősítés",
+        desc: "Explicit (cégméret, szerepkör) + implicit (oldalviselkedés, e-mail engagement) szorzós scoring rendszer. Hot lead 60+, MQL 30-59, raw 0-29.",
+      },
+      {
+        title: "Sales funnel és pipeline",
+        desc: "Konverzióorientált útvonalak (lead → demo → POC → szerződés), upsell és cross-sell automatizációk. HubSpot Deal-stage workflow.",
+      },
+      {
+        title: "Szegmentáció (AI-támogatott)",
+        desc: "Viselkedés-alapú dinamikus szegmensek: a Claude/GPT API-t használjuk e-mail content-perszonalizációhoz minden szegmensnek. Optimális küldési időpont prediktív modellel.",
+      },
+      {
+        title: "Reporting és dashboard",
+        desc: "Automatikus heti/havi riport (Looker Studio + HubSpot Reports). Multi-touch attribution: melyik csatorna hány %-ban járult hozzá a végső szerződéshez.",
+      },
     ],
     process: [
-      { step: "01", title: "Folyamat feltérképezés", desc: "Megvizsgáljuk a jelenlegi marketing folyamatokat és azonosítjuk az automatizálási lehetőségeket." },
-      { step: "02", title: "Platform kiválasztás", desc: "A céljaidnak megfelelő automatizálási platform kiválasztása és beállítása." },
-      { step: "03", title: "Workflow fejlesztés", desc: "Automatizált folyamatok tervezése és implementálása." },
-      { step: "04", title: "Tesztelés és optimalizálás", desc: "Folyamatos monitoring és finomhangolás a legjobb eredményekért." },
+      {
+        step: "01",
+        title: "Folyamat-feltérképezés",
+        desc: "Sales-marketing együtt-ülés (1-2 nap): jelenlegi lead-flow rajzolása, szakaszok definiálása, gyenge pontok azonosítása. Output: konkrét automatizálási roadmap.",
+      },
+      {
+        step: "02",
+        title: "Platform-választás",
+        desc: "HubSpot vs Marketo vs ActiveCampaign vs Mailchimp döntés a cég-méretre, IT-stack-re és CRM-szükségletre szabva. Migrációs terv, ha váltani kell.",
+      },
+      {
+        step: "03",
+        title: "Workflow-fejlesztés",
+        desc: "1 workflow / 2 hét tempóban épülnek a folyamatok. Welcome series → lead nurture → handoff to sales → onboarding → upsell. Tesztelés minden lépés után.",
+      },
+      {
+        step: "04",
+        title: "Tesztelés és iteráció",
+        desc: "A/B teszt minden subject line + CTA + send time. Havi review-meeting: KPI-növekedés, hibátlan workflow ellenőrzés, új use-case-ek priorizálása.",
+      },
     ],
     faq: [
-      { q: "Milyen platformokkal dolgoztok?", a: "HubSpot, ActiveCampaign, Mailchimp, Klaviyo, Salesforce és más vezető platformokkal dolgozunk." },
-      { q: "Mennyi idő az implementáció?", a: "Egy alap automatizálási rendszer 2-4 hét alatt bevezethető, komplexebb megoldások 6-8 hetet igényelnek." },
-      { q: "Kell-e meglévő CRM rendszer?", a: "Nem kötelező, de ajánlott. Ha nincs, segítünk a megfelelő platform kiválasztásában és beállításában." },
+      {
+        q: "Milyen platformokkal dolgoztok?",
+        a: "HubSpot (kis-középvállalat full-stack), Marketo (enterprise), ActiveCampaign (KKV email + CRM), Mailchimp (alap email), Klaviyo (e-commerce), Pipedrive + Mailchimp combo (sales-első), Odoo (ERP-első), Zoho (cost-effective full-stack). Custom integrációkban: Zapier, Make.com, n8n.",
+      },
+      {
+        q: "Mennyi idő az implementáció?",
+        a: "Alap email automatizáció + CRM integráció: 2-4 hét. Lead-scoring + sales funnel: 4-6 hét. Multi-touch attribution + revenue dashboard: 6-8 hét. Komplex enterprise migráció (pl. Salesforce-ról HubSpot-ra): 3-6 hónap.",
+      },
+      {
+        q: "Mi kell az induláshoz?",
+        a: "Meglévő ügyféladatbázis (akár Excel — segítünk a migrálásban), üzleti folyamat-térkép (ha nincs, közösen rajzoljuk), és sales-marketing együttműködési készség (ez a legfontosabb). Tech-stack alapra még nem kell előre dönteni — kiválasztjuk együtt.",
+      },
+      {
+        q: "Hogyan segít az AI a szegmentálásban?",
+        a: "Két szinten: (1) prediktív modellek (mikor lép vásárlóra, mikor lemorzsolódik, mi a legjobb send time per ügyfél); (2) generatív személyre-szabás (Claude API-val a base e-mail templátot átírjuk minden szegmens igényére, anélkül hogy 20 verziót kéne kézzel írni).",
+      },
+      {
+        q: "Mennyibe kerül havonta?",
+        a: "Setup: egyszeri 600 ezer–2.5M Ft a komplexitástól függően. Havi management: 200-600 ezer Ft (alap WF-k karbantartása, új kampányok, riport). Platform-licenc külön — HubSpot Pro 50 ezer Ft/hó környékén indul, Marketo 200+ ezer Ft.",
+      },
+      {
+        q: "Hogyan mérjük a marketing automatizáció ROI-ját?",
+        a: "Idő-megtakarítás: hány óra manuális munka váltódott workflow-ra (jellemzően 30-50% csökkenés a marketing-csapat manuális idejében). Konverziós hatás: lead → SQL és SQL → won deal arány javulása (jellemzően 15-30% lift). Pipeline-velocity: átlagos sales-cycle rövidülése (10-25%).",
+      },
     ],
     cta: "Kérd az ingyenes automatizáció auditot",
   },
   "esg-kommunikacio": {
     slug: "esg-kommunikacio",
     title: "ESG Kommunikáció",
-    subtitle: "Fenntarthatósági és felelős vállalati kommunikáció",
-    heroDesc: "Kommunikáld hatékonyan a vállalat fenntarthatósági törekvéseit. ESG jelentések, zöld marketing, stakeholder kommunikáció.",
-    metaTitle: "ESG Kommunikáció – Fenntarthatósági Marketing | G2A Marketing",
-    metaDesc: "ESG és fenntarthatósági kommunikáció: ESG jelentések, zöld marketing stratégia, stakeholder kommunikáció, CSR tartalmak.",
+    subtitle: "Fenntarthatóság hitelesen — greenwashing nélkül",
+    heroDesc:
+      "Az ESG (Environmental, Social, Governance) ma már nem opcionális — a CSRD szabályozás 2024-2026 között kötelezően írja elő az ESG-jelentéseket egyre több magyar nagyvállalatnak. Segítünk hatékonyan és hitelesen kommunikálni vállalatod fenntarthatósági törekvéseit.",
+    metaTitle: "ESG Kommunikáció és fenntarthatósági marketing | G2A Marketing",
+    metaDesc:
+      "CSRD-megfelelő ESG-jelentés, zöld marketing, stakeholder kommunikáció, CSR tartalmak. Greenwashing-mentes, mérhető fenntarthatósági kommunikáció.",
     icon: "leaf",
     color: "#22c55e",
-    intro: "Az ESG (Environmental, Social, Governance) szempontok egyre fontosabbak a befektetők, ügyfelek és munkavállalók számára. Segítünk hatékonyan kommunikálni a vállalat fenntarthatósági törekvéseit.",
+    intro:
+      "Az EU CSRD (Corporate Sustainability Reporting Directive) 2024-2026 között fokozatosan kötelezi a nagyvállalatokat (250+ fő, 40+ millió € forgalom), majd 2026-tól a tőzsdei KKV-kat is ESG-jelentés készítésére. A G2A ügyvezetője ESG specialistaként rendelkezik a területi tudással — segítünk a CSRD-megfelelőségben és abban, hogy a jelentés ne csak compliance-doc legyen, hanem brand-építő eszköz.",
     benefits: [
-      { title: "ESG stratégia", desc: "Átfogó ESG kommunikációs stratégia kialakítása a vállalat értékei alapján." },
-      { title: "Fenntarthatósági jelentés", desc: "Professzionális ESG és fenntarthatósági jelentések készítése." },
-      { title: "Zöld marketing", desc: "Hiteles és hatékony zöld marketing kampányok, greenwashing elkerülésével." },
-      { title: "Stakeholder kommunikáció", desc: "Célzott kommunikáció befektetők, ügyfelek és munkavállalók felé." },
-      { title: "CSR tartalmak", desc: "Vállalati felelősségvállalási tartalmak és kampányok." },
-      { title: "Impact mérés", desc: "ESG teljesítmény mérése és kommunikálása." },
+      {
+        title: "CSRD-megfelelő ESG stratégia",
+        desc: "Double materiality assessment, ESRS-szabványoknak megfelelő struktúra. Stakeholder-elemzés és prioritized topic-térkép.",
+      },
+      {
+        title: "ESG és fenntarthatósági jelentés",
+        desc: "GRI, ESRS, vagy szektor-specifikus (SBTi, TCFD) szabványok szerinti professzionális éves jelentés. Online + nyomtatott verzió, integráció az éves beszámolóval.",
+      },
+      {
+        title: "Greenwashing-mentes zöld marketing",
+        desc: "ISO 14021 Type II environmental claims szerint hiteles, adatokkal alátámasztott állítások. EU Green Claims Directive-megfelelés.",
+      },
+      {
+        title: "Stakeholder kommunikáció",
+        desc: "Befektetői IR-kommunikáció, ügyfél-irányú zöld marketing, munkavállalói belső ESG-kampányok — mindegyik más nyelven, más csatornán.",
+      },
+      {
+        title: "CSR tartalmak és kampányok",
+        desc: "Volunteer-day storytelling, partnership case study, helyi közösségi projekt kommunikáció. A CSR-t a brandet építő narratívává formáljuk.",
+      },
+      {
+        title: "Impact mérés és benchmark",
+        desc: "Kvantitatív KPI-k (CO2, vízhasználat, diversity, supplier ESG-rating). Benchmark az iparágban, EcoVadis / CDP rating-előkészítés.",
+      },
     ],
     process: [
-      { step: "01", title: "ESG audit", desc: "Megvizsgáljuk a jelenlegi ESG tevékenységeket és kommunikációt." },
-      { step: "02", title: "Stratégia", desc: "ESG kommunikációs stratégia és üzenetrendszer kialakítása." },
-      { step: "03", title: "Tartalom fejlesztés", desc: "ESG tartalmak, jelentések és kampányok létrehozása." },
-      { step: "04", title: "Terjesztés", desc: "Multichannel terjesztés és stakeholder engagement." },
+      {
+        step: "01",
+        title: "ESG audit és gap-elemzés",
+        desc: "Jelenlegi ESG-aktivitás feltérképezése, CSRD-readiness (mire van adat, mire nincs). Stakeholder-prioritizálás. Output: 12 hónapos roadmap.",
+      },
+      {
+        step: "02",
+        title: "Stratégia és üzenetrendszer",
+        desc: "Material topic-ok kommunikációs stratégiája. Üzenethierarchia: enterprise → ágazat → konkrét akció. Kockázat-elemzés (mit lehet és mit nem szabad ígérni).",
+      },
+      {
+        step: "03",
+        title: "Tartalom-fejlesztés és jelentés",
+        desc: "ESG-jelentés (50-150 oldal), kommunikációs anyagok (LinkedIn-kampány, ügyfél-leveleket, weboldali ESG-szekció). EU Taxonomy alignment.",
+      },
+      {
+        step: "04",
+        title: "Terjesztés és stakeholder-engagement",
+        desc: "Befektetői road-show, ügyfél-newsletter, sajtótájékoztató. Évente megújuló tartalom. EcoVadis, CDP, MSCI rating-támogatás.",
+      },
     ],
     faq: [
-      { q: "Kötelező-e az ESG jelentés?", a: "Az EU szabályozás egyre több vállalat számára teszi kötelezővé az ESG jelentést. Segítünk felkészülni a követelményekre." },
-      { q: "Mi a különbség az ESG és CSR között?", a: "A CSR önkéntes vállalati felelősségvállalás, míg az ESG egy strukturált, mérhető keretrendszer befektetői és szabályozói célokra." },
-      { q: "Hogyan kerüljük el a greenwashingot?", a: "Hiteles, adatokon alapuló kommunikációval és transzparenciával. Segítünk a valódi ESG teljesítmény bemutatásában." },
+      {
+        q: "Kötelező-e nekünk az ESG jelentés?",
+        a: "CSRD szerint 2024-től kötelező ha: 250+ fő, 40+ M € forgalom, 20+ M € mérlegfőösszeg (legalább 2 a 3-ból). 2026-tól a tőzsdei KKV-knak is. 2027-2028-tól minden nagy és tőzsdei közepes cégnek. Kis cégek számára még önkéntes — de a B2B beszállítói láncon keresztül a nagyok elvárják.",
+      },
+      {
+        q: "Mi a különbség az ESG és CSR között?",
+        a: "CSR (Corporate Social Responsibility): önkéntes, narratíva-alapú vállalati felelősségvállalás (vásárlóknak, közösségnek). ESG (Environmental, Social, Governance): strukturált, mérhető, befektetői és szabályozói keretrendszer. ESG lefedi a CSR-t, de szigorúbb (KPI-okkal, audit-tal). 2024-től az ESG dominál, a CSR alá kerül.",
+      },
+      {
+        q: "Hogyan kerüljük el a greenwashing-ot?",
+        a: "Három alapelv: (1) Csak adatokkal igazolt állítás (nincs „természet-barát”, csak „95% újrahasznosított anyag”); (2) Teljes lifecycle-szemlélet (a CO2-mérés ne csak a gyártásra, hanem a beszerzésre + szállításra is terjedjen ki); (3) Független audit (legalább SBTi vagy CDP). EU Green Claims Directive 2026-tól ezeket törvényileg is kikényszeríti.",
+      },
+      {
+        q: "Mennyi időbe telik egy ESG jelentés?",
+        a: "Első jelentés 4-9 hónap (adat-gyűjtés a legidőigényesebb). Folyó éves jelentés a 2. évtől 2-3 hónap. CSRD double materiality assessment 6-12 hét.",
+      },
+      {
+        q: "Mibe kerül egy ESG jelentés és kommunikáció?",
+        a: "Kis vállalat (önkéntes ESG): 800 ezer–2M Ft. Nagy KKV (CSRD-readiness): 3-6M Ft. Enterprise éves jelentés (CSRD-megfelelő): 5-15M Ft + független audit (külön 1-3M Ft). A G2A jellemzően a kommunikáció oldalon dolgozik partner audit-cég mellett.",
+      },
+      {
+        q: "Tudunk-e ESG-rátingen javítani?",
+        a: "Igen — EcoVadis, CDP, MSCI ESG Ratings esetén tudunk preparation-támogatást nyújtani. Tipikus eredmény: EcoVadis Bronze → Silver fel 6-12 hónap alatt, ha a tényleges ESG-aktivitás megvan, csak a dokumentációja és kommunikációja nem.",
+      },
     ],
     cta: "Kérd az ingyenes ESG kommunikációs tanácsadást",
   },
   "employer-branding": {
     slug: "employer-branding",
     title: "Employer Branding",
-    subtitle: "Vonzó munkáltatói márka felépítése",
-    heroDesc: "Vonzd a legjobb tehetségeket és tartsd meg a munkatársaidat erős munkáltatói márkával. EVP, karrieroldal, toborzási marketing.",
-    metaTitle: "Employer Branding – Munkáltatói Márka Építés | G2A Marketing",
-    metaDesc: "Employer branding: EVP fejlesztés, karrieroldal, toborzási marketing, munkáltatói kommunikáció. Vonzd a legjobb tehetségeket.",
+    subtitle: "Munkáltatói márka, ami tehetséget vonz",
+    heroDesc:
+      "A magyar munkaerő-piac 2025-2026-ban historikus kihívást támasztott: 2.5%-os munkanélküliségi ráta, magas fluktuáció, generációs különbségek a Z és Y munkavállalók között. Az erős munkáltatói márka nem luxus — kritikus üzleti előny.",
+    metaTitle: "Employer Branding — munkáltatói márkaépítés | G2A Marketing",
+    metaDesc:
+      "EVP-fejlesztés, karrieroldal, toborzási marketing, Glassdoor + Profession.hu reputáció. Vonzd és tartsd meg a legjobb tehetségeket.",
     icon: "users",
     color: "#8b5cf6",
-    intro: "A tehetséges munkavállalókért folyó verseny soha nem volt akkora, mint ma. Az erős munkáltatói márka nemcsak a toborzást könnyíti meg, hanem csökkenti a fluktuációt és növeli a munkavállalói elköteleződést.",
+    intro:
+      "A magyar HR-piac mostanra ugyanolyan versenyzett mint az ügyfél-piac: aki nem hirdet, az nem talál jelölteket. Az employer branding a HR és a marketing határterülete — a G2A azt a hidat építi, amelyen az „employer brand” mint koncepció valódi toborzási és megtartási eszközzé válik. ESG-megfelelőséggel, generációs adaptációval, és a Profession.hu / LinkedIn / Glassdoor hármason mért teljesítménnyel.",
     benefits: [
-      { title: "EVP fejlesztés", desc: "Employer Value Proposition – meghatározzuk, mi teszi egyedivé a munkáltatódat." },
-      { title: "Karrieroldal", desc: "Vonzó karrieroldal tervezése és fejlesztése, amely konvertálja a jelölteket." },
-      { title: "Toborzási marketing", desc: "Célzott toborzási kampányok LinkedIn, Facebook és egyéb platformokon." },
-      { title: "Munkavállalói tartalmak", desc: "Autentikus munkavállalói történetek és tartalmak." },
-      { title: "Glassdoor kezelés", desc: "Munkáltatói profil optimalizálása és vélemény kezelés." },
-      { title: "Belső kommunikáció", desc: "Belső employer branding kampányok a megtartás növelésére." },
+      {
+        title: "EVP-fejlesztés (Employer Value Proposition)",
+        desc: "Saját munkavállalói interjúkon alapuló, hiteles EVP. Nem PR-szöveg, hanem amit valóban kapnak az emberek. 4-6 hét alatt készül.",
+      },
+      {
+        title: "Karrieroldal és jelentkezési flow",
+        desc: "Konverzió-optimalizált karrieroldal pozíciónkénti landing page-ekkel. Greenhouse / Workable / saját ATS integráció. Mobil-first design (Z generáció).",
+      },
+      {
+        title: "Toborzási marketing",
+        desc: "LinkedIn, Profession.hu, Facebook, Instagram, TikTok kampányok pozíció szerint. Sponsored Content B2B, Reels Z generációnak — különböző creatívokkal.",
+      },
+      {
+        title: "Munkavállalói storytelling",
+        desc: "„Egy nap az életünkben” videók, day-in-the-life Reels, csapat-bemutató cikkek. A munkatárs maga a brand-nagykövet — nem egy marketinges szlogen.",
+      },
+      {
+        title: "Glassdoor + Profession.hu reputáció",
+        desc: "Munkáltatói profil optimalizálás, válaszadási stratégia értékelésekre (jó és rossz egyaránt), proaktív review-szerzés elégedett dolgozóktól.",
+      },
+      {
+        title: "Belső kommunikáció és onboarding",
+        desc: "Az új belépőtől az első 90 napig strukturált onboarding flow. Belső hírlevél, sikertörténetek, csapatépítés-kommunikáció.",
+      },
     ],
     process: [
-      { step: "01", title: "Audit", desc: "Jelenlegi munkáltatói márka és toborzási folyamatok felmérése." },
-      { step: "02", title: "EVP fejlesztés", desc: "Egyedi munkáltatói értékajánlat kidolgozása." },
-      { step: "03", title: "Kommunikáció", desc: "Employer branding tartalmak és kampányok létrehozása." },
-      { step: "04", title: "Mérés", desc: "Toborzási metrikák és munkavállalói elégedettség mérése." },
+      {
+        step: "01",
+        title: "Employer brand audit",
+        desc: "Mai jelölt-élmény térképezése: miért lépnek ki, miért jönnek be, mi a Glassdoor/Profession-rating. 5-8 munkavállalói interjú, 2-3 ex-munkavállalói. Output: realitás-térkép.",
+      },
+      {
+        step: "02",
+        title: "EVP-megfogalmazás",
+        desc: "A munkavállalói „tényleges mit kapok itt” listából kondenzáljuk a 3-4 legerősebb pillért. Tesztelés célcsoport-fókuszcsoportokkal. Final EVP statement.",
+      },
+      {
+        step: "03",
+        title: "Kommunikáció és kampány",
+        desc: "Karrieroldal redesign, LinkedIn/Profession content-naptár, video story-pipeline, Glassdoor profil revízió. Toborzási kampányok pozíció szerint.",
+      },
+      {
+        step: "04",
+        title: "Mérés és iteráció",
+        desc: "Time-to-hire, cost-per-hire, offer acceptance rate, employee NPS havonta. Glassdoor / Profession.hu rating trend. Kvartálos EVP-validation.",
+      },
     ],
     faq: [
-      { q: "Mikor érdemes employer brandinggel foglalkozni?", a: "Akkor, ha nehézségeid vannak a megfelelő jelöltek vonzásával, magas a fluktuáció, vagy szeretnéd megerősíteni a vállalati kultúrát." },
-      { q: "Mennyi idő alatt láthatók az eredmények?", a: "Az employer branding hosszú távú befektetés. Az első eredmények (több és jobb minőségű jelöltek) 3-6 hónap után láthatók." },
-      { q: "Hogyan mérik az employer branding sikerét?", a: "Time-to-hire, cost-per-hire, offer acceptance rate, employee NPS és Glassdoor értékelések alapján." },
+      {
+        q: "Mikor érdemes employer brandinggel foglalkozni?",
+        a: "3 jelzés: (1) több mint 3 hónapja nem találtok megfelelő jelöltet egy nyitott pozícióra; (2) a fluktuáció meghaladja az iparági átlagot (jellemzően 15% feletti évente); (3) a Glassdoor/Profession.hu rating-etek 3 csillag alatt van. Bármelyik jelzés esetén az EB már nem opció, hanem szükséglet.",
+      },
+      {
+        q: "Mennyi idő alatt láthatók az eredmények?",
+        a: "Karrieroldal redesign: 4-6 hét. Első toborzási kampány-eredmény: 6-8 hét. EVP-megfogalmazás teljes hatása (jelentkezés-szám + minőség): 4-6 hónap. Glassdoor rating javulás: 6-12 hónap (review-k szerveződnek időben).",
+      },
+      {
+        q: "Hogyan mérjük az employer branding sikerét?",
+        a: "5 fő KPI: time-to-hire (csökken 15-30%), cost-per-hire (csökken 20-40%), offer acceptance rate (nő 60-tól 80%-ra), employee NPS (nő 6-7-ről 8-9-re), Glassdoor rating (nő 0.5-1 csillagot). Ezek mind 12-18 hónapos időtávon mérhetők.",
+      },
+      {
+        q: "Mi van, ha kicsi cég vagyunk?",
+        a: "Az employer branding KKV-szinten is működik — sőt, ott a legintimebb és leghitelesebb. 5-30 fős cégnek nem kell milliós költségvetéssel induljon: alap karrieroldal + Profession.hu profil + LinkedIn-poszt-kalendárium tulajdonos/HR-vezető nevén havi 150-250 ezer Ft-ból szállít.",
+      },
+      {
+        q: "Tudtok influencer / employee advocacy programot indítani?",
+        a: "Igen. Munkatársak (5-10 önkéntes „brand ambassador”) képzése LinkedIn-poszt-receptekkel, content-kalendáriummal. Egy 5 fős advocacy-program szerves elérése jellemzően 3-5x nagyobb mint maga a vállalati LinkedIn-fiók.",
+      },
+      {
+        q: "Mibe kerül havi szinten?",
+        a: "KKV alap (karrier oldal + Profession + havi 4 LinkedIn poszt): 200-400 ezer Ft. Közepes vállalat (full EB stack: karrier + LinkedIn + Profession + Glassdoor management + storytelling): 500-900 ezer Ft. Enterprise (advocacy program + video pipeline): 1.2-2.5M Ft.",
+      },
     ],
     cta: "Kérd az ingyenes employer branding konzultációt",
   },
   "nemzetkozi-marketing": {
     slug: "nemzetkozi-marketing",
     title: "Nemzetközi Marketing",
-    subtitle: "Globális terjeszkedés lokális szakértelemmel",
-    heroDesc: "Lépj be új piacokra hatékonyan. Lokalizáció, multilingvális SEO, cross-border kampányok és kulturálisan adaptált kommunikáció.",
-    metaTitle: "Nemzetközi Marketing – Globális Terjeszkedés | G2A Marketing",
-    metaDesc: "Nemzetközi marketing: lokalizáció, multilingvális SEO, cross-border kampányok, kulturálisan adaptált kommunikáció. Terjeszkedj globálisan.",
+    subtitle: "Globális piac, lokális szemlélet",
+    heroDesc:
+      "Külföldi piacokra lépnél? A siker titka a lokalizáció: nem elég lefordítani a weboldalt, a kulturális sajátosságokhoz és helyi keresőmotorokhoz kell igazodnunk. Magyar + nemzetközi tapasztalat, közvetlen kínai piaci kapcsolatokkal.",
+    metaTitle: "Nemzetközi marketing és piaci belépés | G2A Marketing",
+    metaDesc:
+      "Multilingvális SEO, cross-border kampányok, lokalizáció, piaci belépési stratégia. DACH, CEE, BeNeLux, UK és kínai piacok. Helyi szemlélettel.",
     icon: "globe",
     color: "#06b6d4",
-    intro: "A globális terjeszkedés komoly kihívásokat jelent – különböző kultúrák, nyelvek, szabályozások és fogyasztói szokások. Segítünk hatékonyan belépni új piacokra és adaptálni a marketing üzeneteket.",
+    intro:
+      "A magyar KKV-k 2025-2026-ban egyre inkább a régiós piac (DACH, CEE) felé orientálódnak, mert a hazai piac telített és a forint-volatilitás kockázatot jelent. A G2A ügyvezetője, Győrfi Attila a Varsói Egyetem vendégoktatója és nemzetközi marketing-specialista — közvetlen kapcsolatokkal a lengyel, cseh és kínai piaci szereplők felé. Ez nem ügynöki kapcsolat, hanem operatív tudás.",
     benefits: [
-      { title: "Piacra lépési stratégia", desc: "Részletes elemzés és stratégia az új piacra való belépéshez." },
-      { title: "Lokalizáció", desc: "Kulturálisan adaptált tartalmak és kommunikáció, nem csak fordítás." },
-      { title: "Multilingvális SEO", desc: "Több nyelvű SEO stratégia és implementáció hreflang tagekkel." },
-      { title: "Cross-border kampányok", desc: "Több országra kiterjedő hirdetési kampányok kezelése." },
-      { title: "Kulturális adaptáció", desc: "A marketing üzenetek kulturális szempontok szerinti adaptálása." },
-      { title: "Helyi partnerségek", desc: "Helyi influencerek és partnerek bevonása az új piacokon." },
+      {
+        title: "Piacra lépési stratégia",
+        desc: "Mélyfúrásos piac-elemzés: kereslet, versenyhelyzet, csatornastruktúra, szabályozás. Go-to-market roadmap 12 hónapra.",
+      },
+      {
+        title: "Lokalizáció (nem fordítás)",
+        desc: "Kulturálisan adaptált tartalom: nem szó szerinti, hanem helyi viszonyok közé átültetett üzenet. Anyanyelvi szerkesztők minden célnyelvre.",
+      },
+      {
+        title: "Multilingvális SEO",
+        desc: "Hreflang implementáció helyes ccTLD vagy aldomén stratégiával. Nyelvenkénti kulcsszó-kutatás (a németben más a kifejezés mint a magyarban). Lokális link-építés.",
+      },
+      {
+        title: "Cross-border PPC",
+        desc: "Google Ads + Meta cross-country kampányok. Külön valuta-kezelés, ország-specifikus billing flow, GDPR-megfelelés EU-szerte.",
+      },
+      {
+        title: "Kínai piaci specializáció",
+        desc: "WeChat, Baidu, Xiaohongshu (Little Red Book), Douyin (kínai TikTok) marketing. Sino-magyar üzleti partnerségek tanácsadása.",
+      },
+      {
+        title: "Helyi partnerségek és influencer",
+        desc: "Lengyel, cseh, német és kínai influencer kapcsolatok. Helyi nagykereskedők és viszonteladók azonosítása. PR a célpiacokon.",
+      },
     ],
     process: [
-      { step: "01", title: "Piac elemzés", desc: "Célpiacok elemzése: versenyhelyzet, fogyasztói szokások, szabályozás." },
-      { step: "02", title: "Stratégia", desc: "Piacra lépési és marketing stratégia kidolgozása." },
-      { step: "03", title: "Lokalizáció", desc: "Tartalmak, hirdetések és weboldal lokalizálása." },
-      { step: "04", title: "Kampányok", desc: "Helyi kampányok indítása és optimalizálása." },
+      {
+        step: "01",
+        title: "Piac-elemzés és target country pick",
+        desc: "Top 3-5 célország értékelése: piacméret, kereslet, verseny-intenzitás, TAM (Total Addressable Market) becslés. Win-rate kalkulátor országonként.",
+      },
+      {
+        step: "02",
+        title: "Lokalizációs stratégia",
+        desc: "Domain stratégia (.de vs /de, ccTLD vs aldomén), hreflang setup, anyanyelvi tartalom-szerkesztők kiválasztása. Cégbejegyzés vagy local entity ha kell.",
+      },
+      {
+        step: "03",
+        title: "Tartalom és weboldal lokalizáció",
+        desc: "Weboldal multilingvális verziók, marketing-anyagok (e-mail, social) lokalizációja, kulcsszó-térkép országonként. Pilot ország 2-3 hónap.",
+      },
+      {
+        step: "04",
+        title: "Kampányok és skálázás",
+        desc: "Lokális Google Ads + Meta launching. Lokális PR és influencer outreach. Havi review: melyik ország skálázódik, melyik csökkenjen vagy bukjon.",
+      },
     ],
     faq: [
-      { q: "Milyen piacokra segítitek a terjeszkedést?", a: "Elsősorban európai piacokra specializálódtunk (DACH, CEE, Benelux, UK), de globális terjeszkedésben is tudunk segíteni." },
-      { q: "Mi a különbség a fordítás és a lokalizáció között?", a: "A fordítás szó szerinti átalakítás, míg a lokalizáció kulturálisan adaptálja az üzenetet – figyelembe véve a helyi szokásokat, humor és értékeket." },
-      { q: "Kell-e helyi iroda az új piacon?", a: "Nem feltétlenül. Digitális marketing eszközökkel fizikai jelenlét nélkül is hatékonyan lehet új piacokon értékesíteni." },
+      {
+        q: "Milyen piacokra segítitek a terjeszkedést?",
+        a: "Elsősorban: DACH (Németország, Ausztria, Svájc), CEE (Lengyelország, Csehország, Szlovákia, Románia), BeNeLux és UK. Speciális: Kína (WeChat + Baidu + helyi partnerségek). Globális terjeszkedésben (USA, India, MENA) partner ügynökségekkel dolgozunk.",
+      },
+      {
+        q: "Mi a különbség a fordítás és a lokalizáció között?",
+        a: "Fordítás = szó szerinti átalakítás (gyakran gépi fordítóval kezdve). Lokalizáció = teljes adaptáció, beleértve a humor, az utalások, a vizuális elemek (modellek, színek), a fizetési módok, a jogi szöveg. Egy „best in class” szlogen ami magyarul jól szól, németül nyelvtanilag rossz, lengyelül pedig kulturálisan idegen lehet.",
+      },
+      {
+        q: "Kell-e új domain regisztrálni?",
+        a: "Két stratégia: (1) ccTLD (országkódos domain): a saját domain.hu mellett domain.de, domain.cz — legjobb local SEO, de drága és komplex. (2) Aldomén vagy alkönyvtár: de.domain.com vagy domain.com/de — egyszerűbb, de gyengébb local ranking. Általában az aldomén/alkönyvtár megoldást javasoljuk a 2-3. piacig, és csak utána ccTLD-t.",
+      },
+      {
+        q: "Milyen hosszú a folyamat?",
+        a: "Pilot piac (1 új ország): 4-12 hét teljes lokalizációs folyamat. Skálázás további piacokra: 6-8 hét / új piac, ha a pilot sikeres. Cégalapítás vagy local entity kell-e: külön tanácsadás, 3-6 hónap.",
+      },
+      {
+        q: "Tudtok kínai piaci tanácsadásban segíteni?",
+        a: "Igen. Ügyvezetőnk Győrfi Attila a Varsói Egyetem vendégoktatója és kínai piaci szakértő. WeChat-en közvetlenül elérhető a kínai partnereinkkel. WeChat marketing, Baidu SEO, Tmall/JD listing, Xiaohongshu (Little Red Book) influencer kampányok. Kínai piacra-lépéshez tipikusan magyar+kínai joggyakorlót is bevonunk a regulációs része miatt.",
+      },
+      {
+        q: "Mibe kerül a nemzetközi terjeszkedés marketingje?",
+        a: "Pilot ország launch (DACH/CEE): egyszeri 1.5-3M Ft (lokalizáció + setup + első kampányok). Havi management: 400-900 ezer Ft / ország. Kínai piaci pilot: 3-6M Ft (komplexebb a regulációs része). Hirdetési költség külön, jellemzően havi 300-1500 ezer Ft / ország a piacméret függvényében.",
+      },
     ],
     cta: "Kérd az ingyenes nemzetközi marketing konzultációt",
   },
