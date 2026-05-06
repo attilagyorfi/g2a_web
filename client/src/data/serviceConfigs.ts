@@ -478,86 +478,90 @@ const HU: Record<string, ServiceConfig> = {
     title: "ESG Kommunikáció",
     subtitle: "Fenntarthatóság hitelesen — greenwashing nélkül",
     heroDesc:
-      "Az ESG (Environmental, Social, Governance) ma már nem opcionális — a CSRD szabályozás 2024-2026 között kötelezően írja elő az ESG-jelentéseket egyre több magyar nagyvállalatnak. Segítünk hatékonyan és hitelesen kommunikálni vállalatod fenntarthatósági törekvéseit.",
+      "A fenntarthatósági erőfeszítéseidet úgy kommunikáljuk, hogy a vásárlók, befektetők és a beszállítói lánc ténylegesen elhiggyék — adatokkal alátámasztva, az EU Green Claims Directive és a hazai jogszabályi környezet szellemében. A hivatalos ESG-jelentéstételt és -tanúsítást SZTFH-regisztrált partnerek végzik.",
     metaTitle: "ESG Kommunikáció és fenntarthatósági marketing | G2A Marketing",
     metaDesc:
-      "CSRD-megfelelő ESG-jelentés, zöld marketing, stakeholder kommunikáció, CSR tartalmak. Greenwashing-mentes, mérhető fenntarthatósági kommunikáció.",
+      "Greenwashing-mentes ESG és CSR kommunikáció: stakeholder üzenetek, zöld marketing, weboldali ESG-szekció, rating-előkészítés. Hivatalos ESG-jelentést SZTFH-regisztrált partnerek készítenek.",
     icon: "leaf",
     color: "#22c55e",
     intro:
-      "Az EU CSRD (Corporate Sustainability Reporting Directive) 2024-2026 között fokozatosan kötelezi a nagyvállalatokat (250+ fő, 40+ millió € forgalom), majd 2026-tól a tőzsdei KKV-kat is ESG-jelentés készítésére. A G2A ügyvezetője ESG specialistaként rendelkezik a területi tudással — segítünk a CSRD-megfelelőségben és abban, hogy a jelentés ne csak compliance-doc legyen, hanem brand-építő eszköz.",
+      "Tisztázzuk a hatáskört rögtön az elején: a G2A Marketing Bt. NEM rendelkezik a Szabályozott Tevékenységek Felügyeleti Hatósága (SZTFH) általi regisztrációval, ezért a 2023. évi CVIII. törvény szerinti hivatalos ESG-tanácsadói és ESG-tanúsítási tevékenységet nem végezzük — a kötelező CSRD-jelentés készítését és tanúsítását SZTFH-regisztrált partnerekre bízzuk vagy ajánljuk hozzá szakértőt. Amit mi vállalunk: az ESG-stratégia kommunikációs oldala, a stakeholder-üzenetek megfogalmazása, a brand-narratíva, a marketing-szintű content és a rating-előkészítés. Ügyvezetőnk, Győrfi Attila ESG specialistaként hozzáadott háttérrel ad informális szakmai tanácsot — de ez nem helyettesíti a hivatalos, regisztrált ESG-tanácsadást.",
     benefits: [
       {
-        title: "CSRD-megfelelő ESG stratégia",
-        desc: "Double materiality assessment, ESRS-szabványoknak megfelelő struktúra. Stakeholder-elemzés és prioritized topic-térkép.",
+        title: "ESG kommunikációs stratégia",
+        desc: "A regisztrált tanácsadód által készített double materiality assessment OUTPUT-ját átfordítjuk hiteles külső kommunikációvá. Stakeholder-térkép és priorizált üzenethierarchia.",
       },
       {
-        title: "ESG és fenntarthatósági jelentés",
-        desc: "GRI, ESRS, vagy szektor-specifikus (SBTi, TCFD) szabványok szerinti professzionális éves jelentés. Online + nyomtatott verzió, integráció az éves beszámolóval.",
+        title: "ESG kommunikációs anyagok és design",
+        desc: "Weboldali ESG-szekció, a hivatalos éves jelentés design-ja és narratív oldala (a hivatalos tartalmat a regisztrált auditor adja, mi olvashatóvá és brand-konzisztenssé tesszük), social media + LinkedIn poszt-sorozatok.",
       },
       {
         title: "Greenwashing-mentes zöld marketing",
-        desc: "ISO 14021 Type II environmental claims szerint hiteles, adatokkal alátámasztott állítások. EU Green Claims Directive-megfelelés.",
+        desc: "ISO 14021 Type II environmental claims szerint hiteles, adatokkal alátámasztott állítások. EU Green Claims Directive 2026-os követelményeire felkészített megfogalmazás.",
       },
       {
         title: "Stakeholder kommunikáció",
-        desc: "Befektetői IR-kommunikáció, ügyfél-irányú zöld marketing, munkavállalói belső ESG-kampányok — mindegyik más nyelven, más csatornán.",
+        desc: "Befektetői IR-kommunikáció, ügyfél-irányú zöld marketing, munkavállalói belső ESG-kampányok — mindegyik más nyelven, más csatornán, jogi felülvizsgálattal.",
       },
       {
         title: "CSR tartalmak és kampányok",
-        desc: "Volunteer-day storytelling, partnership case study, helyi közösségi projekt kommunikáció. A CSR-t a brandet építő narratívává formáljuk.",
+        desc: "Volunteer-day storytelling, partnership case study, helyi közösségi projekt kommunikáció. A CSR-t a brandet építő narratívává formáljuk — ez tisztán kommunikációs munka, nem szabályozott terület.",
       },
       {
-        title: "Impact mérés és benchmark",
-        desc: "Kvantitatív KPI-k (CO2, vízhasználat, diversity, supplier ESG-rating). Benchmark az iparágban, EcoVadis / CDP rating-előkészítés.",
+        title: "Rating-előkészítés (kommunikációs oldal)",
+        desc: "EcoVadis / CDP / MSCI ESG önértékelési kérdőívek kommunikációs oldalának előkészítése: a válaszok strukturált megfogalmazása. A tényleges adatokat és értékelést a vállalat vagy a regisztrált tanácsadó szállítja.",
       },
     ],
     process: [
       {
         step: "01",
-        title: "ESG audit és gap-elemzés",
-        desc: "Jelenlegi ESG-aktivitás feltérképezése, CSRD-readiness (mire van adat, mire nincs). Stakeholder-prioritizálás. Output: 12 hónapos roadmap.",
+        title: "Hatáskör-tisztázás és gap-elemzés",
+        desc: "Első találkozón egyértelműen elhatároljuk: mit végez a regisztrált ESG-tanácsadó / auditor (vagy melyik partnerünket ajánljuk), és mit veszünk át mi a kommunikációs oldalon. Output: szerepkör-mátrix, hogy a határvonalak érthetőek legyenek minden érintettnek.",
       },
       {
         step: "02",
-        title: "Stratégia és üzenetrendszer",
-        desc: "Material topic-ok kommunikációs stratégiája. Üzenethierarchia: enterprise → ágazat → konkrét akció. Kockázat-elemzés (mit lehet és mit nem szabad ígérni).",
+        title: "Kommunikációs stratégia és üzenetrendszer",
+        desc: "A regisztrált tanácsadó által szolgáltatott ESRS-adatokat átfordítjuk publikus kommunikációra. Üzenethierarchia: enterprise → ágazat → konkrét akció. Kockázat-elemzés: mit lehet és mit nem szabad jogszerűen állítani.",
       },
       {
         step: "03",
-        title: "Tartalom-fejlesztés és jelentés",
-        desc: "ESG-jelentés (50-150 oldal), kommunikációs anyagok (LinkedIn-kampány, ügyfél-leveleket, weboldali ESG-szekció). EU Taxonomy alignment.",
+        title: "Tartalom-fejlesztés és design",
+        desc: "Az éves jelentés vizuális design-ja és narratívája (a hivatalos szakmai tartalmat a regisztrált auditor szállítja), weboldali ESG-szekció, LinkedIn-kampány, ügyfél-levelek, sajtóanyag. EU Taxonomy összhang ellenőrzés.",
       },
       {
         step: "04",
         title: "Terjesztés és stakeholder-engagement",
-        desc: "Befektetői road-show, ügyfél-newsletter, sajtótájékoztató. Évente megújuló tartalom. EcoVadis, CDP, MSCI rating-támogatás.",
+        desc: "Befektetői road-show prezentáció, ügyfél-newsletter, sajtótájékoztató. Évente megújuló kommunikációs tartalom. EcoVadis / CDP / MSCI rating-előkészítés a kommunikációs oldalon.",
       },
     ],
     faq: [
       {
-        q: "Kötelező-e nekünk az ESG jelentés?",
-        a: "CSRD szerint 2024-től kötelező ha: 250+ fő, 40+ M € forgalom, 20+ M € mérlegfőösszeg (legalább 2 a 3-ból). 2026-tól a tőzsdei KKV-knak is. 2027-2028-tól minden nagy és tőzsdei közepes cégnek. Kis cégek számára még önkéntes — de a B2B beszállítói láncon keresztül a nagyok elvárják.",
+        q: "Készítenek hivatalos ESG-jelentést cégünknek?",
+        a: "Nem, és ezt egyértelműen tisztázzuk: a G2A Marketing Bt. NEM rendelkezik az SZTFH által kiadott ESG-tanácsadói vagy ESG-tanúsítási regisztrációval (2023. évi CVIII. tv.), ezért hivatalos CSRD-jelentés készítését és tanúsítását nem vállaljuk. Mi a kommunikációs oldalon dolgozunk: a regisztrált tanácsadó / auditor által készített hivatalos dokumentumot olvashatóvá és brand-konzisztenssé tesszük, stakeholder-üzeneteket fogalmazunk, weboldali ESG-szekciót és kampányt építünk. A hivatalos jelentéstételhez SZTFH-regisztrált partnereket javasolunk.",
       },
       {
-        q: "Mi a különbség az ESG és CSR között?",
-        a: "CSR (Corporate Social Responsibility): önkéntes, narratíva-alapú vállalati felelősségvállalás (vásárlóknak, közösségnek). ESG (Environmental, Social, Governance): strukturált, mérhető, befektetői és szabályozói keretrendszer. ESG lefedi a CSR-t, de szigorúbb (KPI-okkal, audit-tal). 2024-től az ESG dominál, a CSR alá kerül.",
+        q: "Kötelező-e nekünk a CSRD szerinti ESG-jelentés?",
+        a: "A magyar átültetés (2023. évi CVIII. tv.) alapján 2024-től fokozatosan kötelező: nagyvállalatok (250+ fő, 40+ M € forgalom, 20+ M € mérlegfőösszeg — legalább 2 a 3-ból) elsőként, majd 2026-tól a tőzsdei KKV-k. Kis cégek számára egyelőre önkéntes, de a B2B beszállítói láncon keresztül a nagyok elvárják. A pontos kötelezettség-meghatározáshoz mindenképp regisztrált ESG-tanácsadót vagy könyvvizsgálót keressetek — mi nem adunk jogi minősítést.",
+      },
+      {
+        q: "Mi a különbség az ESG és a CSR között?",
+        a: "CSR (Corporate Social Responsibility): önkéntes, narratíva-alapú vállalati felelősségvállalás — ezzel kapcsolatban tisztán kommunikációs munkát végzünk, nincs szabályozási korlát. ESG (Environmental, Social, Governance): jogszabály által szabályozott, KPI-okkal és kötelező auditálással ellátott keretrendszer — ennek hivatalos része SZTFH-regisztrált szakértőkre tartozik, mi csak a kommunikációs oldalt vesszük át.",
       },
       {
         q: "Hogyan kerüljük el a greenwashing-ot?",
-        a: "Három alapelv: (1) Csak adatokkal igazolt állítás (nincs „természet-barát”, csak „95% újrahasznosított anyag”); (2) Teljes lifecycle-szemlélet (a CO2-mérés ne csak a gyártásra, hanem a beszerzésre + szállításra is terjedjen ki); (3) Független audit (legalább SBTi vagy CDP). EU Green Claims Directive 2026-tól ezeket törvényileg is kikényszeríti.",
+        a: "Három alapelv a kommunikációban: (1) Csak adatokkal igazolt állítás (nincs „természet-barát”, csak „95% újrahasznosított anyag, ISO 14021 Type II tanúsítva”); (2) Teljes lifecycle-szemlélet a fogalmazásban; (3) Független audit-ra történő hivatkozás minden konkrét számnál. Az EU Green Claims Directive 2026-tól ezeket törvényileg is kikényszeríti — ezért minden zöld kommunikációs anyagunkat ezen elvek szerint formáljuk meg.",
       },
       {
-        q: "Mennyi időbe telik egy ESG jelentés?",
-        a: "Első jelentés 4-9 hónap (adat-gyűjtés a legidőigényesebb). Folyó éves jelentés a 2. évtől 2-3 hónap. CSRD double materiality assessment 6-12 hét.",
+        q: "Tudtok-e ESG-rátingen javítani?",
+        a: "EcoVadis, CDP, MSCI ESG Ratings esetén a kommunikációs oldalon segítünk: az önértékelési kérdőívek válaszainak megfogalmazása úgy, hogy a tényleges teljesítményt a legjobb fényben mutassa be. A számszerű adatokat és a tényleges értékelést a cég maga vagy a regisztrált ESG-tanácsadó szállítja. Ha az alap-aktivitás megvan és csak a dokumentáció + kommunikáció gyenge, jellemzően EcoVadis Bronze → Silver lift 6-12 hónap alatt elérhető.",
       },
       {
-        q: "Mibe kerül egy ESG jelentés és kommunikáció?",
-        a: "Kis vállalat (önkéntes ESG): 800 ezer–2M Ft. Nagy KKV (CSRD-readiness): 3-6M Ft. Enterprise éves jelentés (CSRD-megfelelő): 5-15M Ft + független audit (külön 1-3M Ft). A G2A jellemzően a kommunikáció oldalon dolgozik partner audit-cég mellett.",
+        q: "Mibe kerül az ESG kommunikáció?",
+        a: "Kis vállalat (önkéntes ESG-kommunikáció, weboldali ESG-szekció + 1 éves anyag): 600 ezer–1.5M Ft. Nagy KKV (a regisztrált auditor jelentése köré épített kommunikációs csomag): 1.5-3M Ft. Enterprise (folyamatos IR és stakeholder-kommunikáció): 3-7M Ft / év. A regisztrált ESG-tanácsadó / könyvvizsgáló díja (1-15M Ft a méret függvényében) ezen felül és tőlünk függetlenül merül fel.",
       },
       {
-        q: "Tudunk-e ESG-rátingen javítani?",
-        a: "Igen — EcoVadis, CDP, MSCI ESG Ratings esetén tudunk preparation-támogatást nyújtani. Tipikus eredmény: EcoVadis Bronze → Silver fel 6-12 hónap alatt, ha a tényleges ESG-aktivitás megvan, csak a dokumentációja és kommunikációja nem.",
+        q: "Hogyan találunk SZTFH-regisztrált ESG-tanácsadót vagy auditort?",
+        a: "Az SZTFH nyilvánosan vezeti az ESG-tanácsadói és ESG-tanúsítói névjegyzéket — érdemes a hatóság hivatalos honlapján ellenőrizni. Mi nem szerepelünk a listán, de partnerként több regisztrált auditor-céggel együtt dolgozunk hosszabb ideje, és igény esetén bemutatunk olyat, amelyik az iparágadhoz és a cég-méretedhez illik. A választás és a szerződéskötés köztetek történik, mi nem közvetítünk jutalékért.",
       },
     ],
     cta: "Kérd az ingyenes ESG kommunikációs tanácsadást",
