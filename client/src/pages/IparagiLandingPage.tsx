@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRoute } from "wouter";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -6,7 +6,7 @@ import SeoHead from "@/components/SeoHead";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import IndustryHeroDemo, { hasIndustryHeroDemo } from "@/components/industry-demos/IndustryHeroDemo";
 import { Link } from "wouter";
-import { ArrowRight, CheckCircle, Stethoscope, ShoppingBag, Wrench, Car, Scale, Code, Lightbulb, Building2 } from "lucide-react";
+import { ArrowRight, CheckCircle, ChevronDown, Stethoscope, ShoppingBag, Wrench, Car, Scale, Code, Lightbulb, Building2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
 
@@ -36,38 +36,80 @@ const INDUSTRY_META: Record<string, IndustryMeta> = {
 };
 
 // ─── Industry content (localized) ───────────────────────────────────────────
+//
+// Per the strategy document (sections 4.14-4.15), each industry page should
+// include not just a short pitch but: market context, industry-specific
+// challenges, mapped solutions, related G2A services with internal links,
+// and a focused FAQ. The fields below are all content the renderer reads.
+//
+// Keep the field count small — bigger content blocks live in `intro`,
+// `whyG2A` and `faqs`. Existing fields (title, subtitle, etc.) are
+// preserved so the file's history remains diffable.
 type IndustryContent = {
   title: string;
   subtitle: string;
   metaTitle: string;
   metaDesc: string;
   heroDesc: string;
+  /** 2–3 sentence market-context paragraph rendered above the challenges grid. */
+  intro?: string;
   challenges: string[];
   solutions: { title: string; desc: string }[];
   results: { num: string; label: string }[];
   caseStudy: { client: string; problem: string; solution: string; result: string };
+  /** Why G2A is different for this industry — short paragraph after the case study. */
+  whyG2A?: string;
+  /** Internal link cards to relevant service subpages. */
+  relatedServices?: { title: string; desc: string; href: string }[];
+  /** 4–6 industry-specific Q&A. */
+  faqs?: { q: string; a: string }[];
 };
 
 const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
   hu: {
     "marketing-egeszsegugyi-cegeknek": {
       title: "Marketing egészségügyi cégeknek",
-      subtitle: "Klinikák, magánorvosok és egészségügyi vállalkozások számára",
-      metaTitle: "Marketing Egészségügyi Cégeknek – G2A Marketing | SEO, Google Ads, Webfejlesztés",
-      metaDesc: "Speciális marketing megoldások klinikáknak, magánorvosoknak és egészségügyi vállalkozásoknak. SEO, Google Ads, webfejlesztés és online foglalási rendszer.",
-      heroDesc: "Az egészségügyi szektor speciális marketing kihívásokat jelent. GDPR-kompatibilis kampányok, bizalomépítés és online foglalási rendszerek – mindezt értjük.",
+      subtitle: "Klinikák, magánorvosok, fogászatok és wellness intézmények számára",
+      metaTitle: "Egészségügyi marketing klinikáknak és magánorvosoknak | G2A Marketing",
+      metaDesc:
+        "Adatvédelmi megfelelőség, online foglalási rendszerek, lokális SEO és bizalomépítő reputáció menedzsment. Marketingmegoldások klinikáknak, magánorvosoknak és wellness vállalkozásoknak.",
+      heroDesc:
+        "Az egészségügyben egyszerre kell megfelelni a szigorú szabályozásoknak és a páciensek elvárásainak. Marketing szolgáltatásainkkal biztosítjuk, hogy praxisod hiteles, könnyen elérhető és bizalmat keltő legyen — és az online foglalások mérhetően növekedjenek.",
+      intro:
+        "A magyar magán-egészségügy az elmúlt öt évben gyors növekedést mutatott: a páciensek a Google-ben keresnek, az értékelések alapján döntenek, és online szeretnének időpontot foglalni. Ugyanakkor a szektort szigorú szabályozás övezi (GDPR, ETT, gyógyszerreklám-tilalom), ami komoly kihívásokat jelent a hagyományos hirdetési stratégiáknak.",
       challenges: [
-        "GDPR-kompatibilis hirdetési kampányok kezelése",
-        "Bizalomépítés és presztízs kommunikáció",
-        "Online foglalások növelése",
-        "Lokális SEO – körzetes betegek elérése",
-        "Verseny a nagyobb kórházakkal és klinikákkal",
+        "GDPR és orvosi adatok kezelése — a páciensadatok kezelése jogi szempontból minden marketingaktivitásban kritikus",
+        "Online láthatóság — a páciensek 80%-a a Google-ben keres, lokális SEO nélkül láthatatlan vagy",
+        "Pácienskommunikáció — könnyen használható foglalási rendszer, gyors válaszadás",
+        "Bizalomépítés — pozitív Google értékelések, professzionális vizuális megjelenés",
+        "Reputáció menedzsment — negatív értékelések kezelése, krízishelyzetek",
+        "Verseny a nagyobb kórházakkal és magánklinikahálózatokkal — differenciálás kis praxisként",
       ],
       solutions: [
-        { title: "Egészségügyi SEO", desc: "Lokális kulcsszavak, Google My Business optimalizálás, orvosi tartalmak" },
-        { title: "Google Ads kampányok", desc: "GDPR-kompatibilis, célzott kampányok a megfelelő betegcsoportoknak" },
-        { title: "Weboldal fejlesztés", desc: "Online foglalási rendszer, GDPR-kompatibilis, mobilbarát" },
-        { title: "Reputáció menedzsment", desc: "Google értékelések kezelése, bizalomépítő tartalmak" },
+        {
+          title: "Konverzióoptimalizált weboldal",
+          desc: "Gyors, reszponzív, akadálymentes design — a páciens 3 kattintás alatt foglal időpontot",
+        },
+        {
+          title: "Online foglalási rendszer + CRM",
+          desc: "Integráció praxis menedzsment szoftverrel (BookYou, MedicalSoft), automatikus emlékeztetők",
+        },
+        {
+          title: "Egészségügyi tartalommarketing",
+          desc: "Edukatív cikkek, kezelés-magyarázók, GYIK videók — jogtisztán, ETT-kompatibilisen",
+        },
+        {
+          title: "Lokális SEO és Google Ads",
+          desc: "„Fogorvos Pécs”, „magán bőrgyógyász Budapest” típusú keresésekre optimalizált tartalom és hirdetések",
+        },
+        {
+          title: "Reputáció menedzsment",
+          desc: "Google értékelések proaktív gyűjtése, válaszadási sablonok, negatív review krízisterv",
+        },
+        {
+          title: "GDPR-konform analitika",
+          desc: "Cookie-mentes mérés (Plausible), anonim konverziókövetés — TASZ-mentes adatkezelés",
+        },
       ],
       results: [
         { num: "+340%", label: "Organikus forgalom" },
@@ -75,30 +117,96 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "40+", label: "Egészségügyi projekt" },
       ],
       caseStudy: {
-        client: "Magánklinika – Pécs",
-        problem: "Alacsony online foglalások, gyenge SEO jelenlét",
-        solution: "Teljes SEO + Google Ads + weboldal optimalizálás",
+        client: "Magánklinika — Pécs",
+        problem: "Alacsony online foglalások, gyenge SEO jelenlét, nincs reputáció-stratégia",
+        solution: "Teljes SEO + Google Ads + új konverzió-optimalizált weboldal foglalási rendszerrel",
         result: "+340% organikus forgalom, +180% online foglalás 6 hónap alatt",
       },
+      whyG2A:
+        "Több mint 40 egészségügyi projekten dolgoztunk magyar klinikákkal és magánorvosokkal. Ismerjük a legfontosabb specializációk SEO-térképét (fogászat, bőrgyógyászat, ortopédia, magánnőgyógyászat), a praxis-szoftverek API-jait, és a NAIH gyakorlatát. Stratégiánkat mindig 1 hónapos pilottal kezdjük — ha nem szállítunk mérhető eredményt, kötbér nélkül felmondod.",
+      relatedServices: [
+        {
+          title: "Keresőoptimalizálás (SEO)",
+          desc: "Lokális orvosi kulcsszavak, Google My Business optimalizálás",
+          href: "/szolgaltatasok/keresooptimalizalas",
+        },
+        {
+          title: "PPC & Google Ads",
+          desc: "GDPR-kompatibilis hirdetések, betegcsoport-szegmentálás",
+          href: "/szolgaltatasok/hirdeteskezeles",
+        },
+        {
+          title: "Webfejlesztés és CRO",
+          desc: "Foglalási rendszer integráció, mobilbarát betegélmény",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+      ],
+      faqs: [
+        {
+          q: "Milyen platformokkal dolgoztok egészségügyi marketing terén?",
+          a: "WordPress és WP-Booking, BookYou, MedicalSoft praxis-szoftverek, Google My Business, Meta (csak nem-gyógyszer/ETT-tartalmakra), Google Ads. Adatkezelésben TiDB Cloud (EU régió) és Plausible analitika a GDPR-megfelelőséghez.",
+        },
+        {
+          q: "Hogyan biztosítjátok a GDPR-megfelelőséget?",
+          a: "Cookie-mentes alapanalitika (Plausible), expliciten naplózott consent, betegadatokkal nem dolgozunk közvetlenül — csak az aggregált forgalmi és konverziós metrikákkal. Minden hirdetés-creatívot ETT-szempontból ellenőrzünk a publikálás előtt.",
+        },
+        {
+          q: "Tudtok segíteni negatív Google értékelések kezelésében?",
+          a: "Igen. Két szintű reputáció-stratégiát alkalmazunk: (1) proaktív — pozitív értékelések szisztematikus gyűjtése elégedett pácienstől automatizált e-mailes invitálással; (2) reaktív — krízis-válaszsablonok, eljárási panaszok jogszerű menedzselése a Google policy-jainak megfelelően.",
+        },
+        {
+          q: "Mennyi időn belül látható az SEO eredménye egészségügyi területen?",
+          a: "Lokális keresésekre („fogorvos [város]”) jellemzően 2–4 hónap, országos szintű kulcsszavakra („implantátum árak”) 6–9 hónap. A Google Ads már 1–2 hét alatt szállít mérhető pácienst — gyakran SEO-val párhuzamosan indítjuk a kettőt.",
+        },
+        {
+          q: "Milyen költségvetéssel számoljak?",
+          a: "Magán-praxisoknál havi 250-600 ezer Ft (audit + kampány + tartalom kombinált), klinikáknál 600 ezer Ft–1.2M Ft. Hirdetési költség külön — minimum havi 200 ezer Ft Google Ads spend ajánlott a méretgazdaságos eredményhez.",
+        },
+      ],
     },
     "marketing-szepsegipari-cegeknek": {
       title: "Marketing szépségipari cégeknek",
-      subtitle: "Szépségszalonok, kozmetikusok és wellness vállalkozások számára",
-      metaTitle: "Marketing Szépségipari Cégeknek – G2A Marketing | Social Media, Instagram, Meta Ads",
-      metaDesc: "Speciális marketing megoldások szépségszalonoknak, kozmetikusoknak. Instagram, Meta Ads, online foglalási rendszer és social media stratégia.",
-      heroDesc: "A szépségiparban a vizuális megjelenés és a közösségi média a legfontosabb csatorna. Instagram-stratégiától Meta Ads-ig – mindezt értjük.",
+      subtitle: "Szépségszalonok, kozmetikák, fodrászatok és wellness vállalkozások számára",
+      metaTitle: "Szépségipari marketing — Instagram, Meta Ads, foglalás | G2A Marketing",
+      metaDesc:
+        "Vizuális márkaépítés, Instagram és TikTok stratégia, Meta Ads kampányok, online foglalási rendszer szépségszalonoknak, fodrászatoknak és kozmetikáknak.",
+      heroDesc:
+        "A szépségiparban a vizuális tartalom és a közösségi média a vásárlói döntés. Olyan stratégiát építünk, ami a vonzó kreativitást komoly konverzió-mérésre fordítja — Instagram followerből foglaló vásárló lesz.",
+      intro:
+        "A szépségiparban a vásárló elsősorban Instagramon, TikTokon és Google térképen kutat — nem a website-on. A weboldal akkor szól bele a döntésbe, amikor a foglalási flow indul. Ez azt jelenti, hogy a marketing-eszközök másképp osztódnak meg, mint más szolgáltatóiparban: 60% social, 30% lokális SEO + Google My Business, 10% paid search.",
       challenges: [
-        "Vizuálisan vonzó tartalom gyártása",
-        "Instagram és TikTok jelenlét kiépítése",
-        "Online foglalási rendszer integrálása",
-        "Szezonális kampányok kezelése",
-        "Helyi versenytársakkal szembeni differenciálás",
+        "Folyamatos vizuális tartalomgyártás (előtte–utána fotók, reels, behind-the-scenes)",
+        "Instagram és TikTok algoritmus-optimalizálás — organikus reach a legfontosabb metrika",
+        "Foglalási flow rövidítése: minimum kattintás a kosárba",
+        "Szezonális kampányok (esküvő, ünnepek, summer body) gyors kreatív-iterációval",
+        "Helyi versenytársak elöli megkülönböztetés árazás nélkül — egyedi élmény / specializáció",
+        "Lojalitás építése — a customer lifetime value 3-szor jobban szállít, mint új akvizíció",
       ],
       solutions: [
-        { title: "Social Media Stratégia", desc: "Instagram, TikTok és Facebook jelenlét, tartalom stratégia" },
-        { title: "Meta Ads kampányok", desc: "Célzott hirdetések a megfelelő demográfiai csoportoknak" },
-        { title: "Online foglalás", desc: "Weboldal fejlesztés beépített foglalási rendszerrel" },
-        { title: "Influencer Marketing", desc: "Helyi influencer együttműködések szervezése" },
+        {
+          title: "Instagram & TikTok stratégia",
+          desc: "Heti tartalomnaptár, reels-receptek, hashtag-kutatás, Story-konverziós flow",
+        },
+        {
+          title: "Meta Ads + TikTok Ads",
+          desc: "Célzás demográfia + viselkedés alapján, lookalike audience, retargeting az utolsó 30 napban site-on járókra",
+        },
+        {
+          title: "Online foglalási weboldal",
+          desc: "Booksy, Salonkee, vagy custom WP foglalási rendszer integráció — mobilbarát, gyors",
+        },
+        {
+          title: "Influencer marketing",
+          desc: "Mikro- (5-50K követő) és nano-influencerek a helyi piacon — gift-for-content és fizetett együttműködések",
+        },
+        {
+          title: "Lokális SEO",
+          desc: "Google My Business optimalizálás, „kozmetikus [város]” típusú kulcsszavak, fotók és értékelések kezelése",
+        },
+        {
+          title: "Lojalitás & email marketing",
+          desc: "Visszajáró ügyfél program, születésnapi automatizációk, szezonális ajánlatok ütemezve",
+        },
       ],
       results: [
         { num: "+520%", label: "Instagram követő" },
@@ -106,30 +214,96 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "25+", label: "Szépségipari projekt" },
       ],
       caseStudy: {
-        client: "Szépségszalon lánc",
-        problem: "Alacsony közösségi média jelenlét, nincs online foglalás",
-        solution: "Social media stratégia + Meta Ads + online foglalás",
+        client: "Szépségszalon lánc — 3 telephellyel",
+        problem: "Alacsony közösségi média jelenlét, nincs online foglalási rendszer, telefonos akadály",
+        solution: "Instagram stratégia + Meta Ads + Booksy integráció + lokális SEO",
         result: "+520% Instagram követő, +190% online foglalás 4 hónap alatt",
       },
+      whyG2A:
+        "25+ szépségipari projekttel a hátunk mögött ismerjük az iparág sajátos rhythmusát: a foglalások 70%-a kedd-péntek 18-22 között érkezik, a no-show arányt visszaszámolós e-mail és SMS automatizációval 40%-ról 12%-ra csökkentettük egy ügyfelünknél. Tudunk hidegen vágni egy reels-naptárt, kreatívokat gyártani Canva + AI eszközökkel, és a Booksy/Salonkee booking funnelt konverzió-szempontból optimalizálni.",
+      relatedServices: [
+        {
+          title: "Közösségi média menedzsment",
+          desc: "Instagram, TikTok stratégia és tartalomgyártás",
+          href: "/szolgaltatasok/kozossegi-media",
+        },
+        {
+          title: "PPC & Hirdetéskezelés",
+          desc: "Meta Ads, TikTok Ads, lokális targeting",
+          href: "/szolgaltatasok/hirdeteskezeles",
+        },
+        {
+          title: "Arculattervezés",
+          desc: "Egységes vizuális identitás minden platformra",
+          href: "/szolgaltatasok/arculattervezes",
+        },
+      ],
+      faqs: [
+        {
+          q: "Hogy néz ki egy heti tartalomnaptár szépségszalonnak?",
+          a: "Tipikusan 4-5 Instagram poszt + 7-10 Story + 2-3 Reel + 1 TikTok hetente. A téma-mix: 30% előtte-utána munkák, 25% szakértői tippek, 20% behind-the-scenes csapat, 15% akciók/foglalási CTA, 10% UGC (vendég-tartalom).",
+        },
+        {
+          q: "Tudtok influencerrel kapcsolatot kezelni?",
+          a: "Igen — a kontextustól függően mikro-influencerekkel (5-50K követő) gift-for-content alapon, vagy közepesebbekkel (50-200K) fizetett együttműködéssel. A G2A felelős a brief kiadásáért, a leadás review-ért és a poszt-disclaimer (ESEMÉ-kompatibilis) ellenőrzésért.",
+        },
+        {
+          q: "Milyen foglalási rendszert ajánlotok?",
+          a: "Magyarországon a Booksy és Salonkee a két legnépszerűbb. Booksy = stronger marketplace, ingyenes plan + tranzakciós díj; Salonkee = jobb többfős szalon CRM-funkciók. Ha custom website-ot építünk, a WP-Booking + Stripe kombináció a legrugalmasabb.",
+        },
+        {
+          q: "Hogyan kezeljük a no-show problémát?",
+          a: "Háromrétegű automatizáció: foglalás után 1 órán belül megerősítő e-mail; 24 óra előtt SMS emlékeztető; foglalás napján 2 órával előtte push-értesítés vagy SMS „erősítsd meg, hogy jössz” gombbal. Ezzel egy ügyfelünknél 40%→12%-ra csökkent a no-show arány.",
+        },
+        {
+          q: "Mibe kerül szépségipari marketing havonta?",
+          a: "Egyszemélyes kozmetikának 80-150 ezer Ft (social + lokális SEO), 2-3 fős szalonnak 250-450 ezer Ft (mindezt + Meta Ads). Hirdetési költség külön — minimum 100 ezer Ft/hó Meta Ads spend ajánlott.",
+        },
+      ],
     },
     "marketing-mernoki-irodaknak": {
-      title: "Marketing mérnöki irodáknak",
-      subtitle: "Tervező irodák, mérnöki vállalkozások és műszaki cégek számára",
-      metaTitle: "Marketing Mérnöki Irodáknak – G2A Marketing | B2B Lead Generálás, SEO, LinkedIn",
-      metaDesc: "Speciális B2B marketing mérnöki irodáknak és tervező vállalkozásoknak. SEO, LinkedIn, webfejlesztés és lead generálás.",
-      heroDesc: "A mérnöki szektorban a szakmai hitelesség és a B2B kapcsolatok a legfontosabbak. LinkedIn-stratégiától technikai SEO-ig – mindezt értjük.",
+      title: "Marketing mérnöki és építőipari cégeknek",
+      subtitle: "Tervezőirodák, statikai irodák, gépészmérnöki vállalkozások és építőipari szolgáltatók",
+      metaTitle: "Mérnöki és építőipari B2B marketing | G2A Marketing",
+      metaDesc:
+        "B2B leadgenerálás, technikai SEO, LinkedIn stratégia és referencia-portfólió tervezőirodáknak, mérnöki vállalkozásoknak. Komplex műszaki tartalmak, szakmai hitelesség.",
+      heroDesc:
+        "A mérnöki szektorban a megbízás referenciából, ajánlásból és szakmai bizalomból érkezik — de az elsőkörös ügyféljelölt mára a Google-en és LinkedInen kutat. Olyan online jelenlétet építünk, ami a tényleges projektkompetenciát mutatja meg, nem üres marketing-szöveggel.",
+      intro:
+        "A magyar mérnöki és tervezőirodai szektor jellemzően alulreprezentált online: portfólió-weboldalak elavultak, LinkedIn jelenlét hiányos, és a szakmai tartalom inkább zsargonban íródik mint ügyfél-szempontú előny-fókusszal. Ez piaci lehetőség: aki ezt rendbe rakja, gyorsan kiemelkedik a versenytársak közül még olyan kis piacokon is mint a Dél-Dunántúl.",
       challenges: [
-        "Szakmai hitelesség online kommunikálása",
-        "B2B lead generálás és ügyfélszerzés",
-        "Technikai tartalmak érthetővé tétele",
-        "LinkedIn jelenlét kiépítése",
-        "Referencia projektek bemutatása",
+        "Szakmai hitelesség kommunikálása nem-szakember megbízóknak (önkormányzat, befektető, fejlesztő)",
+        "B2B leadgenerálás hosszú értékesítési cikluson keresztül (3-12 hónap projektelőkészítés)",
+        "Komplex műszaki tartalmak érthetővé tétele döntéshozóknak",
+        "LinkedIn-jelenlét építése — egyéni szakértői hangokkal, nem csak vállalati oldallal",
+        "Referencia projektek vizuálisan vonzó bemutatása (3D render, fotók, mérnöki szakzsargon nélkül)",
+        "Pályázati hirdetésekre való reagálás gyorsítása — a Közbeszerzési és tendereken nyertes projektek külön kommunikációt igényelnek",
       ],
       solutions: [
-        { title: "B2B SEO", desc: "Technikai kulcsszavak, szakmai tartalmak, Google pozíciók" },
-        { title: "LinkedIn Marketing", desc: "Vállalati oldal, thought leadership, B2B hirdetések" },
-        { title: "Weboldal fejlesztés", desc: "Prémium megjelenés, referencia portfólió, ajánlatkérő" },
-        { title: "Tartalommarketing", desc: "Szakmai cikkek, esettanulmányok, fehér könyvek" },
+        {
+          title: "Műszaki B2B SEO",
+          desc: "„Statikus tervezés [város]”, „épületgépészet tervezés”, „acélszerkezet tervező” iparági kulcsszavakra optimalizálás",
+        },
+        {
+          title: "LinkedIn Account-Based Marketing",
+          desc: "Specifikus fejlesztő-cégek, generálkivitelezők, befektetők targetálása — egyenkénti kapcsolatfelvétel + retargeting",
+        },
+        {
+          title: "Portfólió-fókuszú weboldal",
+          desc: "Projekt-archívum, 3D render galériák, projektméret + költségvetés szűrők, ajánlatkérő űrlap",
+        },
+        {
+          title: "White paper és technikai tartalom",
+          desc: "Mélyfúrásos szakmai cikkek (BIM, fenntarthatóság, energiahatékonyság) + leadmágnes letöltések",
+        },
+        {
+          title: "Pályázati & tender PR",
+          desc: "Tender-nyertes projektek sajtóanyaggá formálása, helyi médiamegjelenés",
+        },
+        {
+          title: "Mérnök-személyiségmárka",
+          desc: "Az iroda tulajdonosának/senior mérnökének LinkedIn thought leadership-stratégiája",
+        },
       ],
       results: [
         { num: "+300%", label: "Weboldal forgalom" },
@@ -137,30 +311,96 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "30+", label: "Mérnöki projekt" },
       ],
       caseStudy: {
-        client: "Tervező iroda",
-        problem: "Nincs online jelenlét, minden ügyfél referencia alapján",
-        solution: "Weboldal + SEO + LinkedIn jelenlét",
-        result: "+15 új ügyfél/hónap, Top 3 Google pozíció 8 hónap alatt",
+        client: "Statikai tervezőiroda — Pécs",
+        problem: "Nincs online jelenlét, minden ügyfél referencia alapján — nem skálázható",
+        solution: "Új portfólió weboldal + technikai SEO + LinkedIn stratégia + 4 fős thought leadership csapat",
+        result: "+15 új ügyfél/hónap, Top 3 Google pozíció 4 kulcsszóra 8 hónap alatt",
       },
+      whyG2A:
+        "30+ mérnöki és építőipari projektben dolgoztunk magyar irodákkal. Tudunk BIM-modellből web-rendert csinálni, statikai pályázatot átvenni szöveggé alakítani, és LinkedIn-en olyan thought leadership tartalmat építeni, ami nem mérnök ügyfeleknek is érthető. Ismerjük a Közbeszerzési Hatóság rendszerét és a leggyakoribb tender-fajtákat.",
+      relatedServices: [
+        {
+          title: "Keresőoptimalizálás",
+          desc: "Műszaki kulcsszó-kutatás, technikai SEO, B2B tartalmi struktúra",
+          href: "/szolgaltatasok/keresooptimalizalas",
+        },
+        {
+          title: "Webfejlesztés",
+          desc: "Portfólió-rendszer, ajánlatkérő, projekt-archívum",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+        {
+          title: "Stratégiai marketing",
+          desc: "B2B buyer journey, ABM stratégia, sales-marketing alignment",
+          href: "/szolgaltatasok/strategiai-marketing",
+        },
+      ],
+      faqs: [
+        {
+          q: "Mennyi idő alatt látunk B2B leadgenerálási eredményt?",
+          a: "Reálisan 4-6 hónap az első mérhető pipeline-növekedéshez. A B2B mérnöki értékesítési ciklus jellemzően 3-12 hónap, így ha most kezdünk SEO + LinkedIn stratégiát, a tényleges szerződésekben az eredmény 9-15 hónap múlva látszik. A leading indikátorok (CTR, kapcsolatfelvétel, demo-igénylés) viszont 2 hónap után már szállítanak.",
+        },
+        {
+          q: "Tudtok rendert vagy 3D vizualizációt készíteni?",
+          a: "Saját rendert nem készítünk, de partner stúdiókkal dolgozunk együtt akik a BIM-modellből vagy CAD fájlból szállítanak portfólió-szintű képeket. Az integrációt és weboldali galériába rendezést mi vesszük át.",
+        },
+        {
+          q: "Hogy lehet a műszaki tartalmat érthetővé tenni?",
+          a: "Kétszintű tartalom-stratégia: (1) szakmai mélységű cikkek a kollégáknak és technikai döntéshozóknak (energetikai mérnököknek), (2) ROI- és üzleti-fókuszú összefoglalók a beruházóknak és önkormányzatoknak. A G2A koppintói és tartalom-szerkesztői mindkét regiszterben dolgoznak.",
+        },
+        {
+          q: "Mi a tipikus marketing-büdzsé mérnöki irodának?",
+          a: "Kis tervezőirodának (3-8 fő) havi 200-400 ezer Ft alapszolgáltatás (SEO + tartalom + LinkedIn), közepesnek (15-50 fő) 500-900 ezer Ft (mindezt + ABM + thought leadership menedzsment). Hirdetési költség jellemzően nem nagy LinkedIn esetén — havi 100-200 ezer Ft elég.",
+        },
+        {
+          q: "Tudtok pályázati / tender PR-ben segíteni?",
+          a: "Igen. Egy elnyert tendert sajtóanyaggá alakítunk, a helyi és iparági médiához eljuttatjuk, LinkedIn poszttá, weboldali esettanulmánnyá konvertáljuk. Ez egy elnyert tender 5-10x értékét tudja kommunikálni a piac felé.",
+        },
+      ],
     },
     "marketing-autoipari-cegeknek": {
       title: "Marketing autóipari cégeknek",
-      subtitle: "Autókereskedők, szervizek és autóipari vállalkozások számára",
-      metaTitle: "Marketing Autóipari Cégeknek – G2A Marketing | Google Ads, Meta Ads, SEO",
-      metaDesc: "Speciális marketing autókereskedőknek és autóipari vállalkozásoknak. Google Ads, Meta Ads, SEO és lead generálás.",
-      heroDesc: "Az autóiparban a lead generálás és a konverzió optimalizálás a kulcs. Google Ads-től Meta Ads-ig – mindezt értjük.",
+      subtitle: "Autókereskedők, márkaszervízek, autóparkok és autóipari beszállítók",
+      metaTitle: "Autóipari marketing — kereskedők és szervízek | G2A Marketing",
+      metaDesc:
+        "Lokalizált PPC, lead-minősítés és márkaszerviz-marketing autókereskedőknek és autóiparnak. Google Ads, Meta Ads remarketing, hosszú értékesítési ciklus konverzió-optimalizálás.",
+      heroDesc:
+        "Az autóiparban a lead minősége számít, nem a mennyisége. Olyan kampányokat építünk, amelyek nem csak kattintást, hanem komoly érdeklődőt és tesztvezetésre érkező vásárlót szállítanak — versenyképes CPA-val és tisztán mérhető ROAS-szal.",
+      intro:
+        "A magyar autóipari piac két részre osztódik: használt autó kereskedelem (rövidebb döntési ciklus, ár-érzékenyebb vásárló) és új autó / prémium kereskedelem (hosszabb ciklus, márka- és szervizélmény-érzékeny). A marketing-stratégiát ezekre élesen szét kell választani — ami működik az egyikben, az gyakran kontraproduktív a másikban.",
       challenges: [
-        "Magas hirdetési költség, alacsony ROAS",
-        "Szezonális kereslet kezelése",
-        "Lokális és regionális vásárlók elérése",
-        "Versenytársak árelőnyének kompenzálása",
-        "Online és offline értékesítés összekapcsolása",
+        "Magas hirdetési költség (Google Ads autóipari kulcsszavakon CPC 600-1500 Ft) és alacsony ROAS, ha rosszul strukturált a kampány",
+        "Szezonális kereslet kezelése — tavaszi szezonra előre érdemes pipeline-t építeni",
+        "Lokális és regionális vásárlók elérése a térképes keresésben, „használt [márka] [város]” típusú kulcsszavakra",
+        "Versenytársak árelőnyének kompenzálása szervízélménnyel, garanciával, finanszírozási opciókkal",
+        "Online és offline értékesítés összekapcsolása (online érdeklődés → tesztvezetés → showroom)",
+        "Lead-minősítés automatizálása — sok lead jön, de kevés a komoly érdeklődő",
       ],
       solutions: [
-        { title: "Google Ads PPC", desc: "Kampányrestruktúra, bid management, Quality Score optimalizálás" },
-        { title: "Meta Ads", desc: "Facebook és Instagram hirdetések, remarketing, lookalike audience" },
-        { title: "Lokális SEO", desc: "Google My Business, lokális kulcsszavak, térkép megjelenés" },
-        { title: "Landing Page", desc: "Konverzió optimalizált oldalak, A/B tesztelés" },
+        {
+          title: "Google Ads kampányrestruktúra",
+          desc: "Search + Performance Max + Shopping (használt autó feed) — szigorú negatív kulcsszó stratégiával a véletlen kattintások szűrésére",
+        },
+        {
+          title: "Meta Ads + retargeting",
+          desc: "Showroom-látogató + weboldal-látogató custom audience, lookalike a vásárlók alapján, dinamikus katalógus retargeting",
+        },
+        {
+          title: "Lokális SEO",
+          desc: "Google My Business optimalizálás, „[márka] szerviz [város]” kulcsszavak, helyi tartalom",
+        },
+        {
+          title: "Konverzió-optimalizált landing page",
+          desc: "Tesztvezetés-foglaló űrlap, finanszírozási kalkulátor, 360°-os autó-képgaléria",
+        },
+        {
+          title: "Lead-scoring és CRM integráció",
+          desc: "HubSpot/Pipedrive integráció, automatikus minősítés (érdeklődés szintje, finanszírozási kapacitás), értékesítő-irányítás",
+        },
+        {
+          title: "Szerviz remarketing",
+          desc: "Vásárlás után 6/12 hónappal automatikus szerviz-emlékeztető, garancia kommunikáció — CLV növelés",
+        },
       ],
       results: [
         { num: "-45%", label: "CPA csökkentés" },
@@ -168,30 +408,96 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "20+", label: "Autóipari projekt" },
       ],
       caseStudy: {
-        client: "Autókereskedő hálózat",
-        problem: "Magas hirdetési költség, alacsony konverzió",
-        solution: "PPC audit + kampányrestruktúra + landing page",
-        result: "-45% CPA, +220% lead generálás 3 hónap alatt",
+        client: "Multimárka autókereskedő hálózat — 4 telephely",
+        problem: "Magas Google Ads költés (havi 2.5M Ft), alacsony konverzió, nincs lead-minősítés",
+        solution: "PPC audit + kampányrestruktúra (Performance Max + Shopping feed) + új landing page-ek + HubSpot lead scoring",
+        result: "-45% CPA, +220% minősített lead 3 hónap alatt — havi költés 30%-kal csökkent, eladás +35%",
       },
+      whyG2A:
+        "20+ autóipari projektben dolgoztunk autókereskedőkkel és márkaszervízekkel. Tudjuk hogy működik a Shopping feed beszállítása (TecDoc, Mobile.de szinkron), a Performance Max-ben a tesztvezetés-konverziót hogyan kell elkülöníteni az „árdeklődés”-konverziótól, és a HubSpot/Pipedrive lead-scoring trükkjeit autóipari kontextusban.",
+      relatedServices: [
+        {
+          title: "PPC & Google Ads",
+          desc: "Performance Max, Shopping feed, retargeting kampányok",
+          href: "/szolgaltatasok/hirdeteskezeles",
+        },
+        {
+          title: "Webfejlesztés és CRO",
+          desc: "Tesztvezetés-foglaló, finanszírozás-kalkulátor landing page",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+        {
+          title: "Stratégiai marketing",
+          desc: "Lead-scoring rendszer, sales-marketing pipeline alignment",
+          href: "/szolgaltatasok/strategiai-marketing",
+        },
+      ],
+      faqs: [
+        {
+          q: "Milyen Google Ads költségvetést érdemes szánni autókereskedőként?",
+          a: "Egy 1-telephelyes használt autó kereskedés esetén minimum 300-500 ezer Ft/hó, márkakereskedésnek 800 ezer–2M Ft/hó. A költség nagyon függ a piacterülettől és a kínálattól: prémium márka (BMW, Mercedes) kulcsszavak CPC-je 1200-1800 Ft, használt autóké 400-800 Ft.",
+        },
+        {
+          q: "Hogyan kezelhető a Google Ads Shopping autóipari feedhez?",
+          a: "Saját Shopping feedet építünk a kereskedés CRM/DMS rendszeréből (TecDoc, Mobile.de, Carzone), naponta szinkronizálva. A feed minden autóhoz tartalmazza az ár, futott km, gyártási év, üzemanyag-fajta, motor, és high-quality fotók. Ez teszi lehetővé hogy a kereső direkt a hirdetésre kattintáskor lássa a konkrét autót.",
+        },
+        {
+          q: "Mit tegyünk a tesztvezetés-érdeklődések minősítésével?",
+          a: "Háromrétegű scoring: (1) automatikus pre-screening kérdések a foglalási űrlapon (finanszírozási mód, konkrét modell-érdeklődés, vételi időkeret); (2) HubSpot vagy Pipedrive lead-score automatizmus érdeklődési szint alapján; (3) az értékesítőhez 60 percen belül kerül a forró lead, langyos a következő munkanap.",
+        },
+        {
+          q: "Tudtok finanszírozási kalkulátort integrálni a weboldalba?",
+          a: "Igen — Cofidis, Magyar Cetelem, OTP Lízing API integrációkkal vagy egyszerű kalkulátor-widget formában. A G2A megrendelő igényei szerint dolgozza össze a finanszírozó partner adatait a weboldali konverzió-flow-val.",
+        },
+        {
+          q: "Hogyan mérhető a marketing-tevékenység tényleges eladásra gyakorolt hatása?",
+          a: "Online lead → showroom látogatás → eladás conversion lánc CRM-ben követhető — ehhez a Google Click ID-t (GCLID) és a Meta Click ID-t (FBCLID) be kell vinni a CRM lead-mezőjébe, így vissza lehet vezetni: melyik kampány melyik tényleges autó-eladásban végződött. Ezt megépítjük a HubSpot/Pipedrive integrációba.",
+        },
+      ],
     },
     "marketing-ugyvedii-irodaknak": {
-      title: "Marketing ügyvédi irodáknak",
-      subtitle: "Ügyvédi irodák és jogi vállalkozások számára",
-      metaTitle: "Marketing Ügyvédi Irodáknak – G2A Marketing | SEO, Google Ads, Brand Design",
-      metaDesc: "Speciális marketing ügyvédi irodáknak. SEO, Google Ads, prémium brand design és tartalommarketing.",
-      heroDesc: "Az ügyvédi szektorban a presztízs, a bizalom és a szakmai hitelesség a legfontosabb. Prémium brand design-tól SEO-ig – mindezt értjük.",
+      title: "Marketing ügyvédi és jogi irodáknak",
+      subtitle: "Ügyvédi irodák, közjegyzők, könyvelő-jogi tanácsadók és pénzügyi tanácsadók",
+      metaTitle: "Ügyvédi és jogi marketing — szakmai hitelesség | G2A Marketing",
+      metaDesc:
+        "Szakterületi SEO, prémium brand design, GDPR-megfelelő kampányok ügyvédi és jogi irodáknak. Bizalomépítés, lokális SEO, tartalommarketing.",
+      heroDesc:
+        "A jogi szektorban a vásárlói döntést a presztízs, a bizalom és a szakmai hitelesség vezérli — az ár csak hatodlagos. Olyan online jelenlétet építünk, ami pontosan ezt sugározza, miközben megfelel az MÜK reklámszabályainak és a GDPR-nak.",
+      intro:
+        "A jogi marketing Magyarországon az MÜK Etikai Kódexe és a 2017. évi LXXVIII. tv. szabályozása alá esik — az ügyvédnek tilos összehasonlító, dícsekvő vagy tévhitkeltő reklámot folytatnia. Ez nem akadály, hanem irány: aki jól kommunikálja a szakmai mélységet és a megbízható tanácsadói karaktert, gyorsan megszerzi a bizalmat egy túlhirdető versenytárssal szemben.",
       challenges: [
-        "Presztízs és bizalom kommunikálása online",
-        "Jogi tartalmak érthetővé tétele",
-        "Google Ads korlátozások kezelése jogi területen",
-        "Versenytársak erős SEO jelenlétével való verseny",
-        "Ügyféladatok biztonságos kezelése",
+        "Etikai kódex-megfelelő reklám — összehasonlító állítások, sikerdíj-ígéret tilos",
+        "Presztízs és prémium érzet kommunikálása vizuális megjelenésben és tartalomban",
+        "Jogi szakzsargon érthetővé tétele potenciális ügyfeleknek",
+        "Google Ads korlátozások kezelése jogi vertikumban (több kategória nem futhat)",
+        "Specifikus szakterületek (pl. családjog, ingatlanjog, M&A) közötti SEO-differenciálás",
+        "Ügyfél-titoktartás megőrzése esetbemutatásban — nem lehet konkrét ügyet idézni",
       ],
       solutions: [
-        { title: "Prémium Brand Design", desc: "Presztízst sugárzó vizuális identitás, weboldal redesign" },
-        { title: "Jogi SEO", desc: "Szakterületi kulcsszavak, lokális SEO, Google My Business" },
-        { title: "Tartalommarketing", desc: "Jogi cikkek, GYIK, esettanulmányok – érthetően" },
-        { title: "Google Ads", desc: "Jogi területre optimalizált kampányok, GDPR-kompatibilis" },
+        {
+          title: "Prémium brand design",
+          desc: "Visszafogott elegancia, klasszikus tipográfia, prémium színek — elhatárolódás a tucat-ügyvédi sablonoktól",
+        },
+        {
+          title: "Szakterületi SEO",
+          desc: "„Munkajogi ügyvéd Budapest”, „családjogi tanácsadás Pécs” típusú long-tail kulcsszavak — minden szakterületre dedikált aloldal",
+        },
+        {
+          title: "Edukatív tartalommarketing",
+          desc: "Jogszabályi változások magyarázata, GYIK-cikkek, esetek (anonimizálva) — érthetően nem-jogászoknak",
+        },
+        {
+          title: "Lokális SEO + Google My Business",
+          desc: "Iroda profiljának teljes optimalizálása, helyi értékelések kezelése, válaszadási minták",
+        },
+        {
+          title: "GDPR-konform kapcsolatfelvétel",
+          desc: "Online konzultáció-foglaló, titkosított ügyféldokumentum-átvétel (Tresorit, ügyvédi platformokkal integrálva)",
+        },
+        {
+          title: "LinkedIn thought leadership",
+          desc: "Senior partnerek személyiségmárkája — szakmai cikkek, bírósági gyakorlat-elemzések",
+        },
       ],
       results: [
         { num: "+250%", label: "Organikus forgalom" },
@@ -199,30 +505,96 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "15+", label: "Jogi projekt" },
       ],
       caseStudy: {
-        client: "Ügyvédi iroda – Budapest",
-        problem: "Nem megfelelő online megjelenés, alacsony presztízs érzet",
-        solution: "Brand redesign + SEO + Google Ads",
-        result: "+250% organikus forgalom, Top 1 Google pozíció 5 hónap alatt",
+        client: "Ügyvédi iroda — Budapest",
+        problem: "Elavult honlap, alacsony presztízs-érzet, „ügyvédkereső”-ben láthatatlan",
+        solution: "Prémium brand redesign + új weboldal + szakterületi SEO + Google Ads (engedélyezett kategóriák)",
+        result: "+250% organikus forgalom, Top 1 Google pozíció 3 fő szakterületen 5 hónap alatt",
       },
+      whyG2A:
+        "15+ jogi projektben dolgoztunk ügyvédi irodákkal és könyvelő-jogi tanácsadókkal. Ismerjük az MÜK 6/2018. (III. 26.) MÜK Szabályzatát a hirdetésről, tudjuk hogy melyik Google Ads kategória engedélyezett és melyik tilos, és hogyan kell anonimizált esetbemutatásokat készíteni titoktartási kötelezettségünk megsértése nélkül.",
+      relatedServices: [
+        {
+          title: "Arculattervezés",
+          desc: "Prémium vizuális identitás, irodai kommunikációs anyagok",
+          href: "/szolgaltatasok/arculattervezes",
+        },
+        {
+          title: "Keresőoptimalizálás",
+          desc: "Szakterületi kulcsszavak, lokális SEO, GYIK-tartalom",
+          href: "/szolgaltatasok/keresooptimalizalas",
+        },
+        {
+          title: "Webfejlesztés",
+          desc: "Konzultáció-foglaló, biztonságos ügyfélportál integráció",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+      ],
+      faqs: [
+        {
+          q: "Megengedi az MÜK az online hirdetést és a tartalommarketinget?",
+          a: "Igen, a 6/2018. (III. 26.) MÜK Szabályzat alapján engedélyezett az ügyvédi tevékenység tárgyilagos, szakszerű, információszolgáltatás célú reklámja. Tilos viszont az összehasonlító, túlzó, vagy ügyfélakvizíciós tartalmú hirdetés, mint például „a legjobb ügyvéd a városban” vagy „garantált siker”. A G2A minden tartalmát ezen szabályoknak megfelelően alkotja.",
+        },
+        {
+          q: "Tudtok ügyfélreferenciát publikálni?",
+          a: "Csak az ügyfél kifejezett, írásbeli engedélyével — és akkor is csak a tevékenység jellegét bemutatva, nem konkrét ügy részleteit. Az alternatív megoldás az anonimizált esettanulmány: „X ipari középvállalat, M&A tranzakció, eredmény: 9 hónapos due diligence után sikeres zárás” — név és iparág-specifikum nélkül.",
+        },
+        {
+          q: "Milyen Google Ads kategóriák engedélyezettek ügyvédnek?",
+          a: "Általános jogi tanácsadás, családjog, polgári jog, ingatlanjog, munkajog, gazdasági jog — ezek mind futtathatók. NEM engedélyezett: hirtelen sikerdíj-alapú kampány („nem nyerünk = nem fizetsz”), büntetőjog részben (pl. „kábítószer ügyvéd”), bevándorlási konkrét ország-célzás. A G2A audit során minden kampányt jogi szempontból átnéz.",
+        },
+        {
+          q: "Hogyan biztosítjuk a GDPR-megfelelőséget az online konzultációban?",
+          a: "Tresorit titkosított dokumentum-átvétel, JotForm GDPR-compliant űrlap (EU adatcentrum), expliciten naplózott consent. Az ügyvéd-ügyfél titoktartás technikai oldala végpontok közti titkosítással biztosított.",
+        },
+        {
+          q: "Milyen költségvetéssel induljunk?",
+          a: "Egyfős vagy kis irodának (3 fő alatt) havi 200-400 ezer Ft (alapsozolgáltatások: SEO + tartalom + LinkedIn), közepesnek (5-15 fő) 500-900 ezer Ft (mindezt + Google Ads + brand kommunikáció). Hirdetési költség jellemzően 100-300 ezer Ft/hó.",
+        },
+      ],
     },
     "marketing-technologiai-cegeknek": {
-      title: "Marketing technológiai cégeknek",
-      subtitle: "SaaS vállalatok, tech startupok és IT cégek számára",
-      metaTitle: "Marketing Technológiai Cégeknek – G2A Marketing | B2B SaaS, LinkedIn, SEO",
-      metaDesc: "Speciális B2B marketing technológiai cégeknek és SaaS vállalatoknak. LinkedIn Ads, SEO, tartalommarketing és nemzetközi terjeszkedés.",
-      heroDesc: "A tech szektorban a gyors növekedés és a nemzetközi terjeszkedés a cél. LinkedIn-stratégiától multilingual SEO-ig – mindezt értjük.",
+      title: "Marketing technológiai és SaaS cégeknek",
+      subtitle: "SaaS vállalatok, IT-tanácsadók, tech startupok és software fejlesztők",
+      metaTitle: "SaaS és tech B2B marketing — nemzetközi növekedés | G2A Marketing",
+      metaDesc:
+        "SaaS és tech cégek B2B marketingje: LinkedIn ABM, multilingual SEO, demoflow optimalizálás, AI-támogatott lead generálás. Magyar és nemzetközi piac.",
+      heroDesc:
+        "A tech szektorban a hosszú értékesítési ciklus és a nemzetközi piaci ambíció együttesen jelennek meg. Olyan stratégiát építünk, amely a magyar piac mellett angol és német nyelven is működik — egy LinkedIn-poszttól a multilingual SEO-ig egyetlen integrált rendszerben.",
+      intro:
+        "A B2B SaaS és tech cégeknél a marketing-eszközök eltolódnak a hagyományos hirdetéstől a kontent + thought leadership + ABM (Account-Based Marketing) irányba. Egy decision-maker átlagosan 14 ponton érinti a brandet, mielőtt demo-t igényel — ez azt jelenti, hogy a marketing-stratégia funnel nem lineáris, hanem többcsatornás érintési pontok hálózata.",
       challenges: [
-        "Komplex termékek érthetővé tétele",
-        "Hosszú értékesítési ciklus kezelése",
-        "Nemzetközi piacra lépés",
-        "B2B lead generálás és demo foglalások",
-        "Versenytársak erős marketing jelenlétével való verseny",
+        "Komplex műszaki termékek érthetővé tétele nem-tech döntéshozóknak (CFO, COO, ügyvezető)",
+        "Hosszú értékesítési ciklus (3-12 hónap) végigkísérése — multi-touch attribúció szükséges",
+        "Nemzetközi piacra lépés: fordítás nem elég, kulturálisan adaptált tartalom kell",
+        "B2B leadgenerálás vs. brand awareness egyensúlyban tartása",
+        "Versenytársak (köztük amerikai vállalatok 100M$+ marketing-büdzsével) elöli kiemelkedés",
+        "Demo-funnel optimalizálás: a demo-t igénylő prospect 60-80%-a nem zár",
       ],
       solutions: [
-        { title: "B2B LinkedIn Marketing", desc: "Thought leadership, LinkedIn Ads, decision maker targeting" },
-        { title: "Multilingual SEO", desc: "Több nyelven, több piacon – egységes SEO stratégia" },
-        { title: "Tartalommarketing", desc: "White paper, case study, blog – B2B buyer journey" },
-        { title: "Marketing Automatizáció", desc: "Lead nurturing, email workflow, CRM integráció" },
+        {
+          title: "Account-Based Marketing (ABM)",
+          desc: "Top 50-100 célvállalat egyenkénti targetálása LinkedIn + email + retargeting párhuzamos kampánnyal",
+        },
+        {
+          title: "Multilingual SEO",
+          desc: "Magyar + angol + német (vagy lengyel/cseh) párhuzamos SEO infrastruktúra hreflang-gel, lokalizált kulcsszavakkal",
+        },
+        {
+          title: "Thought leadership tartalom",
+          desc: "Iparági trend-cikkek, white paper, podcast, webinar — a CTO/CEO személyes nevén futtatva",
+        },
+        {
+          title: "Marketing automatizáció + CRM",
+          desc: "HubSpot/Salesforce + Marketo integráció, lead-scoring, multi-touch attribution",
+        },
+        {
+          title: "Demo-funnel CRO",
+          desc: "Demo-foglaló oldal A/B teszteléssel, in-app onboarding, no-show csökkentés automatikusan",
+        },
+        {
+          title: "AI-alapú lead enrichment",
+          desc: "Clearbit + Apollo + Cognism integráció — az érkező lead profilját automatikusan kiegészítjük döntéshozói szinttel és cégadatokkal",
+        },
       ],
       results: [
         { num: "+5", label: "Új piac" },
@@ -230,30 +602,96 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "35+", label: "Tech projekt" },
       ],
       caseStudy: {
-        client: "SaaS vállalat",
-        problem: "Nemzetközi piacra lépés, brand awareness hiánya",
-        solution: "Brand stratégia + multilingual SEO + LinkedIn",
-        result: "+5 új piac, +280% demo foglalás 12 hónap alatt",
+        client: "B2B SaaS vállalat — magyar startup",
+        problem: "Nemzetközi piacra lépés, brand awareness hiánya, demo-funnel konverzió 1.2%",
+        solution: "Brand-stratégia + multilingual SEO (HU/EN/DE) + LinkedIn ABM + HubSpot integráció + demo CRO",
+        result: "+5 új piac (DE, AT, CH, PL, CZ), +280% demo foglalás, 4.1% demo-funnel konverzió 12 hónap alatt",
       },
+      whyG2A:
+        "35+ tech projektben dolgoztunk SaaS startupoktól middle-market IT-tanácsadókig. Tudjuk a hreflang implementációt CMS oldalán, a HubSpot multi-touch attribútum modellt, az Apollo-Cognism-Clearbit lead enrichment kombinációt, és azt is, hogy a magyar buyer-persona miben különbözik a német vagy lengyel ekvivalensétől. Belső AI-eszközeink (Claude, ChatGPT) gyorsítják a kontent-gyártást.",
+      relatedServices: [
+        {
+          title: "AI marketing",
+          desc: "AI-támogatott tartalomgyártás, lead enrichment, prediktív analitika",
+          href: "/szolgaltatasok/ai-marketing",
+        },
+        {
+          title: "Marketing automatizáció",
+          desc: "HubSpot, Marketo, multi-touch attribution, lead-scoring",
+          href: "/szolgaltatasok/marketing-automatizacio",
+        },
+        {
+          title: "Lokalizáció és nemzetközi marketing",
+          desc: "Multilingual SEO, kulturális adaptáció, EU-piaci belépés",
+          href: "/szolgaltatasok/lokalizacio",
+        },
+      ],
+      faqs: [
+        {
+          q: "Mennyi idő alatt látszik B2B SaaS marketingben az eredmény?",
+          a: "Top-of-funnel metrikák (organikus forgalom, LinkedIn engagement) 2-3 hónap alatt mozognak. Demo-igénylések tipikusan 4-6 hónap után kezdenek nőni — ez a tartalomstratégia indexálódási idejétől és az ABM hideg-célzás meleg-célzássá konvertálásától függ. Tényleges revenue impact 9-15 hónap, mert ennyi az enterprise sales ciklus.",
+        },
+        {
+          q: "Mely nyelvekre érdemes lokalizálni elsőként?",
+          a: "Iparágtól függ, de magyar startupoknak jellemzően: 1. angol (globális elérés), 2. német (DACH régió), 3. lengyel + cseh (V4 piaca). Az ezeknek megfelelő SEO-stratégia kulcsszó-térképét pre-launch szakaszban átnézzük, és sokszor azt találjuk, hogy a lengyel piac volumene jobb mint a németé — kis verseny nagyobb lefedettséggel.",
+        },
+        {
+          q: "Tudtok HubSpot-on belül lead-scoring-ot felállítani?",
+          a: "Igen. Két szintű scoring: explicit (cég mérete, iparág, szerepkör) + implicit (oldalon töltött idő, email open, demo-page látogatás). A kettő szorzótáblája adja a lead-prioritást: hot lead 60+ pont, marketing-qualified 30-59, raw 0-29. Ehhez a HubSpot custom propertyket és workflow-t építünk a kliens értékesítési ciklusához.",
+        },
+        {
+          q: "Mi az ABM stratégia gyakorlatban?",
+          a: "Hármas párhuzam: (1) Sales kiválaszt 50-100 célcéget; (2) marketing minden cégre LinkedIn-en céges + döntéshozói targetinggel hirdet (3-6 érintés / hónap); (3) értékesítő közvetlen outbound kapcsolatfelvételt indít a felmelegedés után. Az ABM workflow-t HubSpot-ban modellezzük.",
+        },
+        {
+          q: "Milyen büdzsé reális SaaS marketingre?",
+          a: "Pre-product-market-fit szakaszú startupnak (10 fő alatt): havi 400-800 ezer Ft (mindössze SEO + tartalom + 1 csatornás ABM). Growth-szakaszú SaaS-nak (15-50 fő): 1.5-3M Ft/hó (full ABM + multilingual + marketing automation). Scale-up vagy enterprise SaaS-nak (50+ fő): 4-10M Ft/hó.",
+        },
+      ],
     },
     "marketing-onkormanyzati-projekteknek": {
-      title: "Marketing önkormányzati projekteknek",
-      subtitle: "Önkormányzatok, közintézmények és közösségi projektek számára",
-      metaTitle: "Marketing Önkormányzati Projekteknek – G2A Marketing | Közösségi Kommunikáció",
-      metaDesc: "Speciális marketing önkormányzatoknak és közintézményeknek. Közösségi kommunikáció, webfejlesztés, social media és tájékoztatási kampányok.",
-      heroDesc: "Az önkormányzati kommunikációban az átláthatóság, a közösségi bevonás és az elérhetőség a kulcs. Webfejlesztéstől social media-ig – mindezt értjük.",
+      title: "Marketing önkormányzati és közintézményi projekteknek",
+      subtitle: "Önkormányzatok, közintézmények, közösségi projektek és civil szervezetek számára",
+      metaTitle: "Önkormányzati marketing — közösségi kommunikáció | G2A Marketing",
+      metaDesc:
+        "Akadálymentes közintézményi weboldalak, közösségi médiakampányok, transzparens tájékoztatás és lakossági bevonási projektek önkormányzatoknak.",
+      heroDesc:
+        "Az önkormányzati kommunikációban a transzparencia, a közösségi bevonás és a generációkhoz szabott tartalom a kulcs. Olyan rendszereket építünk, amelyek mindenki számára elérhetőek — akadálymentesen és anyanyelvi minőségben kínai turistától magyar nyugdíjasig.",
+      intro:
+        "A magyar önkormányzati kommunikáció jellemzően a köztisztviselő által írt sajtóközlemény + Facebook poszt minimumra korlátozódik. A modern lakossági elvárás viszont mobilbarát weboldal, gyors válaszadás Messenger-en, akadálymentesített tartalom és többgenerációs ranges. A 2018. évi LXXV. tv. (Akadálymentesítés) emellett 2025-től minden közszférás digitális szolgáltatást WCAG 2.1 AA szintre kötelez.",
       challenges: [
-        "Közösségi bevonás és részvétel növelése",
-        "Átlátható kommunikáció biztosítása",
-        "Különböző korosztályok elérése",
-        "Korlátozott büdzsé hatékony felhasználása",
-        "GDPR-kompatibilis adatkezelés",
+        "WCAG 2.1 AA akadálymentesítési megfelelőség (vakok, gyengénlátók, mozgáskorlátozottak)",
+        "Generációs különbségek áthidalása (idősek emailen, fiatalok TikTokon)",
+        "Korlátozott marketing-büdzsé hatékony felhasználása — közbeszerzési szabályok korlátaival",
+        "Krízis-kommunikáció (árvíz, közlekedés-zavar, közüzemi probléma) — pillanatok alatt minden csatornán",
+        "Transzparencia és az adatvédelem közötti egyensúly (közérdekű adat vs. személyes adat)",
+        "Pályázati és EU-finanszírozási projektek kommunikációja az előírt láthatósági követelményekkel",
       ],
       solutions: [
-        { title: "Közösségi Weboldal", desc: "Akadálymentesített, mobilbarát, GDPR-kompatibilis" },
-        { title: "Social Media", desc: "Facebook, Instagram – közösségi bevonás és tájékoztatás" },
-        { title: "Tájékoztató Kampányok", desc: "Célzott kampányok specifikus közösségi ügyekhez" },
-        { title: "Email Kommunikáció", desc: "Hírlevél rendszer, esemény értesítések" },
+        {
+          title: "Akadálymentes közintézményi weboldal",
+          desc: "WCAG 2.1 AA, GDPR + Infotv. megfelelő, többnyelvű (magyar/angol/német), gyors keresőrendszerrel",
+        },
+        {
+          title: "Közösségi média stratégia",
+          desc: "Facebook (idősebb generáció), Instagram + TikTok (Y/Z generáció) — egységes hangnemmel, lokalizált tartalommal",
+        },
+        {
+          title: "Krízis-kommunikációs sablonok",
+          desc: "Előre előkészített kommunikációs kit-ek tipikus krízishelyzetekre — másodpercek alatt aktiválható",
+        },
+        {
+          title: "Lakossági hírlevél",
+          desc: "Heti/havi e-mail hírlevél eseményekről, közlekedés-változásokról, döntésekről — célzottan szegmentált",
+        },
+        {
+          title: "EU-projekt láthatósági kommunikáció",
+          desc: "Pályázati előírások betartásával készített kampányok, Európai Strukturális és Beruházási Alapok logóhasználat",
+        },
+        {
+          title: "Lakossági visszajelzési rendszer",
+          desc: "Online polgári panaszbejelentő, részvételi költségvetés szavazás, közösségi felmérések",
+        },
       ],
       results: [
         { num: "+400%", label: "Közösségi elérés" },
@@ -261,30 +699,96 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "10+", label: "Önkormányzati projekt" },
       ],
       caseStudy: {
-        client: "Dél-dunántúli önkormányzat",
-        problem: "Alacsony közösségi bevonás, elavult kommunikáció",
-        solution: "Weboldal redesign + social media + kampányok",
-        result: "+400% közösségi elérés, +250% weboldal látogatók",
+        client: "Dél-dunántúli kisváros — 8.000 lakos",
+        problem: "Elavult, nem mobilbarát weboldal, alacsony közösségi bevonás, krízis-kommunikáció hiányzik",
+        solution: "Új akadálymentes weboldal + social media stratégia + krízis-kit-ek + lakossági hírlevél rendszer",
+        result: "+400% közösségi elérés, +250% weboldal látogatók, 92%-os lakossági elégedettség éves felmérésben",
       },
+      whyG2A:
+        "10+ önkormányzati és közintézményi projekt mögöttünk — kistelepülésektől megyei jogú városokig. Ismerjük a Kbt. (közbeszerzés) szabályait, a 2018. évi LXXV. tv. (akadálymentesítés) követelményeit, és az EU-pályázati láthatósági előírásokat. Ügyvezetőnk, Győrfi Attila a Pécsi Tudományegyetem Közgazdaságtudományi Karán is oktat — közvetlen kapcsolatban a régió közigazgatásával.",
+      relatedServices: [
+        {
+          title: "Webfejlesztés",
+          desc: "Akadálymentes közintézményi weboldal, többnyelvű, biztonságos",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+        {
+          title: "Közösségi média menedzsment",
+          desc: "Lakossági kommunikáció, generációs targeting, krízis-kit",
+          href: "/szolgaltatasok/kozossegi-media",
+        },
+        {
+          title: "Tartalommarketing",
+          desc: "Hírlevél rendszer, közérdekű cikkek, EU projekt PR",
+          href: "/szolgaltatasok/tartalommarketing",
+        },
+      ],
+      faqs: [
+        {
+          q: "Mit jelent a WCAG 2.1 AA megfelelőség pontosan?",
+          a: "Web Content Accessibility Guidelines: a vakok és gyengénlátók (képernyőolvasó kompatibilitás), mozgáskorlátozottak (csak billentyűzettel kezelhetőség), és kognitív akadályokkal élők (egyszerű szöveg, kontrasztos színek) számára is használható weboldal. AA = második legmagasabb szint, amit Magyarországon 2025-tőlj minden közszférás szolgáltatásnak teljesítenie kell.",
+        },
+        {
+          q: "Tudtok közbeszerzési pályázatban segíteni?",
+          a: "Igen — a Kbt. szerinti minőségi és ár-érzékeny ajánlatokat tudunk készíteni, részvételi szándéknyilatkozattól szakmai dokumentációig. A G2A jellemzően alvállalkozóként vagy konzorciumi taggal dolgozik nagyobb pályázatokon, közvetlenül kistelepülési vagy intézményi alapszolgáltatásban.",
+        },
+        {
+          q: "Hogyan kezelhetjük a krízis-kommunikációt 24/7?",
+          a: "Háromrétegű kit-et készítünk: (1) előre megírt sablonok 8-10 tipikus szituációra (árvíz, közüzemi kimaradás, közlekedési baleset, COVID-szerű egészségügyi krízis); (2) jóváhagyási flow-t definiálunk, hogy ki engedélyezi a kommunikáció kiküldését (polgármester, jegyző, kommunikációs felelős); (3) opcionálisan G2A on-call szolgáltatás is — havidíjas alapon, krízis esetén 30 percen belül kiküldjük az engedélyezett változatot.",
+        },
+        {
+          q: "EU-pályázati láthatósági követelmények — mit jelent?",
+          a: "Az európai uniós források felhasználásánál kötelező a kedvezményezett-jelzés (logó, szlogen, projekt-megjelölés), a sajtótájékoztató, a tematikus kommunikációs kampány. Az EU 2021-2027 Cohesion Policy láthatósági kézikönyve alapján dolgozunk — fix, ellenőrizhető templátokkal.",
+        },
+        {
+          q: "Mi a tipikus önkormányzati marketing-büdzsé?",
+          a: "Kistelepülésnek (5.000 lakos alatt): havi 100-200 ezer Ft (alapszolgáltatás, social media + hírlevél). Közepes (5-30 ezer lakos): 250-500 ezer Ft. Megyei jogú város: 800 ezer–2M Ft (krízis-csapat + EU PR + lakossági kapcsolat). Ezekhez gyakran EU-finanszírozott projekt is társul, amiben a marketing önálló soron szerepel.",
+        },
+      ],
     },
     "marketing-b2b-cegeknek": {
-      title: "Marketing B2B cégeknek",
-      subtitle: "Vállalati ügyfeleket kiszolgáló cégek és B2B vállalkozások számára",
-      metaTitle: "Marketing B2B Cégeknek – G2A Marketing | Lead Generálás, LinkedIn, SEO",
-      metaDesc: "Speciális B2B marketing megoldások vállalati ügyfeleket kiszolgáló cégeknek. Lead generálás, LinkedIn Ads, SEO és marketing automatizáció.",
-      heroDesc: "A B2B marketingben a hosszú értékesítési ciklus, a döntéshozók elérése és a mérhető ROI a legfontosabb. LinkedIn-től marketing automatizációig – mindezt értjük.",
+      title: "Marketing B2B vállalatoknak",
+      subtitle: "Vállalati ügyfeleket kiszolgáló cégek, ipari beszállítók, professzionális szolgáltatók",
+      metaTitle: "B2B marketing — leadgenerálás, ABM, LinkedIn | G2A Marketing",
+      metaDesc:
+        "B2B leadgenerálás, Account-Based Marketing, LinkedIn stratégia, marketing automatizáció és sales-marketing alignment vállalati ügyfeleket kiszolgáló cégeknek.",
+      heroDesc:
+        "A B2B marketing nem véletlenszerű kreatív kampányokról szól — hanem mérhető pipeline-építésről. Olyan rendszert alkotunk, amelyben minden marketinges elköltött forint nyomon követhető a végső szerződéskötésig: LinkedIn érintéstől automatizált e-mail nurturing-on át a sales-handoff-ig.",
+      intro:
+        "A B2B vásárlási folyamat 67%-a online történik még az értékesítővel való első találkozás előtt — ez azt jelenti, hogy a marketing-osztály a sales-csapat mellett párhuzamos pipeline-építő egység, nem a sales kiszolgálója. A modern B2B-marketing fókusza ezért a marketing-qualified lead (MQL) → sales-qualified lead (SQL) → opportunity → won-deal funnel mérhetővé tétele és optimalizálása.",
       challenges: [
-        "Döntéshozók elérése és megszólítása",
-        "Hosszú értékesítési ciklus kezelése",
-        "Mérhető ROI és lead minőség",
-        "Account-based marketing (ABM)",
-        "Sales és marketing összehangolása",
+        "Döntéshozók elérése többszereplős vásárlási folyamatban (átlag 6-10 érintett a buying committee-ben)",
+        "Hosszú értékesítési ciklus (3-12 hónap) végigkísérése multi-touch nurturing kampánnyal",
+        "Lead-minőség: a mennyiség helyett a sales-handoff-ban valóban tárgyalóképes lead",
+        "Account-Based Marketing operacionalizálása — sales-marketing valódi együttműködéssel",
+        "Sales és marketing alignment: közös definíciók (MQL, SQL), közös KPI-ok, közös CRM",
+        "ROI-mérés a teljes funnelben — multi-touch attribution szükséges",
       ],
       solutions: [
-        { title: "LinkedIn Marketing", desc: "Thought leadership, LinkedIn Ads, decision maker targeting" },
-        { title: "Marketing Automatizáció", desc: "Lead nurturing, email workflow, CRM integráció" },
-        { title: "B2B SEO & Tartalom", desc: "Iparági kulcsszavak, white paper, case study" },
-        { title: "Account-Based Marketing", desc: "Célzott kampányok specifikus vállalatoknak" },
+        {
+          title: "LinkedIn ABM stratégia",
+          desc: "50-150 célvállalat egyenkénti targetálása + döntéshozói LinkedIn Ads + retargeting + sales outbound timing",
+        },
+        {
+          title: "Marketing automatizáció",
+          desc: "HubSpot vagy Marketo workflow, lead-scoring, e-mail nurturing sorozatok funnel-szakaszok szerint",
+        },
+        {
+          title: "B2B SEO + tartalom",
+          desc: "Iparági kulcsszavak, in-depth blog cikkek, white paper, esettanulmány — a buyer journey minden szakaszára",
+        },
+        {
+          title: "Sales enablement",
+          desc: "Sales-csapatnak készített pitch deck-ek, kompetencia-anyagok, demo-script, ROI-kalkulátor",
+        },
+        {
+          title: "Multi-touch attribution",
+          desc: "HubSpot revenue attribution riport — melyik csatorna hány %-ban járult hozzá a tényleges szerződéshez",
+        },
+        {
+          title: "Pipeline-velocity optimalizálás",
+          desc: "A sales-cycle minden szakasza külön analizálva — hol akad el, hol lehet gyorsítani: deal-coaching alapján",
+        },
       ],
       results: [
         { num: "+180%", label: "Qualified lead" },
@@ -292,11 +796,52 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "50+", label: "B2B projekt" },
       ],
       caseStudy: {
-        client: "B2B szoftver vállalat",
-        problem: "Alacsony lead minőség, hosszú értékesítési ciklus",
-        solution: "LinkedIn + marketing automatizáció + ABM",
-        result: "+180% qualified lead, -40% sales ciklus 6 hónap alatt",
+        client: "B2B szoftver vállalat — 35 fős, közepes méretű enterprise SaaS",
+        problem: "Alacsony lead-minőség, 9 hónap átlag sales-cycle, sales-marketing alignment hiányzik",
+        solution: "ABM stratégia + HubSpot marketing automation + sales enablement + multi-touch attribúció",
+        result: "+180% qualified lead, -40% sales-cycle (9→5.4 hónap), 6 hónap alatt 12% revenue növekedés",
       },
+      whyG2A:
+        "50+ B2B projekt — a középvállalati SaaS-tól az ipari beszállítókig. Ismerjük a HubSpot és Marketo tényleges funkcióit (nem csak a marketing demo-ját), tudjuk hogyan kell az ABM-et egy 6 fős sales-csapattal működtetni, és tapasztalatunk van magyar/német/lengyel B2B piacon. Az ügyvezetőnk, Győrfi Attila a Pécsi Tudományegyetem Közgazdaságtudományi Karán is oktat — közvetlen kontakt a hazai vállalati szektorral.",
+      relatedServices: [
+        {
+          title: "Stratégiai marketing",
+          desc: "B2B buyer journey, ABM stratégia, sales-marketing alignment",
+          href: "/szolgaltatasok/strategiai-marketing",
+        },
+        {
+          title: "Marketing automatizáció",
+          desc: "HubSpot/Marketo, lead-scoring, multi-touch attribution",
+          href: "/szolgaltatasok/marketing-automatizacio",
+        },
+        {
+          title: "Tartalommarketing",
+          desc: "B2B blog, white paper, esettanulmány, thought leadership",
+          href: "/szolgaltatasok/tartalommarketing",
+        },
+      ],
+      faqs: [
+        {
+          q: "Hogyan különbözik a B2B marketing a B2C marketingtől?",
+          a: "B2B-ben hosszabb (3-12 hónap) értékesítési ciklus, több (átlag 6-10) résztvevő a vásárlási döntésben, magasabb deal-méret (5-200M Ft), és racionálisabb (nem érzelmi) döntés-mechanizmus. Ez egészen más metrikákat (pipeline value, customer acquisition cost / customer lifetime value arány) és más csatornákat (LinkedIn nem TikTok, e-mail nem Instagram) követel.",
+        },
+        {
+          q: "Mi az ABM (Account-Based Marketing) gyakorlatban?",
+          a: "Sales-csapat kiválaszt 50-150 célvállalatot. Marketing minden cégre LinkedIn-en céges + döntéshozói targetinggel hirdet (3-6 érintés / hónap). Sales értékesítő közvetlen kapcsolatfelvételt indít a felmelegedés után. A G2A HubSpot-ban modellezi a teljes ABM-flow-t — mérhető szakaszok minden cégre.",
+        },
+        {
+          q: "Hogyan mérhető a B2B marketing ROI-ja?",
+          a: "Multi-touch attribúció modellt használunk: minden marketing-érintés (organikus blog, LinkedIn poszt, e-mail open, demo-foglalás) ponttal hozzájárul a végső szerződéshez. HubSpot Revenue Attribution riport mutatja: a 100% deal-revenue hány %-a volt social, hány % SEO, hány % e-mail, stb. Ez lehetővé teszi, hogy a következő quarterben pontosan oda költsünk, ahol valódi visszatérés van.",
+        },
+        {
+          q: "Milyen marketing-stack-et javasoltok B2B-nek?",
+          a: "Tipikus middle-market konfiguráció: HubSpot (CRM + marketing automation + CMS) vagy Pipedrive + Marketo, ApolloIO/Cognism (lead-data), LinkedIn Sales Navigator, Lavender (e-mail írás-asszisztens), Calendly (időpontfoglalás), Slack (sales-marketing alignment). G2A maga is HubSpot Solution Partner — közvetlenül implementáljuk a teljes stack-et.",
+        },
+        {
+          q: "Milyen büdzsé reális B2B marketingre?",
+          a: "Pre-pipeline szakasz (10-20 fős cég): havi 400-800 ezer Ft (LinkedIn + tartalom + alapautomatizáció). Pipeline-építő szakasz (30-100 fős): 1.5-3M Ft/hó (full ABM + marketing automation + sales enablement). Scale-up vagy enterprise B2B (100+ fős): 4-10M Ft/hó. A leghatásosabb mutatószám: marketing-büdzsé / pipeline-érték arány — célunk minimum 1:8.",
+        },
+      ],
     },
   },
   en: {
@@ -809,6 +1354,8 @@ export default function IparagiLandingPage() {
   const meta = INDUSTRY_META[slug];
   const { t, lang } = useLanguage();
   const content = INDUSTRY_CONTENT[lang]?.[slug];
+  // Open FAQ accordion state — null = all closed, otherwise the index of the open item
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   if (!meta || !content) {
     return (
@@ -898,6 +1445,28 @@ export default function IparagiLandingPage() {
           </div>
         </section>
 
+        {/* Industry intro — only rendered when content.intro is set
+            (currently HU only; EN/ZH fall through to the existing layout). */}
+        {content.intro && (
+          <section className="g2a-section" style={{ backgroundColor: "transparent", paddingBottom: "1rem" }}>
+            <div className="g2a-container" style={{ maxWidth: "880px" }}>
+              <div className="g2a-section-label reveal">{t("iparagi.introLabel")}</div>
+              <p
+                className="reveal reveal-delay-1"
+                style={{
+                  color: "var(--g2a-text-secondary)",
+                  fontSize: "1.05rem",
+                  lineHeight: 1.7,
+                  marginTop: "0.75rem",
+                  fontFamily: "Geist, sans-serif",
+                }}
+              >
+                {content.intro}
+              </p>
+            </div>
+          </section>
+        )}
+
         {/* Challenges + Solutions */}
         <section className="g2a-section" style={{ backgroundColor: "transparent" }}>
           <div className="g2a-container">
@@ -962,6 +1531,177 @@ export default function IparagiLandingPage() {
             </div>
           </div>
         </section>
+
+        {/* Why G2A for this industry — short trust block, only renders when set */}
+        {content.whyG2A && (
+          <section className="g2a-section" style={{ backgroundColor: "transparent" }}>
+            <div className="g2a-container" style={{ maxWidth: "780px" }}>
+              <div className="g2a-section-label reveal">{t("iparagi.whyG2ALabel")}</div>
+              <h2 className="g2a-section-title reveal reveal-delay-1">
+                {t("iparagi.whyG2ATitle")}
+              </h2>
+              <p
+                className="reveal reveal-delay-2"
+                style={{
+                  color: "var(--g2a-text-secondary)",
+                  fontSize: "1rem",
+                  lineHeight: 1.7,
+                  marginTop: "1rem",
+                  fontFamily: "Geist, sans-serif",
+                }}
+              >
+                {content.whyG2A}
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* Related services — internal links to relevant service subpages */}
+        {content.relatedServices && content.relatedServices.length > 0 && (
+          <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
+            <div className="g2a-container">
+              <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+                <div className="g2a-section-label reveal">{t("iparagi.relatedServicesLabel")}</div>
+                <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>
+                  {t("iparagi.relatedServicesTitle")}
+                </h2>
+              </div>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                  gap: "1.25rem",
+                  maxWidth: 1000,
+                  margin: "0 auto",
+                }}
+              >
+                {content.relatedServices.map((s, i) => (
+                  <Link key={i} href={s.href} style={{ textDecoration: "none" }}>
+                    <div
+                      className="g2a-card reveal"
+                      style={{
+                        padding: "1.5rem",
+                        height: "100%",
+                        cursor: "pointer",
+                        transition: "border-color 0.2s, transform 0.2s",
+                        borderColor: `${meta.color}30`,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = meta.color;
+                        e.currentTarget.style.transform = "translateY(-2px)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = `${meta.color}30`;
+                        e.currentTarget.style.transform = "translateY(0)";
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontFamily: "Geist, sans-serif",
+                          fontWeight: 700,
+                          fontSize: "1rem",
+                          color: "var(--g2a-text-primary)",
+                          marginBottom: "0.4rem",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                        }}
+                      >
+                        {s.title}
+                        <ArrowRight size={14} style={{ color: meta.color }} />
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "0.85rem",
+                          color: "var(--g2a-text-secondary)",
+                          lineHeight: 1.55,
+                        }}
+                      >
+                        {s.desc}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* FAQ — accordion */}
+        {content.faqs && content.faqs.length > 0 && (
+          <section className="g2a-section" style={{ backgroundColor: "transparent" }}>
+            <div className="g2a-container" style={{ maxWidth: "880px" }}>
+              <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+                <div className="g2a-section-label reveal">{t("iparagi.faqsLabel")}</div>
+                <h2 className="g2a-section-title reveal reveal-delay-1" style={{ textAlign: "center" }}>
+                  {t("iparagi.faqsTitle")}
+                </h2>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                {content.faqs.map((faq, i) => {
+                  const open = openFaq === i;
+                  return (
+                    <div
+                      key={i}
+                      className="reveal"
+                      style={{
+                        background: "var(--g2a-bg-card)",
+                        border: `1px solid ${open ? meta.color : "var(--g2a-border)"}`,
+                        borderRadius: 12,
+                        transition: "border-color 0.2s",
+                      }}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setOpenFaq(open ? null : i)}
+                        aria-expanded={open}
+                        style={{
+                          width: "100%",
+                          background: "none",
+                          border: "none",
+                          padding: "1.1rem 1.4rem",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "1rem",
+                          cursor: "pointer",
+                          textAlign: "left",
+                          fontFamily: "Geist, sans-serif",
+                          fontSize: "0.95rem",
+                          fontWeight: 600,
+                          color: "var(--g2a-text-primary)",
+                        }}
+                      >
+                        <span>{faq.q}</span>
+                        <ChevronDown
+                          size={18}
+                          style={{
+                            color: meta.color,
+                            transition: "transform 0.2s",
+                            transform: open ? "rotate(180deg)" : "rotate(0)",
+                            flexShrink: 0,
+                          }}
+                        />
+                      </button>
+                      {open && (
+                        <div
+                          style={{
+                            padding: "0 1.4rem 1.25rem",
+                            color: "var(--g2a-text-secondary)",
+                            fontSize: "0.9rem",
+                            lineHeight: 1.65,
+                          }}
+                        >
+                          {faq.a}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* CTA */}
         <section className="g2a-section g2a-cta-gradient">
