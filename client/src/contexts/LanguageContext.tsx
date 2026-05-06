@@ -167,8 +167,8 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.workingHoursValue": "H–P: 08:00–17:00",
 
     // Contact
-    "contact.title": "Lépjünk kapcsolatba",
-    "contact.subtitle": "Készen állunk segíteni. Töltsd ki az alábbi űrlapot és hamarosan felvesszük veled a kapcsolatot.",
+    "contact.title": "Kapcsolat — lépjünk kapcsolatba",
+    "contact.subtitle": "Szívesen beszélünk az ötleteidről és kihívásaidról: új weboldal-projekt, hirdetésstratégia, AI-integráció vagy bármilyen marketing kérdés. Töltsd ki az alábbi űrlapot, írj e-mailt vagy foglalj 30 perces ingyenes konzultációt — 1–2 munkanapon belül válaszolunk.",
     "contact.formTitle": "Írj nekünk",
     "contact.subject": "Tárgy",
     "contact.send": "Üzenet küldése",
@@ -290,8 +290,8 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.successTitle": "Üzenet elküldve!",
     "contact.successDesc": "Köszönjük megkeresésed! Hamarosan felvesszük veled a kapcsolatot.",
     "contact.errorMsg": "Hiba történt az üzenet küldésekor. Kérjük próbáld újra.",
-    "contact.wechatTitle": "Kínai partnerek számára",
-    "contact.wechatDesc": "Kínai partnereink WeChat-en is elérhetnek minket. Kattints a QR kódra a hozzáadáshoz.",
+    "contact.wechatTitle": "Kínai piaci partnereinknek",
+    "contact.wechatDesc": "Ügyvezetőnk, Győrfi Attila a Varsói Egyetem vendégoktatójaként és nemzetközi marketing szakértőként rendszeresen dolgozik kínai piaci projekteken. Ha kínai piaci belépési vagy lokalizációs tanácsadásra van szükséged, WeChat-en gyors válaszadásra is elérhető — olvasd be a QR kódot.",
     "contact.wechatScan": "Olvasd be a QR kódot",
     "contact.contactInfo": "Elérhetőségeink",
     "contact.formHint24h": "Töltsd ki az alábbi űrlapot és 24 órán belül visszajelzünk.",
@@ -315,10 +315,10 @@ const translations: Record<Language, Record<string, string>> = {
     // Date locale tag
     "common.dateLocale": "hu-HU",
     // Home page
-    "home.hero.badge": "Prémium B2B Marketing Ügynökség",
+    "home.hero.badge": "Stratégiai partnerség KKV-knak és B2B cégeknek",
     "home.hero.title1": "Stratégiai marketing,",
     "home.hero.title2": "mérhető növekedés",
-    "home.hero.subtitle": "AI-alapú megoldások és stratégiai marketing azoknak a cégeknek, akik nem akarnak elveszni a zajban. SEO, PPC, webfejlesztés és teljes marketing ökoszisztéma – egy kézből.",
+    "home.hero.subtitle": "Üzleti problémákra adunk megoldást. A G2A Marketing olyan stratégiai és technológiai partner, amely adatvezérelt marketingrendszert épít vállalkozásodnak — a kutatástól a megvalósításig. Tapasztalt szakértőink összekapcsolják a kreativitást, az analitikát és a mesterséges intelligenciát, hogy fenntartható növekedést érj el.",
     "home.stats.projects": "Sikeres projekt",
     "home.stats.industries": "Iparág",
     "home.stats.countries": "Ország",
@@ -721,8 +721,8 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.workingHoursValue": "Mon–Fri: 08:00–17:00",
 
     // Contact
-    "contact.title": "Get in Touch",
-    "contact.subtitle": "We're ready to help. Fill out the form below and we'll get back to you shortly.",
+    "contact.title": "Contact — let's talk",
+    "contact.subtitle": "We'd love to hear about your ideas and challenges: new website project, ad strategy, AI integration, or any marketing question. Fill in the form, send an email, or book a free 30-minute consultation — we respond within 1–2 business days.",
     "contact.formTitle": "Send Us a Message",
     "contact.subject": "Subject",
     "contact.send": "Send Message",
@@ -844,8 +844,8 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.successTitle": "Message sent!",
     "contact.successDesc": "Thank you for reaching out! We'll get back to you shortly.",
     "contact.errorMsg": "An error occurred while sending the message. Please try again.",
-    "contact.wechatTitle": "For Chinese partners",
-    "contact.wechatDesc": "Our Chinese partners can reach us on WeChat. Tap the QR code to add.",
+    "contact.wechatTitle": "For Chinese-market partners",
+    "contact.wechatDesc": "Our managing director, Attila Győrfi, regularly works on Chinese-market projects as a guest lecturer at the University of Warsaw and an international marketing specialist. For Chinese market-entry or localisation consulting, he's reachable on WeChat for fast responses — scan the QR code.",
     "contact.wechatScan": "Scan the QR code",
     "contact.contactInfo": "Contact Information",
     "contact.formHint24h": "Fill out the form and we'll get back to you within 24 hours.",
@@ -869,10 +869,10 @@ const translations: Record<Language, Record<string, string>> = {
     // Date locale tag
     "common.dateLocale": "en-GB",
     // Home page
-    "home.hero.badge": "Premium B2B Marketing Agency",
+    "home.hero.badge": "Strategic partner for SMBs and B2B companies",
     "home.hero.title1": "Strategic marketing,",
     "home.hero.title2": "measurable growth",
-    "home.hero.subtitle": "AI-powered solutions and strategic marketing for companies that refuse to get lost in the noise. SEO, PPC, web development and a complete marketing ecosystem – from a single source.",
+    "home.hero.subtitle": "We solve business problems. G2A Marketing is the strategic and technology partner that builds a data-driven marketing system for your business — from research to execution. Our experienced team combines creativity, analytics and artificial intelligence so your company achieves sustainable growth.",
     "home.stats.projects": "Successful projects",
     "home.stats.industries": "Industries",
     "home.stats.countries": "Countries",
@@ -1265,8 +1265,8 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.workingHoursValue": "周一至周五 08:00–17:00",
 
     // Contact
-    "contact.title": "与我们联系",
-    "contact.subtitle": "填写下方表单,我们会尽快回复您。",
+    "contact.title": "联系我们 — 期待沟通",
+    "contact.subtitle": "我们乐于聆听您的想法与挑战:新网站项目、广告策略、AI 集成或任何营销问题。填写下方表单、发送邮件或预约 30 分钟免费咨询 — 我们将在 1–2 个工作日内回复。",
     "contact.formTitle": "给我们留言",
     "contact.subject": "主题",
     "contact.send": "发送留言",
@@ -1388,8 +1388,8 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.successTitle": "留言已发送!",
     "contact.successDesc": "感谢您的联系!我们会尽快回复您。",
     "contact.errorMsg": "发送留言时发生错误,请重试。",
-    "contact.wechatTitle": "致中国合作伙伴",
-    "contact.wechatDesc": "中国合作伙伴可以通过微信联系我们。点击二维码添加好友。",
+    "contact.wechatTitle": "面向中国市场的合作伙伴",
+    "contact.wechatDesc": "我们的总经理 Győrfi Attila 作为华沙大学客座讲师与国际营销专家,长期参与中国市场项目。如需中国市场进入或本地化咨询,可通过微信快速联系 — 扫描下方二维码即可添加。",
     "contact.wechatScan": "扫描二维码",
     "contact.contactInfo": "联系方式",
     "contact.formHint24h": "填写表单,我们将在 24 小时内回复您。",
@@ -1413,10 +1413,10 @@ const translations: Record<Language, Record<string, string>> = {
     // Date locale tag
     "common.dateLocale": "zh-CN",
     // Home page
-    "home.hero.badge": "高端 B2B 营销公司",
-    "home.hero.title1": "战略营销,",
+    "home.hero.badge": "中小企业与 B2B 企业的战略合作伙伴",
+    "home.hero.title1": "战略营销、",
     "home.hero.title2": "可衡量的增长",
-    "home.hero.subtitle": "为不愿淹没于喧嚣的企业提供 AI 驱动方案与战略营销。SEO、PPC、网站开发以及完整的营销生态 —— 一站式服务。",
+    "home.hero.subtitle": "我们解决业务问题。G2A Marketing 是战略与技术伙伴,为您的企业从研究到落地打造数据驱动的营销系统。资深团队将创意、分析与人工智能相结合,助您实现可持续增长。",
     "home.stats.projects": "成功项目",
     "home.stats.industries": "行业",
     "home.stats.countries": "国家",
