@@ -3,6 +3,7 @@ import { useRoute } from "wouter";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
+import { serviceSchema, faqPageSchema, breadcrumbSchema } from "@/lib/jsonLd";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import IndustryHeroDemo, { hasIndustryHeroDemo } from "@/components/industry-demos/IndustryHeroDemo";
 import { Link } from "wouter";
@@ -1374,7 +1375,27 @@ export default function IparagiLandingPage() {
 
   return (
     <>
-      <SeoHead title={content.metaTitle} description={content.metaDesc} />
+      <SeoHead
+        title={content.metaTitle}
+        description={content.metaDesc}
+        pageSchemas={[
+          breadcrumbSchema([
+            { name: "G2A Marketing", url: "https://g2amarketing.hu" },
+            { name: t("nav.industries"), url: "https://g2amarketing.hu/" },
+            {
+              name: content.title,
+              url: `https://g2amarketing.hu/iparagi/${slug}`,
+            },
+          ]),
+          serviceSchema({
+            name: content.title,
+            description: content.heroDesc,
+            url: `https://g2amarketing.hu/iparagi/${slug}`,
+            serviceType: "Industry-specific marketing services",
+          }),
+          content.faqs ? faqPageSchema(content.faqs.map((f) => ({ q: f.q, a: f.a }))) : null,
+        ]}
+      />
       <ScrollProgressBar />
       <Navigation />
 

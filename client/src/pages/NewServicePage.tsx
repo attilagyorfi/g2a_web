@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
+import { serviceSchema, faqPageSchema, breadcrumbSchema } from "@/lib/jsonLd";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { parseFormError } from "@/lib/utils";
@@ -64,7 +65,27 @@ export default function NewServicePage({ params }: Props) {
 
   return (
     <>
-      <SeoHead title={config.metaTitle} description={config.metaDesc} />
+      <SeoHead
+        title={config.metaTitle}
+        description={config.metaDesc}
+        pageSchemas={[
+          breadcrumbSchema([
+            { name: "G2A Marketing", url: "https://g2amarketing.hu" },
+            { name: t("nav.services"), url: "https://g2amarketing.hu/szolgaltatasok" },
+            {
+              name: config.title,
+              url: `https://g2amarketing.hu/szolgaltatasok/${config.slug}`,
+            },
+          ]),
+          serviceSchema({
+            name: config.title,
+            description: config.heroDesc,
+            url: `https://g2amarketing.hu/szolgaltatasok/${config.slug}`,
+            serviceType: config.title,
+          }),
+          faqPageSchema(config.faq),
+        ]}
+      />
       <div style={{ minHeight: "100vh", background: "var(--g2a-bg)" }}>
         <Navigation />
 

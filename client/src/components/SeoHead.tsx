@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLanguage, parseLangPath, buildLangPath } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
+import { renderJsonLd } from "@/lib/jsonLd";
 
 const SITE_ORIGIN = "https://g2amarketing.hu";
 
@@ -12,7 +13,18 @@ interface SeoHeadProps {
   ogImage?: string;
   /** If omitted, the canonical is auto-derived from current URL + active language. */
   canonicalUrl?: string;
+  /**
+   * Raw JSON-LD body — full override. Most callers should pass `pageSchemas`
+   * instead so the base graph (Organization + LocalBusiness + WebSite) is
+   * still emitted alongside the page-specific entities.
+   */
   schemaJson?: string;
+  /**
+   * Page-specific Schema.org entities (Service, Article, FAQPage,
+   * BreadcrumbList…) appended to the always-emitted base graph. Build them
+   * with the helpers in `@/lib/jsonLd`.
+   */
+  pageSchemas?: Array<unknown | null | undefined>;
   noIndex?: boolean;
 }
 
@@ -27,6 +39,7 @@ export default function SeoHead({
   ogImage = "https://res.cloudinary.com/dzh1unb6d/image/upload/w_1200,h_630,c_pad,b_rgb:0a0a0a,q_auto,f_auto/g2a/og/default-logo.png",
   canonicalUrl,
   schemaJson,
+  pageSchemas,
   noIndex = false,
 }: SeoHeadProps) {
   const { lang } = useLanguage();
@@ -91,17 +104,20 @@ export default function SeoHead({
     setLink("alternate", `${SITE_ORIGIN}${buildLangPath("hu", rest)}`, "x-default");
 
     // JSON-LD Schema
-    if (schemaJson) {
-      let script = document.querySelector('script[data-seo-schema]') as HTMLScriptElement | null;
-      if (!script) {
-        script = document.createElement("script");
-        script.setAttribute("type", "application/ld+json");
-        script.setAttribute("data-seo-schema", "true");
-        document.head.appendChild(script);
-      }
-      script.textContent = schemaJson;
+    // Always emit at least the base graph (Organization + LocalBusiness +
+    // WebSite). If the caller passes `schemaJson` (raw override), use that;
+    // otherwise build the @graph from `pageSchemas` (or just the base if
+    // pageSchemas is empty).
+    const finalJson = schemaJson ?? renderJsonLd(pageSchemas ?? [], lang);
+    let script = document.querySelector('script[data-seo-schema]') as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement("script");
+      script.setAttribute("type", "application/ld+json");
+      script.setAttribute("data-seo-schema", "true");
+      document.head.appendChild(script);
     }
-  }, [title, description, ogTitle, ogDescription, ogImage, canonicalUrl, schemaJson, noIndex, lang]);
+    script.textContent = finalJson;
+  }, [title, description, ogTitle, ogDescription, ogImage, canonicalUrl, schemaJson, pageSchemas, noIndex, lang]);
 
   return null;
 }

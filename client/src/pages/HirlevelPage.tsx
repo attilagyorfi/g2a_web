@@ -9,6 +9,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
+import { breadcrumbSchema } from "@/lib/jsonLd";
 import NewsletterForm from "@/components/NewsletterForm";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
@@ -204,7 +205,16 @@ export default function HirlevelPage() {
 
   return (
     <>
-      <SeoHead title={doc.seoTitle} description={doc.seoDesc} />
+      <SeoHead
+        title={doc.seoTitle}
+        description={doc.seoDesc}
+        pageSchemas={[
+          breadcrumbSchema([
+            { name: "G2A Marketing", url: "https://g2amarketing.hu" },
+            { name: doc.title, url: "https://g2amarketing.hu/hirlevel" },
+          ]),
+        ]}
+      />
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
         {/* ── HERO ─────────────────────────────────────────────────────── */}

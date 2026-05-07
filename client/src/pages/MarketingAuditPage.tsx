@@ -13,6 +13,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
+import { serviceSchema, breadcrumbSchema } from "@/lib/jsonLd";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
@@ -430,7 +431,22 @@ export default function MarketingAuditPage() {
 
   return (
     <>
-      <SeoHead title={doc.seoTitle} description={doc.seoDesc} />
+      <SeoHead
+        title={doc.seoTitle}
+        description={doc.seoDesc}
+        pageSchemas={[
+          breadcrumbSchema([
+            { name: "G2A Marketing", url: "https://g2amarketing.hu" },
+            { name: doc.title, url: "https://g2amarketing.hu/marketing-audit" },
+          ]),
+          serviceSchema({
+            name: doc.title,
+            description: doc.lead,
+            url: "https://g2amarketing.hu/marketing-audit",
+            serviceType: "Marketing audit",
+          }),
+        ]}
+      />
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
         {/* ── HERO + FORM ──────────────────────────────────────────────── */}

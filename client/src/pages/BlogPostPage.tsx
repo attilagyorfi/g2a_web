@@ -5,6 +5,7 @@ import { trpc } from "@/lib/trpc";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
+import { articleSchema, breadcrumbSchema } from "@/lib/jsonLd";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import EmptyState from "@/components/illustrations/EmptyState";
 import { SkeletonHeroPage } from "@/components/Skeleton";
@@ -73,16 +74,26 @@ export default function BlogPostPage() {
         description={metaDesc || excerpt}
         ogImage={post.featuredImage || ogImageUrl(title, "G2A Marketing — Blog")}
         canonicalUrl={`https://g2amarketing.hu/hirek/${post.slug}`}
-        schemaJson={JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "BlogPosting",
-          "headline": title,
-          "description": excerpt,
-          "image": post.featuredImage || "",
-          "datePublished": post.publishedAt ? new Date(post.publishedAt).toISOString() : "",
-          "author": { "@type": "Person", "name": post.authorName || "G2A Marketing" },
-          "publisher": { "@type": "Organization", "name": "G2A Marketing", "url": "https://g2amarketing.hu" },
-        })}
+        pageSchemas={[
+          breadcrumbSchema([
+            { name: "G2A Marketing", url: "https://g2amarketing.hu" },
+            { name: "Blog", url: "https://g2amarketing.hu/hirek" },
+            { name: title, url: `https://g2amarketing.hu/hirek/${post.slug}` },
+          ]),
+          articleSchema({
+            headline: title,
+            description: excerpt,
+            url: `https://g2amarketing.hu/hirek/${post.slug}`,
+            imageUrl: post.featuredImage || undefined,
+            publishedAt: post.publishedAt
+              ? new Date(post.publishedAt).toISOString()
+              : undefined,
+            modifiedAt: post.updatedAt
+              ? new Date(post.updatedAt).toISOString()
+              : undefined,
+            authorName: post.authorName || undefined,
+          }),
+        ]}
       />
       <ScrollProgressBar />
       <Navigation />

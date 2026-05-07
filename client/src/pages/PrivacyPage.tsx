@@ -14,6 +14,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
+import { breadcrumbSchema } from "@/lib/jsonLd";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
 
@@ -1632,6 +1633,12 @@ export default function PrivacyPage() {
         title={doc.seoTitle}
         description={doc.seoDesc}
         noIndex={false}
+        pageSchemas={[
+          breadcrumbSchema([
+            { name: "G2A Marketing", url: "https://g2amarketing.hu" },
+            { name: doc.title, url: "https://g2amarketing.hu/adatvedelmi-iranyelvek" },
+          ]),
+        ]}
       />
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
