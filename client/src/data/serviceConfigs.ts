@@ -751,93 +751,267 @@ const EN: Record<string, ServiceConfig> = {
   "ai-marketing": {
     slug: "ai-marketing",
     title: "AI Marketing",
-    subtitle: "Artificial intelligence in marketing",
-    heroDesc: "Automate your marketing, boost conversions with personalized content and AI-powered analytics.",
-    metaTitle: "AI Marketing – Artificial Intelligence in Marketing | G2A Marketing",
-    metaDesc: "AI-powered marketing solutions: automated campaigns, personalized content, predictive analytics. Boost efficiency with artificial intelligence.",
+    subtitle: "Artificial intelligence at every stage of marketing",
+    heroDesc:
+      "AI opens new horizons in marketing: more accurate targeting, personalised content, predictive analytics. We reduce manual work and create new revenue opportunities.",
+    metaTitle: "AI Marketing – Artificial intelligence in marketing | G2A Marketing",
+    metaDesc:
+      "Personalised content, predictive analytics, automated ad optimisation and chatbots. Make your marketing data-driven with artificial intelligence.",
     icon: "bot",
     color: "#7c3aed",
-    intro: "Artificial intelligence is revolutionizing marketing. With AI-powered tools we deliver more accurate targeting, personalized communication and automated workflows — all in a fraction of the time and cost.",
+    intro:
+      "AI matured into an operationally usable tool between 2024-2026 — the hype gave way to real ROI. The G2A team uses Claude, ChatGPT, Manus, Gemini, Midjourney, Runway, ElevenLabs and Cursor in daily workflows — from content production to client project audits. We bring this experience to client projects: not as a promise, but as concrete, measurable workflow acceleration.",
     benefits: [
-      { title: "Predictive analytics", desc: "AI-driven data analysis predicts buyer behavior and optimizes campaigns ahead of time." },
-      { title: "Personalized content", desc: "Every user automatically sees relevant content, increasing engagement." },
-      { title: "Automated ads", desc: "Smart bidding and automated campaign management for maximum ROI." },
-      { title: "Chatbot integration", desc: "24/7 customer support with AI chatbots that create real value." },
-      { title: "Content generation", desc: "AI-assisted content creation that accelerates your marketing workflows." },
-      { title: "Conversion optimization", desc: "Machine learning-based A/B testing and landing page optimization." },
+      {
+        title: "Predictive analytics",
+        desc: "Forecast buyer patterns (when next purchase, when churn risk), simulate campaign results before launch — based on Google AI + custom models.",
+      },
+      {
+        title: "Personalised content",
+        desc: "Dynamic email and web content: every visitor sees something different based on behaviour. HubSpot Smart Content + Mutiny + custom workflows.",
+      },
+      {
+        title: "Automated ad optimisation",
+        desc: "Performance Max, Smart Bidding, Meta Advantage+ campaigns with AI — Google/Meta AI iterates creatives and targeting, we provide the strategic frame and exclusion lists.",
+      },
+      {
+        title: "Chatbot and AI agent integration",
+        desc: "24/7 customer support with AI chatbots (Intercom Fin, Drift, or custom Claude-API solution). Typically 60-70% first-touch resolution rate after month 1.",
+      },
+      {
+        title: "AI-assisted content production",
+        desc: "Blog drafts, social copy, ad creatives — Claude + Midjourney + Runway hybrid pipeline. Weekly content output 3-5x with quality preserved.",
+      },
+      {
+        title: "Conversion optimisation with machine learning",
+        desc: "Predictive A/B tests (forecasting which variant wins), AI-driven UX heatmap analysis, dynamic landing page elements per visitor segment.",
+      },
     ],
     process: [
-      { step: "01", title: "AI Audit", desc: "We review your current marketing workflows and identify AI integration opportunities." },
-      { step: "02", title: "Strategy", desc: "We craft a tailored AI marketing strategy based on your goals." },
-      { step: "03", title: "Implementation", desc: "We roll out AI tools and integrate them with your existing systems." },
-      { step: "04", title: "Optimization", desc: "Continuous monitoring and fine-tuning for the best possible results." },
+      {
+        step: "01",
+        title: "Needs assessment and AI audit",
+        desc: "We map your marketing workflows, identify highest-ROI AI integration spots — and where it's a false friend. Concrete recommendation pack with KPIs.",
+      },
+      {
+        step: "02",
+        title: "Data strategy and platform choice",
+        desc: "AI is only as good as your clean data. We build the data pipeline (CDP, GA4, CRM event tracking) and select AI tools fit for the task.",
+      },
+      {
+        step: "03",
+        title: "AI solution integration",
+        desc: "Step-by-step rollout — one workflow at a time. We start with a pilot, measure, then scale. Never 5 parallel AI projects at once.",
+      },
+      {
+        step: "04",
+        title: "Measurement and iteration",
+        desc: "Monthly review report: time and cost savings AI delivered vs. setup cost. Quarterly strategic review with new tool evaluation.",
+      },
     ],
     faq: [
-      { q: "What size of company is AI marketing for?", a: "AI marketing is accessible for any size of business. For smaller companies, automation delivers most value; for larger ones, predictive analytics and personalization." },
-      { q: "How soon can results be seen?", a: "First results typically appear within 4–8 weeks, but full potential unfolds after 3–6 months." },
-      { q: "Which AI tools do you use?", a: "We integrate Google AI, Meta AI ad systems, OpenAI API, HubSpot AI, Jasper and other leading platforms." },
+      {
+        q: "What size of company is AI marketing for?",
+        a: "Every size, but with different tools. For SMBs the content + ad-creative AI assist (Claude + Midjourney + Runway) delivers the fastest ROI. For mid-market, predictive analytics and CRM-AI integration. For enterprise, custom model fine-tuning on first-party data.",
+      },
+      {
+        q: "How soon can results be seen?",
+        a: "Content pipeline acceleration: 2-3 weeks. AI-assisted ad optimisation: 4-6 weeks. Predictive analytics and personalisation: 3-4 months (data is required). Custom AI agent: 6-9 months for full ROI.",
+      },
+      {
+        q: "Which AI tools do you use specifically?",
+        a: "LLM: Claude (1M token context), ChatGPT (general), Gemini (Workspace integration), Manus (autonomous agents). Image: Midjourney v7, DALL·E 3, Adobe Firefly. Video: Runway Gen-4, Sora. Voice: ElevenLabs. Marketing-specific: HubSpot AI, Surfer, Frase, Clearscope. Detailed list at /technologia.",
+      },
+      {
+        q: "Will AI increase ad costs?",
+        a: "Short-term, there's a setup cost (audit, integration, training) — typically a one-off HUF 300-800k. Long-term it delivers 20-40% efficiency gains: more conversions for the same spend, or the same conversions for less spend.",
+      },
+      {
+        q: "How does it integrate with existing systems?",
+        a: "Via API integration. Most common: HubSpot/Salesforce CRM + Claude API for client emailing, GA4 + Google AI for predictive analytics, Intercom + custom RAG (own client document base) for chatbots. G2A writes the workflows; you receive the finished integration.",
+      },
+      {
+        q: "What about GDPR and data protection?",
+        a: "We pick AI tools that operate in EU regions or contractually guarantee not to use your data for training. Enterprise versions of OpenAI, Anthropic and Google all offer this. G2A never sends client data to free-tier OpenAI endpoints — only enterprise/zero-retention endpoints.",
+      },
     ],
     cta: "Request a free AI marketing audit",
   },
   "ppc-google-ads": {
     slug: "ppc-google-ads",
-    title: "PPC / Google Ads",
-    subtitle: "Expert paid search ad management",
-    heroDesc: "Maximize the return on your Google Ads investment with professional campaign management, precise targeting and continuous optimization.",
-    metaTitle: "PPC Google Ads Management – Paid Ads | G2A Marketing",
-    metaDesc: "Professional Google Ads campaign management. Search, Display, Shopping, YouTube ads. Measurable results, maximum ROI.",
+    title: "PPC and Google Ads",
+    subtitle: "Paid advertising that pays back — across every Google channel",
+    heroDesc:
+      "Paid ads are essential when you need new customers fast. We build data-driven PPC campaigns across Google Search, Display, Shopping and YouTube — always aligned with your business goals.",
+    metaTitle: "PPC and Google Ads expert services | G2A Marketing",
+    metaDesc:
+      "Data-driven PPC campaigns: Search, Display, Shopping, YouTube and Performance Max. Multiple platforms, one strategy — measurable ROI with G2A Marketing.",
     icon: "target",
     color: "#ea4335",
-    intro: "Google Ads is one of the most effective tools for instant visibility and conversion growth. Our expert team is fluent in every campaign type — from Search to Shopping.",
+    intro:
+      "By 2026 Google Ads has gone almost entirely smart-bidding-driven — meaning the era of manual bid management is over, replaced by strategy, structure and the quality of conversion signals. Modern Google Ads work is 30% creative, 30% data engineering, 20% tracking setup and 20% strategy. G2A delivers exactly this combination.",
     benefits: [
-      { title: "Google Search Ads", desc: "Targeted search ads that appear precisely when potential customers are looking." },
-      { title: "Google Display Network", desc: "Visual ads across the Google network with effective remarketing options." },
-      { title: "Google Shopping", desc: "Product-based ads for e-commerce businesses, optimized for maximum conversion." },
-      { title: "YouTube Ads", desc: "Video advertising on the world's second-largest search engine." },
-      { title: "Performance Max", desc: "AI-driven campaigns that optimize across all Google channels." },
-      { title: "Remarketing", desc: "Bring back website visitors who didn't convert with targeted ads." },
+      {
+        title: "Search Ads",
+        desc: "Keyword-based ads with search intent. SKAG or SPAG structure, broad match + audience signals, dynamic search ads (DSA) for long-tail.",
+      },
+      {
+        title: "Display Network and YouTube",
+        desc: "Visual ads on Google's partner network + YouTube. TrueView for Action and Demand Gen campaigns, retargeting across the web.",
+      },
+      {
+        title: "Shopping (e-commerce)",
+        desc: "Product-based ads for webshops. Merchant Center feed optimisation, category-level bidding strategy, custom labels for seasonality.",
+      },
+      {
+        title: "Performance Max",
+        desc: "Cross-channel AI campaign. Asset group structure per customer segment, audience signal strategy, brand exclusion + tiltóra — so it doesn't cannibalise Search.",
+      },
+      {
+        title: "Remarketing and audiences",
+        desc: "Customer Match lists (email upload), website visitor remarketing, similar audience, lookalike. LTV-based segment strategy.",
+      },
+      {
+        title: "Conversion tracking and tagging",
+        desc: "GA4 + Google Tag Manager + enhanced conversions + offline conversion import (sync from CRM). Accurate attribution all the way to actual sales.",
+      },
     ],
     process: [
-      { step: "01", title: "Account audit", desc: "We review your current campaigns and identify improvement opportunities." },
-      { step: "02", title: "Keyword research", desc: "Detailed keyword analysis for the most effective targeting." },
-      { step: "03", title: "Campaign build", desc: "Optimal campaign structure, ad groups and creatives." },
-      { step: "04", title: "Optimization", desc: "Weekly optimization, bid management and performance reports." },
+      {
+        step: "01",
+        title: "PPC audit",
+        desc: "Free account review (or, if no account, keyword map). We measure Quality Score, wasted spend %, conversion-tracking accuracy. Immediately actionable recommendations.",
+      },
+      {
+        step: "02",
+        title: "Keyword and audience research",
+        desc: "Industry-specific keyword map with intent segmentation. Competitor ad copy analysis. Audience list build (1st party + Customer Match + similar).",
+      },
+      {
+        step: "03",
+        title: "Campaign build and launch",
+        desc: "SKAG/SPAG structure, ad copy variants (4-6 per ad group), responsive search ads, image extensions. Full tracking validation before go-live.",
+      },
+      {
+        step: "04",
+        title: "Weekly optimisation and reporting",
+        desc: "Weekly negative keyword expansion, ad copy iteration, audience tuning. Monthly full report: Search Term report, Auction Insights, ROAS trend. Quarterly strategic review.",
+      },
     ],
     faq: [
-      { q: "What budget should we start with?", a: "Generally Google Ads campaigns are worth running from HUF 100,000/month, but it depends on industry and goals." },
-      { q: "What's the agency fee?", a: "Our fee is based on the managed budget. Request a free consultation for details." },
-      { q: "What reports do I get?", a: "We send detailed monthly performance reports and provide access to your Google Ads account." },
+      {
+        q: "What budget should we start with?",
+        a: "Industry-dependent. Local services (hairdresser, car repair): HUF 100-200k/month. SMB B2B or webshop: HUF 300-800k. Mid-market e-commerce: HUF 1-3M+. In high-CPC verticals (legal, insurance, finance) it's hard to deliver measurable results below HUF 800k.",
+      },
+      {
+        q: "What's the difference between Search and Performance Max?",
+        a: "Search = precise keyword targeting with search intent — more control, lower scalability. Performance Max = AI-driven cross-channel — less control, much higher scalability. Optimal strategy: Search for brand + high-intent keywords, Performance Max for discovery + new customer acquisition.",
+      },
+      {
+        q: "Do you also handle YouTube and Shopping campaigns?",
+        a: "Yes, all four main campaign types (Search, Display + YouTube, Shopping, Performance Max). For YouTube we can bring in a dedicated video creative partner; for Shopping we optimise Merchant Center feeds (TecDoc/Carzone for automotive, or custom WooCommerce/Shopify feeds).",
+      },
+      {
+        q: "How do we measure campaign success?",
+        a: "Conversions, CPA (cost per acquisition), ROAS (return on ad spend) — basics. Plus: average Quality Score, Search Impression Share, brand vs non-brand revenue split. For e-commerce: LTV-based ROAS (not just first-purchase, but 12-month value).",
+      },
+      {
+        q: "What's the agency fee?",
+        a: "Two models: (1) flat retainer (HUF 200-600k/month based on campaign size); (2) % of media spend (10-15%, typically for larger campaigns). G2A doesn't hide platform invoices — every advertising cost goes directly from your card to Google.",
+      },
+      {
+        q: "Is a long-term contract required?",
+        a: "No, we work on a 30-day notice period. Honestly though: Google Ads needs 2-3 months for smart bidding to learn, Quality Score to stabilise, and real optimisation work to happen. One-month experiments rarely deliver.",
+      },
     ],
     cta: "Request a free Google Ads audit",
   },
   "meta-hirdetes": {
     slug: "meta-hirdetes",
-    title: "Meta Ads",
-    subtitle: "Facebook and Instagram ad management",
-    heroDesc: "Reach your target audience on the world's largest social platforms. Precise targeting, creative ads, measurable results.",
-    metaTitle: "Meta Ads – Facebook and Instagram Ads | G2A Marketing",
-    metaDesc: "Professional Meta (Facebook, Instagram) ad management. Targeted campaigns, remarketing, conversion optimization.",
+    title: "Meta Ads (Facebook + Instagram)",
+    subtitle: "Social media advertising that delivers conversions",
+    heroDesc:
+      "Social media ads let us reach exactly the audience most likely to convert. We design creative, data-driven campaigns on Meta (Facebook, Instagram) and LinkedIn — campaigns that deliver real conversions, not just reach.",
+    metaTitle: "Meta Ads and social media advertising | G2A Marketing",
+    metaDesc:
+      "Results-oriented Facebook, Instagram and LinkedIn ad management. Audience segmentation, creative production, A/B testing and ROI optimisation.",
     icon: "smartphone",
     color: "#1877f2",
-    intro: "Meta platforms (Facebook, Instagram, WhatsApp) have over 3 billion active users. With their precise targeting capabilities, you can reach your ideal customers with surgical accuracy.",
+    intro:
+      "On Meta platforms (Facebook + Instagram), 6+ million active Hungarian users move daily. Since Apple's iOS 14.5 ATT change in 2021, targeting has become less certain — making 2026 Meta Ads success hinge on creative and the Conversion API. G2A focuses precisely on these: rapid creative iteration + clean server-side conversion tracking.",
     benefits: [
-      { title: "Facebook Ads", desc: "Targeted ads on Facebook based on demographics, interests and behavior." },
-      { title: "Instagram Ads", desc: "Visually compelling ads on Instagram in Stories and Reels formats." },
-      { title: "Lookalike Audiences", desc: "Target similar audiences based on your best customers." },
-      { title: "Retargeting", desc: "Bring back website visitors and cart abandoners." },
-      { title: "Lead Generation Ads", desc: "Direct lead capture inside the platform with high conversion rates." },
-      { title: "Catalog Ads", desc: "Dynamic product ads for e-commerce businesses." },
+      {
+        title: "Facebook Ads (CBO + ASC)",
+        desc: "Campaign Budget Optimization or Advantage+ Shopping Campaigns. Audience signal strategy, separating cold + warm + hot funnel stages.",
+      },
+      {
+        title: "Instagram Ads (Stories + Reels)",
+        desc: "Reels-first creative strategy (Reels currently has the lowest CPM). Stories swipe-up integration, mobile-first experience.",
+      },
+      {
+        title: "LinkedIn Ads (B2B)",
+        desc: "Sponsored Content, Message Ads, Lead Gen Forms with B2B targeting. Company size, role, industry + matched audience combinations.",
+      },
+      {
+        title: "Lookalike and Custom Audience",
+        desc: "1%, 3%, 5% lookalike segments seeded by top-10% LTV customers. Customer Match email upload + website visitor.",
+      },
+      {
+        title: "Lead Generation Ads",
+        desc: "On-platform lead forms — the user never leaves Facebook. Higher conversion, lower CPL, but weaker lead quality (pre-screening questions needed).",
+      },
+      {
+        title: "Conversion API + Pixel",
+        desc: "Server-side event push (post-iOS14 solution). Stripe/HubSpot/Shopify integration + offline conversion import from CRM.",
+      },
     ],
     process: [
-      { step: "01", title: "Pixel install", desc: "Meta Pixel and Conversion API setup for accurate measurement." },
-      { step: "02", title: "Audience build", desc: "Define target audiences and create lookalike audiences." },
-      { step: "03", title: "Creative development", desc: "Design effective ad creatives and copy." },
-      { step: "04", title: "Test and optimize", desc: "A/B testing, campaign optimization and monthly reports." },
+      {
+        step: "01",
+        title: "Pixel + CAPI install",
+        desc: "Meta Pixel + Conversion API setup with full server-side event flow. Target Event Match Quality 70%+ (vs the 30% average) — improves campaign performance by 20-30%.",
+      },
+      {
+        step: "02",
+        title: "Audience map and creative brief",
+        desc: "Cold + warm + hot segment definition. Competitor ad library mining (Meta Ad Library + Foreplay). Creative brief with 5-8 concepts.",
+      },
+      {
+        step: "03",
+        title: "Creative production and launch",
+        desc: "5-8 creative variants per ad set (static + video + carousel + UGC style). Launch with 50/50 cold-warm split, learn fast in week 1.",
+      },
+      {
+        step: "04",
+        title: "Iterate and scale",
+        desc: "Weekly creative rotation (creative-fatigue strategy), audience expansion. Scale via CBO, ad set duplication for winning creatives.",
+      },
     ],
     faq: [
-      { q: "Facebook or Instagram — which is better?", a: "It depends on your audience. For B2B, Facebook is more effective; for younger audiences, Instagram. Generally it's worth being on both." },
-      { q: "Do I need to provide my own creatives?", a: "No — creative development is part of our service. We produce the ad assets." },
-      { q: "How are results measured?", a: "We measure conversions, ROAS and other KPIs precisely with Meta Pixel and Conversion API." },
+      {
+        q: "How long until we can start advertising?",
+        a: "We build the structure within 1-2 weeks: Pixel + Conversion API setup (3-4 days), audience map (2 days), first creative batch (5-7 days). The first learning phase post-launch is 7-14 days.",
+      },
+      {
+        q: "What does ad budget depend on?",
+        a: "Industry (CPM HUF 600-3,500 typically), audience size (smaller = costlier creative needed), and funnel stage. Realistic minimum: HUF 200-400k/month for local business; HUF 600k-1.5M for webshops or B2B lead gen.",
+      },
+      {
+        q: "What creatives do we need?",
+        a: "In 2026 it's Reels-first: 9:16 vertical video (15-30s), with captions (80% watch on mute), strong hook (first 1-2 seconds). Plus static carousels and UGC-style footage. We can produce in-house, with partner studios, or optimise your existing material.",
+      },
+      {
+        q: "Can you also help with organic social media?",
+        a: "Yes, we have a dedicated social media management service: content calendar, content production, community moderation, influencer relations. The two services (organic + paid) together are 2-3x more effective than separately.",
+      },
+      {
+        q: "How do we measure success?",
+        a: "CPC (cost per click), CPM (cost per thousand impressions), CTR, CPA (cost per acquisition), ROAS (return on ad spend) — basics. Plus: Brand Lift Studies (for larger campaigns), iOS 14.5+ privacy-conscious attribution model.",
+      },
+      {
+        q: "What about post-iOS 14.5 tracking?",
+        a: "Due to ATT (App Tracking Transparency), the Pixel only receives partial data. That's why the Conversion API matters: server-side event tracking that works on iOS too. G2A installs CAPI by default on every new project (not as an option).",
+      },
     ],
     cta: "Request a free Meta Ads audit",
   },
@@ -846,153 +1020,446 @@ const EN: Record<string, ServiceConfig> = {
     title: "Content Marketing",
     subtitle: "Valuable content that attracts customers",
     heroDesc: "Build authority and organic traffic with valuable content. Blog, video, podcast, infographic — across every channel.",
-    metaTitle: "Content Marketing Agency – Blog, SEO Content | G2A Marketing",
-    metaDesc: "Professional content marketing: SEO-optimized blog posts, videos, social media content. Grow organic traffic and customer trust.",
+    metaTitle: "Content marketing and copywriting | G2A Marketing",
+    metaDesc:
+      "Build brand authority and organic traffic. Blog writing, video and podcast content, newsletters, educational material for SMBs and B2B companies.",
     icon: "pen",
     color: "#10b981",
-    intro: "Content marketing is one of the most cost-effective ways to grow organic traffic and customer trust. We attract potential customers with valuable, SEO-optimized content.",
+    intro:
+      "In B2B and SMB segments, content marketing is the best long-term investment: a single well-written long-form article can drive organic traffic for 3-5 years. Yet 2026 brings Google AI Overviews and ChatGPT-powered search, transforming the game — it's no longer enough to write good content; it must be structured with schema and FAQ-style formatting so AI search uses it as a reference.",
     benefits: [
-      { title: "SEO blog posts", desc: "Keyword-optimized long-form articles that drive organic traffic." },
-      { title: "Social media content", desc: "Platform-tailored content for Facebook, Instagram and LinkedIn." },
-      { title: "Email marketing", desc: "Valuable newsletter content that maintains customer relationships." },
-      { title: "Video content", desc: "Short and long-form video for YouTube and social media." },
-      { title: "Infographics", desc: "Visually compelling data visualization and infographic design." },
-      { title: "Case studies", desc: "Compelling case study content that proves expertise." },
+      {
+        title: "Blog strategy and long-form articles",
+        desc: "Keyword map and cluster strategy (pillar + cluster), 1,500-3,500-word articles. Schema.org Article/FAQ markup, AI Overviews-optimised format.",
+      },
+      {
+        title: "Video and podcast",
+        desc: "Scriptwriting, YouTube SEO (title, description, chapter markers), thumbnail A/B testing. Podcast: topic structure, production, editing, distribution (Spotify/Apple/YouTube).",
+      },
+      {
+        title: "Newsletter and lead magnets",
+        desc: "Weekly/monthly newsletter strategy (with topic-picker automation), e-books and whitepapers in exchange for email sign-up. Resend/Mailchimp integration.",
+      },
+      {
+        title: "Thought leadership and LinkedIn",
+        desc: "Articles and LinkedIn post sequences under the leader's personal name. Industry trend analysis, opinion pieces, life-situation narratives — humanising the brand.",
+      },
+      {
+        title: "Content distribution and PR",
+        desc: "Owned (own channels) + earned (PR) + paid (boost) three-tier distribution. Outreach to industry media, guest blogging, performance PR.",
+      },
+      {
+        title: "Case studies and portfolio",
+        desc: "Structured case study templates: challenge → solution → result → lesson. Anonymised version for tight NDA contexts.",
+      },
     ],
     process: [
-      { step: "01", title: "Content audit", desc: "We review existing content and identify improvement opportunities." },
-      { step: "02", title: "Strategy", desc: "Content calendar and topic structure built around your audience." },
-      { step: "03", title: "Content production", desc: "Quality content created with SEO and conversion in mind." },
-      { step: "04", title: "Distribution", desc: "Multichannel distribution and performance measurement." },
+      {
+        step: "01",
+        title: "Research and topic map",
+        desc: "Keyword research (Ahrefs/Semrush + AlsoAsked), competitor gap analysis, ICP interviews (3-5 customers). Output: 6-12 month topic map.",
+      },
+      {
+        step: "02",
+        title: "Strategy and content calendar",
+        desc: "Pillar-cluster structure, article-level brief for every topic (keyword, goal, structure, internal links). You receive the calendar; you approve.",
+      },
+      {
+        step: "03",
+        title: "Production and optimisation",
+        desc: "Article production (AI-assisted but always human-edited), SEO editing (Surfer/Frase), schema markup, internal link network. 1-3 articles per week.",
+      },
+      {
+        step: "04",
+        title: "Distribution and measurement",
+        desc: "Owned (own channels), earned (PR outreach), paid (boost). Monthly report: organic traffic, ranking, engagement, conversion. Quarterly topic pivot.",
+      },
     ],
     faq: [
-      { q: "How soon can results be seen?", a: "Content marketing is a long-term investment. First organic results appear after 3–6 months, but value grows exponentially over time." },
-      { q: "How many articles do you write monthly?", a: "It depends on the package and budget. We typically recommend 4–8 blog posts per month for optimal results." },
-      { q: "Who writes the content?", a: "Our experienced copywriters and industry experts write the content, which our SEO specialists then optimize." },
+      {
+        q: "How soon do first results appear?",
+        a: "Long-tail keywords: 3-4 months (Google indexing + ranking growth). More competitive keywords: 6-9 months. Brand and authority building: 12-18 months. In the first months, consistent publishing — not traffic — is critical.",
+      },
+      {
+        q: "Can you also help with video content?",
+        a: "Yes. Two models: (1) full-service with partner video studios (script → shoot → edit → SEO); (2) AI-assisted production (Claude script + ElevenLabs voice + Runway visuals). The choice depends on brand needs and budget.",
+      },
+      {
+        q: "What keyword strategy do you follow?",
+        a: "Pillar-cluster model. 1 pillar page (broad topic, e.g. \"digital marketing for SMBs\") + 8-15 cluster articles (specific subtopics, e.g. \"local SEO tips\", \"Meta Ads for small businesses\"). Every cluster links internally to the pillar. AI Overviews-optimised FAQ section in every article.",
+      },
+      {
+        q: "How do we measure content success?",
+        a: "Top-of-funnel: organic traffic, keyword rankings, content sharing. Middle-of-funnel: page engagement (time on page, scroll depth), email sign-ups. Bottom-of-funnel: blog attribution (HubSpot multi-touch) — what % each article contributed to actual contracts.",
+      },
+      {
+        q: "What investment is needed?",
+        a: "Entry level (2 articles + content calendar / month): HUF 200-300k/month. Serious content engine (1-2 articles + LinkedIn + newsletter / week): HUF 500-900k. Premium (3 articles + video + podcast / week): HUF 1.2-2.5M.",
+      },
+      {
+        q: "What does AI Overviews optimisation mean?",
+        a: "The Google AI Overviews (and ChatGPT-search) introduced in 2024-2025 cite articles differently: they look for short, question-answer-based, authority-signalled sections. So today a long-form article must contain structured FAQ sections, step sequences, and lists — otherwise AI search skips over it.",
+      },
     ],
     cta: "Request a free content audit",
   },
   "marketing-automatizacio": {
     slug: "marketing-automatizacio",
     title: "Marketing Automation",
-    subtitle: "Automated workflows for more efficient marketing",
-    heroDesc: "Save time and grow revenue with automated marketing workflows. CRM integration, email automation, lead nurturing.",
-    metaTitle: "Marketing Automation – CRM, Email, Lead Nurturing | G2A Marketing",
-    metaDesc: "Marketing automation: CRM integration, email automation, lead nurturing, sales funnel optimization. Boost efficiency with automated workflows.",
+    subtitle: "Efficiency, AI-supported",
+    heroDesc:
+      "Save time and resources by automating repetitive marketing workflows. We build your email and CRM system so every prospect receives the right message at the right time.",
+    metaTitle: "Marketing automation — Email and CRM | G2A Marketing",
+    metaDesc:
+      "Build automated marketing workflows: email automation, CRM integration, lead nurturing, sales funnel and segmentation. AI-assisted segmentation.",
     icon: "zap",
     color: "#f59e0b",
-    intro: "Marketing automation lets you deliver the right message at the right time to the right person — without manual intervention. This boosts efficiency and reduces manual work.",
+    intro:
+      "Marketing automation works when the entire customer journey (lead → prospect → buyer → repeat customer) is modelled as a multi-actor workflow. G2A starts with sales-marketing alignment: defining MQL-SQL-Opportunity-Won and only then building automation — otherwise the smartest workflow is wasted if sales and marketing speak different languages.",
     benefits: [
-      { title: "Email automation", desc: "Trigger-based email sequences that respond automatically to user behavior." },
-      { title: "CRM integration", desc: "Setup and integration of HubSpot, Salesforce, ActiveCampaign and other CRM systems." },
-      { title: "Lead nurturing", desc: "Automated lead-care workflows that guide prospects through to a buying decision." },
-      { title: "Sales funnel", desc: "Full sales funnel automation from lead generation to conversion." },
-      { title: "Segmentation", desc: "Dynamic segmentation based on behavior and demographics." },
-      { title: "Reporting", desc: "Automated performance reports and dashboards." },
+      {
+        title: "Email automation",
+        desc: "Welcome sequences, lead nurturing flows, post-purchase follow-up, win-back campaigns. Triggers: website behaviour, email open, demo request, purchase amount.",
+      },
+      {
+        title: "CRM integration",
+        desc: "HubSpot, Salesforce, ActiveCampaign, Pipedrive, Odoo, Zoho setup with two-way sync. Custom field mapping per client need.",
+      },
+      {
+        title: "Lead scoring and qualification",
+        desc: "Explicit (company size, role) + implicit (page behaviour, email engagement) multiplied scoring. Hot lead 60+, MQL 30-59, raw 0-29.",
+      },
+      {
+        title: "Sales funnel and pipeline",
+        desc: "Conversion-oriented paths (lead → demo → POC → contract), upsell and cross-sell automations. HubSpot Deal-stage workflows.",
+      },
+      {
+        title: "Segmentation (AI-assisted)",
+        desc: "Behaviour-based dynamic segments: we use the Claude/GPT API to personalise email content per segment. Optimal send-time prediction model.",
+      },
+      {
+        title: "Reporting and dashboards",
+        desc: "Automated weekly/monthly reports (Looker Studio + HubSpot Reports). Multi-touch attribution: what % each channel contributed to final contracts.",
+      },
     ],
     process: [
-      { step: "01", title: "Process mapping", desc: "We review your current marketing workflows and identify automation opportunities." },
-      { step: "02", title: "Platform selection", desc: "Choose and configure the automation platform that fits your goals." },
-      { step: "03", title: "Workflow development", desc: "Design and implement automated workflows." },
-      { step: "04", title: "Test and optimize", desc: "Continuous monitoring and fine-tuning for the best results." },
+      {
+        step: "01",
+        title: "Process mapping",
+        desc: "Joint sales-marketing session (1-2 days): drawing the current lead flow, defining stages, identifying weak points. Output: concrete automation roadmap.",
+      },
+      {
+        step: "02",
+        title: "Platform selection",
+        desc: "HubSpot vs Marketo vs ActiveCampaign vs Mailchimp decision based on company size, IT stack, CRM needs. Migration plan if switching.",
+      },
+      {
+        step: "03",
+        title: "Workflow development",
+        desc: "1 workflow per 2 weeks: welcome series → lead nurture → handoff to sales → onboarding → upsell. Testing after each step.",
+      },
+      {
+        step: "04",
+        title: "Testing and iteration",
+        desc: "A/B test every subject line + CTA + send time. Monthly review: KPI growth, workflow integrity check, prioritising new use-cases.",
+      },
     ],
     faq: [
-      { q: "Which platforms do you work with?", a: "HubSpot, ActiveCampaign, Mailchimp, Klaviyo, Salesforce and other leading platforms." },
-      { q: "How long is implementation?", a: "A basic automation system can be live in 2–4 weeks; more complex solutions take 6–8 weeks." },
-      { q: "Do I need an existing CRM?", a: "Not mandatory but recommended. If you don't have one, we'll help you choose and set it up." },
+      {
+        q: "Which platforms do you work with?",
+        a: "HubSpot (SMB-mid full-stack), Marketo (enterprise), ActiveCampaign (SMB email + CRM), Mailchimp (basic email), Klaviyo (e-commerce), Pipedrive + Mailchimp combo (sales-first), Odoo (ERP-first), Zoho (cost-effective full-stack). Custom integrations: Zapier, Make.com, n8n.",
+      },
+      {
+        q: "How long does implementation take?",
+        a: "Basic email automation + CRM integration: 2-4 weeks. Lead scoring + sales funnel: 4-6 weeks. Multi-touch attribution + revenue dashboard: 6-8 weeks. Complex enterprise migration (e.g. Salesforce → HubSpot): 3-6 months.",
+      },
+      {
+        q: "What do we need to start?",
+        a: "Existing customer database (even Excel — we help migrate), business process map (or we draw one together), and sales-marketing willingness to collaborate (most important). Tech stack doesn't need to be decided upfront — we choose together.",
+      },
+      {
+        q: "How does AI help with segmentation?",
+        a: "Two layers: (1) predictive models (when next purchase, when churn, optimal send-time per customer); (2) generative personalisation (Claude API rewrites the base email template per segment, so we don't manually write 20 variants).",
+      },
+      {
+        q: "What does it cost monthly?",
+        a: "Setup: one-off HUF 600k–2.5M depending on complexity. Monthly management: HUF 200-600k (workflow maintenance, new campaigns, reporting). Platform licence separate — HubSpot Pro ~HUF 50k/month, Marketo HUF 200k+.",
+      },
+      {
+        q: "How do we measure marketing automation ROI?",
+        a: "Time savings: hours of manual work shifted to workflows (typically 30-50% reduction in marketing team manual time). Conversion impact: lead → SQL and SQL → won deal rate improvement (typically 15-30% lift). Pipeline velocity: average sales-cycle shortening (10-25%).",
+      },
     ],
     cta: "Request a free automation audit",
   },
   "esg-kommunikacio": {
     slug: "esg-kommunikacio",
     title: "ESG Communications",
-    subtitle: "Sustainability and responsible corporate communications",
-    heroDesc: "Communicate your sustainability efforts effectively. ESG reports, green marketing, stakeholder communications.",
-    metaTitle: "ESG Communications – Sustainability Marketing | G2A Marketing",
-    metaDesc: "ESG and sustainability communications: ESG reports, green marketing strategy, stakeholder communications, CSR content.",
+    subtitle: "Sustainability told credibly — without greenwashing",
+    heroDesc:
+      "We communicate your sustainability efforts so customers, investors and supply chains genuinely believe them — backed by data, in line with the EU Green Claims Directive and Hungarian regulation. Official ESG reporting and certification are handled by SZTFH-registered partners.",
+    metaTitle: "ESG Communications and sustainability marketing | G2A Marketing",
+    metaDesc:
+      "Greenwashing-free ESG and CSR communications: stakeholder messaging, green marketing, website ESG section, rating preparation. Official reports filed by registered partners.",
     icon: "leaf",
     color: "#22c55e",
-    intro: "ESG (Environmental, Social, Governance) factors are increasingly important to investors, customers and employees. We help you communicate your sustainability efforts effectively.",
+    intro:
+      "Important boundary upfront: G2A Marketing Bt. is NOT registered with the Hungarian Authority of Regulated Activities (SZTFH), so under Hungarian Act CVIII of 2023 we do not perform official ESG advisory or ESG certification — mandatory CSRD reporting and certification are entrusted to SZTFH-registered partners or recommended auditors. What we do: the communication side of ESG strategy, stakeholder messaging, brand narrative, marketing-grade content and rating preparation. Our managing director Attila Győrfi as an ESG specialist provides informal expert advice, but this does not replace official registered ESG advisory.",
     benefits: [
-      { title: "ESG strategy", desc: "Comprehensive ESG communication strategy built around your company's values." },
-      { title: "Sustainability report", desc: "Professional ESG and sustainability reports." },
-      { title: "Green marketing", desc: "Credible and effective green marketing campaigns that avoid greenwashing." },
-      { title: "Stakeholder communications", desc: "Targeted communication to investors, customers and employees." },
-      { title: "CSR content", desc: "Corporate responsibility content and campaigns." },
-      { title: "Impact measurement", desc: "Measuring and communicating ESG performance." },
+      {
+        title: "ESG communication strategy",
+        desc: "We translate the double materiality assessment OUTPUT (delivered by your registered advisor) into credible external communication. Stakeholder map and prioritised message hierarchy.",
+      },
+      {
+        title: "ESG communication materials and design",
+        desc: "Website ESG section, annual report design and narrative (the official content comes from the registered auditor; we make it readable and brand-consistent), social media + LinkedIn post sequences.",
+      },
+      {
+        title: "Greenwashing-free green marketing",
+        desc: "ISO 14021 Type II environmental claims — credible, data-backed statements. Phrasing prepared for the EU Green Claims Directive 2026 requirements.",
+      },
+      {
+        title: "Stakeholder communication",
+        desc: "Investor IR communications, customer-facing green marketing, internal employee ESG campaigns — each in different language, on different channels, with legal review.",
+      },
+      {
+        title: "CSR content and campaigns",
+        desc: "Volunteer-day storytelling, partnership case studies, local community project communication. We turn CSR into a brand-building narrative — pure communication work, not regulated territory.",
+      },
+      {
+        title: "Rating preparation (communication side)",
+        desc: "EcoVadis / CDP / MSCI ESG self-assessment questionnaire communication preparation: drafting answer wording. The actual data and assessment come from the company or the registered advisor.",
+      },
     ],
     process: [
-      { step: "01", title: "ESG audit", desc: "We review your current ESG activities and communications." },
-      { step: "02", title: "Strategy", desc: "ESG communication strategy and message system." },
-      { step: "03", title: "Content development", desc: "ESG content, reports and campaigns." },
-      { step: "04", title: "Distribution", desc: "Multichannel distribution and stakeholder engagement." },
+      {
+        step: "01",
+        title: "Scope clarification and gap analysis",
+        desc: "First meeting: clearly demarcating what the registered ESG advisor / auditor handles (or which partner we recommend), and what we cover on the communications side. Output: role matrix so the boundaries are clear.",
+      },
+      {
+        step: "02",
+        title: "Communications strategy and message system",
+        desc: "We translate ESRS data delivered by the registered advisor into public communication. Message hierarchy: enterprise → industry → concrete action. Risk analysis: what may and may not be claimed legally.",
+      },
+      {
+        step: "03",
+        title: "Content development and design",
+        desc: "Annual report visual design and narrative (registered auditor delivers the official professional content), website ESG section, LinkedIn campaign, customer letters, press kit. EU Taxonomy alignment review.",
+      },
+      {
+        step: "04",
+        title: "Distribution and stakeholder engagement",
+        desc: "Investor roadshow presentation, customer newsletter, press conference. Yearly refreshed communication content. EcoVadis / CDP / MSCI rating preparation on the communications side.",
+      },
     ],
     faq: [
-      { q: "Is ESG reporting mandatory?", a: "EU regulation increasingly mandates ESG reporting. We help prepare you for the requirements." },
-      { q: "What's the difference between ESG and CSR?", a: "CSR is voluntary corporate responsibility, while ESG is a structured, measurable framework for investor and regulatory purposes." },
-      { q: "How do we avoid greenwashing?", a: "Through credible, data-driven communication and transparency. We help showcase real ESG performance." },
+      {
+        q: "Do you produce official ESG reports for our company?",
+        a: "No, and we're explicit about this: G2A Marketing Bt. is NOT registered with the Hungarian Authority of Regulated Activities (SZTFH) for ESG advisory or ESG certification (Act CVIII of 2023), so we don't undertake official CSRD report production or certification. We work on the communications side: making the official document produced by your registered advisor / auditor readable and brand-consistent, drafting stakeholder messaging, building the website ESG section and campaign. For official reporting we recommend SZTFH-registered partners.",
+      },
+      {
+        q: "Is CSRD-mandated ESG reporting required for us?",
+        a: "Under the Hungarian transposition (Act CVIII of 2023), it's gradually mandatory from 2024: large enterprises (250+ staff, €40M+ revenue, €20M+ balance sheet — at least 2 of 3) first, then listed SMEs from 2026. Smaller companies still voluntary, but B2B supply chains push the requirement down. For exact applicability check with a registered advisor or auditor — we don't provide legal qualification.",
+      },
+      {
+        q: "What's the difference between ESG and CSR?",
+        a: "CSR (Corporate Social Responsibility): voluntary, narrative-based corporate responsibility — pure communications work for us, no regulatory limit. ESG (Environmental, Social, Governance): legally regulated framework with KPIs and mandatory auditing — the official part is for SZTFH-registered experts; we only handle the communication side.",
+      },
+      {
+        q: "How do we avoid greenwashing?",
+        a: "Three principles in communication: (1) only data-backed claims (no \"nature-friendly\", only \"95% recycled material, ISO 14021 Type II certified\"); (2) full lifecycle thinking in phrasing; (3) reference to independent audit for every concrete number. The EU Green Claims Directive 2026 will enforce these in law — we shape every green communication piece accordingly.",
+      },
+      {
+        q: "Can you help improve our ESG rating?",
+        a: "On the communications side, yes — for EcoVadis, CDP, MSCI ESG Ratings: drafting the self-assessment questionnaire answers to present actual performance in best light. The numerical data and actual assessment come from the company or registered advisor. If base activity exists and only documentation + communication is weak, EcoVadis Bronze → Silver lift is typically achievable in 6-12 months.",
+      },
+      {
+        q: "What does ESG communication cost?",
+        a: "Small company (voluntary ESG comms, website ESG section + 1 annual piece): HUF 600k–1.5M. Large SMB (communication package built around the registered auditor's report): HUF 1.5-3M. Enterprise (continuous IR + stakeholder communication): HUF 3-7M / year. The registered ESG advisor / auditor fee (HUF 1-15M depending on size) is on top and independent of us.",
+      },
+      {
+        q: "How do we find an SZTFH-registered ESG advisor or auditor?",
+        a: "SZTFH publicly maintains the ESG advisor and ESG auditor registry — check the authority's official website. We're not on the list, but we work as a partner with several registered audit firms and can introduce one fitting your industry and size. The selection and contract are between you two; we don't take referral commissions.",
+      },
     ],
     cta: "Request free ESG communications consulting",
   },
   "employer-branding": {
     slug: "employer-branding",
     title: "Employer Branding",
-    subtitle: "Build a compelling employer brand",
-    heroDesc: "Attract top talent and retain your team with a strong employer brand. EVP, careers page, recruitment marketing.",
-    metaTitle: "Employer Branding – Employer Brand Building | G2A Marketing",
-    metaDesc: "Employer branding: EVP development, careers page, recruitment marketing, employer communications. Attract top talent.",
+    subtitle: "Employer brand that attracts talent",
+    heroDesc:
+      "The Hungarian labour market 2025-2026 presented a historic challenge: 2.5% unemployment, high turnover, generational gaps between Gen Z and Y workers. A strong employer brand isn't a luxury — it's a critical business advantage.",
+    metaTitle: "Employer Branding — employer brand building | G2A Marketing",
+    metaDesc:
+      "EVP development, careers page, recruitment marketing, Glassdoor + Profession.hu reputation. Attract and retain top talent.",
     icon: "users",
     color: "#8b5cf6",
-    intro: "The competition for talented employees has never been fiercer. A strong employer brand not only eases recruitment, it reduces turnover and boosts employee engagement.",
+    intro:
+      "The Hungarian HR market is now as competitive as the customer market: if you don't advertise, you don't find candidates. Employer branding sits between HR and marketing — G2A builds the bridge that turns the abstract \"employer brand\" into real recruitment and retention tools. With ESG compliance, generational adaptation, and performance measured across the Profession.hu / LinkedIn / Glassdoor triad.",
     benefits: [
-      { title: "EVP development", desc: "Employer Value Proposition — we define what makes your company unique as an employer." },
-      { title: "Careers page", desc: "Compelling careers page design and development that converts candidates." },
-      { title: "Recruitment marketing", desc: "Targeted recruitment campaigns on LinkedIn, Facebook and other platforms." },
-      { title: "Employee content", desc: "Authentic employee stories and content." },
-      { title: "Glassdoor management", desc: "Employer profile optimization and review management." },
-      { title: "Internal communications", desc: "Internal employer branding campaigns to boost retention." },
+      {
+        title: "EVP development (Employer Value Proposition)",
+        desc: "Authentic EVP based on real employee interviews. Not a PR slogan — what people actually receive. Ready in 4-6 weeks.",
+      },
+      {
+        title: "Careers page and application flow",
+        desc: "Conversion-optimised careers page with per-position landing pages. Greenhouse / Workable / custom ATS integration. Mobile-first design (Gen Z).",
+      },
+      {
+        title: "Recruitment marketing",
+        desc: "LinkedIn, Profession.hu, Facebook, Instagram, TikTok campaigns by position. Sponsored Content for B2B, Reels for Gen Z — different creatives.",
+      },
+      {
+        title: "Employee storytelling",
+        desc: "\"Day in the life\" videos, behind-the-scenes Reels, team profile articles. The employee is the brand ambassador — not a marketing slogan.",
+      },
+      {
+        title: "Glassdoor + Profession.hu reputation",
+        desc: "Employer profile optimisation, response strategy for reviews (good and bad alike), proactive review collection from satisfied staff.",
+      },
+      {
+        title: "Internal communication and onboarding",
+        desc: "Structured onboarding flow from new hire to first 90 days. Internal newsletter, success stories, team-building communication.",
+      },
     ],
     process: [
-      { step: "01", title: "Audit", desc: "Assess current employer brand and recruitment processes." },
-      { step: "02", title: "EVP development", desc: "Develop a unique employer value proposition." },
-      { step: "03", title: "Communication", desc: "Create employer branding content and campaigns." },
-      { step: "04", title: "Measurement", desc: "Measure recruitment metrics and employee satisfaction." },
+      {
+        step: "01",
+        title: "Employer brand audit",
+        desc: "Map today's candidate experience: why people leave, why they join, what's the Glassdoor/Profession rating. 5-8 employee interviews, 2-3 ex-employee. Output: reality map.",
+      },
+      {
+        step: "02",
+        title: "EVP articulation",
+        desc: "Condense the \"what people actually receive\" list into 3-4 strongest pillars. Test with target-audience focus groups. Final EVP statement.",
+      },
+      {
+        step: "03",
+        title: "Communication and campaign",
+        desc: "Careers page redesign, LinkedIn/Profession content calendar, video story pipeline, Glassdoor profile revision. Recruitment campaigns by position.",
+      },
+      {
+        step: "04",
+        title: "Measurement and iteration",
+        desc: "Time-to-hire, cost-per-hire, offer acceptance rate, employee NPS monthly. Glassdoor / Profession.hu rating trend. Quarterly EVP validation.",
+      },
     ],
     faq: [
-      { q: "When should we focus on employer branding?", a: "When you struggle to attract the right candidates, have high turnover, or want to strengthen company culture." },
-      { q: "How soon can results be seen?", a: "Employer branding is a long-term investment. First results (more and better-quality candidates) appear after 3–6 months." },
-      { q: "How is employer branding success measured?", a: "Time-to-hire, cost-per-hire, offer acceptance rate, employee NPS and Glassdoor ratings." },
+      {
+        q: "When is it time for employer branding?",
+        a: "Three signals: (1) you've spent over 3 months unable to fill an open position; (2) your turnover exceeds the industry average (typically over 15% annually); (3) your Glassdoor/Profession.hu rating is below 3 stars. Any signal makes EB no longer optional but necessary.",
+      },
+      {
+        q: "How soon do results appear?",
+        a: "Careers page redesign: 4-6 weeks. First recruitment campaign result: 6-8 weeks. Full EVP impact (application volume + quality): 4-6 months. Glassdoor rating improvement: 6-12 months (reviews accumulate over time).",
+      },
+      {
+        q: "How do we measure employer branding success?",
+        a: "5 main KPIs: time-to-hire (drops 15-30%), cost-per-hire (drops 20-40%), offer acceptance rate (rises from 60% to 80%), employee NPS (rises 6-7 to 8-9), Glassdoor rating (rises 0.5-1 stars). All measurable on a 12-18 month horizon.",
+      },
+      {
+        q: "What if we're a small company?",
+        a: "Employer branding works at SMB scale too — in fact it's most intimate and credible there. A 5-30 person company doesn't need a million-forint budget: basic careers page + Profession.hu profile + LinkedIn post calendar under owner/HR director name delivers from HUF 150-250k/month.",
+      },
+      {
+        q: "Can you set up an influencer / employee advocacy program?",
+        a: "Yes. Train employees (5-10 volunteer brand ambassadors) with LinkedIn post recipes and content calendars. A 5-person advocacy program's organic reach is typically 3-5x larger than the corporate LinkedIn page itself.",
+      },
+      {
+        q: "What does it cost monthly?",
+        a: "SMB basic (careers page + Profession + 4 LinkedIn posts/month): HUF 200-400k. Mid-sized company (full EB stack: career + LinkedIn + Profession + Glassdoor management + storytelling): HUF 500-900k. Enterprise (advocacy + video pipeline): HUF 1.2-2.5M.",
+      },
     ],
     cta: "Request a free employer branding consultation",
   },
   "nemzetkozi-marketing": {
     slug: "nemzetkozi-marketing",
     title: "International Marketing",
-    subtitle: "Global expansion with local expertise",
-    heroDesc: "Enter new markets effectively. Localization, multilingual SEO, cross-border campaigns and culturally adapted communication.",
-    metaTitle: "International Marketing – Global Expansion | G2A Marketing",
-    metaDesc: "International marketing: localization, multilingual SEO, cross-border campaigns, culturally adapted communication. Expand globally.",
+    subtitle: "Global markets, local perspective",
+    heroDesc:
+      "Entering foreign markets? Localisation is the key to success: a website translation isn't enough — you need to adapt to cultural particularities and local search engines. Hungarian + international experience with direct Chinese-market connections.",
+    metaTitle: "International marketing and market entry | G2A Marketing",
+    metaDesc:
+      "Multilingual SEO, cross-border campaigns, localisation, market entry strategy. DACH, CEE, BeNeLux, UK and Chinese markets — with local perspective.",
     icon: "globe",
     color: "#06b6d4",
-    intro: "Global expansion brings serious challenges — different cultures, languages, regulations and consumer behaviors. We help you enter new markets effectively and adapt your marketing message.",
+    intro:
+      "Hungarian SMBs in 2025-2026 are increasingly looking towards regional markets (DACH, CEE) — the domestic market is saturated and HUF volatility creates risk. Our managing director Attila Győrfi is a guest lecturer at the University of Warsaw and an international marketing specialist with direct connections to Polish, Czech and Chinese-market actors. This isn't agent relationships; it's operational knowledge.",
     benefits: [
-      { title: "Market entry strategy", desc: "Detailed analysis and strategy for entering a new market." },
-      { title: "Localization", desc: "Culturally adapted content and communication — not just translation." },
-      { title: "Multilingual SEO", desc: "Multi-language SEO strategy and implementation with hreflang tags." },
-      { title: "Cross-border campaigns", desc: "Multi-country ad campaign management." },
-      { title: "Cultural adaptation", desc: "Adapting marketing messages to cultural context." },
-      { title: "Local partnerships", desc: "Engaging local influencers and partners in new markets." },
+      {
+        title: "Market entry strategy",
+        desc: "Deep market analysis: demand, competition, channel structure, regulation. Go-to-market roadmap for 12 months.",
+      },
+      {
+        title: "Localisation (not translation)",
+        desc: "Culturally adapted content: not literal but transferred to local context. Native-speaker editors for every target language.",
+      },
+      {
+        title: "Multilingual SEO",
+        desc: "Hreflang implementation with the right ccTLD or subdomain strategy. Per-language keyword research (German uses different phrasing than Hungarian). Local link building.",
+      },
+      {
+        title: "Cross-border PPC",
+        desc: "Google Ads + Meta cross-country campaigns. Separate currency handling, country-specific billing flow, EU-wide GDPR compliance.",
+      },
+      {
+        title: "Chinese market specialisation",
+        desc: "WeChat, Baidu, Xiaohongshu (Little Red Book), Douyin (Chinese TikTok) marketing. Sino-Hungarian business partnership consulting.",
+      },
+      {
+        title: "Local partnerships and influencer",
+        desc: "Polish, Czech, German and Chinese influencer connections. Identifying local wholesalers and resellers. PR in target markets.",
+      },
     ],
     process: [
-      { step: "01", title: "Market analysis", desc: "Analyze target markets: competition, consumer behavior, regulation." },
-      { step: "02", title: "Strategy", desc: "Develop market entry and marketing strategy." },
-      { step: "03", title: "Localization", desc: "Localize content, ads and website." },
-      { step: "04", title: "Campaigns", desc: "Launch and optimize local campaigns." },
+      {
+        step: "01",
+        title: "Market analysis and target country pick",
+        desc: "Top 3-5 target country evaluation: market size, demand, competition intensity, TAM (Total Addressable Market) estimation. Win-rate calculator per country.",
+      },
+      {
+        step: "02",
+        title: "Localisation strategy",
+        desc: "Domain strategy (.de vs /de, ccTLD vs subdomain), hreflang setup, native content editor selection. Company registration or local entity if needed.",
+      },
+      {
+        step: "03",
+        title: "Content and website localisation",
+        desc: "Multilingual website versions, marketing materials (email, social) localisation, per-country keyword map. Pilot country 2-3 months.",
+      },
+      {
+        step: "04",
+        title: "Campaigns and scaling",
+        desc: "Local Google Ads + Meta launch. Local PR and influencer outreach. Monthly review: which country scales, which scales down or fails.",
+      },
     ],
     faq: [
-      { q: "Which markets do you support for expansion?", a: "We specialize primarily in European markets (DACH, CEE, Benelux, UK), but can support global expansion too." },
-      { q: "What's the difference between translation and localization?", a: "Translation is literal conversion; localization culturally adapts the message — accounting for local customs, humor and values." },
-      { q: "Do we need a local office in the new market?", a: "Not necessarily. With digital marketing tools you can sell effectively in new markets without a physical presence." },
+      {
+        q: "Which markets do you support for expansion?",
+        a: "Primarily: DACH (Germany, Austria, Switzerland), CEE (Poland, Czech Republic, Slovakia, Romania), BeNeLux and UK. Special: China (WeChat + Baidu + local partnerships). For global expansion (US, India, MENA) we work with partner agencies.",
+      },
+      {
+        q: "What's the difference between translation and localisation?",
+        a: "Translation = literal conversion (often starting with machine translation). Localisation = full adaptation including humour, references, visual elements (models, colours), payment methods, legal text. A \"best in class\" slogan that works in Hungarian may be grammatically wrong in German and culturally alien in Polish.",
+      },
+      {
+        q: "Do we need a new domain?",
+        a: "Two strategies: (1) ccTLD (country domain): alongside domain.hu, domain.de, domain.cz — best local SEO but expensive and complex. (2) Subdomain or subdirectory: de.domain.com or domain.com/de — simpler but weaker local ranking. We typically recommend subdomain/subdirectory up to the 2-3rd market, then ccTLD.",
+      },
+      {
+        q: "How long is the process?",
+        a: "Pilot market (1 new country): 4-12 weeks full localisation flow. Scaling to additional markets: 6-8 weeks per new market if pilot is successful. Whether company formation or local entity is needed: separate consulting, 3-6 months.",
+      },
+      {
+        q: "Can you help with Chinese market consulting?",
+        a: "Yes. Our managing director Attila Győrfi is a guest lecturer at the University of Warsaw and a Chinese market specialist. He's reachable on WeChat with our Chinese partners directly. WeChat marketing, Baidu SEO, Tmall/JD listings, Xiaohongshu (Little Red Book) influencer campaigns. For Chinese market entry we typically also bring a Hungarian-Chinese legal practitioner due to the regulatory aspect.",
+      },
+      {
+        q: "What does international expansion marketing cost?",
+        a: "Pilot country launch (DACH/CEE): one-off HUF 1.5-3M (localisation + setup + first campaigns). Monthly management: HUF 400-900k / country. Chinese market pilot: HUF 3-6M (more complex regulatory side). Ad spend separate, typically HUF 300k-1.5M/month per country depending on market size.",
+      },
     ],
     cta: "Request a free international marketing consultation",
   },
