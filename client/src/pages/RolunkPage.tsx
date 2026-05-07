@@ -1,6 +1,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
+import { aboutPageSchema, breadcrumbSchema } from "@/lib/jsonLd";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import AboutHeroDemo from "@/components/page-demos/AboutHeroDemo";
 import ProcessIllustration from "@/components/illustrations/ProcessIllustration";
@@ -43,7 +44,7 @@ const TEAM: Record<Language, TeamMember[]> = {
     {
       name: "Radó Bence",
       role: "Tartalom és AI Specialista",
-      desc: "AI-alapú tartalomgyártás, prompt-engineering és kreatív szövegírás. Részletes bemutatkozás hamarosan.",
+      desc: "AI-alapú tartalomgyártás, prompt-engineering és kreatív szövegírás. A G2A-nál a Claude + Midjourney + Runway tartalom-pipeline operatív felelőse — ügyfél-kampányokhoz, blog-cikkekhez és kreatívokhoz.",
       initial: "RB",
       image: PORTRAIT_BENCE,
     },
@@ -59,7 +60,7 @@ const TEAM: Record<Language, TeamMember[]> = {
     {
       name: "Bence Radó",
       role: "Content & AI Specialist",
-      desc: "AI-powered content production, prompt engineering and creative copywriting. Full bio coming soon.",
+      desc: "AI-powered content production, prompt engineering and creative copywriting. At G2A he runs the Claude + Midjourney + Runway content pipeline — for client campaigns, blog articles and creatives.",
       initial: "RB",
       image: PORTRAIT_BENCE,
     },
@@ -75,7 +76,7 @@ const TEAM: Record<Language, TeamMember[]> = {
     {
       name: "Radó Bence (本采)",
       role: "内容与 AI 专家",
-      desc: "AI 驱动的内容生产、提示工程与创意文案。详细介绍即将推出。",
+      desc: "AI 驱动的内容生产、提示工程与创意文案。在 G2A 负责 Claude + Midjourney + Runway 内容流水线 —— 用于客户活动、博客文章与创意。",
       initial: "RB",
       image: PORTRAIT_BENCE,
     },
@@ -88,28 +89,82 @@ const buildValues = (rows: { title: string; desc: string }[]): Value[] => rows.m
 
 const VALUES_LIST: Record<Language, Value[]> = {
   hu: buildValues([
-    { title: "Eredményorientált", desc: "Minden döntésünket az üzleti eredmény vezérli, nem a látszat." },
-    { title: "Stratégiai gondolkodás", desc: "Nem csak kivitelezünk – üzleti stratégiát alkotunk." },
-    { title: "Globális szemlélet", desc: "Lokális tudás, nemzetközi tapasztalat." },
-    { title: "Agilis működés", desc: "Gyors reakcióidő és rugalmas alkalmazkodás." },
-    { title: "Átláthatóság", desc: "Részletes riportok, nyílt kommunikáció." },
-    { title: "Minőség", desc: "Prémium minőség minden projektnél, kompromisszumok nélkül." },
+    {
+      title: "Eredményorientált",
+      desc: "Minden projektet KPI-okra építünk: ROAS, CPA, organikus forgalom, leadminőség. Ha a szám nem nő 3 hónap után, az nem a TE problémád — közösen újratervezünk.",
+    },
+    {
+      title: "Stratégiai gondolkodás",
+      desc: "Audit + ICP-elemzés + versenytárs-térképpel kezdünk minden projektet. Nem fogadunk el „csak csináljatok már valamit” megbízást — ha nincs stratégia, nincs G2A.",
+    },
+    {
+      title: "Globális szemlélet",
+      desc: "Pécsi gyökerek, magyar piaci ismeret, nemzetközi tapasztalat (Varsói Egyetem vendégoktató, kínai partnerségek). Tudjuk a különbséget egy magyar vs lengyel B2B buyer-persona között.",
+    },
+    {
+      title: "Agilis működés",
+      desc: "Heti standup-ok ügyféllel, kétheti sprint-review. Gyorsabb iteráció mint a hagyományos retainer-modell — ha valami nem működik 2 hét után, változtatunk, nem 6 hónapot várunk.",
+    },
+    {
+      title: "Átláthatóság",
+      desc: "Megosztott Looker Studio dashboard, közös HubSpot pipeline-tárhely. Ami nálunk van, nálad is megvan. Sosem hangzik el „elvesztettünk hozzáférést”.",
+    },
+    {
+      title: "Minőség kompromisszum nélkül",
+      desc: "Nem csinálunk gyorsítványt, nem indítunk olyan kampányt amit nem tennék ki sajátként. Ha valami feszített határidő miatt hígulna, inkább áttoljuk.",
+    },
   ]),
   en: buildValues([
-    { title: "Results-oriented", desc: "Every decision is driven by business outcomes, not appearances." },
-    { title: "Strategic thinking", desc: "We don't just execute — we build business strategy." },
-    { title: "Global perspective", desc: "Local knowledge, international experience." },
-    { title: "Agile operations", desc: "Fast response time and flexible adaptation." },
-    { title: "Transparency", desc: "Detailed reports, open communication." },
-    { title: "Quality", desc: "Premium quality on every project, no compromises." },
+    {
+      title: "Results-oriented",
+      desc: "Every project built on KPIs: ROAS, CPA, organic traffic, lead quality. If numbers don't move after 3 months, it's not your problem alone — we replan together.",
+    },
+    {
+      title: "Strategic thinking",
+      desc: "Every engagement starts with audit + ICP analysis + competitor map. We don't take \"just do something already\" briefs — no strategy, no G2A.",
+    },
+    {
+      title: "Global perspective",
+      desc: "Pécs roots, Hungarian market knowledge, international experience (University of Warsaw guest lecturer, Chinese partnerships). We know the difference between a Hungarian and Polish B2B buyer persona.",
+    },
+    {
+      title: "Agile operations",
+      desc: "Weekly client standups, biweekly sprint reviews. Faster iteration than traditional retainers — if something isn't working after 2 weeks, we change course rather than wait 6 months.",
+    },
+    {
+      title: "Transparency",
+      desc: "Shared Looker Studio dashboard, shared HubSpot pipeline access. Everything we have, you have. \"We lost access\" is never said.",
+    },
+    {
+      title: "Quality without compromise",
+      desc: "We don't cut corners, we don't launch a campaign we wouldn't put our own name on. If a tight deadline would dilute the work, we push it back instead.",
+    },
   ]),
   zh: buildValues([
-    { title: "结果导向", desc: "每一项决策都以业务成果为导向,而非表面功夫。" },
-    { title: "战略思维", desc: "我们不只是执行者 —— 而是战略的构建者。" },
-    { title: "全球视野", desc: "本地智慧,国际经验。" },
-    { title: "敏捷运作", desc: "快速响应,灵活适应。" },
-    { title: "透明公开", desc: "详细的报告,开放的沟通。" },
-    { title: "优质品质", desc: "每一个项目都追求优质,绝不妥协。" },
+    {
+      title: "结果导向",
+      desc: "每个项目以 KPI 为基础:ROAS、CPA、自然流量、线索质量。3 个月后数字不动,这不是您的独立问题 —— 我们共同重新规划。",
+    },
+    {
+      title: "战略思维",
+      desc: "每个合作以审计 + ICP 分析 + 竞争对手地图开始。我们不接受「快做点什么吧」的简报 —— 没有战略,就没有 G2A。",
+    },
+    {
+      title: "全球视野",
+      desc: "佩奇根基、匈牙利市场知识、国际经验(华沙大学客座讲师、中国合作伙伴关系)。我们了解匈牙利与波兰 B2B 买方画像之间的差异。",
+    },
+    {
+      title: "敏捷运作",
+      desc: "每周客户站会、双周冲刺复盘。比传统月费模式更快迭代 —— 如果某事 2 周后不奏效,我们改方向而非等 6 个月。",
+    },
+    {
+      title: "透明公开",
+      desc: "共享 Looker Studio 仪表板、共享 HubSpot 管道访问权限。我们有的,您也有。永远不会说「我们失去了访问权」。",
+    },
+    {
+      title: "不妥协的品质",
+      desc: "不走捷径,不启动我们自己不愿署名的活动。如果赶工期会稀释工作质量,我们宁愿往后推。",
+    },
   ]),
 };
 
@@ -166,7 +221,21 @@ export default function RolunkPage() {
 
   return (
     <>
-      <SeoHead title={t("about.seoTitle")} description={t("about.seoDesc")} />
+      <SeoHead
+        title={t("about.seoTitle")}
+        description={t("about.seoDesc")}
+        pageSchemas={[
+          breadcrumbSchema([
+            { name: "G2A Marketing", url: "https://g2amarketing.hu" },
+            { name: t("nav.about"), url: "https://g2amarketing.hu/rolunk" },
+          ]),
+          aboutPageSchema({
+            url: "https://g2amarketing.hu/rolunk",
+            name: t("about.seoTitle"),
+            description: t("about.seoDesc"),
+          }),
+        ]}
+      />
       <ScrollProgressBar />
       <Navigation />
 
@@ -224,8 +293,11 @@ export default function RolunkPage() {
                 <p className="reveal reveal-delay-2" style={{ color: "var(--g2a-text-secondary)", lineHeight: "1.8", marginBottom: "1.5rem", fontFamily: "Geist, sans-serif" }}>
                   {t("about.story.p1")}
                 </p>
-                <p className="reveal reveal-delay-3" style={{ color: "var(--g2a-text-secondary)", lineHeight: "1.8", marginBottom: "2rem", fontFamily: "Geist, sans-serif" }}>
+                <p className="reveal reveal-delay-3" style={{ color: "var(--g2a-text-secondary)", lineHeight: "1.8", marginBottom: "1.5rem", fontFamily: "Geist, sans-serif" }}>
                   {t("about.story.p2")}
+                </p>
+                <p className="reveal reveal-delay-3" style={{ color: "var(--g2a-text-secondary)", lineHeight: "1.8", marginBottom: "2rem", fontFamily: "Geist, sans-serif", fontStyle: "italic" }}>
+                  {t("about.story.p3")}
                 </p>
                 <div className="reveal reveal-delay-4">
                   <Link href="/kapcsolat" style={{ textDecoration: "none" }}>
@@ -247,6 +319,166 @@ export default function RolunkPage() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mission + Vision */}
+        <section
+          className="g2a-section"
+          style={{
+            backgroundColor: "var(--g2a-bg-2)",
+            borderTop: "1px solid var(--g2a-border)",
+            borderBottom: "1px solid var(--g2a-border)",
+          }}
+        >
+          <div className="g2a-container">
+            <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+              <div className="g2a-section-label reveal">{t("about.mission.label")}</div>
+              <h2
+                className="g2a-section-title reveal reveal-delay-1"
+                style={{ textAlign: "center" }}
+              >
+                {t("about.mission.title")}
+              </h2>
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                gap: "1.5rem",
+                maxWidth: 980,
+                margin: "0 auto",
+              }}
+            >
+              <div
+                className="g2a-card reveal"
+                style={{
+                  padding: "2rem",
+                  borderLeft: "4px solid var(--g2a-brand-teal)",
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "Geist Mono, monospace",
+                    fontSize: "0.75rem",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: "var(--g2a-brand-teal)",
+                    marginBottom: "0.75rem",
+                  }}
+                >
+                  {t("about.mission.missionTitle")}
+                </div>
+                <p
+                  style={{
+                    color: "var(--g2a-text-secondary)",
+                    fontSize: "0.95rem",
+                    lineHeight: 1.7,
+                    margin: 0,
+                  }}
+                >
+                  {t("about.mission.missionBody")}
+                </p>
+              </div>
+              <div
+                className="g2a-card reveal reveal-delay-1"
+                style={{
+                  padding: "2rem",
+                  borderLeft: "4px solid var(--g2a-brand-teal)",
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "Geist Mono, monospace",
+                    fontSize: "0.75rem",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: "var(--g2a-brand-teal)",
+                    marginBottom: "0.75rem",
+                  }}
+                >
+                  {t("about.mission.visionTitle")}
+                </div>
+                <p
+                  style={{
+                    color: "var(--g2a-text-secondary)",
+                    fontSize: "0.95rem",
+                    lineHeight: 1.7,
+                    margin: 0,
+                  }}
+                >
+                  {t("about.mission.visionBody")}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Why G2A — 6 differentiators that contextualise the values block.
+            Built from individual translation keys (not a structured list)
+            because each point has a distinct title + body and we want the
+            translation strings to live alongside the rest of the about copy. */}
+        <section className="g2a-section" style={{ backgroundColor: "transparent" }}>
+          <div className="g2a-container">
+            <div style={{ textAlign: "center", marginBottom: "3rem" }}>
+              <div className="g2a-section-label reveal">{t("about.whyUs.label")}</div>
+              <h2
+                className="g2a-section-title reveal reveal-delay-1"
+                style={{ textAlign: "center" }}
+              >
+                {t("about.whyUs.title")}
+              </h2>
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                gap: "1.25rem",
+                maxWidth: 1100,
+                margin: "0 auto",
+              }}
+            >
+              {[1, 2, 3, 4, 5, 6].map((n, i) => (
+                <div
+                  key={n}
+                  className={`g2a-card reveal reveal-delay-${(i % 3) + 1}`}
+                  style={{ padding: "1.75rem" }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "Geist Mono, monospace",
+                      fontSize: "0.7rem",
+                      letterSpacing: "0.12em",
+                      color: "var(--g2a-brand-teal)",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    {String(n).padStart(2, "0")}
+                  </div>
+                  <h3
+                    style={{
+                      fontFamily: "Geist, sans-serif",
+                      fontWeight: 700,
+                      fontSize: "1.05rem",
+                      color: "var(--g2a-text-primary)",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    {t(`about.whyUs.point${n}Title`)}
+                  </h3>
+                  <p
+                    style={{
+                      color: "var(--g2a-text-secondary)",
+                      fontSize: "0.875rem",
+                      lineHeight: 1.6,
+                      margin: 0,
+                    }}
+                  >
+                    {t(`about.whyUs.point${n}Body`)}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
