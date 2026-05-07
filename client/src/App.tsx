@@ -38,6 +38,7 @@ const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const AszfPage = lazy(() => import("./pages/AszfPage"));
 const HirlevelPage = lazy(() => import("./pages/HirlevelPage"));
 const MarketingAuditPage = lazy(() => import("./pages/MarketingAuditPage"));
+const KarrierPage = lazy(() => import("./pages/KarrierPage"));
 const RolunkPage = lazy(() => import("./pages/RolunkPage"));
 const NewServicePage = lazy(() => import("./pages/NewServicePage"));
 const AuditPage = lazy(() => import("./pages/AuditPage"));
@@ -97,6 +98,7 @@ function PublicRouter() {
       <Route path="/aszf" component={AszfPage} />
       <Route path="/hirlevel" component={HirlevelPage} />
       <Route path="/marketing-audit" component={MarketingAuditPage} />
+      <Route path="/karrier" component={KarrierPage} />
       <Route path="/ingyenes-seo-audit" component={SeoAuditPage} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

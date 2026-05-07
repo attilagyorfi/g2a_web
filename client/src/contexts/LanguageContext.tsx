@@ -29,6 +29,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.freeAudit": "Ingyenes Audit",
     "nav.industries": "Iparágak",
     "nav.newsletter": "Hírlevél",
+    "nav.career": "Karrier",
 
     // Services
     "service.localization": "Lokalizáció",
@@ -611,6 +612,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.freeAudit": "Free Audit",
     "nav.industries": "Industries",
     "nav.newsletter": "Newsletter",
+    "nav.career": "Careers",
 
     // Services
     "service.localization": "Localization",
@@ -1183,6 +1185,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.freeAudit": "免费评估",
     "nav.industries": "行业",
     "nav.newsletter": "通讯订阅",
+    "nav.career": "招聘",
 
     // Services
     "service.localization": "本地化",

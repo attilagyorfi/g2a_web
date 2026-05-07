@@ -31,6 +31,7 @@ const COMPANY = [
   { key: "nav.blog", href: "/hirek" },
   { key: "nav.freeAudit", href: "/ingyenes-audit" },
   { key: "nav.newsletter", href: "/hirlevel" },
+  { key: "nav.career", href: "/karrier" },
   { key: "nav.contact", href: "/kapcsolat" },
 ];
 

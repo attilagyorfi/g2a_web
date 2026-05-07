@@ -30,6 +30,7 @@ const PATHS = [
   { path: "/aszf", priority: "0.3", changefreq: "yearly" },
   { path: "/hirlevel", priority: "0.7", changefreq: "monthly" },
   { path: "/marketing-audit", priority: "0.9", changefreq: "monthly" },
+  { path: "/karrier", priority: "0.6", changefreq: "monthly" },
 
   // Services
   { path: "/szolgaltatasok", priority: "0.9", changefreq: "monthly" },
