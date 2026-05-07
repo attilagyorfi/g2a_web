@@ -848,22 +848,47 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
   en: {
     "marketing-egeszsegugyi-cegeknek": {
       title: "Marketing for Healthcare Companies",
-      subtitle: "For clinics, private practitioners and healthcare businesses",
-      metaTitle: "Healthcare Marketing – G2A Marketing | SEO, Google Ads, Web Development",
-      metaDesc: "Specialised marketing solutions for clinics, private practitioners and healthcare businesses. SEO, Google Ads, web development and online booking systems.",
-      heroDesc: "The healthcare sector brings specific marketing challenges. GDPR-compliant campaigns, trust building and online booking systems — we understand all of it.",
+      subtitle: "For clinics, private practitioners, dental practices and wellness providers",
+      metaTitle: "Healthcare marketing for clinics and private practices | G2A Marketing",
+      metaDesc:
+        "GDPR compliance, online booking systems, local SEO and trust-building reputation management. Marketing solutions for clinics, private practitioners and wellness businesses.",
+      heroDesc:
+        "In healthcare you have to satisfy strict regulation and patient expectations at the same time. Our marketing services make your practice credible, easy to find and trust-inspiring — with measurable growth in online bookings.",
+      intro:
+        "Hungarian private healthcare has grown rapidly over the last five years: patients search on Google, decide based on reviews, and want to book online. The sector is governed by strict rules (GDPR, Hungary's ETT medical-ethics rules, the pharmaceutical-advertising ban) which make traditional ad strategies risky.",
       challenges: [
-        "GDPR-compliant advertising campaigns",
-        "Building trust and prestige",
-        "Growing online bookings",
-        "Local SEO – reaching patients in your catchment area",
-        "Competing with larger hospitals and clinics",
+        "GDPR and patient-data handling — every marketing activity must respect data-protection law",
+        "Online visibility — 80% of patients start on Google; without local SEO you are invisible",
+        "Patient communication — easy booking, fast response on every channel",
+        "Trust-building — positive Google reviews, professional visual presence",
+        "Reputation management — handling negative reviews and crises",
+        "Competing with hospitals and large private clinic chains as a small practice",
       ],
       solutions: [
-        { title: "Healthcare SEO", desc: "Local keywords, Google Business Profile optimisation, medical content" },
-        { title: "Google Ads campaigns", desc: "GDPR-compliant targeted campaigns for the right patient segments" },
-        { title: "Website development", desc: "Online booking system, GDPR-compliant, mobile-friendly" },
-        { title: "Reputation management", desc: "Google review handling and trust-building content" },
+        {
+          title: "Conversion-optimised website",
+          desc: "Fast, responsive, accessible — patient books an appointment in 3 clicks",
+        },
+        {
+          title: "Online booking + CRM",
+          desc: "Integration with practice-management software (BookYou, MedicalSoft), automatic reminders",
+        },
+        {
+          title: "Healthcare content marketing",
+          desc: "Educational articles, treatment explainers, FAQ videos — legally clean, ETT-compatible",
+        },
+        {
+          title: "Local SEO and Google Ads",
+          desc: "Optimised content and ads for searches like \"private dermatologist Budapest\" or \"dentist Pécs\"",
+        },
+        {
+          title: "Reputation management",
+          desc: "Proactive Google review collection, response templates, negative-review crisis plan",
+        },
+        {
+          title: "GDPR-compliant analytics",
+          desc: "Cookie-free measurement (Plausible), anonymous conversion tracking — privacy-first by default",
+        },
       ],
       results: [
         { num: "+340%", label: "Organic traffic" },
@@ -871,11 +896,52 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "40+", label: "Healthcare projects" },
       ],
       caseStudy: {
-        client: "Private clinic – Pécs",
-        problem: "Low online bookings, weak SEO presence",
-        solution: "Full SEO + Google Ads + website optimisation",
+        client: "Private clinic — Pécs",
+        problem: "Low online bookings, weak SEO presence, no reputation strategy",
+        solution: "Full SEO + Google Ads + new conversion-optimised website with booking system",
         result: "+340% organic traffic, +180% online bookings in 6 months",
       },
+      whyG2A:
+        "We've worked on 40+ healthcare projects with Hungarian clinics and private practitioners. We know the SEO map of major specialisations (dentistry, dermatology, orthopaedics, private gynaecology), the APIs of practice-management software, and the practice of the Hungarian DPA. Every engagement starts with a 1-month pilot — if we don't deliver measurable results, you can leave without penalty.",
+      relatedServices: [
+        {
+          title: "Search engine optimisation (SEO)",
+          desc: "Local medical keywords, Google Business Profile optimisation",
+          href: "/szolgaltatasok/keresooptimalizalas",
+        },
+        {
+          title: "PPC & Google Ads",
+          desc: "GDPR-compliant ads, patient-segment targeting",
+          href: "/szolgaltatasok/hirdeteskezeles",
+        },
+        {
+          title: "Web development & CRO",
+          desc: "Booking system integration, mobile-first patient experience",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+      ],
+      faqs: [
+        {
+          q: "Which platforms do you work with for healthcare marketing?",
+          a: "WordPress and WP-Booking, BookYou and MedicalSoft practice software, Google Business Profile, Meta (only for non-pharma/non-ETT content), Google Ads. For data: TiDB Cloud (EU region) and Plausible analytics for GDPR compliance.",
+        },
+        {
+          q: "How do you ensure GDPR compliance?",
+          a: "Cookie-free baseline analytics (Plausible), explicit logged consent. We never handle raw patient data — only aggregated traffic and conversion metrics. Every ad creative is reviewed for medical-ethics compliance before launch.",
+        },
+        {
+          q: "Can you help with negative Google reviews?",
+          a: "Yes. Two-tier reputation strategy: (1) proactive — systematic collection of positive reviews from satisfied patients via automated email invitation; (2) reactive — crisis-response templates and policy-compliant management of complaints in line with Google's review guidelines.",
+        },
+        {
+          q: "How long until SEO delivers results in healthcare?",
+          a: "Local searches (\"dentist [city]\") typically 2–4 months; nationwide keywords (\"implant prices\") 6–9 months. Google Ads delivers measurable patient enquiries in 1–2 weeks — we usually run both in parallel.",
+        },
+        {
+          q: "What budget should I expect?",
+          a: "Solo practitioners HUF 250–600k/month (audit + campaigns + content combined); clinics HUF 600k–1.2M/month. Ad spend is on top — we recommend at least HUF 200k/month on Google Ads to reach economies of scale.",
+        },
+      ],
     },
     "marketing-szepsegipari-cegeknek": {
       title: "Marketing for the Beauty Industry",
@@ -902,11 +968,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "25+", label: "Beauty industry projects" },
       ],
       caseStudy: {
-        client: "Beauty salon chain",
-        problem: "Low social media presence, no online booking",
-        solution: "Social media strategy + Meta Ads + online booking",
+        client: "Beauty salon chain — 3 locations",
+        problem: "Low social media presence, no online booking, phone-only barrier",
+        solution: "Instagram strategy + Meta Ads + Booksy integration + local SEO",
         result: "+520% Instagram followers, +190% online bookings in 4 months",
       },
+      intro:
+        "In the beauty industry buyers research primarily on Instagram, TikTok and Google Maps — not on the website. The site only enters the journey when the booking flow starts. This shifts the marketing budget allocation: 60% social, 30% local SEO + Google Business Profile, 10% paid search.",
+      whyG2A:
+        "With 25+ beauty industry projects we know the cadence of the sector: 70% of bookings arrive Tue–Fri 6–10pm; we cut a client's no-show rate from 40% to 12% with countdown email + SMS automation. We can spin up a Reels content calendar from cold, generate creatives with Canva + AI tools, and optimise the Booksy/Salonkee booking funnel for conversion.",
+      relatedServices: [
+        {
+          title: "Social media management",
+          desc: "Instagram and TikTok strategy and content production",
+          href: "/szolgaltatasok/kozossegi-media",
+        },
+        {
+          title: "PPC & Ad management",
+          desc: "Meta Ads, TikTok Ads, local targeting",
+          href: "/szolgaltatasok/hirdeteskezeles",
+        },
+        {
+          title: "Brand design",
+          desc: "Consistent visual identity across all platforms",
+          href: "/szolgaltatasok/arculattervezes",
+        },
+      ],
+      faqs: [
+        {
+          q: "What does a weekly content calendar look like for a beauty salon?",
+          a: "Typically 4–5 Instagram posts + 7–10 Stories + 2–3 Reels + 1 TikTok per week. Topic mix: 30% before-after work, 25% expert tips, 20% behind-the-scenes team, 15% promotions/booking CTAs, 10% UGC (guest content).",
+        },
+        {
+          q: "Can you manage influencer partnerships?",
+          a: "Yes. Depending on context, micro-influencers (5–50k followers) on a gift-for-content basis, or mid-tier (50–200k) for paid collaborations. G2A handles the brief, content review and disclosure-compliance check before publishing.",
+        },
+        {
+          q: "Which booking system do you recommend?",
+          a: "Booksy and Salonkee are the two most popular in Hungary. Booksy = stronger marketplace, free plan + transaction fee. Salonkee = better multi-staff salon CRM features. For custom websites, WP-Booking + Stripe is the most flexible combo.",
+        },
+        {
+          q: "How do we handle no-shows?",
+          a: "Three-layer automation: confirmation email within 1 hour of booking; SMS reminder 24 hours before; push or SMS \"confirm you're coming\" 2 hours before. This dropped one client's no-show rate from 40% to 12%.",
+        },
+        {
+          q: "What does monthly beauty marketing cost?",
+          a: "Solo cosmetologist HUF 80–150k (social + local SEO); 2–3 staff salon HUF 250–450k (the above + Meta Ads). Ad spend is on top — minimum HUF 100k/month Meta Ads recommended.",
+        },
+      ],
     },
     "marketing-mernoki-irodaknak": {
       title: "Marketing for Engineering Firms",
@@ -933,11 +1042,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "30+", label: "Engineering projects" },
       ],
       caseStudy: {
-        client: "Design studio",
-        problem: "No online presence, every client via referral",
-        solution: "Website + SEO + LinkedIn presence",
-        result: "+15 new clients/month, Top 3 Google ranking in 8 months",
+        client: "Structural design studio — Pécs",
+        problem: "No online presence, every client via referral — not scalable",
+        solution: "New portfolio website + technical SEO + LinkedIn strategy + 4-person thought leadership team",
+        result: "+15 new clients/month, Top 3 Google ranking on 4 keywords in 8 months",
       },
+      intro:
+        "The Hungarian engineering and design-studio sector is typically under-represented online: portfolio sites are dated, LinkedIn presence is patchy, and technical content is written in jargon rather than from a buyer-benefit angle. That's an opportunity: whoever fixes it stands out quickly even on a small market like Southern Transdanubia.",
+      whyG2A:
+        "30+ engineering and construction projects with Hungarian studios. We can turn a BIM model into a web-grade render via partner studios, transform a public-procurement tender into prose, and build LinkedIn thought-leadership content that resonates with non-engineering decision makers (developers, investors, public bodies). We know the Hungarian Public Procurement Authority's system and the most common tender types.",
+      relatedServices: [
+        {
+          title: "Search engine optimisation",
+          desc: "Technical keyword research, technical SEO, B2B content structure",
+          href: "/szolgaltatasok/keresooptimalizalas",
+        },
+        {
+          title: "Web development",
+          desc: "Portfolio system, quote request, project archive",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+        {
+          title: "Strategic marketing",
+          desc: "B2B buyer journey, ABM strategy, sales-marketing alignment",
+          href: "/szolgaltatasok/strategiai-marketing",
+        },
+      ],
+      faqs: [
+        {
+          q: "How long until B2B lead generation delivers results?",
+          a: "Realistically 4–6 months for measurable pipeline growth. The B2B engineering sales cycle is typically 3–12 months, so SEO + LinkedIn investments today translate into actual contracts in 9–15 months. Leading indicators (CTR, contact requests, demo requests) move within 2 months.",
+        },
+        {
+          q: "Can you produce 3D renders or visualisations?",
+          a: "We don't render in-house but partner with studios that deliver portfolio-grade images from BIM models or CAD files. We handle the integration and curation into the website gallery.",
+        },
+        {
+          q: "How do you make technical content accessible?",
+          a: "Two-tier content strategy: (1) deep-dive technical articles for fellow professionals and technical decision makers; (2) ROI- and business-focused summaries for investors and public-sector buyers. G2A copywriters and editors work in both registers.",
+        },
+        {
+          q: "What's a typical engineering-firm marketing budget?",
+          a: "Small studio (3–8 staff) HUF 200–400k/month (SEO + content + LinkedIn). Medium (15–50 staff) HUF 500–900k (the above + ABM + thought leadership management). LinkedIn ad spend is typically modest at HUF 100–200k/month.",
+        },
+        {
+          q: "Can you help with public-procurement tender PR?",
+          a: "Yes. We turn an awarded tender into a press release, distribute it to local and trade media, then convert it into LinkedIn posts and a website case study. This effectively communicates 5–10x the value of an awarded tender to the market.",
+        },
+      ],
     },
     "marketing-autoipari-cegeknek": {
       title: "Marketing for the Automotive Industry",
@@ -964,11 +1116,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "20+", label: "Automotive projects" },
       ],
       caseStudy: {
-        client: "Car dealership network",
-        problem: "High ad spend, low conversion",
-        solution: "PPC audit + campaign restructure + landing pages",
-        result: "-45% CPA, +220% lead generation in 3 months",
+        client: "Multi-brand car dealership — 4 locations",
+        problem: "High Google Ads spend (HUF 2.5M/mo), low conversion, no lead scoring",
+        solution: "PPC audit + campaign restructure (Performance Max + Shopping feed) + new landing pages + HubSpot lead scoring",
+        result: "-45% CPA, +220% qualified leads in 3 months — monthly spend down 30%, sales up 35%",
       },
+      intro:
+        "The Hungarian automotive market splits into two halves: used-car retail (shorter decision cycle, price-sensitive buyer) and new-car / premium retail (longer cycle, brand- and service-experience-sensitive). The marketing strategy has to cleanly separate the two — what works for one is often counter-productive for the other.",
+      whyG2A:
+        "20+ automotive projects with dealerships and authorised service centres. We know how to ship Shopping feeds (TecDoc, Mobile.de sync), how to separate test-drive conversions from price-enquiry conversions in Performance Max, and the lead-scoring tricks for HubSpot/Pipedrive in an automotive context.",
+      relatedServices: [
+        {
+          title: "PPC & Google Ads",
+          desc: "Performance Max, Shopping feed, retargeting campaigns",
+          href: "/szolgaltatasok/hirdeteskezeles",
+        },
+        {
+          title: "Web development & CRO",
+          desc: "Test-drive booking, finance calculator landing pages",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+        {
+          title: "Strategic marketing",
+          desc: "Lead-scoring, sales-marketing pipeline alignment",
+          href: "/szolgaltatasok/strategiai-marketing",
+        },
+      ],
+      faqs: [
+        {
+          q: "What Google Ads budget is realistic for a car dealer?",
+          a: "Single-location used car dealer: minimum HUF 300–500k/month. Authorised dealer: HUF 800k–2M/month. Cost depends heavily on territory and inventory: premium-brand keywords (BMW, Mercedes) CPC HUF 1,200–1,800, used-car CPC HUF 400–800.",
+        },
+        {
+          q: "How do you handle automotive Shopping feeds in Google Ads?",
+          a: "We build a custom Shopping feed from your CRM/DMS (TecDoc, Mobile.de, Carzone), synced daily. Each car carries price, mileage, year, fuel, engine and high-quality photos. Buyers see the actual car directly when clicking the ad.",
+        },
+        {
+          q: "How do you qualify test-drive enquiries?",
+          a: "Three layers: (1) automatic pre-screening on the booking form (financing type, model interest, purchase timeframe); (2) HubSpot or Pipedrive lead-scoring on intent signals; (3) hot lead reaches the salesperson within 60 minutes, warm by next business day.",
+        },
+        {
+          q: "Can you integrate a finance calculator on the website?",
+          a: "Yes — Cofidis, Cetelem and OTP Lízing API integrations, or simple calculator widgets. We work with your finance partner's data and the website conversion flow.",
+        },
+        {
+          q: "How can we measure the impact of marketing on actual sales?",
+          a: "Online lead → showroom visit → sale conversion chain in CRM — for this we push the Google Click ID (GCLID) and Meta Click ID (FBCLID) into the CRM lead record, so you can attribute back which campaign produced which actual car sale. We build this into the HubSpot/Pipedrive integration.",
+        },
+      ],
     },
     "marketing-ugyvedii-irodaknak": {
       title: "Marketing for Law Firms",
@@ -995,11 +1190,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "15+", label: "Legal projects" },
       ],
       caseStudy: {
-        client: "Law firm – Budapest",
-        problem: "Inadequate online presence, low prestige perception",
-        solution: "Brand redesign + SEO + Google Ads",
-        result: "+250% organic traffic, Top 1 Google ranking in 5 months",
+        client: "Law firm — Budapest",
+        problem: "Outdated website, low prestige perception, invisible in lawyer-finder searches",
+        solution: "Premium brand redesign + new website + practice-area SEO + Google Ads (allowed categories)",
+        result: "+250% organic traffic, Top 1 Google ranking on 3 main practice areas in 5 months",
       },
+      intro:
+        "Hungarian legal marketing is governed by the Hungarian Bar Association's (MÜK) ethics code and Act LXXVIII of 2017 — comparative, boastful or misleading advertising is prohibited. This isn't a barrier but a direction: communicate professional depth and trustworthy advisory character well, and you quickly win trust against an over-promising competitor.",
+      whyG2A:
+        "15+ legal projects with law firms and accountancy-legal advisory practices. We know the Hungarian Bar's 6/2018 (III. 26.) advertising regulation, which Google Ads categories are allowed and which aren't, and how to produce anonymised case studies without breaching client confidentiality.",
+      relatedServices: [
+        {
+          title: "Brand design",
+          desc: "Premium visual identity, firm communication materials",
+          href: "/szolgaltatasok/arculattervezes",
+        },
+        {
+          title: "Search engine optimisation",
+          desc: "Practice-area keywords, local SEO, FAQ content",
+          href: "/szolgaltatasok/keresooptimalizalas",
+        },
+        {
+          title: "Web development",
+          desc: "Consultation booking, secure client portal integration",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+      ],
+      faqs: [
+        {
+          q: "Does the Hungarian Bar (MÜK) allow online ads and content marketing?",
+          a: "Yes. The 6/2018 (III. 26.) MÜK regulation permits objective, professional, informational advertising. Comparative, exaggerated, or client-poaching content is forbidden — like \"the best lawyer in town\" or \"guaranteed success\". G2A creates all content within these rules.",
+        },
+        {
+          q: "Can you publish client testimonials?",
+          a: "Only with the client's express written consent — and even then, describing the activity rather than the case details. The alternative is anonymised case studies: \"X medium-sized industrial company, M&A transaction, 9-month due diligence, successful close\" — without names or industry specifics.",
+        },
+        {
+          q: "Which Google Ads categories are allowed for lawyers?",
+          a: "General legal counsel, family law, civil law, real estate law, employment law, business law — all permitted. NOT permitted: success-fee campaigns (\"no win = no fee\"), parts of criminal law (e.g. \"drug lawyer\"), country-specific immigration targeting. G2A reviews every campaign for legal compliance during audit.",
+        },
+        {
+          q: "How do you ensure GDPR compliance in online consultations?",
+          a: "Tresorit encrypted document delivery, JotForm GDPR-compliant forms (EU data centre), explicit logged consent. The technical side of the lawyer-client privilege is enforced with end-to-end encryption.",
+        },
+        {
+          q: "What budget do we start with?",
+          a: "Solo or small firm (under 3 lawyers): HUF 200–400k/month (base services: SEO + content + LinkedIn). Medium (5–15 lawyers): HUF 500–900k/month (the above + Google Ads + brand communication). Ad spend typically HUF 100–300k/month.",
+        },
+      ],
     },
     "marketing-technologiai-cegeknek": {
       title: "Marketing for Technology Companies",
@@ -1026,11 +1264,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "35+", label: "Tech projects" },
       ],
       caseStudy: {
-        client: "SaaS company",
-        problem: "International market entry, lack of brand awareness",
-        solution: "Brand strategy + multilingual SEO + LinkedIn",
-        result: "+5 new markets, +280% demo bookings in 12 months",
+        client: "B2B SaaS company — Hungarian startup",
+        problem: "International market entry, low brand awareness, demo-funnel conversion 1.2%",
+        solution: "Brand strategy + multilingual SEO (HU/EN/DE) + LinkedIn ABM + HubSpot integration + demo CRO",
+        result: "+5 new markets (DE, AT, CH, PL, CZ), +280% demo bookings, 4.1% demo-funnel conversion in 12 months",
       },
+      intro:
+        "In B2B SaaS and tech, marketing tools shift from traditional advertising to content + thought leadership + ABM (Account-Based Marketing). A decision maker touches the brand at an average of 14 points before requesting a demo — meaning the marketing funnel is non-linear, a network of multi-channel touchpoints.",
+      whyG2A:
+        "35+ tech projects from SaaS startups to mid-market IT consultancies. We know hreflang implementation on the CMS side, the HubSpot multi-touch attribution model, the Apollo–Cognism–Clearbit lead enrichment combo, and how the Hungarian buyer persona differs from German or Polish equivalents. Our internal AI tools (Claude, ChatGPT) accelerate content production.",
+      relatedServices: [
+        {
+          title: "AI marketing",
+          desc: "AI-assisted content production, lead enrichment, predictive analytics",
+          href: "/szolgaltatasok/ai-marketing",
+        },
+        {
+          title: "Marketing automation",
+          desc: "HubSpot, Marketo, multi-touch attribution, lead scoring",
+          href: "/szolgaltatasok/marketing-automatizacio",
+        },
+        {
+          title: "Localisation & international marketing",
+          desc: "Multilingual SEO, cultural adaptation, EU market entry",
+          href: "/szolgaltatasok/lokalizacio",
+        },
+      ],
+      faqs: [
+        {
+          q: "How long until B2B SaaS marketing delivers results?",
+          a: "Top-of-funnel metrics (organic traffic, LinkedIn engagement) move in 2–3 months. Demo requests typically grow from month 4–6 — depending on content indexing time and ABM cold-to-warm conversion. Actual revenue impact is 9–15 months because that's the enterprise sales cycle.",
+        },
+        {
+          q: "Which languages should we localise to first?",
+          a: "Industry-dependent, but for Hungarian startups typically: 1. English (global reach), 2. German (DACH region), 3. Polish + Czech (V4 markets). We map keyword volumes pre-launch and often find Polish has more volume than German with less competition — a better foothold.",
+        },
+        {
+          q: "Can you build lead-scoring inside HubSpot?",
+          a: "Yes. Two layers: explicit (company size, industry, role) + implicit (time on site, email open, demo-page visits). The product gives lead priority: hot lead 60+ points, marketing-qualified 30–59, raw 0–29. We build custom HubSpot properties and workflows for the client's sales cycle.",
+        },
+        {
+          q: "What does ABM look like in practice?",
+          a: "Three parallel tracks: (1) Sales picks 50–100 target accounts; (2) marketing runs LinkedIn account + decision-maker targeting (3–6 touches/month); (3) sales rep starts direct outbound after warming up. We model the entire ABM workflow in HubSpot.",
+        },
+        {
+          q: "What's a realistic SaaS marketing budget?",
+          a: "Pre-product-market-fit startup (under 10 staff): HUF 400–800k/month (only SEO + content + 1-channel ABM). Growth-stage SaaS (15–50 staff): HUF 1.5–3M/month (full ABM + multilingual + marketing automation). Scale-up or enterprise SaaS (50+): HUF 4–10M/month.",
+        },
+      ],
     },
     "marketing-onkormanyzati-projekteknek": {
       title: "Marketing for Municipal Projects",
@@ -1057,11 +1338,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "10+", label: "Municipal projects" },
       ],
       caseStudy: {
-        client: "Southern Transdanubian municipality",
-        problem: "Low community engagement, outdated communication",
-        solution: "Website redesign + social media + campaigns",
-        result: "+400% community reach, +250% website visitors",
+        client: "Southern Transdanubian small town — 8,000 residents",
+        problem: "Outdated, non-mobile-friendly website, low community engagement, no crisis communication",
+        solution: "New accessible website + social media strategy + crisis kits + resident newsletter system",
+        result: "+400% community reach, +250% website visitors, 92% resident satisfaction in annual survey",
       },
+      intro:
+        "Hungarian municipal communication typically defaults to a clerk-written press release plus a Facebook post — but residents expect a mobile-friendly website, fast Messenger replies, accessible content and multi-generational reach. From 2025, Hungary's Act LXXV of 2018 mandates WCAG 2.1 AA compliance for every public-sector digital service.",
+      whyG2A:
+        "10+ municipal and public-institution projects — from villages to county-seat cities. We know the Hungarian Public Procurement Act (Kbt.), the 2018 LXXV. tv. accessibility requirements, and EU project visibility rules. Our managing director Attila Győrfi also lectures at the University of Pécs Faculty of Economics — direct connection to the regional public administration.",
+      relatedServices: [
+        {
+          title: "Web development",
+          desc: "Accessible public-sector website, multilingual, secure",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+        {
+          title: "Social media management",
+          desc: "Resident communication, generational targeting, crisis kit",
+          href: "/szolgaltatasok/kozossegi-media",
+        },
+        {
+          title: "Content marketing",
+          desc: "Newsletter system, public-interest articles, EU project PR",
+          href: "/szolgaltatasok/tartalommarketing",
+        },
+      ],
+      faqs: [
+        {
+          q: "What does WCAG 2.1 AA compliance mean exactly?",
+          a: "Web Content Accessibility Guidelines: usable for blind and visually impaired (screen-reader compatible), motor-impaired (keyboard-only operable) and cognitively impaired (simple text, contrasting colours) users. AA = second-highest level, mandatory in Hungary from 2025 for every public-sector service.",
+        },
+        {
+          q: "Can you help with public procurement?",
+          a: "Yes — we can prepare quality- and price-sensitive bids per the Hungarian Public Procurement Act, from intent statements to technical documentation. G2A typically works as a subcontractor or consortium member on larger tenders, directly on smaller municipal/institutional service contracts.",
+        },
+        {
+          q: "How can we handle 24/7 crisis communication?",
+          a: "Three-layer kit: (1) pre-written templates for 8–10 typical scenarios (flood, utility outage, traffic incident, COVID-style health crisis); (2) a defined approval flow (mayor, clerk, comms officer); (3) optional G2A on-call service — monthly retainer, 30-minute response on crisis trigger.",
+        },
+        {
+          q: "EU project visibility — what does that mean?",
+          a: "Mandatory for EU-funded projects: beneficiary marking (logo, slogan, project ID), press release, themed communication. We work to the EU 2021–2027 Cohesion Policy visibility handbook — fixed, audit-friendly templates.",
+        },
+        {
+          q: "What's a typical municipal marketing budget?",
+          a: "Small village (under 5,000 residents): HUF 100–200k/month (basic services, social media + newsletter). Medium town (5–30k residents): HUF 250–500k/month. County-seat city: HUF 800k–2M/month (crisis team + EU PR + resident relations). EU-funded projects often have marketing as a separate line item.",
+        },
+      ],
     },
     "marketing-b2b-cegeknek": {
       title: "Marketing for B2B Companies",
@@ -1088,11 +1412,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "50+", label: "B2B projects" },
       ],
       caseStudy: {
-        client: "B2B software company",
-        problem: "Low lead quality, long sales cycle",
-        solution: "LinkedIn + marketing automation + ABM",
-        result: "+180% qualified leads, -40% sales cycle in 6 months",
+        client: "B2B software company — 35 staff, mid-market enterprise SaaS",
+        problem: "Low lead quality, 9-month average sales cycle, no sales-marketing alignment",
+        solution: "ABM strategy + HubSpot marketing automation + sales enablement + multi-touch attribution",
+        result: "+180% qualified leads, -40% sales cycle (9→5.4 months), 12% revenue growth in 6 months",
       },
+      intro:
+        "67% of the B2B buying journey happens online before the first sales touch — meaning marketing operates as a parallel pipeline-building unit, not a sales support function. Modern B2B marketing focuses on making the marketing-qualified lead (MQL) → sales-qualified lead (SQL) → opportunity → won-deal funnel measurable and optimisable.",
+      whyG2A:
+        "50+ B2B projects, from mid-market SaaS to industrial suppliers. We know the actual capabilities of HubSpot and Marketo (not just their marketing demos), how to operate ABM with a 6-person sales team, and we have experience in the Hungarian/German/Polish B2B markets. Our managing director Attila Győrfi also lectures at the University of Pécs Faculty of Economics — direct contact with the domestic enterprise sector.",
+      relatedServices: [
+        {
+          title: "Strategic marketing",
+          desc: "B2B buyer journey, ABM strategy, sales-marketing alignment",
+          href: "/szolgaltatasok/strategiai-marketing",
+        },
+        {
+          title: "Marketing automation",
+          desc: "HubSpot/Marketo, lead-scoring, multi-touch attribution",
+          href: "/szolgaltatasok/marketing-automatizacio",
+        },
+        {
+          title: "Content marketing",
+          desc: "B2B blog, white papers, case studies, thought leadership",
+          href: "/szolgaltatasok/tartalommarketing",
+        },
+      ],
+      faqs: [
+        {
+          q: "How does B2B marketing differ from B2C?",
+          a: "B2B has a longer (3–12 months) sales cycle, more (avg 6–10) participants in the buying decision, higher deal sizes (HUF 5–200M), and a more rational (less emotional) decision mechanism. This calls for different metrics (pipeline value, customer acquisition cost / lifetime value ratio) and different channels (LinkedIn not TikTok, email not Instagram).",
+        },
+        {
+          q: "What does Account-Based Marketing (ABM) look like in practice?",
+          a: "Sales picks 50–150 target accounts. Marketing runs LinkedIn ads with company + decision-maker targeting (3–6 touches/month). Sales reps start direct outbound after warm-up. G2A models the entire ABM flow in HubSpot — measurable stages for every account.",
+        },
+        {
+          q: "How do you measure B2B marketing ROI?",
+          a: "Multi-touch attribution: every marketing touch (organic blog, LinkedIn post, email open, demo booking) contributes proportionally to the final contract. The HubSpot Revenue Attribution report shows what % of total revenue came from social, SEO, email, etc. — so the next quarter's spend can target where actual returns are.",
+        },
+        {
+          q: "What marketing stack do you recommend for B2B?",
+          a: "Typical mid-market: HubSpot (CRM + marketing automation + CMS) or Pipedrive + Marketo, Apollo/Cognism (lead data), LinkedIn Sales Navigator, Lavender (email-writing assistant), Calendly (booking), Slack (sales-marketing alignment). G2A is also a HubSpot Solution Partner — we directly implement the full stack.",
+        },
+        {
+          q: "What budget is realistic for B2B marketing?",
+          a: "Pre-pipeline stage (10–20 staff): HUF 400–800k/month (LinkedIn + content + basic automation). Pipeline-building (30–100 staff): HUF 1.5–3M/month (full ABM + marketing automation + sales enablement). Scale-up or enterprise (100+): HUF 4–10M/month. Best metric: marketing budget / pipeline value — target at minimum 1:8.",
+        },
+      ],
     },
   },
   zh: {
