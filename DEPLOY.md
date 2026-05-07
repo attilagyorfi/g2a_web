@@ -23,6 +23,7 @@ Másold le a [`.env.example`](.env.example) fájlt `.env`-re, és töltsd ki min
 | `DEEPL_API_KEY` | Admin UI auto-fordító gombok szürkék | Ingyenes: https://www.deepl.com/signup (500k karakter/hó, `:fx` végű kulcs = free tier auto-detect) |
 | `CLOUDINARY_URL` + `VITE_CLOUDINARY_CLOUD_NAME` | Admin képfeltöltés a Forge storage-ra megy (lassabb), nincs auto WebP/AVIF | Ingyenes: https://cloudinary.com/users/register/free (25 GB tárhely + 25 GB sávszél/hó) |
 | `RESEND_API_KEY` + `RESEND_FROM_EMAIL` + `RESEND_NOTIFY_EMAIL` | Contact / audit / hírlevél form-ok DB-be mennek, de email-értesítés nincs | Ingyenes: https://resend.com/signup (3000 email/hó). DEV: `onboarding@resend.dev` OK; PROD: hitelesített saját domain kell |
+| `RESEND_WEBHOOK_SECRET` | Hírlevél kampány-stat (megnyitás, kattintás, bounce) nem mérhető — `/admin/newsletter/campaigns` „stat" gombja 0-kat mutat | Resend Dashboard → Webhooks → **Add Endpoint** → URL: `https://g2amarketing.hu/api/webhooks/resend`, Events: minden `email.*` típus. A „Signing Secret" (whsec_...) → `RESEND_WEBHOOK_SECRET` env. Részletek: 1.c szekció |
 | `OPENAI_API_KEY` | Admin AI gombok ("AI: blog draft", "AI: SEO meta") szürkék | https://platform.openai.com/api-keys — default `gpt-4o-mini` (~5 HUF/draft, ~0.5 HUF/SEO meta). Felülírható: `OPENAI_MODEL=gpt-4o` |
 | `BUILT_IN_FORGE_API_KEY` | Manus Forge értesítés nem megy (ha Resend van, nincs hatása) | Manus Forge — ha Resend be van állítva, ez már nem szükséges |
 
@@ -90,6 +91,43 @@ Manuálisan a böngészőben:
 - `/api/_diag/me` → `"role": "admin"` JSON-ban
 
 Ha bármi `Forbidden` vagy `Invalid session` hibát kapsz: ellenőrizd hogy a Manus app redirect URI-je **pontosan** `/api/oauth/callback`-re mutat-e (nem `/api/oauth/callback/` slash-sel a végén).
+
+---
+
+## 1.c Resend webhook setup — kampány-stat (megnyitás, kattintás, bounce)
+
+Hírlevél kampány-küldés (`/admin/newsletter/campaigns`) Resend-en megy. A **megnyitás / kattintás / bounce / spam-jelölés** statisztikákhoz be kell kötni a Resend webhook-ját — anélkül a stat gomb mindenhol 0-t mutat.
+
+### 1. lépés — Webhook endpoint regisztrálása Resend-ben
+
+1. Lépj be a [Resend Dashboard](https://resend.com/webhooks)-ba.
+2. **Webhooks → Add Endpoint**.
+3. Töltsd ki:
+   - **Endpoint URL**: `https://g2amarketing.hu/api/webhooks/resend`
+   - **Events**: jelöld be **mind** az alábbiakat: `email.delivered`, `email.opened`, `email.clicked`, `email.bounced`, `email.complained`, `email.delivery_delayed`
+4. **Create**.
+5. A létrehozott endpoint oldalán másold ki a **Signing Secret**-et (`whsec_...` formátumú).
+
+### 2. lépés — Env var beállítása
+
+Vidd fel a Vercel projekthez (Settings → Environment Variables, **Production + Preview** mind a kettőre):
+
+```
+RESEND_WEBHOOK_SECRET=whsec_<base64-string-amit-Resend-ad>
+```
+
+Mentés után a Vercel automatikusan újraépít.
+
+### 3. lépés — Verifikáció
+
+1. A Resend webhook oldalán kattints a **Send test event** gombra.
+2. A G2A admin felületen `/admin/newsletter/campaigns` → bármelyik kampány „stat" gombja → ha az értékek 0 vannak, az még normális teszt-eseménynél (a teszt-eseményhez nem tartozik valós kampány-tag).
+3. Indíts el egy valós teszt-kampányt magadnak (test send → utána sendCampaign 1 fős szegmensen). 5-30 másodpercen belül a webhook-történet rögzítődik a Resend-ben (látható: Webhook → Recent deliveries → 200 status).
+4. Az admin „stat" gombnál a **Kézbesítve = 1**, és ha megnyitod, **Megnyitva = 1**. Kattints egy linkre, **Kattintva = 1** is megjelenik.
+
+### Kapcsolódó szabályozási megjegyzés
+
+A megnyitás-követés (open tracking) a Resend-ben alapból bekapcsolt: 1×1 átlátszó pixelt szúr be minden HTML email aljára. Az EU ePrivacy értelmezés szerint ez egy „technikai sütihez hasonló" tracker — a hírlevél-feliratkozási űrlapon a felhasználó már hozzájárult ehhez (l. /adatvedelmi-iranyelvek 4.3 pont). Production-ben **nincs külön consent banner** szükséges a megnyitás-követéshez, mert a feliratkozás aktusa már fedi.
 
 ---
 

@@ -220,35 +220,160 @@ export default function AdminNewsletterCampaigns() {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ background: "rgba(255,255,255,0.02)" }}>
-              {["Tárgy", "Szegmens", "Címzett", "Sikeres", "Hiba", "Status", "Küldve"].map(h => (
+              {["Tárgy", "Szegmens", "Címzett", "Sikeres", "Hiba", "Status", "Küldve", "Stat"].map(h => (
                 <th key={h} style={{ padding: "10px 14px", textAlign: "left", color: "#666", fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.06em", fontFamily: "Geist Mono, monospace", whiteSpace: "nowrap" }}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {(campaignList.data || []).map((c) => (
-              <tr key={c.id} style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                <td style={{ padding: "10px 14px", color: "#fff", fontSize: "0.78rem", maxWidth: 280, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.subject}</td>
-                <td style={{ padding: "10px 14px", color: "#888", fontSize: "0.72rem" }}>{c.segment || "—"}</td>
-                <td style={{ padding: "10px 14px", color: "#aaa", fontSize: "0.78rem" }}>{c.recipientCount}</td>
-                <td style={{ padding: "10px 14px", color: "var(--g2a-brand-teal)", fontSize: "0.78rem" }}>{c.sentCount}</td>
-                <td style={{ padding: "10px 14px", color: c.failedCount > 0 ? "#ef4444" : "#666", fontSize: "0.78rem" }}>{c.failedCount}</td>
-                <td style={{ padding: "10px 14px" }}>
-                  <span style={{ padding: "2px 8px", borderRadius: 3, fontSize: "0.65rem", fontFamily: "Geist Mono, monospace", textTransform: "uppercase", letterSpacing: "0.05em",
-                    background: c.status === "sent" ? "rgba(20,184,166,0.15)" : c.status === "failed" ? "rgba(239,68,68,0.15)" : "rgba(245,158,11,0.15)",
-                    color: c.status === "sent" ? "#14B8A6" : c.status === "failed" ? "#ef4444" : "#fbbf24",
-                  }}>{c.status}</span>
-                </td>
-                <td style={{ padding: "10px 14px", color: "#666", fontSize: "0.72rem", whiteSpace: "nowrap" }}>
-                  {c.sentAt ? formatAdminDateTime(c.sentAt) : "—"}
-                </td>
-              </tr>
+              <CampaignRow key={c.id} campaign={c} />
             ))}
             {(campaignList.data || []).length === 0 && (
-              <tr><td colSpan={7} style={{ padding: 32, textAlign: "center", color: "#666", fontSize: "0.8rem" }}>Még nincs kiküldött kampány.</td></tr>
+              <tr><td colSpan={8} style={{ padding: 32, textAlign: "center", color: "#666", fontSize: "0.8rem" }}>Még nincs kiküldött kampány.</td></tr>
             )}
           </tbody>
         </table>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * One row of the campaign history table — splits into a summary line and a
+ * collapsible stats panel that only fires the `campaignStats` query when
+ * the user actually expands it (avoids N queries on initial render).
+ */
+type CampaignSummary = {
+  id: number;
+  subject: string;
+  segment: string | null;
+  recipientCount: number;
+  sentCount: number;
+  failedCount: number;
+  status: string;
+  sentAt: Date | string | null;
+};
+
+function CampaignRow({ campaign: c }: { campaign: CampaignSummary }) {
+  const [expanded, setExpanded] = useState(false);
+  const stats = trpc.admin.newsletter.campaignStats.useQuery(
+    { campaignId: c.id },
+    { enabled: expanded, staleTime: 30 * 1000 },
+  );
+
+  const recipientBase = c.sentCount > 0 ? c.sentCount : c.recipientCount;
+  const pct = (n: number) =>
+    recipientBase > 0 ? `${Math.round((n / recipientBase) * 100)}%` : "—";
+
+  return (
+    <>
+      <tr style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+        <td style={{ padding: "10px 14px", color: "#fff", fontSize: "0.78rem", maxWidth: 280, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.subject}</td>
+        <td style={{ padding: "10px 14px", color: "#888", fontSize: "0.72rem" }}>{c.segment || "—"}</td>
+        <td style={{ padding: "10px 14px", color: "#aaa", fontSize: "0.78rem" }}>{c.recipientCount}</td>
+        <td style={{ padding: "10px 14px", color: "var(--g2a-brand-teal)", fontSize: "0.78rem" }}>{c.sentCount}</td>
+        <td style={{ padding: "10px 14px", color: c.failedCount > 0 ? "#ef4444" : "#666", fontSize: "0.78rem" }}>{c.failedCount}</td>
+        <td style={{ padding: "10px 14px" }}>
+          <span style={{ padding: "2px 8px", borderRadius: 3, fontSize: "0.65rem", fontFamily: "Geist Mono, monospace", textTransform: "uppercase", letterSpacing: "0.05em",
+            background: c.status === "sent" ? "rgba(20,184,166,0.15)" : c.status === "failed" ? "rgba(239,68,68,0.15)" : "rgba(245,158,11,0.15)",
+            color: c.status === "sent" ? "#14B8A6" : c.status === "failed" ? "#ef4444" : "#fbbf24",
+          }}>{c.status}</span>
+        </td>
+        <td style={{ padding: "10px 14px", color: "#666", fontSize: "0.72rem", whiteSpace: "nowrap" }}>
+          {c.sentAt ? formatAdminDateTime(c.sentAt) : "—"}
+        </td>
+        <td style={{ padding: "10px 14px" }}>
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            style={{
+              background: "none",
+              border: "1px solid rgba(255,255,255,0.15)",
+              color: "#aaa",
+              padding: "3px 8px",
+              borderRadius: 3,
+              fontSize: "0.65rem",
+              fontFamily: "Geist Mono, monospace",
+              cursor: "pointer",
+              letterSpacing: "0.04em",
+            }}
+          >
+            {expanded ? "▲ rejt" : "▼ stat"}
+          </button>
+        </td>
+      </tr>
+      {expanded && (
+        <tr style={{ background: "rgba(255,255,255,0.02)" }}>
+          <td colSpan={8} style={{ padding: "12px 16px" }}>
+            {stats.isLoading ? (
+              <div style={{ color: "#888", fontSize: "0.78rem", display: "flex", alignItems: "center", gap: 8 }}>
+                <Loader2 size={12} className="animate-spin" />
+                Stat lekérése...
+              </div>
+            ) : stats.data ? (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                  gap: 12,
+                }}
+              >
+                <StatBox label="Kézbesítve" value={stats.data.delivered} pct={pct(stats.data.delivered)} color="#14B8A6" />
+                <StatBox label="Megnyitva" value={stats.data.opened} pct={pct(stats.data.opened)} color="#3b82f6" />
+                <StatBox label="Kattintva" value={stats.data.clicked} pct={pct(stats.data.clicked)} color="#8b5cf6" />
+                <StatBox label="Visszapattant" value={stats.data.bounced} pct={pct(stats.data.bounced)} color="#ef4444" />
+                <StatBox label="Spam-jelölt" value={stats.data.complained} pct={pct(stats.data.complained)} color="#f59e0b" />
+                <div
+                  style={{
+                    color: "#666",
+                    fontSize: "0.7rem",
+                    fontFamily: "Geist Mono, monospace",
+                    alignSelf: "center",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  Az események a Resend webhook-tól érkeznek.
+                  <br />
+                  Ha 0 minden = a webhook nincs konfigurálva.
+                </div>
+              </div>
+            ) : (
+              <div style={{ color: "#888", fontSize: "0.78rem" }}>Stat nem elérhető.</div>
+            )}
+          </td>
+        </tr>
+      )}
+    </>
+  );
+}
+
+function StatBox({ label, value, pct, color }: { label: string; value: number; pct: string; color: string }) {
+  return (
+    <div
+      style={{
+        padding: "10px 12px",
+        background: "#0f0f0f",
+        border: "1px solid rgba(255,255,255,0.06)",
+        borderRadius: 4,
+        borderLeft: `3px solid ${color}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "Geist Mono, monospace",
+          fontSize: "0.62rem",
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          color: "#888",
+          marginBottom: 4,
+        }}
+      >
+        {label}
+      </div>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+        <span style={{ color: "#fff", fontSize: "1.1rem", fontWeight: 600, fontFamily: "Geist Mono, monospace" }}>{value}</span>
+        <span style={{ color, fontSize: "0.7rem", fontFamily: "Geist Mono, monospace" }}>{pct}</span>
       </div>
     </div>
   );

@@ -15,6 +15,7 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { registerNewsletterRoutes } from "./newsletterRoutes";
+import { registerResendWebhookRoute } from "./resendWebhookRoute";
 
 export function createApp(): Express {
   const app = express();
@@ -27,6 +28,12 @@ export function createApp(): Express {
 
   // Newsletter unsubscribe — GET /api/newsletter/unsubscribe?token=...
   registerNewsletterRoutes(app);
+
+  // Resend webhook — POST /api/webhooks/resend (open/click/bounce events).
+  // Registered BEFORE the JSON body parser would normally see it, but we
+  // attach a route-scoped raw-body parser inside `registerResendWebhookRoute`
+  // since signature verification requires the original bytes.
+  registerResendWebhookRoute(app);
 
   // tRPC API — /api/trpc/*
   app.use(

@@ -10,6 +10,7 @@ import {
   industries,
   newsletterSubscribers,
   emailCampaigns,
+  emailEvents,
   pages,
   partners,
   posts,
@@ -540,6 +541,77 @@ export async function listEmailCampaigns() {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(emailCampaigns).orderBy(desc(emailCampaigns.createdAt));
+}
+
+/**
+ * Persist a Resend webhook event row. Called from the webhook handler for
+ * every delivered/opened/clicked/bounced/complained event we receive.
+ */
+export async function recordEmailEvent(data: {
+  campaignId: number | null;
+  recipient: string;
+  eventType: string;
+  resendMessageId?: string;
+  rawData?: string;
+}) {
+  const db = await getDb();
+  if (!db) return null;
+  const [result] = await db.insert(emailEvents).values({
+    campaignId: data.campaignId,
+    recipient: data.recipient,
+    eventType: data.eventType,
+    resendMessageId: data.resendMessageId ?? null,
+    rawData: data.rawData ?? null,
+  });
+  return (result as { insertId?: number }).insertId ?? null;
+}
+
+/**
+ * Aggregate per-campaign stats: count of unique recipients per event type.
+ * "Unique" so an open + 3 clicks from the same recipient count as 1 open + 1
+ * click in the rates — which is the industry-standard metric.
+ *
+ * Returns:
+ *   { delivered, opened, clicked, bounced, complained }
+ *
+ * Computes open/click rates client-side from these + recipientCount.
+ */
+export async function getCampaignEventStats(
+  campaignId: number,
+): Promise<{
+  delivered: number;
+  opened: number;
+  clicked: number;
+  bounced: number;
+  complained: number;
+}> {
+  const db = await getDb();
+  if (!db) {
+    return { delivered: 0, opened: 0, clicked: 0, bounced: 0, complained: 0 };
+  }
+  // Drizzle doesn't have GROUP BY + COUNT DISTINCT shortcuts that play nicely
+  // across MySQL editions, so fetch the raw rows and reduce in JS — there
+  // are at most a few thousand events per campaign, well within memory.
+  const rows = await db
+    .select({
+      recipient: emailEvents.recipient,
+      eventType: emailEvents.eventType,
+    })
+    .from(emailEvents)
+    .where(eq(emailEvents.campaignId, campaignId));
+
+  const seen = new Map<string, Set<string>>(); // eventType → Set<recipient>
+  for (const r of rows) {
+    if (!seen.has(r.eventType)) seen.set(r.eventType, new Set());
+    seen.get(r.eventType)!.add(r.recipient);
+  }
+  return {
+    delivered: seen.get("email.delivered")?.size ?? 0,
+    opened: seen.get("email.opened")?.size ?? 0,
+    clicked: seen.get("email.clicked")?.size ?? 0,
+    bounced: seen.get("email.bounced")?.size ?? 0,
+    complained: seen.get("email.complained")?.size ?? 0,
+  };
 }
 
 /** One-click unsubscribe by token. Returns the deactivated subscriber's email

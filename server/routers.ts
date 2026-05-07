@@ -653,6 +653,16 @@ const adminRouter = router({
     /** List past + draft campaigns. */
     campaignList: adminProcedure.query(() => db.listEmailCampaigns()),
 
+    /**
+     * Per-campaign event stats (delivered / opened / clicked / bounced /
+     * complained — unique recipients). Powers the campaign-history table
+     * in /admin/newsletter/campaigns. Returns zeros when the webhook
+     * isn't yet configured (no events collected).
+     */
+    campaignStats: adminProcedure
+      .input(z.object({ campaignId: z.number() }))
+      .query(({ input }) => db.getCampaignEventStats(input.campaignId)),
+
     /** Send a test email to a single address (admin's own email is the typical target). */
     sendTest: adminProcedure
       .input(z.object({
@@ -721,11 +731,15 @@ const adminRouter = router({
           const personalizedHtml = input.html.replace(/\{\{unsubscribeUrl\}\}/g, unsubscribeUrl);
           const personalizedText = input.text?.replace(/\{\{unsubscribeUrl\}\}/g, unsubscribeUrl);
           try {
+            // Attach the campaign_id tag so the Resend webhook can attribute
+            // delivered/opened/clicked events back to this campaign for the
+            // stats dashboard. Tag values are strings only (Resend constraint).
             const ok = await sendEmail({
               to: sub.email,
               subject: input.subject,
               html: personalizedHtml,
               text: personalizedText,
+              tags: [{ name: "campaign_id", value: String(campaignId) }],
             });
             if (ok) sent++; else failed++;
           } catch (err) {

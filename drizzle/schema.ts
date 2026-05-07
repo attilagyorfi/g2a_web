@@ -258,6 +258,25 @@ export const emailCampaigns = mysqlTable("email_campaigns", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
+/**
+ * One row per Resend webhook event we receive (email.delivered, email.opened,
+ * email.clicked, email.bounced, email.complained, email.delivery_delayed).
+ * `campaignId` is set when the originating send attached a `campaign_id` tag,
+ * which is how we attribute opens/clicks to campaigns. NULL = transactional
+ * (audit, contact, welcome) — we still log those for spam/deliverability
+ * monitoring but no campaign-level dashboard rolls them up.
+ */
+export const emailEvents = mysqlTable("email_events", {
+  id: int("id").autoincrement().primaryKey(),
+  campaignId: int("campaignId"), // FK to emailCampaigns.id (nullable for transactional)
+  recipient: varchar("recipient", { length: 320 }).notNull(),
+  eventType: varchar("eventType", { length: 64 }).notNull(), // e.g. email.opened
+  resendMessageId: varchar("resendMessageId", { length: 128 }), // for de-dup + lookup
+  /** Raw event JSON for forensic-ability — stringified, may include click URL etc. */
+  rawData: text("rawData"),
+  receivedAt: timestamp("receivedAt").defaultNow().notNull(),
+});
+
 export const newsletterSubscribers = mysqlTable("newsletter_subscribers", {
   id: int("id").autoincrement().primaryKey(),
   email: varchar("email", { length: 320 }).notNull().unique(),

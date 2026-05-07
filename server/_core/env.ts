@@ -11,6 +11,10 @@ export const ENV = {
   resendApiKey: process.env.RESEND_API_KEY ?? "",
   resendFromEmail: process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev",
   resendNotifyEmail: process.env.RESEND_NOTIFY_EMAIL ?? "",
+  // Resend webhook signing secret (Svix). Set in Resend dashboard
+  // under Settings → Webhooks → Signing Secret. Without it the webhook
+  // 401s in production; in dev it's accepted unsigned for easy testing.
+  resendWebhookSecret: process.env.RESEND_WEBHOOK_SECRET ?? "",
   // Cloudinary — image hosting + auto WebP/AVIF
   cloudinaryUrl: process.env.CLOUDINARY_URL ?? "",
   cloudinaryCloudName: process.env.VITE_CLOUDINARY_CLOUD_NAME ?? "",

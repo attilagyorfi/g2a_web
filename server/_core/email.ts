@@ -27,17 +27,40 @@ export type EmailPayload = {
   text?: string;
   /** Reply-To header — set to the visitor's address so admin can reply directly. */
   replyTo?: string;
+  /**
+   * Resend tags. Used to attribute webhook events back to a specific
+   * campaign — pass `[{ name: "campaign_id", value: String(campaignId) }]`.
+   * Tag names must be lowercase ASCII, alphanumeric + underscore (Resend
+   * rejects others with 422).
+   */
+  tags?: Array<{ name: string; value: string }>;
 };
 
+/**
+ * The legacy boolean return is preserved for callers that don't care about
+ * the message ID (transactional notifications, welcome emails). New callers
+ * needing event-level attribution should use `sendEmailWithId` instead.
+ */
 export async function sendEmail(payload: EmailPayload): Promise<boolean> {
+  const result = await sendEmailWithId(payload);
+  return result.ok;
+}
+
+/**
+ * Send an email and return the Resend message ID for downstream event
+ * attribution (open / click webhook → campaign).
+ */
+export async function sendEmailWithId(
+  payload: EmailPayload,
+): Promise<{ ok: boolean; messageId?: string }> {
   if (!ENV.resendApiKey) {
     console.warn("[Email] RESEND_API_KEY not set — skipping email send");
-    return false;
+    return { ok: false };
   }
   const to = payload.to ?? ENV.resendNotifyEmail;
   if (!to || (Array.isArray(to) && to.length === 0)) {
     console.warn("[Email] No recipient (set RESEND_NOTIFY_EMAIL or pass `to`) — skipping");
-    return false;
+    return { ok: false };
   }
 
   try {
@@ -54,18 +77,21 @@ export async function sendEmail(payload: EmailPayload): Promise<boolean> {
         html: payload.html,
         text: payload.text,
         reply_to: payload.replyTo,
+        tags: payload.tags,
       }),
     });
 
     if (!res.ok) {
       const detail = await res.text().catch(() => "");
       console.warn(`[Email] Resend ${res.status} ${res.statusText}${detail ? `: ${detail.slice(0, 300)}` : ""}`);
-      return false;
+      return { ok: false };
     }
-    return true;
+    // Resend returns `{ id: "..." }` on success — capture it for event correlation.
+    const data = (await res.json().catch(() => null)) as { id?: string } | null;
+    return { ok: true, messageId: data?.id };
   } catch (err) {
     console.warn("[Email] Resend request failed:", err);
-    return false;
+    return { ok: false };
   }
 }
 

@@ -262,6 +262,19 @@ var emailCampaigns = mysqlTable("email_campaigns", {
   sentByUserId: int("sentByUserId"),
   createdAt: timestamp("createdAt").defaultNow().notNull()
 });
+var emailEvents = mysqlTable("email_events", {
+  id: int("id").autoincrement().primaryKey(),
+  campaignId: int("campaignId"),
+  // FK to emailCampaigns.id (nullable for transactional)
+  recipient: varchar("recipient", { length: 320 }).notNull(),
+  eventType: varchar("eventType", { length: 64 }).notNull(),
+  // e.g. email.opened
+  resendMessageId: varchar("resendMessageId", { length: 128 }),
+  // for de-dup + lookup
+  /** Raw event JSON for forensic-ability — stringified, may include click URL etc. */
+  rawData: text("rawData"),
+  receivedAt: timestamp("receivedAt").defaultNow().notNull()
+});
 var newsletterSubscribers = mysqlTable("newsletter_subscribers", {
   id: int("id").autoincrement().primaryKey(),
   email: varchar("email", { length: 320 }).notNull().unique(),
@@ -348,6 +361,10 @@ var ENV = {
   resendApiKey: process.env.RESEND_API_KEY ?? "",
   resendFromEmail: process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev",
   resendNotifyEmail: process.env.RESEND_NOTIFY_EMAIL ?? "",
+  // Resend webhook signing secret (Svix). Set in Resend dashboard
+  // under Settings → Webhooks → Signing Secret. Without it the webhook
+  // 401s in production; in dev it's accepted unsigned for easy testing.
+  resendWebhookSecret: process.env.RESEND_WEBHOOK_SECRET ?? "",
   // Cloudinary — image hosting + auto WebP/AVIF
   cloudinaryUrl: process.env.CLOUDINARY_URL ?? "",
   cloudinaryCloudName: process.env.VITE_CLOUDINARY_CLOUD_NAME ?? "",
@@ -762,6 +779,40 @@ async function listEmailCampaigns() {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(emailCampaigns).orderBy(desc(emailCampaigns.createdAt));
+}
+async function recordEmailEvent(data) {
+  const db = await getDb();
+  if (!db) return null;
+  const [result] = await db.insert(emailEvents).values({
+    campaignId: data.campaignId,
+    recipient: data.recipient,
+    eventType: data.eventType,
+    resendMessageId: data.resendMessageId ?? null,
+    rawData: data.rawData ?? null
+  });
+  return result.insertId ?? null;
+}
+async function getCampaignEventStats(campaignId) {
+  const db = await getDb();
+  if (!db) {
+    return { delivered: 0, opened: 0, clicked: 0, bounced: 0, complained: 0 };
+  }
+  const rows = await db.select({
+    recipient: emailEvents.recipient,
+    eventType: emailEvents.eventType
+  }).from(emailEvents).where(eq(emailEvents.campaignId, campaignId));
+  const seen = /* @__PURE__ */ new Map();
+  for (const r of rows) {
+    if (!seen.has(r.eventType)) seen.set(r.eventType, /* @__PURE__ */ new Set());
+    seen.get(r.eventType).add(r.recipient);
+  }
+  return {
+    delivered: seen.get("email.delivered")?.size ?? 0,
+    opened: seen.get("email.opened")?.size ?? 0,
+    clicked: seen.get("email.clicked")?.size ?? 0,
+    bounced: seen.get("email.bounced")?.size ?? 0,
+    complained: seen.get("email.complained")?.size ?? 0
+  };
 }
 async function unsubscribeByToken(token) {
   const db = await getDb();
@@ -1201,14 +1252,18 @@ function isEmailConfigured() {
   return Boolean(ENV.resendApiKey && ENV.resendNotifyEmail);
 }
 async function sendEmail(payload) {
+  const result = await sendEmailWithId(payload);
+  return result.ok;
+}
+async function sendEmailWithId(payload) {
   if (!ENV.resendApiKey) {
     console.warn("[Email] RESEND_API_KEY not set \u2014 skipping email send");
-    return false;
+    return { ok: false };
   }
   const to = payload.to ?? ENV.resendNotifyEmail;
   if (!to || Array.isArray(to) && to.length === 0) {
     console.warn("[Email] No recipient (set RESEND_NOTIFY_EMAIL or pass `to`) \u2014 skipping");
-    return false;
+    return { ok: false };
   }
   try {
     const res = await fetch(RESEND_ENDPOINT, {
@@ -1223,18 +1278,20 @@ async function sendEmail(payload) {
         subject: payload.subject,
         html: payload.html,
         text: payload.text,
-        reply_to: payload.replyTo
+        reply_to: payload.replyTo,
+        tags: payload.tags
       })
     });
     if (!res.ok) {
       const detail = await res.text().catch(() => "");
       console.warn(`[Email] Resend ${res.status} ${res.statusText}${detail ? `: ${detail.slice(0, 300)}` : ""}`);
-      return false;
+      return { ok: false };
     }
-    return true;
+    const data = await res.json().catch(() => null);
+    return { ok: true, messageId: data?.id };
   } catch (err) {
     console.warn("[Email] Resend request failed:", err);
-    return false;
+    return { ok: false };
   }
 }
 function renderNotificationHtml(content) {
@@ -2400,6 +2457,13 @@ var adminRouter = router({
     }),
     /** List past + draft campaigns. */
     campaignList: adminProcedure2.query(() => listEmailCampaigns()),
+    /**
+     * Per-campaign event stats (delivered / opened / clicked / bounced /
+     * complained — unique recipients). Powers the campaign-history table
+     * in /admin/newsletter/campaigns. Returns zeros when the webhook
+     * isn't yet configured (no events collected).
+     */
+    campaignStats: adminProcedure2.input(z2.object({ campaignId: z2.number() })).query(({ input }) => getCampaignEventStats(input.campaignId)),
     /** Send a test email to a single address (admin's own email is the typical target). */
     sendTest: adminProcedure2.input(z2.object({
       to: z2.string().email(),
@@ -2460,7 +2524,8 @@ var adminRouter = router({
             to: sub.email,
             subject: input.subject,
             html: personalizedHtml,
-            text: personalizedText
+            text: personalizedText,
+            tags: [{ name: "campaign_id", value: String(campaignId) }]
           });
           if (ok) sent++;
           else failed++;
@@ -2823,6 +2888,123 @@ function registerNewsletterRoutes(app2) {
   app2.post("/api/newsletter/unsubscribe", handler);
 }
 
+// server/_core/resendWebhookRoute.ts
+import { createHmac, timingSafeEqual } from "crypto";
+var TOLERANCE_SECONDS = 5 * 60;
+function verifySvixSignature(rawBody, headers, secret) {
+  const id = headers["svix-id"];
+  const timestamp2 = headers["svix-timestamp"];
+  const signatureHeader = headers["svix-signature"];
+  if (!id || !timestamp2 || !signatureHeader) return false;
+  const ts = Number(timestamp2);
+  if (!Number.isFinite(ts)) return false;
+  const drift = Math.abs(Date.now() / 1e3 - ts);
+  if (drift > TOLERANCE_SECONDS) return false;
+  const secretBytes = secret.startsWith("whsec_") ? Buffer.from(secret.slice(6), "base64") : Buffer.from(secret, "utf8");
+  const signedPayload = `${id}.${timestamp2}.${rawBody}`;
+  const expected = createHmac("sha256", secretBytes).update(signedPayload).digest("base64");
+  const candidates = signatureHeader.split(" ");
+  for (const candidate of candidates) {
+    const parts = candidate.split(",");
+    if (parts.length !== 2 || parts[0] !== "v1") continue;
+    const provided = parts[1];
+    if (provided.length !== expected.length) continue;
+    if (timingSafeEqual(
+      Buffer.from(provided, "utf8"),
+      Buffer.from(expected, "utf8")
+    )) {
+      return true;
+    }
+  }
+  return false;
+}
+function extractTags(eventData) {
+  if (!eventData || typeof eventData !== "object") return {};
+  const tags = eventData.tags;
+  if (!tags) return {};
+  if (Array.isArray(tags)) {
+    const map = {};
+    for (const t2 of tags) {
+      if (t2 && typeof t2 === "object" && typeof t2.name === "string" && typeof t2.value === "string") {
+        map[t2.name] = t2.value;
+      }
+    }
+    return map;
+  }
+  if (typeof tags === "object") {
+    return Object.fromEntries(
+      Object.entries(tags).filter(
+        ([, v]) => typeof v === "string"
+      )
+    );
+  }
+  return {};
+}
+function registerResendWebhookRoute(app2) {
+  app2.post(
+    "/api/webhooks/resend",
+    (req, res, next) => {
+      let body = "";
+      req.setEncoding("utf8");
+      req.on("data", (chunk) => {
+        body += chunk;
+        if (body.length > 1e6) {
+          res.status(413).json({ error: "Payload too large" });
+          req.destroy();
+        }
+      });
+      req.on("end", () => {
+        req.rawBody = body;
+        try {
+          req.body = body ? JSON.parse(body) : {};
+        } catch {
+          res.status(400).json({ error: "Invalid JSON" });
+          return;
+        }
+        next();
+      });
+    },
+    async (req, res) => {
+      const rawBody = req.rawBody ?? "";
+      if (ENV.resendWebhookSecret) {
+        if (!verifySvixSignature(rawBody, req.headers, ENV.resendWebhookSecret)) {
+          res.status(401).json({ error: "Invalid signature" });
+          return;
+        }
+      } else if (ENV.isProduction) {
+        console.warn(
+          "[resend-webhook] RESEND_WEBHOOK_SECRET not set in production \u2014 accepting unsigned events"
+        );
+      }
+      const event = req.body;
+      if (!event || typeof event !== "object" || !event.type) {
+        res.status(400).json({ error: "Missing event type" });
+        return;
+      }
+      const data = event.data ?? {};
+      const recipient = Array.isArray(data.to) ? data.to[0] ?? "unknown" : data.to ?? "unknown";
+      const messageId = data.email_id;
+      const tags = extractTags(data);
+      const campaignIdRaw = tags.campaign_id ?? tags.campaignId;
+      const campaignId = campaignIdRaw && /^\d+$/.test(campaignIdRaw) ? Number(campaignIdRaw) : null;
+      try {
+        await recordEmailEvent({
+          campaignId,
+          recipient,
+          eventType: event.type,
+          resendMessageId: messageId,
+          rawData: JSON.stringify(event)
+        });
+      } catch (err) {
+        console.error("[resend-webhook] DB write failed:", err);
+        res.status(500).json({ error: "Storage failed" });
+        return;
+      }
+      res.status(200).json({ ok: true });
+    }
+  );
+}
+
 // server/_core/app.ts
 function createApp() {
   const app2 = express();
@@ -2830,6 +3012,7 @@ function createApp() {
   app2.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerOAuthRoutes(app2);
   registerNewsletterRoutes(app2);
+  registerResendWebhookRoute(app2);
   app2.use(
     "/api/trpc",
     createExpressMiddleware({
