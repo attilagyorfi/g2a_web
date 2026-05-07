@@ -1465,22 +1465,47 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
   zh: {
     "marketing-egeszsegugyi-cegeknek": {
       title: "医疗健康行业营销",
-      subtitle: "为诊所、私人医生与医疗健康企业提供",
-      metaTitle: "医疗健康行业营销 – G2A Marketing | SEO、Google Ads、网站开发",
-      metaDesc: "为诊所、私人医生与医疗健康企业提供专业营销方案。SEO、Google Ads、网站开发与在线预约系统。",
-      heroDesc: "医疗健康行业有其独特的营销挑战。GDPR 合规的营销活动、信任建立与在线预约系统 —— 我们深谙其道。",
+      subtitle: "为诊所、私人医生、牙科诊所与健康养生机构服务",
+      metaTitle: "面向诊所与私人医生的医疗营销 | G2A Marketing",
+      metaDesc:
+        "GDPR 合规、在线预约系统、本地 SEO 与建立信任的声誉管理。为诊所、私人医生与健康养生企业提供营销方案。",
+      heroDesc:
+        "医疗行业需要同时满足严格的法规和患者期望。我们的营销服务让您的诊所专业可信、便于查找,在线预约可量化增长。",
+      intro:
+        "过去五年匈牙利私人医疗快速增长:患者在 Google 上搜索、依据评价做决定、希望在线预约。同时该行业受严格监管约束(GDPR、匈牙利 ETT 医疗伦理规则、药品广告禁令),传统广告策略风险较高。",
       challenges: [
-        "GDPR 合规的广告活动",
-        "建立信任与品牌声誉",
-        "提升在线预约量",
-        "本地 SEO —— 覆盖区域内的患者",
-        "与大型医院与诊所竞争",
+        "GDPR 与患者数据处理 —— 每项营销活动都必须遵守数据保护法",
+        "在线可见性 —— 80% 的患者从 Google 开始查找,无本地 SEO 即不可见",
+        "患者沟通 —— 易用预约系统与各渠道的快速响应",
+        "信任建立 —— 正面 Google 评价、专业视觉形象",
+        "声誉管理 —— 处理负面评价与危机",
+        "作为小型诊所与医院和大型连锁竞争",
       ],
       solutions: [
-        { title: "医疗健康 SEO", desc: "本地关键词、Google 商家资料优化、医疗内容" },
-        { title: "Google Ads 营销活动", desc: "GDPR 合规、精准定位目标患者群体" },
-        { title: "网站开发", desc: "在线预约系统、GDPR 合规、移动端友好" },
-        { title: "声誉管理", desc: "Google 评价管理与信任建设内容" },
+        {
+          title: "转化优化网站",
+          desc: "快速、响应式、无障碍 —— 患者 3 次点击完成预约",
+        },
+        {
+          title: "在线预约 + CRM",
+          desc: "与诊所管理软件(BookYou、MedicalSoft)集成,自动提醒",
+        },
+        {
+          title: "医疗内容营销",
+          desc: "教育文章、治疗说明、FAQ 视频 —— 法律清洁、符合 ETT 规则",
+        },
+        {
+          title: "本地 SEO 与 Google Ads",
+          desc: "针对「私人皮肤科 布达佩斯」「牙医 佩奇」等搜索优化的内容与广告",
+        },
+        {
+          title: "声誉管理",
+          desc: "主动收集 Google 评价、回复模板、负面评价危机预案",
+        },
+        {
+          title: "GDPR 合规分析",
+          desc: "无 Cookie 测量(Plausible)、匿名转化追踪 —— 默认隐私优先",
+        },
       ],
       results: [
         { num: "+340%", label: "自然流量" },
@@ -1488,30 +1513,96 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "40+", label: "医疗项目" },
       ],
       caseStudy: {
-        client: "私立诊所 – 佩奇",
-        problem: "在线预约量低、SEO 表现弱",
-        solution: "完整 SEO + Google Ads + 网站优化",
+        client: "私立诊所 — 佩奇",
+        problem: "在线预约量低、SEO 表现弱、无声誉策略",
+        solution: "完整 SEO + Google Ads + 含预约系统的新转化优化网站",
         result: "6 个月内自然流量 +340%、在线预约 +180%",
       },
+      whyG2A:
+        "我们与匈牙利诊所与私人医生合作完成 40+ 医疗项目。我们了解主要专科(牙科、皮肤科、骨科、私人妇科)的 SEO 地图、诊所管理软件 API、以及匈牙利数据保护机构的实务。每个项目都从 1 个月试点开始 —— 若未交付可量化成果,您可无违约金离开。",
+      relatedServices: [
+        {
+          title: "搜索引擎优化 (SEO)",
+          desc: "本地医疗关键词、Google 商家资料优化",
+          href: "/szolgaltatasok/keresooptimalizalas",
+        },
+        {
+          title: "PPC 与 Google Ads",
+          desc: "GDPR 合规广告、患者群体细分",
+          href: "/szolgaltatasok/hirdeteskezeles",
+        },
+        {
+          title: "网站开发与 CRO",
+          desc: "预约系统集成、移动优先患者体验",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+      ],
+      faqs: [
+        {
+          q: "你们使用哪些医疗营销平台?",
+          a: "WordPress 与 WP-Booking、BookYou、MedicalSoft 诊所软件、Google 商家资料、Meta(仅非药物/非 ETT 内容)、Google Ads。数据方面:TiDB Cloud(欧盟区域)与 Plausible 分析以满足 GDPR 合规。",
+        },
+        {
+          q: "如何确保 GDPR 合规?",
+          a: "无 Cookie 基础分析(Plausible)、明确日志化的同意。我们不直接处理患者数据 —— 仅汇总流量与转化指标。每个广告创意在发布前都进行医疗伦理合规审核。",
+        },
+        {
+          q: "能否帮助处理负面 Google 评价?",
+          a: "可以。两层声誉策略:(1) 主动 —— 通过自动邮件邀请,系统化收集满意患者的正面评价;(2) 被动 —— 危机回复模板、按 Google 评价政策合规处理投诉。",
+        },
+        {
+          q: "医疗 SEO 多久见效?",
+          a: "本地搜索(「牙医 [城市]」)通常 2–4 个月;全国关键词(「种植牙价格」)6–9 个月。Google Ads 1–2 周内可带来可量化的患者咨询 —— 我们通常并行运行两者。",
+        },
+        {
+          q: "应预算多少?",
+          a: "独立医生每月 25–60 万福林(审计 + 营销活动 + 内容综合);诊所每月 60 万–120 万福林。广告费另计 —— 建议 Google Ads 至少每月 20 万福林以达到规模效益。",
+        },
+      ],
     },
     "marketing-szepsegipari-cegeknek": {
       title: "美容行业营销",
-      subtitle: "为美容沙龙、美容师与 wellness 企业提供",
-      metaTitle: "美容行业营销 – G2A Marketing | 社交媒体、Instagram、Meta 广告",
-      metaDesc: "为美容沙龙与美容师提供专业营销方案。Instagram、Meta 广告、在线预约系统与社交媒体战略。",
-      heroDesc: "在美容行业,视觉表现与社交媒体是最关键的渠道。从 Instagram 战略到 Meta 广告 —— 我们深谙其道。",
+      subtitle: "为美容沙龙、美容师、美发与健康养生企业服务",
+      metaTitle: "美容行业营销 — Instagram、Meta 广告与预约 | G2A Marketing",
+      metaDesc:
+        "美容沙龙、美发店与化妆品店的视觉品牌建设、Instagram 与 TikTok 战略、Meta 广告活动、在线预约系统。",
+      heroDesc:
+        "美容行业的视觉内容与社交媒体直接驱动购买决策。我们打造既具视觉冲击又能严肃量化转化的策略 —— 让 Instagram 粉丝转化为预约客户。",
+      intro:
+        "美容行业的客户主要在 Instagram、TikTok 与 Google 地图上调研,而非网站。网站只在预约流程开始时介入决策。这意味着营销资源分配不同于其他服务行业:60% 社媒、30% 本地 SEO + Google 商家资料、10% 付费搜索。",
       challenges: [
-        "制作具有视觉吸引力的内容",
-        "建立 Instagram 与 TikTok 影响力",
-        "整合在线预约系统",
-        "运营季节性营销活动",
-        "与本地竞争对手差异化",
+        "持续视觉内容生产(前后照片、Reels、幕后花絮)",
+        "Instagram 与 TikTok 算法优化 —— 自然触达是最关键指标",
+        "缩短预约流程:最少点击数完成下单",
+        "季节性活动(婚礼、节日、夏日身材)的快速创意迭代",
+        "在不打价格战的情况下与本地竞争对手区分 —— 通过独特体验/专业化",
+        "建立忠诚度 —— 客户终身价值是新客获取的 3 倍",
       ],
       solutions: [
-        { title: "社交媒体战略", desc: "Instagram、TikTok 与 Facebook 运营、内容战略" },
-        { title: "Meta 广告活动", desc: "针对合适人群的精准广告" },
-        { title: "在线预约", desc: "带集成预约系统的网站开发" },
-        { title: "网红营销", desc: "组织本地网红合作" },
+        {
+          title: "Instagram 与 TikTok 战略",
+          desc: "每周内容日历、Reels 配方、Hashtag 研究、Story 转化流程",
+        },
+        {
+          title: "Meta 广告 + TikTok 广告",
+          desc: "基于人口统计 + 行为定位、相似受众、过去 30 天网站访客再营销",
+        },
+        {
+          title: "在线预约网站",
+          desc: "Booksy、Salonkee 或定制 WP 预约系统集成 —— 移动端友好、快速",
+        },
+        {
+          title: "网红营销",
+          desc: "本地市场的微(5-50K 粉丝)与纳米网红 —— 礼品换内容与付费合作",
+        },
+        {
+          title: "本地 SEO",
+          desc: "Google 商家资料优化、「[城市] 美容师」类关键词、照片与评价管理",
+        },
+        {
+          title: "忠诚度与邮件营销",
+          desc: "回头客计划、生日自动化、季节性优惠定时发送",
+        },
       ],
       results: [
         { num: "+520%", label: "Instagram 粉丝" },
@@ -1519,11 +1610,52 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "25+", label: "美容行业项目" },
       ],
       caseStudy: {
-        client: "美容沙龙连锁",
-        problem: "社交媒体影响力弱、无在线预约",
-        solution: "社交媒体战略 + Meta 广告 + 在线预约",
+        client: "美容沙龙连锁 — 3 家分店",
+        problem: "社交媒体表现弱、无在线预约系统、电话预约障碍",
+        solution: "Instagram 战略 + Meta 广告 + Booksy 集成 + 本地 SEO",
         result: "4 个月内 Instagram 粉丝 +520%、在线预约 +190%",
       },
+      whyG2A:
+        "凭借 25+ 美容行业项目,我们了解行业的特殊节奏:70% 的预约在周二至周五 18-22 点之间到达;通过倒计时邮件 + 短信自动化,我们将某客户的失约率从 40% 降至 12%。我们能从零搭建 Reels 日历、用 Canva + AI 工具生成创意,并优化 Booksy/Salonkee 预约漏斗的转化。",
+      relatedServices: [
+        {
+          title: "社交媒体管理",
+          desc: "Instagram、TikTok 战略与内容生产",
+          href: "/szolgaltatasok/kozossegi-media",
+        },
+        {
+          title: "PPC 与广告管理",
+          desc: "Meta 广告、TikTok 广告、本地定位",
+          href: "/szolgaltatasok/hirdeteskezeles",
+        },
+        {
+          title: "品牌视觉设计",
+          desc: "跨平台一致的视觉身份",
+          href: "/szolgaltatasok/arculattervezes",
+        },
+      ],
+      faqs: [
+        {
+          q: "美容沙龙的每周内容日历是怎样的?",
+          a: "通常每周 4-5 条 Instagram 帖子 + 7-10 个 Story + 2-3 个 Reel + 1 个 TikTok。主题分布:30% 前后对比作品、25% 专家提示、20% 团队幕后、15% 活动/预约 CTA、10% UGC(客户内容)。",
+        },
+        {
+          q: "能管理网红合作吗?",
+          a: "可以。根据情况,微网红(5-50K 粉丝)采用礼品换内容,中型(50-200K)采用付费合作。G2A 负责简报、内容审查与发布前的披露合规性检查。",
+        },
+        {
+          q: "推荐哪种预约系统?",
+          a: "在匈牙利 Booksy 和 Salonkee 最受欢迎。Booksy = 更强的市场曝光,免费方案 + 交易费;Salonkee = 多员工沙龙的 CRM 功能更佳。如果搭建定制网站,WP-Booking + Stripe 组合最灵活。",
+        },
+        {
+          q: "如何处理失约问题?",
+          a: "三层自动化:预约后 1 小时内的确认邮件;提前 24 小时短信提醒;预约前 2 小时推送/短信「确认前来」按钮。这将某客户的失约率从 40% 降至 12%。",
+        },
+        {
+          q: "美容营销每月费用多少?",
+          a: "单人化妆师每月 8-15 万福林(社媒 + 本地 SEO);2-3 人沙龙每月 25-45 万福林(以上 + Meta 广告)。广告费另计 —— 建议 Meta 每月最少 10 万福林。",
+        },
+      ],
     },
     "marketing-mernoki-irodaknak": {
       title: "工程咨询公司营销",
@@ -1550,11 +1682,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "30+", label: "工程项目" },
       ],
       caseStudy: {
-        client: "设计事务所",
-        problem: "无线上表现,客户全部来自转介绍",
-        solution: "网站 + SEO + LinkedIn 布局",
-        result: "每月新客户 +15、8 个月内 Google 前三",
+        client: "结构设计事务所 — 佩奇",
+        problem: "无线上表现,客户全部来自转介绍 —— 不可规模化",
+        solution: "新作品集网站 + 技术 SEO + LinkedIn 战略 + 4 人思想领导力团队",
+        result: "每月新客户 +15、8 个月内 4 个关键词进入 Google 前 3",
       },
+      intro:
+        "匈牙利工程与设计事务所行业线上表现普遍不足:作品集网站陈旧、LinkedIn 形象不一致、技术内容多用术语而非以买方收益为视角。这是机会:谁先解决,谁就能在区域性小市场(如南多瑙)中迅速脱颖而出。",
+      whyG2A:
+        "我们与匈牙利事务所合作完成 30+ 工程与建筑项目。能将 BIM 模型转换成网页级渲染、把公共招标转译为可读文案、并在 LinkedIn 上为非工程出身的决策者(开发商、投资人、政府)建立可理解的思想领导力内容。我们了解匈牙利公共采购局的体系与最常见的招标类型。",
+      relatedServices: [
+        {
+          title: "搜索引擎优化",
+          desc: "技术关键词研究、技术 SEO、B2B 内容结构",
+          href: "/szolgaltatasok/keresooptimalizalas",
+        },
+        {
+          title: "网站开发",
+          desc: "作品集系统、询价、项目档案",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+        {
+          title: "战略营销",
+          desc: "B2B 买方旅程、ABM 战略、销售-营销协同",
+          href: "/szolgaltatasok/strategiai-marketing",
+        },
+      ],
+      faqs: [
+        {
+          q: "B2B 线索生成多久见效?",
+          a: "可量化的管道增长通常需 4-6 个月。B2B 工程销售周期一般 3-12 个月,因此现在投入 SEO + LinkedIn 战略,实际合同需 9-15 个月才能体现。先行指标(CTR、咨询、需求咨询)2 个月即可移动。",
+        },
+        {
+          q: "你们能制作渲染或 3D 可视化吗?",
+          a: "我们不内部渲染,但与合作工作室合作,从 BIM 模型或 CAD 文件交付作品集级图像。集成与网站画廊整理由我们承接。",
+        },
+        {
+          q: "如何让技术内容易懂?",
+          a: "两层内容策略:(1) 面向同行与技术决策者的深度专业文章;(2) 面向投资人与公共部门的 ROI 与商业焦点摘要。G2A 文案与编辑同时以两种语调写作。",
+        },
+        {
+          q: "工程事务所典型营销预算?",
+          a: "小型设计事务所(3-8 人)每月 20-40 万福林(SEO + 内容 + LinkedIn)。中型(15-50 人)每月 50-90 万福林(以上 + ABM + 思想领导力)。LinkedIn 广告费用一般每月 10-20 万福林即可。",
+        },
+        {
+          q: "能协助公共采购/招标 PR 吗?",
+          a: "可以。我们将获得的招标转化为新闻稿、推送至本地与行业媒体、转换为 LinkedIn 帖子与网站案例研究。这能将 1 次中标的影响放大 5-10 倍向市场传达。",
+        },
+      ],
     },
     "marketing-autoipari-cegeknek": {
       title: "汽车行业营销",
@@ -1581,11 +1756,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "20+", label: "汽车行业项目" },
       ],
       caseStudy: {
-        client: "汽车经销商网络",
-        problem: "广告成本高、转化率低",
-        solution: "PPC 审核 + 广告重构 + 落地页",
-        result: "3 个月内 CPA -45%、线索生成 +220%",
+        client: "多品牌汽车经销商 — 4 家分店",
+        problem: "高 Google Ads 支出(每月 250 万福林)、转化率低、无线索分级",
+        solution: "PPC 审核 + 广告重构(Performance Max + Shopping feed)+ 新落地页 + HubSpot 线索评分",
+        result: "3 个月内 CPA -45%、合格线索 +220% —— 月度支出降低 30%、销量上升 35%",
       },
+      intro:
+        "匈牙利汽车市场分为两半:二手车零售(决策周期较短、价格敏感)与新车/高端零售(周期较长、对品牌与售后体验敏感)。营销战略必须清晰区分 —— 适用于一方的策略往往对另一方适得其反。",
+      whyG2A:
+        "我们完成 20+ 汽车行业项目,合作对象包括经销商与授权服务中心。我们了解 Shopping feed 的对接(TecDoc、Mobile.de 同步)、Performance Max 中如何分离试驾转化与询价转化、以及 HubSpot/Pipedrive 在汽车场景中的线索评分技巧。",
+      relatedServices: [
+        {
+          title: "PPC 与 Google Ads",
+          desc: "Performance Max、Shopping feed、再营销",
+          href: "/szolgaltatasok/hirdeteskezeles",
+        },
+        {
+          title: "网站开发与 CRO",
+          desc: "试驾预约、金融计算器落地页",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+        {
+          title: "战略营销",
+          desc: "线索评分、销售-营销管道协同",
+          href: "/szolgaltatasok/strategiai-marketing",
+        },
+      ],
+      faqs: [
+        {
+          q: "汽车经销商应预算多少 Google Ads?",
+          a: "单店二手车每月最低 30-50 万福林;授权经销商每月 80 万-200 万福林。成本受地理与库存影响:高端品牌(BMW、奔驰)关键词 CPC 1200-1800 福林,二手车 CPC 400-800 福林。",
+        },
+        {
+          q: "汽车 Shopping feed 如何处理?",
+          a: "我们从经销商 CRM/DMS(TecDoc、Mobile.de、Carzone)构建自定义 Shopping feed,每日同步。每辆车包含价格、里程、年份、燃料、引擎与高质量图片。这让买家在点击广告时直接看到具体车辆。",
+        },
+        {
+          q: "如何对试驾询问进行分级?",
+          a: "三层评分:(1) 预约表单上的自动预筛选问题(融资方式、具体车型兴趣、购买时间);(2) HubSpot 或 Pipedrive 线索评分自动化;(3) 热线索 60 分钟内到达销售员、温线索次工作日。",
+        },
+        {
+          q: "能否在网站集成融资计算器?",
+          a: "可以 —— 通过 Cofidis、Cetelem、OTP Lízing API 集成或简单计算器小工具。G2A 根据需求整合融资伙伴数据与网站转化流程。",
+        },
+        {
+          q: "如何衡量营销对实际销售的影响?",
+          a: "线上线索 → 展厅访问 → 销售的转化链可在 CRM 追踪 —— 我们将 Google Click ID(GCLID)和 Meta Click ID(FBCLID)写入 CRM 线索字段,即可回溯哪个营销活动促成了具体的车辆销售。我们将其构建到 HubSpot/Pipedrive 集成中。",
+        },
+      ],
     },
     "marketing-ugyvedii-irodaknak": {
       title: "律师事务所营销",
@@ -1612,11 +1830,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "15+", label: "法律项目" },
       ],
       caseStudy: {
-        client: "律师事务所 – 布达佩斯",
-        problem: "线上表现不足、品牌声望感低",
-        solution: "品牌重塑 + SEO + Google Ads",
-        result: "5 个月内自然流量 +250%、Google 第一位",
+        client: "律师事务所 — 布达佩斯",
+        problem: "网站陈旧、品牌声望感不足、在律师查找平台中不可见",
+        solution: "高端品牌重塑 + 新网站 + 专业领域 SEO + Google Ads(允许类别)",
+        result: "5 个月内自然流量 +250%、3 个主要专业领域 Google 排名第 1",
       },
+      intro:
+        "匈牙利法律营销受匈牙利律师协会(MÜK)伦理准则和 2017 年第 LXXVIII 号法律约束 —— 比较性、夸大性或误导性广告被禁止。这并非障碍而是方向:善于沟通专业深度与可信顾问形象的律所,能在过度宣传的竞争对手面前迅速赢得信任。",
+      whyG2A:
+        "完成 15+ 法律项目,合作对象为律师事务所与会计-法律顾问。我们了解匈牙利律师协会 6/2018(III. 26.)广告规章,知道哪些 Google Ads 类别允许、哪些禁止,以及如何在不违反保密义务的前提下制作匿名化案例研究。",
+      relatedServices: [
+        {
+          title: "品牌视觉设计",
+          desc: "高端视觉身份、事务所沟通物料",
+          href: "/szolgaltatasok/arculattervezes",
+        },
+        {
+          title: "搜索引擎优化",
+          desc: "专业领域关键词、本地 SEO、FAQ 内容",
+          href: "/szolgaltatasok/keresooptimalizalas",
+        },
+        {
+          title: "网站开发",
+          desc: "咨询预约、安全客户门户集成",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+      ],
+      faqs: [
+        {
+          q: "匈牙利律师协会(MÜK)允许在线广告与内容营销吗?",
+          a: "允许。6/2018(III. 26.)MÜK 规章允许客观、专业、信息性的律师服务广告。但禁止比较性、夸大性或揽客式广告,如「本市最佳律师」或「保证胜诉」。G2A 在此规则范围内创作所有内容。",
+        },
+        {
+          q: "你们能发布客户参考吗?",
+          a: "仅在客户明确书面同意下,而且只描述业务性质而非具体案件细节。替代方案是匿名化案例研究:「某中型工业集团,M&A 交易,9 个月尽职调查后成功结案」—— 不附名字与行业细节。",
+        },
+        {
+          q: "律师可使用哪些 Google Ads 类别?",
+          a: "一般法律咨询、家庭法、民事法、不动产法、劳动法、商业法 —— 全部允许。不允许:成功费方式广告(「不胜诉=不收费」)、刑事法部分(如「毒品律师」)、特定国家移民定向。G2A 在审核中会检查每个广告的法律合规性。",
+        },
+        {
+          q: "如何在线咨询中确保 GDPR 合规?",
+          a: "Tresorit 加密文档传输、JotForm GDPR 合规表单(欧盟数据中心)、明确日志化的同意。律师-客户特权的技术面通过端到端加密保障。",
+        },
+        {
+          q: "应预算多少?",
+          a: "独立律师或小型事务所(3 人以下)每月 20-40 万福林(SEO + 内容 + LinkedIn);中型(5-15 人)每月 50-90 万福林(以上 + Google Ads + 品牌沟通)。广告费一般每月 10-30 万福林。",
+        },
+      ],
     },
     "marketing-technologiai-cegeknek": {
       title: "科技公司营销",
@@ -1643,11 +1904,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "35+", label: "科技项目" },
       ],
       caseStudy: {
-        client: "SaaS 公司",
-        problem: "国际市场进入、品牌知名度不足",
-        solution: "品牌战略 + 多语种 SEO + LinkedIn",
-        result: "12 个月内新开拓 5 个市场、演示预约 +280%",
+        client: "B2B SaaS 公司 — 匈牙利创业公司",
+        problem: "国际市场进入、品牌知名度不足、演示漏斗转化率仅 1.2%",
+        solution: "品牌战略 + 多语种 SEO(HU/EN/DE)+ LinkedIn ABM + HubSpot 集成 + 演示 CRO",
+        result: "12 个月内新开拓 5 个市场(DE、AT、CH、PL、CZ)、演示预约 +280%、漏斗转化率 4.1%",
       },
+      intro:
+        "B2B SaaS 与科技领域的营销工具从传统广告转向内容 + 思想领导力 + ABM(基于账户的营销)。决策者在请求演示前平均触达品牌 14 次 —— 这意味着营销漏斗不是线性的,而是多渠道触点的网络。",
+      whyG2A:
+        "完成 35+ 科技项目,从 SaaS 创业公司到中型 IT 咨询机构。我们了解 CMS 端的 hreflang 实现、HubSpot 多触点归因模型、Apollo–Cognism–Clearbit 线索丰富组合,以及匈牙利买方画像与德国或波兰的差异。内部 AI 工具(Claude、ChatGPT)加速内容生产。",
+      relatedServices: [
+        {
+          title: "AI 营销",
+          desc: "AI 辅助内容生产、线索丰富、预测分析",
+          href: "/szolgaltatasok/ai-marketing",
+        },
+        {
+          title: "营销自动化",
+          desc: "HubSpot、Marketo、多触点归因、线索评分",
+          href: "/szolgaltatasok/marketing-automatizacio",
+        },
+        {
+          title: "本地化与国际营销",
+          desc: "多语种 SEO、文化适应、欧盟市场进入",
+          href: "/szolgaltatasok/lokalizacio",
+        },
+      ],
+      faqs: [
+        {
+          q: "B2B SaaS 营销多久见效?",
+          a: "顶部漏斗指标(自然流量、LinkedIn 互动)2-3 个月内移动。演示请求通常从第 4-6 个月开始增长 —— 取决于内容索引时间与 ABM 冷转暖速度。实际收入影响为 9-15 个月,因为这是企业销售周期长度。",
+        },
+        {
+          q: "应优先本地化到哪些语种?",
+          a: "因行业而异,但匈牙利初创公司通常:1. 英语(全球覆盖)、2. 德语(DACH 区域)、3. 波兰语 + 捷克语(V4 市场)。我们在启动前预先映射关键词量,常发现波兰语市场比德国大、竞争更小。",
+        },
+        {
+          q: "能否在 HubSpot 内设置线索评分?",
+          a: "可以。两层评分:显性(公司规模、行业、角色)+ 隐性(站内时长、邮件打开、演示页访问)。乘积表给出线索优先级:热线索 60+、营销合格线索 30-59、原始线索 0-29。我们为客户的销售周期构建定制 HubSpot 字段与工作流。",
+        },
+        {
+          q: "ABM 实践具体如何?",
+          a: "三轨并行:(1) 销售挑选 50-100 目标账户;(2) 营销在 LinkedIn 上对每个公司+决策者进行定向投放(每月 3-6 触点);(3) 销售员在升温后启动直接外联。整个 ABM 流程在 HubSpot 中建模。",
+        },
+        {
+          q: "SaaS 营销现实预算多少?",
+          a: "产品-市场契合前的初创(10 人以下)每月 40-80 万福林(SEO + 内容 + 单渠道 ABM)。增长期 SaaS(15-50 人)每月 150-300 万福林(完整 ABM + 多语种 + 营销自动化)。规模化或企业级 SaaS(50+ 人)每月 400-1000 万福林。",
+        },
+      ],
     },
     "marketing-onkormanyzati-projekteknek": {
       title: "政府机构与公共项目营销",
@@ -1674,11 +1978,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "10+", label: "政府项目" },
       ],
       caseStudy: {
-        client: "南多瑙河地区地方政府",
-        problem: "社区参与度低、沟通方式过时",
-        solution: "网站重塑 + 社交媒体 + 营销活动",
-        result: "社区触达 +400%、网站访客 +250%",
+        client: "南多瑙河地区小镇 — 8000 居民",
+        problem: "网站陈旧、无移动适配、社区参与度低、无危机沟通",
+        solution: "新无障碍网站 + 社交媒体战略 + 危机包 + 居民简报系统",
+        result: "社区触达 +400%、网站访客 +250%、年度调查中居民满意度 92%",
       },
+      intro:
+        "匈牙利地方政府沟通通常局限于公务员撰写的新闻稿 + Facebook 帖子,但居民期望移动友好网站、Messenger 快速回复、无障碍内容与多代际覆盖。匈牙利 2018 年第 LXXV 号法律自 2025 年起对所有公共部门数字服务强制 WCAG 2.1 AA 合规。",
+      whyG2A:
+        "完成 10+ 政府与公共机构项目,从乡镇到县级城市。我们了解匈牙利公共采购法(Kbt.)、2018 年第 LXXV 号无障碍要求、欧盟项目可见性规则。总经理 Győrfi Attila 在佩奇大学经济学系任教 —— 与区域公共行政有直接联系。",
+      relatedServices: [
+        {
+          title: "网站开发",
+          desc: "无障碍公共部门网站、多语种、安全",
+          href: "/szolgaltatasok/webfejlesztes",
+        },
+        {
+          title: "社交媒体管理",
+          desc: "居民沟通、代际定位、危机包",
+          href: "/szolgaltatasok/kozossegi-media",
+        },
+        {
+          title: "内容营销",
+          desc: "简报系统、公益文章、欧盟项目 PR",
+          href: "/szolgaltatasok/tartalommarketing",
+        },
+      ],
+      faqs: [
+        {
+          q: "WCAG 2.1 AA 合规具体意味着什么?",
+          a: "Web Content Accessibility Guidelines:对盲人与低视力者(屏幕阅读器兼容)、运动障碍者(仅键盘可用)、认知障碍者(简单文本、对比色)友好。AA = 第二最高级别,匈牙利自 2025 年起对所有公共部门服务强制要求。",
+        },
+        {
+          q: "你们能协助公共采购吗?",
+          a: "可以 —— 按 Kbt. 撰写质量与价格敏感的标书,从参与意向声明到技术文档。G2A 通常作为分包商或联合体成员参与较大投标,直接为乡镇或机构提供基础服务。",
+        },
+        {
+          q: "如何 24/7 处理危机沟通?",
+          a: "三层包:(1) 8-10 种典型情况(洪水、断水断电、交通事故、新冠类健康危机)的预写模板;(2) 定义审批流(市长、书记、传播负责人);(3) 可选 G2A 待命服务 —— 月费基础上,危机触发后 30 分钟内推送已批准内容。",
+        },
+        {
+          q: "欧盟项目可见性是什么意思?",
+          a: "欧盟资助项目强制:受益人标识(Logo、口号、项目编号)、新闻发布、主题传播。我们按欧盟 2021-2027 凝聚政策可见性手册工作 —— 固定、可审计的模板。",
+        },
+        {
+          q: "典型政府营销预算?",
+          a: "小型乡镇(5000 居民以下)每月 10-20 万福林(基础服务、社媒 + 简报);中型(5-30k 居民)每月 25-50 万福林;县级城市每月 80-200 万福林(危机团队 + 欧盟 PR + 居民关系)。欧盟资助项目通常将营销作为独立预算项。",
+        },
+      ],
     },
     "marketing-b2b-cegeknek": {
       title: "B2B 企业营销",
@@ -1705,11 +2052,54 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "50+", label: "B2B 项目" },
       ],
       caseStudy: {
-        client: "B2B 软件公司",
-        problem: "线索质量低、销售周期长",
-        solution: "LinkedIn + 营销自动化 + ABM",
-        result: "6 个月内合格线索 +180%、销售周期 -40%",
+        client: "B2B 软件公司 — 35 人中型企业级 SaaS",
+        problem: "线索质量低、平均销售周期 9 个月、销售-营销不协同",
+        solution: "ABM 战略 + HubSpot 营销自动化 + 销售赋能 + 多触点归因",
+        result: "6 个月内合格线索 +180%、销售周期 -40%(9→5.4 月)、营收增长 12%",
       },
+      intro:
+        "B2B 购买旅程的 67% 在销售首次接触前已在线发生 —— 这意味着营销作为与销售并行的管道建设单位运作,而非销售的支持职能。现代 B2B 营销关注 MQL → SQL → Opportunity → Won-Deal 漏斗的可量化与可优化。",
+      whyG2A:
+        "完成 50+ B2B 项目,从中型 SaaS 到工业供应商。我们了解 HubSpot 与 Marketo 的实际功能(而非营销 demo)、如何用 6 人销售团队运营 ABM、以及在匈牙利/德国/波兰 B2B 市场的经验。总经理 Győrfi Attila 在佩奇大学经济学系任教 —— 与本国企业部门有直接联系。",
+      relatedServices: [
+        {
+          title: "战略营销",
+          desc: "B2B 买方旅程、ABM 战略、销售-营销协同",
+          href: "/szolgaltatasok/strategiai-marketing",
+        },
+        {
+          title: "营销自动化",
+          desc: "HubSpot/Marketo、线索评分、多触点归因",
+          href: "/szolgaltatasok/marketing-automatizacio",
+        },
+        {
+          title: "内容营销",
+          desc: "B2B 博客、白皮书、客户案例、思想领导力",
+          href: "/szolgaltatasok/tartalommarketing",
+        },
+      ],
+      faqs: [
+        {
+          q: "B2B 与 B2C 营销有何不同?",
+          a: "B2B 销售周期更长(3-12 个月)、决策参与方更多(平均 6-10 人)、交易额更高(500 万-2 亿福林)、决策更理性(非情绪化)。这要求不同的指标(管道价值、CAC/LTV 比)与渠道(LinkedIn 而非 TikTok、邮件而非 Instagram)。",
+        },
+        {
+          q: "ABM(基于账户的营销)实际怎么做?",
+          a: "销售挑选 50-150 个目标公司。营销在 LinkedIn 上对每个公司进行公司+决策者定向(每月 3-6 触点)。销售员在升温后启动直接外联。G2A 在 HubSpot 中建模整个 ABM 流 —— 每家公司可量化阶段。",
+        },
+        {
+          q: "如何衡量 B2B 营销 ROI?",
+          a: "采用多触点归因模型:每个营销触点(自然博客、LinkedIn 帖子、邮件打开、演示预约)按比例贡献最终合同。HubSpot 收入归因报告显示总收入中社媒、SEO、邮件等各占多少 % —— 据此可在下季度精准投放回报最高的渠道。",
+        },
+        {
+          q: "推荐 B2B 营销技术栈?",
+          a: "典型中型市场配置:HubSpot(CRM + 营销自动化 + CMS)或 Pipedrive + Marketo、Apollo/Cognism(线索数据)、LinkedIn Sales Navigator、Lavender(邮件写作助手)、Calendly(预约)、Slack(销售-营销协同)。G2A 本身是 HubSpot Solution Partner —— 可直接实施完整技术栈。",
+        },
+        {
+          q: "B2B 营销现实预算多少?",
+          a: "管道前期(10-20 人公司):每月 40-80 万福林(LinkedIn + 内容 + 基础自动化)。管道建设期(30-100 人):每月 150-300 万福林(完整 ABM + 营销自动化 + 销售赋能)。规模化或企业级 B2B(100+ 人):每月 400-1000 万福林。最佳指标:营销预算 / 管道价值 — 至少目标 1:8。",
+        },
+      ],
     },
   },
 };
