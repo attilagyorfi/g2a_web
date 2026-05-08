@@ -81,6 +81,10 @@ export default function AuditPage() {
   const pageRef = useRef<HTMLDivElement>(null);
   useReveal(pageRef);
   const [form, setForm] = useState({ name: "", email: "", phone: "", company: "", website: "", monthlyBudget: "", currentChallenges: "", goals: "" });
+  // `botField` is the honeypot for this form — `website` is a legitimate input
+  // (the audit subject's URL), so we use a different name. Real users never
+  // see/touch it; bots that auto-fill all inputs get caught silently.
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   const auditIncludes = AUDIT_INCLUDES[lang].map((x, i) => ({ ...x, icon: INCLUDE_ICONS[i] }));
@@ -103,6 +107,7 @@ export default function AuditPage() {
       monthlyBudget: form.monthlyBudget || undefined,
       currentChallenges: form.currentChallenges || undefined,
       goals: form.goals || undefined,
+      botField: honeypot, // honeypot — server-side AUDIT_HONEYPOT
     });
   };
 
@@ -255,6 +260,19 @@ export default function AuditPage() {
                     <div>
                       <label className="g2a-label">{t("auditPage.challengesLabel")}</label>
                       <textarea className="g2a-input" rows={4} value={form.currentChallenges} onChange={e => setForm(f => ({ ...f, currentChallenges: e.target.value }))} placeholder={t("auditPage.challengesPlaceholder")} style={{ resize: "vertical" }} />
+                    </div>
+                    {/* Honeypot — hidden from real users, bots will fill it */}
+                    <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: "-9999px", width: 1, height: 1, overflow: "hidden", opacity: 0 }}>
+                      <label htmlFor="botField">Leave this field empty</label>
+                      <input
+                        id="botField"
+                        name="botField"
+                        type="text"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={honeypot}
+                        onChange={e => setHoneypot(e.target.value)}
+                      />
                     </div>
                     <button type="submit" className="g2a-btn-primary" disabled={status === "loading"} style={{ width: "100%", justifyContent: "center", padding: "1rem" }}>
                       {status === "loading" ? t("audit.submitting") : t("audit.submit")}
