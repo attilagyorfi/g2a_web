@@ -277,6 +277,24 @@ export const emailEvents = mysqlTable("email_events", {
   receivedAt: timestamp("receivedAt").defaultNow().notNull(),
 });
 
+/**
+ * Sliding-window rate-limit hits.
+ *
+ * One row per submission attempt to a public form. Keyed by `bucketKey` (e.g.
+ * `contact:1.2.3.4`), counted within a time window via `hitAt`. We use a DB
+ * table — not in-memory — because Vercel serverless containers have ephemeral
+ * memory: each cold start resets in-process counters, and parallel regional
+ * instances each keep their own state, defeating the limiter.
+ *
+ * Cleanup: a periodic best-effort delete inside the rate-limit check itself
+ * removes rows older than 1 hour. No cron needed; the table stays small.
+ */
+export const rateLimitHits = mysqlTable("rate_limit_hits", {
+  id: int("id").autoincrement().primaryKey(),
+  bucketKey: varchar("bucketKey", { length: 192 }).notNull(),
+  hitAt: timestamp("hitAt").defaultNow().notNull(),
+});
+
 export const newsletterSubscribers = mysqlTable("newsletter_subscribers", {
   id: int("id").autoincrement().primaryKey(),
   email: varchar("email", { length: 320 }).notNull().unique(),

@@ -10,7 +10,8 @@ import * as db from "./db";
 import { translate, isTranslateConfigured } from "./_core/translate";
 import { cloudinaryUpload, isCloudinaryConfigured } from "./_core/cloudinary";
 import { generateBlogDraft, generateImage, generateSeoMeta, improveText, isAiConfigured, getAiModel } from "./_core/ai";
-import { checkRateLimit, getClientIp } from "./_core/rateLimit";
+import { getClientIp } from "./_core/rateLimit";
+import { checkRateLimitDb } from "./_core/dbRateLimit";
 import { isHoneypotTriggered, HONEYPOT_FIELD } from "./_core/spam";
 import { sendEmail, isEmailConfigured } from "./_core/email";
 import { randomBytes } from "node:crypto";
@@ -32,6 +33,8 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
  *   shape via `silentSuccess` (caller picks the shape) — bots think it worked.
  * - Rate limit: 5 submissions / 15 min / IP per form. Generous enough for
  *   legit users (even if a family shares one IP), tight enough to stop spam.
+ *   Stored in DB (TiDB) — Vercel serverless cold starts wipe in-memory state,
+ *   so per-IP limits would not survive across requests otherwise.
  */
 async function guardPublicFormOrSilent<T>(
   ctx: { req: import("express").Request },
@@ -45,7 +48,7 @@ async function guardPublicFormOrSilent<T>(
     return silentSuccess;
   }
   const ip = getClientIp(ctx.req);
-  const limit = checkRateLimit(`${formKey}:${ip}`, { max: 5, windowMs: 15 * 60 * 1000 });
+  const limit = await checkRateLimitDb(`${formKey}:${ip}`, { max: 5, windowMs: 15 * 60 * 1000 });
   if (!limit.allowed) {
     const minutes = Math.ceil(((limit.retryAt ?? Date.now()) - Date.now()) / 60000);
     throw new TRPCError({
@@ -165,11 +168,20 @@ const contactRouter = router({
       serviceInterest: z.string().optional(),
       // Honeypot — must remain empty for the submission to be persisted
       [HONEYPOT_FIELD]: z.string().optional(),
+      // Optional form-origin marker. Lets shared endpoints (e.g. /karrier
+      // posts to contact.submit) keep separate rate-limit buckets so a job
+      // applicant doesn't burn through the contact form's quota.
+      formContext: z.enum(["contact", "careers"]).optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      const guard = await guardPublicFormOrSilent(ctx, input, "contact", { success: true });
+      const bucket = input.formContext === "careers" ? "careers" : "contact";
+      const guard = await guardPublicFormOrSilent(ctx, input, bucket, { success: true });
       if (guard) return guard;
-      await db.createContactSubmission(input);
+      // Strip honeypot + form-origin marker before persistence — neither
+      // belongs in the contact_submissions table.
+      const { [HONEYPOT_FIELD]: _hp, formContext: _fc, ...submission } = input;
+      void _hp; void _fc;
+      await db.createContactSubmission(submission);
       // Notify admin (best-effort — never blocks form submission)
       await notifyOwner({
         title: `Új kapcsolatfelvétel: ${input.name}`,
