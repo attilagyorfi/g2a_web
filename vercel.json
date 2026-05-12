@@ -8,6 +8,12 @@
     { "source": "/sitemap.xml", "destination": "/api" },
     { "source": "/rss.xml", "destination": "/api" },
     { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/admin", "destination": "/index.html" },
+    { "source": "/admin/:path*", "destination": "/index.html" },
+    { "source": "/referenciak/:slug", "destination": "/index.html" },
+    { "source": "/hirek/:slug", "destination": "/index.html" },
+    { "source": "/en/:path*", "destination": "/index.html" },
+    { "source": "/zh/:path*", "destination": "/index.html" },
     { "source": "/((?!api/).+)", "destination": "/index.html" }
   ],
   "functions": {

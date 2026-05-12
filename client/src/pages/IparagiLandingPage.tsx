@@ -118,10 +118,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "40+", label: "Egészségügyi projekt" },
       ],
       caseStudy: {
-        client: "Magánklinika — Pécs",
-        problem: "Alacsony online foglalások, gyenge SEO jelenlét, nincs reputáció-stratégia",
-        solution: "Teljes SEO + Google Ads + új konverzió-optimalizált weboldal foglalási rendszerrel",
-        result: "+340% organikus forgalom, +180% online foglalás 6 hónap alatt",
+        client: "Dent & Beauty",
+        problem: "Fogászati és esztétikai klinika, ahol a páciensek többsége mobilról keresi az infókat — a régi weboldal nem volt mobilbarát, az időpontfoglalás bonyolult.",
+        solution: "Mobilbarát WordPress weboldal, páciens-fókuszú információs hierarchia: kezelés-portfólió, transzparens árak, 3 kattintásos foglalás.",
+        result: "Strukturált kezelés-portfólió, transzparens árak, mobilra optimalizált foglalási folyamat.",
       },
       whyG2A:
         "Több mint 40 egészségügyi projekten dolgoztunk magyar klinikákkal és magánorvosokkal. Ismerjük a legfontosabb specializációk SEO-térképét (fogászat, bőrgyógyászat, ortopédia, magánnőgyógyászat), a praxis-szoftverek API-jait, és a NAIH gyakorlatát. Stratégiánkat mindig 1 hónapos pilottal kezdjük — ha nem szállítunk mérhető eredményt, kötbér nélkül felmondod.",
@@ -215,10 +215,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "25+", label: "Szépségipari projekt" },
       ],
       caseStudy: {
-        client: "Szépségszalon lánc — 3 telephellyel",
-        problem: "Alacsony közösségi média jelenlét, nincs online foglalási rendszer, telefonos akadály",
-        solution: "Instagram stratégia + Meta Ads + Booksy integráció + lokális SEO",
-        result: "+520% Instagram követő, +190% online foglalás 4 hónap alatt",
+        client: "GRB Skin Clinic",
+        problem: "Prémium bőrgyógyászati klinika, ahol az ügyfelek diszkréciót és hitelességet várnak — fragmentált digitális jelenlét (külön Ads, SEO, weboldal ügynökségekkel).",
+        solution: "Komplex digitális jelenlét egy kézben: Google Ads + SEO + WordPress weboldal + kreatív szövegírás — orvosi-szakmai pontosság, ügyfélbarát hangnem.",
+        result: "Egységes minőségű digitális jelenlét egy partnerrel, folyamatos Google Ads + SEO együttműködés.",
       },
       whyG2A:
         "25+ szépségipari projekttel a hátunk mögött ismerjük az iparág sajátos rhythmusát: a foglalások 70%-a kedd-péntek 18-22 között érkezik, a no-show arányt visszaszámolós e-mail és SMS automatizációval 40%-ról 12%-ra csökkentettük egy ügyfelünknél. Tudunk hidegen vágni egy reels-naptárt, kreatívokat gyártani Canva + AI eszközökkel, és a Booksy/Salonkee booking funnelt konverzió-szempontból optimalizálni.",
@@ -312,10 +312,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "30+", label: "Mérnöki projekt" },
       ],
       caseStudy: {
-        client: "Statikai tervezőiroda — Pécs",
-        problem: "Nincs online jelenlét, minden ügyfél referencia alapján — nem skálázható",
-        solution: "Új portfólió weboldal + technikai SEO + LinkedIn stratégia + 4 fős thought leadership csapat",
-        result: "+15 új ügyfél/hónap, Top 3 Google pozíció 4 kulcsszóra 8 hónap alatt",
+        client: "M Mérnöki Iroda Kft.",
+        problem: "30 éves szakmai múltú mérnöki iroda nem mobilbarát weboldallal és csak alkalmi social posztokkal — a presztízs nem tükröződött online.",
+        solution: "Új UI/UX (Figma) + mobilbarát weboldal (Bootstrap, HTML, CSS) + Facebook/Instagram/LinkedIn jelenlét — minden platformon egységes brand-arculat.",
+        result: "Korszerű, mobilbarát weboldal, aktív 3-platformos social jelenlét, egységes vizuális identitás.",
       },
       whyG2A:
         "30+ mérnöki és építőipari projektben dolgoztunk magyar irodákkal. Tudunk BIM-modellből web-rendert csinálni, statikai pályázatot átvenni szöveggé alakítani, és LinkedIn-en olyan thought leadership tartalmat építeni, ami nem mérnök ügyfeleknek is érthető. Ismerjük a Közbeszerzési Hatóság rendszerét és a leggyakoribb tender-fajtákat.",
@@ -409,10 +409,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "20+", label: "Autóipari projekt" },
       ],
       caseStudy: {
-        client: "Multimárka autókereskedő hálózat — 4 telephely",
-        problem: "Magas Google Ads költés (havi 2.5M Ft), alacsony konverzió, nincs lead-minősítés",
-        solution: "PPC audit + kampányrestruktúra (Performance Max + Shopping feed) + új landing page-ek + HubSpot lead scoring",
-        result: "-45% CPA, +220% minősített lead 3 hónap alatt — havi költés 30%-kal csökkent, eladás +35%",
+        client: "Nissan Ste-Ba",
+        problem: "Pécsi Nissan márkakereskedés folyamatos szezonális kampányokat akar futtatni (modellek, akciók, szerviz) — mérhető, márkahangulattal konzisztens Facebook hirdetésekkel.",
+        solution: "Szezonális marketing stratégia + folyamatos Facebook Ads kampányok, kéthetente cserélődő egyedi grafikák és sales-fókuszú copy a Nissan brand-hangon belül.",
+        result: "Folyamatos Facebook Ads jelenlét célzott kampányokkal, sales-fókuszú copy regionális vásárlók megszólításához.",
       },
       whyG2A:
         "20+ autóipari projektben dolgoztunk autókereskedőkkel és márkaszervízekkel. Tudjuk hogy működik a Shopping feed beszállítása (TecDoc, Mobile.de szinkron), a Performance Max-ben a tesztvezetés-konverziót hogyan kell elkülöníteni az „árdeklődés”-konverziótól, és a HubSpot/Pipedrive lead-scoring trükkjeit autóipari kontextusban.",
@@ -506,10 +506,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "15+", label: "Jogi projekt" },
       ],
       caseStudy: {
-        client: "Ügyvédi iroda — Budapest",
-        problem: "Elavult honlap, alacsony presztízs-érzet, „ügyvédkereső”-ben láthatatlan",
-        solution: "Prémium brand redesign + új weboldal + szakterületi SEO + Google Ads (engedélyezett kategóriák)",
-        result: "+250% organikus forgalom, Top 1 Google pozíció 3 fő szakterületen 5 hónap alatt",
+        client: "Proverium Ügyvédi Iroda",
+        problem: "Komplex jogi szolgáltatások vállalati és magánügyfeleknek — tekintélyt sugárzó, de nem hideg online megjelenés kellett az egyik legversengőbb online piacon.",
+        solution: "WordPress weboldal ügyvédi presztízshez illő modern dizájnnal + SEO-optimalizálás jogi kulcsszavakra + egységes vizuális sablonok a kommunikációhoz.",
+        result: "Tekintélyes weboldal jogi szektorhoz, kulcsszó-optimalizált SEO struktúra, következetes brand-élmény minden érintkezési ponton.",
       },
       whyG2A:
         "15+ jogi projektben dolgoztunk ügyvédi irodákkal és könyvelő-jogi tanácsadókkal. Ismerjük az MÜK 6/2018. (III. 26.) MÜK Szabályzatát a hirdetésről, tudjuk hogy melyik Google Ads kategória engedélyezett és melyik tilos, és hogyan kell anonimizált esetbemutatásokat készíteni titoktartási kötelezettségünk megsértése nélkül.",
@@ -603,10 +603,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "35+", label: "Tech projekt" },
       ],
       caseStudy: {
-        client: "B2B SaaS vállalat — magyar startup",
-        problem: "Nemzetközi piacra lépés, brand awareness hiánya, demo-funnel konverzió 1.2%",
-        solution: "Brand-stratégia + multilingual SEO (HU/EN/DE) + LinkedIn ABM + HubSpot integráció + demo CRO",
-        result: "+5 új piac (DE, AT, CH, PL, CZ), +280% demo foglalás, 4.1% demo-funnel konverzió 12 hónap alatt",
+        client: "AR Works",
+        problem: "Kiterjesztett valóság (AR/VR) megoldásokat fejlesztő tech cég — a high-tech jelleget és komplex technológiai kompetenciát vizuálisan + tartalmilag is közvetíteni kellett a B2B vásárlóknak.",
+        solution: "WordPress weboldal egyedi HTML/CSS testreszabással — strukturált szolgáltatás- és referencia-bemutatás, tech-arculatú vizualitás, B2B-tech tone.",
+        result: "Modern, tech-arculatú weboldal, B2B-tech vásárlókhoz illő hangvétel, strukturált portfólió.",
       },
       whyG2A:
         "35+ tech projektben dolgoztunk SaaS startupoktól middle-market IT-tanácsadókig. Tudjuk a hreflang implementációt CMS oldalán, a HubSpot multi-touch attribútum modellt, az Apollo-Cognism-Clearbit lead enrichment kombinációt, és azt is, hogy a magyar buyer-persona miben különbözik a német vagy lengyel ekvivalensétől. Belső AI-eszközeink (Claude, ChatGPT) gyorsítják a kontent-gyártást.",
@@ -700,10 +700,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "10+", label: "Önkormányzati projekt" },
       ],
       caseStudy: {
-        client: "Dél-dunántúli kisváros — 8.000 lakos",
-        problem: "Elavult, nem mobilbarát weboldal, alacsony közösségi bevonás, krízis-kommunikáció hiányzik",
-        solution: "Új akadálymentes weboldal + social media stratégia + krízis-kit-ek + lakossági hírlevél rendszer",
-        result: "+400% közösségi elérés, +250% weboldal látogatók, 92%-os lakossági elégedettség éves felmérésben",
+        client: "Zsolnay Örökségkezelő Nonprofit Kft.",
+        problem: "Pécsi Zsolnay Negyed kulturális életét üzemeltető nonprofit — sok látogató Google-keresésen keresztül találja a programokat, ezért a SEO-teljesítmény közvetlenül hat a látogatószámra.",
+        solution: "Részletes SEO audit (technikai + kulcsszó + tartalmi gap), prioritizált javítási csomag, eszköz-javaslatok a csapat önálló folytatásához.",
+        result: "Részletes SEO felmérés prioritizált akciókkal, csapat önállóan folytatható optimalizálással.",
       },
       whyG2A:
         "10+ önkormányzati és közintézményi projekt mögöttünk — kistelepülésektől megyei jogú városokig. Ismerjük a Kbt. (közbeszerzés) szabályait, a 2018. évi LXXV. tv. (akadálymentesítés) követelményeit, és az EU-pályázati láthatósági előírásokat. Ügyvezetőnk, Győrfi Attila a Pécsi Tudományegyetem Közgazdaságtudományi Karán is oktat — közvetlen kapcsolatban a régió közigazgatásával.",
@@ -797,10 +797,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "50+", label: "B2B projekt" },
       ],
       caseStudy: {
-        client: "B2B szoftver vállalat — 35 fős, közepes méretű enterprise SaaS",
-        problem: "Alacsony lead-minőség, 9 hónap átlag sales-cycle, sales-marketing alignment hiányzik",
-        solution: "ABM stratégia + HubSpot marketing automation + sales enablement + multi-touch attribúció",
-        result: "+180% qualified lead, -40% sales-cycle (9→5.4 hónap), 6 hónap alatt 12% revenue növekedés",
+        client: "ÉMI-TÜV SÜD",
+        problem: "Magyar építőipari és termékminősítési piac vezető szereplője — a B2B döntéshozók online keresik a tanúsítási szolgáltatásokat, SEO + hirdetéskezelés optimalizálás kellett.",
+        solution: "SEO felmérés tanúsítási kulcsszavakra + hirdetéskezelési audit (Google Analytics + Search Console adatokra építve), mérési-alapú döntéstámogatás.",
+        result: "Részletes SEO felmérés és PPC audit, kulcsszó-pozícionálás, mérési-alapú döntéstámogatás Analytics + Search Console-lal.",
       },
       whyG2A:
         "50+ B2B projekt — a középvállalati SaaS-tól az ipari beszállítókig. Ismerjük a HubSpot és Marketo tényleges funkcióit (nem csak a marketing demo-ját), tudjuk hogyan kell az ABM-et egy 6 fős sales-csapattal működtetni, és tapasztalatunk van magyar/német/lengyel B2B piacon. Az ügyvezetőnk, Győrfi Attila a Pécsi Tudományegyetem Közgazdaságtudományi Karán is oktat — közvetlen kontakt a hazai vállalati szektorral.",
@@ -896,10 +896,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "40+", label: "Healthcare projects" },
       ],
       caseStudy: {
-        client: "Private clinic — Pécs",
-        problem: "Low online bookings, weak SEO presence, no reputation strategy",
-        solution: "Full SEO + Google Ads + new conversion-optimised website with booking system",
-        result: "+340% organic traffic, +180% online bookings in 6 months",
+        client: "Dent & Beauty",
+        problem: "Dental and aesthetic clinic where most patients search for info on mobile — the old site wasn't mobile-friendly, appointment booking was cumbersome.",
+        solution: "Mobile-friendly WordPress site with patient-focused information hierarchy: treatment portfolio, transparent pricing, 3-click booking flow.",
+        result: "Structured treatment portfolio, transparent pricing, mobile-optimised booking flow.",
       },
       whyG2A:
         "We've worked on 40+ healthcare projects with Hungarian clinics and private practitioners. We know the SEO map of major specialisations (dentistry, dermatology, orthopaedics, private gynaecology), the APIs of practice-management software, and the practice of the Hungarian DPA. Every engagement starts with a 1-month pilot — if we don't deliver measurable results, you can leave without penalty.",
@@ -968,10 +968,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "25+", label: "Beauty industry projects" },
       ],
       caseStudy: {
-        client: "Beauty salon chain — 3 locations",
-        problem: "Low social media presence, no online booking, phone-only barrier",
-        solution: "Instagram strategy + Meta Ads + Booksy integration + local SEO",
-        result: "+520% Instagram followers, +190% online bookings in 4 months",
+        client: "GRB Skin Clinic",
+        problem: "Premium dermatology clinic whose clients expect discretion and credibility — fragmented digital presence (separate agencies for Ads, SEO, website).",
+        solution: "Full digital presence under one roof: Google Ads + SEO + WordPress site + creative copywriting — medical-grade accuracy with client-friendly tone.",
+        result: "Consistent quality across the entire digital footprint with a single partner, continuous Google Ads + SEO engagement.",
       },
       intro:
         "In the beauty industry buyers research primarily on Instagram, TikTok and Google Maps — not on the website. The site only enters the journey when the booking flow starts. This shifts the marketing budget allocation: 60% social, 30% local SEO + Google Business Profile, 10% paid search.",
@@ -1042,10 +1042,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "30+", label: "Engineering projects" },
       ],
       caseStudy: {
-        client: "Structural design studio — Pécs",
-        problem: "No online presence, every client via referral — not scalable",
-        solution: "New portfolio website + technical SEO + LinkedIn strategy + 4-person thought leadership team",
-        result: "+15 new clients/month, Top 3 Google ranking on 4 keywords in 8 months",
+        client: "M Mérnöki Iroda Kft.",
+        problem: "Engineering office with 30 years of expertise but a non-mobile-friendly site and only occasional social posts — the prestige didn't show online.",
+        solution: "New UI/UX in Figma + mobile-friendly site (Bootstrap, HTML, CSS) + Facebook/Instagram/LinkedIn presence with a single brand visual identity.",
+        result: "Modern, mobile-friendly site, active presence across three social platforms, consistent visual identity end-to-end.",
       },
       intro:
         "The Hungarian engineering and design-studio sector is typically under-represented online: portfolio sites are dated, LinkedIn presence is patchy, and technical content is written in jargon rather than from a buyer-benefit angle. That's an opportunity: whoever fixes it stands out quickly even on a small market like Southern Transdanubia.",
@@ -1116,10 +1116,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "20+", label: "Automotive projects" },
       ],
       caseStudy: {
-        client: "Multi-brand car dealership — 4 locations",
-        problem: "High Google Ads spend (HUF 2.5M/mo), low conversion, no lead scoring",
-        solution: "PPC audit + campaign restructure (Performance Max + Shopping feed) + new landing pages + HubSpot lead scoring",
-        result: "-45% CPA, +220% qualified leads in 3 months — monthly spend down 30%, sales up 35%",
+        client: "Nissan Ste-Ba",
+        problem: "Pécs-based Nissan dealership needs continuous seasonal campaigns (models, promos, service) — measurable, brand-consistent Facebook ads.",
+        solution: "Seasonal marketing strategy + continuous Facebook Ads campaigns, custom graphics rotated bi-weekly with sales-focused copy in the Nissan brand voice.",
+        result: "Continuous Facebook Ads presence with targeted campaigns, sales-focused copy reaching regional buyers.",
       },
       intro:
         "The Hungarian automotive market splits into two halves: used-car retail (shorter decision cycle, price-sensitive buyer) and new-car / premium retail (longer cycle, brand- and service-experience-sensitive). The marketing strategy has to cleanly separate the two — what works for one is often counter-productive for the other.",
@@ -1190,10 +1190,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "15+", label: "Legal projects" },
       ],
       caseStudy: {
-        client: "Law firm — Budapest",
-        problem: "Outdated website, low prestige perception, invisible in lawyer-finder searches",
-        solution: "Premium brand redesign + new website + practice-area SEO + Google Ads (allowed categories)",
-        result: "+250% organic traffic, Top 1 Google ranking on 3 main practice areas in 5 months",
+        client: "Proverium Ügyvédi Iroda",
+        problem: "Complex legal services for corporate and private clients — needed an online presence that conveys authority without feeling cold, in one of the most competitive online markets.",
+        solution: "WordPress website with a modern design fitting legal-sector prestige + SEO optimisation on legal keywords + consistent visual templates across all communication.",
+        result: "Authoritative website for the legal sector, keyword-optimised SEO structure, consistent brand experience across every touchpoint.",
       },
       intro:
         "Hungarian legal marketing is governed by the Hungarian Bar Association's (MÜK) ethics code and Act LXXVIII of 2017 — comparative, boastful or misleading advertising is prohibited. This isn't a barrier but a direction: communicate professional depth and trustworthy advisory character well, and you quickly win trust against an over-promising competitor.",
@@ -1264,10 +1264,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "35+", label: "Tech projects" },
       ],
       caseStudy: {
-        client: "B2B SaaS company — Hungarian startup",
-        problem: "International market entry, low brand awareness, demo-funnel conversion 1.2%",
-        solution: "Brand strategy + multilingual SEO (HU/EN/DE) + LinkedIn ABM + HubSpot integration + demo CRO",
-        result: "+5 new markets (DE, AT, CH, PL, CZ), +280% demo bookings, 4.1% demo-funnel conversion in 12 months",
+        client: "AR Works",
+        problem: "Augmented-reality (AR/VR) solutions company — needed to convey high-tech character and complex technological competence both visually and editorially for B2B buyers.",
+        solution: "WordPress site with custom HTML/CSS — structured service and reference showcase, tech-grade visual identity, B2B-tech tone of voice.",
+        result: "Modern, tech-grade website, voice matching B2B-tech buyers, structured portfolio.",
       },
       intro:
         "In B2B SaaS and tech, marketing tools shift from traditional advertising to content + thought leadership + ABM (Account-Based Marketing). A decision maker touches the brand at an average of 14 points before requesting a demo — meaning the marketing funnel is non-linear, a network of multi-channel touchpoints.",
@@ -1338,10 +1338,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "10+", label: "Municipal projects" },
       ],
       caseStudy: {
-        client: "Southern Transdanubian small town — 8,000 residents",
-        problem: "Outdated, non-mobile-friendly website, low community engagement, no crisis communication",
-        solution: "New accessible website + social media strategy + crisis kits + resident newsletter system",
-        result: "+400% community reach, +250% website visitors, 92% resident satisfaction in annual survey",
+        client: "Zsolnay Örökségkezelő Nonprofit Kft.",
+        problem: "Nonprofit running the cultural life of Pécs's Zsolnay Quarter — many visitors find programmes via Google search, so SEO performance directly drives footfall.",
+        solution: "Detailed SEO audit (technical + keyword + content gap), prioritised improvement package, tool recommendations for the in-house team to continue independently.",
+        result: "Detailed SEO audit with prioritised actions, self-sustaining optimisation workflow for the team.",
       },
       intro:
         "Hungarian municipal communication typically defaults to a clerk-written press release plus a Facebook post — but residents expect a mobile-friendly website, fast Messenger replies, accessible content and multi-generational reach. From 2025, Hungary's Act LXXV of 2018 mandates WCAG 2.1 AA compliance for every public-sector digital service.",
@@ -1412,10 +1412,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "50+", label: "B2B projects" },
       ],
       caseStudy: {
-        client: "B2B software company — 35 staff, mid-market enterprise SaaS",
-        problem: "Low lead quality, 9-month average sales cycle, no sales-marketing alignment",
-        solution: "ABM strategy + HubSpot marketing automation + sales enablement + multi-touch attribution",
-        result: "+180% qualified leads, -40% sales cycle (9→5.4 months), 12% revenue growth in 6 months",
+        client: "ÉMI-TÜV SÜD",
+        problem: "Leader of the Hungarian construction and product certification market — B2B decision-makers search online for certification services, so SEO + ad management optimisation was needed.",
+        solution: "SEO audit on certification keywords + ad-management audit (built on Google Analytics + Search Console data), measurement-based decision support.",
+        result: "Detailed SEO audit and PPC audit, keyword positioning, measurement-based decision support with Analytics + Search Console.",
       },
       intro:
         "67% of the B2B buying journey happens online before the first sales touch — meaning marketing operates as a parallel pipeline-building unit, not a sales support function. Modern B2B marketing focuses on making the marketing-qualified lead (MQL) → sales-qualified lead (SQL) → opportunity → won-deal funnel measurable and optimisable.",
@@ -1513,10 +1513,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "40+", label: "医疗项目" },
       ],
       caseStudy: {
-        client: "私立诊所 — 佩奇",
-        problem: "在线预约量低、SEO 表现弱、无声誉策略",
-        solution: "完整 SEO + Google Ads + 含预约系统的新转化优化网站",
-        result: "6 个月内自然流量 +340%、在线预约 +180%",
+        client: "Dent & Beauty",
+        problem: "牙科及美容诊所，大部分患者通过手机查询信息——旧网站不适配移动端，预约流程繁琐。",
+        solution: "移动端友好的 WordPress 网站，以患者为中心的信息层次：治疗组合、透明定价、3 次点击完成预约。",
+        result: "结构化的治疗组合，透明定价，移动端优化的预约流程。",
       },
       whyG2A:
         "我们与匈牙利诊所与私人医生合作完成 40+ 医疗项目。我们了解主要专科(牙科、皮肤科、骨科、私人妇科)的 SEO 地图、诊所管理软件 API、以及匈牙利数据保护机构的实务。每个项目都从 1 个月试点开始 —— 若未交付可量化成果,您可无违约金离开。",
@@ -1610,10 +1610,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "25+", label: "美容行业项目" },
       ],
       caseStudy: {
-        client: "美容沙龙连锁 — 3 家分店",
-        problem: "社交媒体表现弱、无在线预约系统、电话预约障碍",
-        solution: "Instagram 战略 + Meta 广告 + Booksy 集成 + 本地 SEO",
-        result: "4 个月内 Instagram 粉丝 +520%、在线预约 +190%",
+        client: "GRB Skin Clinic",
+        problem: "高端皮肤科诊所，客户期望谨慎、可信度——数字化布局分散（Ads、SEO、网站分属不同代理）。",
+        solution: "一站式数字化布局：Google Ads + SEO + WordPress 网站 + 创意文案——医疗级准确性与客户友好语气兼具。",
+        result: "由单一合作伙伴提供质量一致的数字化布局，持续的 Google Ads + SEO 合作。",
       },
       whyG2A:
         "凭借 25+ 美容行业项目,我们了解行业的特殊节奏:70% 的预约在周二至周五 18-22 点之间到达;通过倒计时邮件 + 短信自动化,我们将某客户的失约率从 40% 降至 12%。我们能从零搭建 Reels 日历、用 Canva + AI 工具生成创意,并优化 Booksy/Salonkee 预约漏斗的转化。",
@@ -1682,10 +1682,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "30+", label: "工程项目" },
       ],
       caseStudy: {
-        client: "结构设计事务所 — 佩奇",
-        problem: "无线上表现,客户全部来自转介绍 —— 不可规模化",
-        solution: "新作品集网站 + 技术 SEO + LinkedIn 战略 + 4 人思想领导力团队",
-        result: "每月新客户 +15、8 个月内 4 个关键词进入 Google 前 3",
+        client: "M Mérnöki Iroda Kft.",
+        problem: "拥有 30 年专业经验的工程事务所，原网站不适配移动端，社交媒体仅有零星发布——线上未能体现品牌声望。",
+        solution: "Figma 中重新设计 UI/UX + 移动端友好网站（Bootstrap、HTML、CSS）+ Facebook/Instagram/LinkedIn 三平台运营，统一品牌视觉。",
+        result: "现代化、移动端友好的网站，三个社交平台的持续运营，统一的视觉品牌识别。",
       },
       intro:
         "匈牙利工程与设计事务所行业线上表现普遍不足:作品集网站陈旧、LinkedIn 形象不一致、技术内容多用术语而非以买方收益为视角。这是机会:谁先解决,谁就能在区域性小市场(如南多瑙)中迅速脱颖而出。",
@@ -1756,10 +1756,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "20+", label: "汽车行业项目" },
       ],
       caseStudy: {
-        client: "多品牌汽车经销商 — 4 家分店",
-        problem: "高 Google Ads 支出(每月 250 万福林)、转化率低、无线索分级",
-        solution: "PPC 审核 + 广告重构(Performance Max + Shopping feed)+ 新落地页 + HubSpot 线索评分",
-        result: "3 个月内 CPA -45%、合格线索 +220% —— 月度支出降低 30%、销量上升 35%",
+        client: "Nissan Ste-Ba",
+        problem: "佩奇的 Nissan 品牌经销商需要持续运营季节性活动（车型、促销、维修）——可衡量、品牌一致的 Facebook 广告。",
+        solution: "季节性营销战略 + 持续的 Facebook Ads 活动，每两周轮换定制图形与销售导向文案，保持 Nissan 品牌语气。",
+        result: "持续的 Facebook Ads 投放，针对性活动，销售导向文案触达区域买家。",
       },
       intro:
         "匈牙利汽车市场分为两半:二手车零售(决策周期较短、价格敏感)与新车/高端零售(周期较长、对品牌与售后体验敏感)。营销战略必须清晰区分 —— 适用于一方的策略往往对另一方适得其反。",
@@ -1830,10 +1830,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "15+", label: "法律项目" },
       ],
       caseStudy: {
-        client: "律师事务所 — 布达佩斯",
-        problem: "网站陈旧、品牌声望感不足、在律师查找平台中不可见",
-        solution: "高端品牌重塑 + 新网站 + 专业领域 SEO + Google Ads(允许类别)",
-        result: "5 个月内自然流量 +250%、3 个主要专业领域 Google 排名第 1",
+        client: "Proverium Ügyvédi Iroda",
+        problem: "面向企业和个人客户的综合法律服务——在最具竞争力的线上市场之一，需要既有权威感又不冰冷的线上呈现。",
+        solution: "符合律师行业声望的现代化 WordPress 网站 + 针对法律关键词的 SEO 优化 + 跨沟通渠道统一的视觉模板。",
+        result: "为法律行业打造的权威网站，关键词优化的 SEO 结构，每个接触点都保持一致的品牌体验。",
       },
       intro:
         "匈牙利法律营销受匈牙利律师协会(MÜK)伦理准则和 2017 年第 LXXVIII 号法律约束 —— 比较性、夸大性或误导性广告被禁止。这并非障碍而是方向:善于沟通专业深度与可信顾问形象的律所,能在过度宣传的竞争对手面前迅速赢得信任。",
@@ -1904,10 +1904,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "35+", label: "科技项目" },
       ],
       caseStudy: {
-        client: "B2B SaaS 公司 — 匈牙利创业公司",
-        problem: "国际市场进入、品牌知名度不足、演示漏斗转化率仅 1.2%",
-        solution: "品牌战略 + 多语种 SEO(HU/EN/DE)+ LinkedIn ABM + HubSpot 集成 + 演示 CRO",
-        result: "12 个月内新开拓 5 个市场(DE、AT、CH、PL、CZ)、演示预约 +280%、漏斗转化率 4.1%",
+        client: "AR Works",
+        problem: "增强现实（AR/VR）解决方案公司——需要在视觉与内容上同时传达高科技属性与复杂的技术能力，面向 B2B 买家。",
+        solution: "基于 WordPress 的网站，定制 HTML/CSS——结构化的服务与案例展示，技术级视觉风格，B2B-tech 语调。",
+        result: "现代化、技术级的网站，符合 B2B-tech 买家的语调，结构化的作品集。",
       },
       intro:
         "B2B SaaS 与科技领域的营销工具从传统广告转向内容 + 思想领导力 + ABM(基于账户的营销)。决策者在请求演示前平均触达品牌 14 次 —— 这意味着营销漏斗不是线性的,而是多渠道触点的网络。",
@@ -1978,10 +1978,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "10+", label: "政府项目" },
       ],
       caseStudy: {
-        client: "南多瑙河地区小镇 — 8000 居民",
-        problem: "网站陈旧、无移动适配、社区参与度低、无危机沟通",
-        solution: "新无障碍网站 + 社交媒体战略 + 危机包 + 居民简报系统",
-        result: "社区触达 +400%、网站访客 +250%、年度调查中居民满意度 92%",
+        client: "Zsolnay Örökségkezelő Nonprofit Kft.",
+        problem: "运营佩奇 Zsolnay 区文化生活的非营利组织——许多访客通过 Google 搜索发现活动，SEO 表现直接影响访客量。",
+        solution: "详细的 SEO 审核（技术 + 关键词 + 内容差距），优先级改进方案，团队可独立延续优化的工具建议。",
+        result: "带有优先级行动的详细 SEO 审核，团队可独立维护的优化流程。",
       },
       intro:
         "匈牙利地方政府沟通通常局限于公务员撰写的新闻稿 + Facebook 帖子,但居民期望移动友好网站、Messenger 快速回复、无障碍内容与多代际覆盖。匈牙利 2018 年第 LXXV 号法律自 2025 年起对所有公共部门数字服务强制 WCAG 2.1 AA 合规。",
@@ -2052,10 +2052,10 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         { num: "50+", label: "B2B 项目" },
       ],
       caseStudy: {
-        client: "B2B 软件公司 — 35 人中型企业级 SaaS",
-        problem: "线索质量低、平均销售周期 9 个月、销售-营销不协同",
-        solution: "ABM 战略 + HubSpot 营销自动化 + 销售赋能 + 多触点归因",
-        result: "6 个月内合格线索 +180%、销售周期 -40%(9→5.4 月)、营收增长 12%",
+        client: "ÉMI-TÜV SÜD",
+        problem: "匈牙利建筑业和产品认证市场的领导者——B2B 决策者通过在线搜索寻找认证服务，需要 SEO 与广告管理优化。",
+        solution: "针对认证关键词的 SEO 审核 + 广告管理审核（基于 Google Analytics + Search Console 数据），以测量为依据的决策支持。",
+        result: "详细的 SEO 审核与 PPC 审核，关键词定位，借助 Analytics + Search Console 的测量驱动决策支持。",
       },
       intro:
         "B2B 购买旅程的 67% 在销售首次接触前已在线发生 —— 这意味着营销作为与销售并行的管道建设单位运作,而非销售的支持职能。现代 B2B 营销关注 MQL → SQL → Opportunity → Won-Deal 漏斗的可量化与可优化。",

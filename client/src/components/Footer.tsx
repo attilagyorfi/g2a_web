@@ -213,28 +213,13 @@ export default function Footer({ hideNewsletter = false }: { hideNewsletter?: bo
               </div>
             </div>
 
-            {/* CTA */}
-            <div style={{ marginTop: "1.5rem" }}>
-              <a
-                href="/ingyenes-audit"
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: "0.5rem",
-                  backgroundColor: "var(--g2a-brand-teal)", color: "#fff",
-                  padding: "0.625rem 1.25rem", borderRadius: "6px",
-                  fontSize: "0.8125rem", fontWeight: 600,
-                  textDecoration: "none", fontFamily: "Geist Mono, monospace",
-                  transition: "background-color 0.2s",
-                }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#0D9488"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#14B8A6"; }}
-              >
-                {t("nav.freeAudit")}
-              </a>
-              {/* Secondary: Calendly text link — books a 30-min slot directly */}
-              <div style={{ marginTop: "0.75rem", fontSize: "0.8125rem", color: "var(--g2a-text-muted)", fontFamily: "Geist Mono, monospace" }}>
-                {t("footer.orBookSlot")}{" "}
-                <CalendlyTextLink text={t("footer.bookSlotLink")} style={{ fontWeight: 600 }} />
-              </div>
+            {/* Calendly direct-booking link — kept as the single secondary CTA
+                in the footer contact block. The primary "Ingyenes audit" button
+                was removed per design feedback (already redundant with the
+                sticky CTA and the main nav). */}
+            <div style={{ marginTop: "1.25rem", fontSize: "0.8125rem", color: "var(--g2a-text-muted)", fontFamily: "Geist Mono, monospace" }}>
+              {t("footer.orBookSlot")}{" "}
+              <CalendlyTextLink text={t("footer.bookSlotLink")} style={{ fontWeight: 600 }} />
             </div>
           </div>
         </div>
