@@ -122,7 +122,7 @@ export default function Navigation() {
               {[
                 { href: "https://facebook.com/g2amarketing", icon: <Facebook size={13} /> },
                 { href: "https://youtube.com/g2amarketing", icon: <Youtube size={13} /> },
-                { href: "https://linkedin.com/company/g2amarketing", icon: <Linkedin size={13} /> },
+                { href: "https://www.linkedin.com/company/g2a-marketing/", icon: <Linkedin size={13} /> },
               ].map((s, i) => (
                 <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
                   style={{ color: "var(--g2a-text-muted)", transition: "color 0.2s" }}

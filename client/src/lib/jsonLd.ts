@@ -46,7 +46,7 @@ const COMPANY = {
   social: [
     "https://www.facebook.com/g2amarketing",
     "https://www.youtube.com/g2amarketing",
-    "https://www.linkedin.com/company/g2amarketing",
+    "https://www.linkedin.com/company/g2a-marketing/",
   ],
 };
 

@@ -13,7 +13,6 @@ import CustomCursor from "./components/CustomCursor";
 import GrainOverlay from "./components/GrainOverlay";
 import { ConfirmDialogHost } from "./components/ConfirmDialog";
 import PolygonNetwork from "./components/PolygonNetwork";
-import StickyCTA from "./components/StickyCTA";
 import WhatsAppButton from "./components/WhatsAppButton";
 import WechatButton from "./components/WechatButton";
 import ExitIntentPopup from "./components/ExitIntentPopup";
@@ -191,7 +190,6 @@ function PublicOnlyChrome() {
         <PolygonNetwork density={0.42} lineAlpha={0.16} pointAlpha={0.5} />
       </div>
       <CustomCursor />
-      <StickyCTA />
       <WhatsAppButton />
       <WechatButton />
       <ExitIntentPopup />

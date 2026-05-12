@@ -6,9 +6,12 @@
  * runtime, but pure HTML scrapers miss that update.
  *
  * Approach: take the Vite-built `dist/public/index.html`, do regex string
- * replacement on the meta tags, and write a copy to `dist/public/<route>.html`.
- * Vercel serves `<route>.html` for a `/<route>` request when `cleanUrls: true`
- * is set, with no rewrite needed.
+ * replacement on the meta tags, and write a copy to
+ * `dist/public/<route>/index.html`. Vercel's static file resolver serves
+ * `<route>/index.html` for a `/<route>` request automatically — no rewrite
+ * or cleanUrls config needed, and unprerendered SPA routes (`/admin`, blog
+ * detail pages, etc.) cleanly fall through to the catch-all rewrite that
+ * sends them to the root `index.html`.
  *
  * Coverage: ~25 static routes (home + service/industry/audit/about/legal
  * pages). Blog posts and case studies are NOT prerendered — those carry their
@@ -229,12 +232,16 @@ function renderRouteHtml(baseHtml, route) {
 }
 
 /**
- * Write a prerendered file at `dist/public/<route>.html`. Vercel's
- * `cleanUrls: true` setting maps `/<route>` requests to this file.
+ * Write a prerendered file at `dist/public/<route>/index.html`. Vercel's
+ * static-file resolver serves this for a `/<route>` request automatically.
+ * Using the directory form (instead of `<route>.html`) means SPA fallbacks
+ * for unprerendered routes still work: when no file exists at that path,
+ * Vercel falls through to the rewrite catch-all that sends every other
+ * request to the root index.html.
  *
- * For nested routes (e.g. `/szolgaltatasok/ai-marketing`) we create
- * `dist/public/szolgaltatasok/ai-marketing.html`. mkdirSync ensures the
- * parent directory exists.
+ * For nested routes (e.g. `/szolgaltatasok/ai-marketing`) the file is
+ * `dist/public/szolgaltatasok/ai-marketing/index.html`. mkdirSync ensures
+ * the parent directory exists.
  */
 function writeRouteFile(route, html) {
   if (route.path === "/") {
@@ -244,7 +251,7 @@ function writeRouteFile(route, html) {
     return;
   }
   const trimmed = route.path.replace(/^\/+/, "");
-  const outPath = join(PUBLIC_DIR, `${trimmed}.html`);
+  const outPath = join(PUBLIC_DIR, trimmed, "index.html");
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, html, "utf8");
 }

@@ -109,7 +109,7 @@ export default function Footer({ hideNewsletter = false }: { hideNewsletter?: bo
               {[
                 { href: "https://www.facebook.com/g2amarketing", icon: <Facebook size={16} />, label: "Facebook" },
                 { href: "https://www.youtube.com/g2amarketing", icon: <Youtube size={16} />, label: "YouTube" },
-                { href: "https://www.linkedin.com/company/g2amarketing", icon: <Linkedin size={16} />, label: "LinkedIn" },
+                { href: "https://www.linkedin.com/company/g2a-marketing/", icon: <Linkedin size={16} />, label: "LinkedIn" },
               ].map(s => (
                 <a
                   key={s.label}
@@ -300,14 +300,6 @@ export default function Footer({ hideNewsletter = false }: { hideNewsletter?: bo
             >
               {t("footer.cookieSettings")}
             </button>
-            <a
-              href="/admin"
-              style={{ color: "var(--g2a-text-muted)", opacity: 0.6, fontSize: "0.8125rem", textDecoration: "none" }}
-              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = "1"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = "0.6"; }}
-            >
-              {t("footer.admin")}
-            </a>
           </div>
         </div>
       </div>
