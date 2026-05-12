@@ -275,6 +275,11 @@ var emailEvents = mysqlTable("email_events", {
   rawData: text("rawData"),
   receivedAt: timestamp("receivedAt").defaultNow().notNull()
 });
+var rateLimitHits = mysqlTable("rate_limit_hits", {
+  id: int("id").autoincrement().primaryKey(),
+  bucketKey: varchar("bucketKey", { length: 192 }).notNull(),
+  hitAt: timestamp("hitAt").defaultNow().notNull()
+});
 var newsletterSubscribers = mysqlTable("newsletter_subscribers", {
   id: int("id").autoincrement().primaryKey(),
   email: varchar("email", { length: 320 }).notNull().unique(),
@@ -1826,6 +1831,50 @@ function getClientIp(req) {
   return req.ip || req.socket.remoteAddress || "unknown";
 }
 
+// server/_core/dbRateLimit.ts
+import { and as and2, eq as eq2, gte, lt, sql as sql2 } from "drizzle-orm";
+async function checkRateLimitDb(bucketKey, opts) {
+  const db = await getDb();
+  if (!db) {
+    return checkRateLimit(bucketKey, opts);
+  }
+  const now = Date.now();
+  const windowStart = new Date(now - opts.windowMs);
+  try {
+    const rows = await db.select({ count: sql2`COUNT(*)` }).from(rateLimitHits).where(
+      and2(
+        eq2(rateLimitHits.bucketKey, bucketKey),
+        gte(rateLimitHits.hitAt, windowStart)
+      )
+    );
+    const hitCount = Number(rows[0]?.count ?? 0);
+    if (hitCount >= opts.max) {
+      const [oldest] = await db.select({ hitAt: rateLimitHits.hitAt }).from(rateLimitHits).where(
+        and2(
+          eq2(rateLimitHits.bucketKey, bucketKey),
+          gte(rateLimitHits.hitAt, windowStart)
+        )
+      ).orderBy(rateLimitHits.hitAt).limit(1);
+      const oldestMs = oldest ? new Date(oldest.hitAt).getTime() : now;
+      return {
+        allowed: false,
+        retryAt: oldestMs + opts.windowMs,
+        remaining: 0
+      };
+    }
+    await db.insert(rateLimitHits).values({ bucketKey });
+    if (Math.random() < 0.05) {
+      const cutoff = new Date(now - 60 * 60 * 1e3);
+      db.delete(rateLimitHits).where(lt(rateLimitHits.hitAt, cutoff)).catch(() => {
+      });
+    }
+    return { allowed: true, remaining: opts.max - hitCount - 1 };
+  } catch (err) {
+    console.warn("[dbRateLimit] DB check failed, falling back to memory:", err);
+    return checkRateLimit(bucketKey, opts);
+  }
+}
+
 // server/_core/spam.ts
 var HONEYPOT_FIELD = "website";
 function isHoneypotTriggered(input) {
@@ -1846,7 +1895,7 @@ async function guardPublicFormOrSilent(ctx, input, formKey, silentSuccess) {
     return silentSuccess;
   }
   const ip = getClientIp(ctx.req);
-  const limit = checkRateLimit(`${formKey}:${ip}`, { max: 5, windowMs: 15 * 60 * 1e3 });
+  const limit = await checkRateLimitDb(`${formKey}:${ip}`, { max: 5, windowMs: 15 * 60 * 1e3 });
   if (!limit.allowed) {
     const minutes = Math.ceil(((limit.retryAt ?? Date.now()) - Date.now()) / 6e4);
     throw new TRPCError3({
@@ -1949,11 +1998,19 @@ var contactRouter = router({
     message: z2.string().min(10, "Az \xFCzenet legal\xE1bb 10 karakter legyen"),
     serviceInterest: z2.string().optional(),
     // Honeypot — must remain empty for the submission to be persisted
-    [HONEYPOT_FIELD]: z2.string().optional()
+    [HONEYPOT_FIELD]: z2.string().optional(),
+    // Optional form-origin marker. Lets shared endpoints (e.g. /karrier
+    // posts to contact.submit) keep separate rate-limit buckets so a job
+    // applicant doesn't burn through the contact form's quota.
+    formContext: z2.enum(["contact", "careers"]).optional()
   })).mutation(async ({ input, ctx }) => {
-    const guard = await guardPublicFormOrSilent(ctx, input, "contact", { success: true });
+    const bucket = input.formContext === "careers" ? "careers" : "contact";
+    const guard = await guardPublicFormOrSilent(ctx, input, bucket, { success: true });
     if (guard) return guard;
-    await createContactSubmission(input);
+    const { [HONEYPOT_FIELD]: _hp, formContext: _fc, ...submission } = input;
+    void _hp;
+    void _fc;
+    await createContactSubmission(submission);
     await notifyOwner({
       title: `\xDAj kapcsolatfelv\xE9tel: ${input.name}`,
       content: `**Felad\xF3:** ${input.name}
@@ -3005,6 +3062,246 @@ function registerResendWebhookRoute(app2) {
   );
 }
 
+// server/_core/sitemapRoute.ts
+import { desc as desc2, eq as eq3 } from "drizzle-orm";
+var ORIGIN = "https://g2amarketing.hu";
+var LANGS = [
+  { code: "hu", prefix: "", hreflang: "hu" },
+  { code: "en", prefix: "/en", hreflang: "en" },
+  { code: "zh", prefix: "/zh", hreflang: "zh-CN" }
+];
+var STATIC_PATHS = [
+  // Home + top-level
+  { path: "/", priority: "1.0", changefreq: "weekly" },
+  { path: "/rolunk", priority: "0.8", changefreq: "monthly" },
+  { path: "/ingyenes-audit", priority: "0.9", changefreq: "monthly" },
+  { path: "/ingyenes-seo-audit", priority: "0.9", changefreq: "monthly" },
+  { path: "/referenciak", priority: "0.8", changefreq: "monthly" },
+  { path: "/kapcsolat", priority: "0.8", changefreq: "monthly" },
+  { path: "/szakertelem", priority: "0.7", changefreq: "monthly" },
+  { path: "/technologia", priority: "0.7", changefreq: "monthly" },
+  { path: "/partnereink", priority: "0.7", changefreq: "monthly" },
+  { path: "/hirek", priority: "0.8", changefreq: "weekly" },
+  { path: "/adatvedelmi-iranyelvek", priority: "0.3", changefreq: "yearly" },
+  { path: "/aszf", priority: "0.3", changefreq: "yearly" },
+  { path: "/hirlevel", priority: "0.7", changefreq: "monthly" },
+  { path: "/marketing-audit", priority: "0.9", changefreq: "monthly" },
+  { path: "/karrier", priority: "0.6", changefreq: "monthly" },
+  // Services
+  { path: "/szolgaltatasok", priority: "0.9", changefreq: "monthly" },
+  ...[
+    "lokalizacio",
+    "arculattervezes",
+    "hirdeteskezeles",
+    "kozossegi-media",
+    "strategiai-marketing",
+    "keresooptimalizalas",
+    "webfejlesztes",
+    "ai-marketing",
+    "ppc-google-ads",
+    "meta-hirdetes",
+    "tartalommarketing",
+    "marketing-automatizacio",
+    "esg-kommunikacio",
+    "employer-branding",
+    "nemzetkozi-marketing"
+  ].map((slug) => ({
+    path: `/szolgaltatasok/${slug}`,
+    priority: "0.8",
+    changefreq: "monthly"
+  })),
+  // Industry landing pages
+  ...[
+    "marketing-egeszsegugyi-cegeknek",
+    "marketing-szepsegipari-cegeknek",
+    "marketing-mernoki-irodaknak",
+    "marketing-autoipari-cegeknek",
+    "marketing-ugyvedii-irodaknak",
+    "marketing-technologiai-cegeknek",
+    "marketing-onkormanyzati-projekteknek",
+    "marketing-b2b-cegeknek"
+  ].map((slug) => ({
+    path: `/iparagi/${slug}`,
+    priority: "0.8",
+    changefreq: "monthly"
+  }))
+];
+function buildUrl(path, langPrefix) {
+  if (path === "/") return `${ORIGIN}${langPrefix || "/"}`;
+  return `${ORIGIN}${langPrefix}${path}`;
+}
+function escapeXml(s) {
+  return s.replace(/[&<>'"]/g, (c) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "'": "&apos;",
+    '"': "&quot;"
+  })[c]);
+}
+function renderUrlEntry(entry) {
+  const lastmod = entry.lastmod ?? (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+  const blocks = [];
+  for (const lang of LANGS) {
+    const loc = buildUrl(entry.path, lang.prefix);
+    const altLinks = LANGS.map(
+      (alt) => `    <xhtml:link rel="alternate" hreflang="${alt.hreflang}" href="${escapeXml(buildUrl(entry.path, alt.prefix))}" />`
+    ).join("\n");
+    blocks.push(
+      `  <url>
+    <loc>${escapeXml(loc)}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${entry.changefreq}</changefreq>
+    <priority>${entry.priority}</priority>
+${altLinks}
+    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(buildUrl(entry.path, ""))}" />
+  </url>`
+    );
+  }
+  return blocks.join("\n");
+}
+async function fetchDynamicPaths() {
+  const db = await getDb();
+  if (!db) return [];
+  const out = [];
+  try {
+    const blogRows = await db.select({
+      slug: posts.slug,
+      updatedAt: posts.updatedAt,
+      publishedAt: posts.publishedAt
+    }).from(posts).where(eq3(posts.status, "published")).orderBy(desc2(posts.publishedAt));
+    for (const r of blogRows) {
+      const mod = r.updatedAt ?? r.publishedAt;
+      out.push({
+        path: `/hirek/${r.slug}`,
+        priority: "0.7",
+        changefreq: "monthly",
+        lastmod: mod ? new Date(mod).toISOString().slice(0, 10) : void 0
+      });
+    }
+    const csRows = await db.select({
+      slug: caseStudies.slug,
+      updatedAt: caseStudies.updatedAt
+    }).from(caseStudies).where(eq3(caseStudies.isActive, true)).orderBy(desc2(caseStudies.updatedAt));
+    for (const r of csRows) {
+      out.push({
+        path: `/referenciak/${r.slug}`,
+        priority: "0.7",
+        changefreq: "monthly",
+        lastmod: r.updatedAt ? new Date(r.updatedAt).toISOString().slice(0, 10) : void 0
+      });
+    }
+  } catch (err) {
+    console.warn("[sitemap] DB query failed, serving static skeleton only:", err);
+  }
+  return out;
+}
+function registerSitemapRoute(app2) {
+  const handler = async (_req, res) => {
+    const dynamic = await fetchDynamicPaths();
+    const all = [...STATIC_PATHS, ...dynamic];
+    const body = [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+      '        xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+      "",
+      `  <!-- Generated dynamically \u2014 ${all.length} paths \xD7 ${LANGS.length} languages = ${all.length * LANGS.length} URL entries -->`,
+      "",
+      ...all.map(renderUrlEntry),
+      "",
+      "</urlset>",
+      ""
+    ].join("\n");
+    res.setHeader("Content-Type", "application/xml; charset=utf-8");
+    res.setHeader("Cache-Control", "public, max-age=300, s-maxage=3600");
+    res.send(body);
+  };
+  app2.get("/sitemap.xml", handler);
+  app2.get("/api/sitemap.xml", handler);
+}
+
+// server/_core/rssRoute.ts
+import { desc as desc3, eq as eq4 } from "drizzle-orm";
+var ORIGIN2 = "https://g2amarketing.hu";
+var FEED_TITLE = "G2A Marketing \u2014 Blog";
+var FEED_DESC = "Marketing tippek, trendek \xE9s ipar\xE1gi h\xEDrek a G2A Marketing csapat\xE1t\xF3l. P\xE9cs, Magyarorsz\xE1g.";
+var FEED_LANGUAGE = "hu-HU";
+var ITEM_LIMIT = 20;
+function escapeXml2(s) {
+  return s.replace(/[&<>'"]/g, (c) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "'": "&apos;",
+    '"': "&quot;"
+  })[c]);
+}
+function htmlToText(html, maxChars = 500) {
+  const text2 = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return text2.length > maxChars ? text2.slice(0, maxChars).trimEnd() + "\u2026" : text2;
+}
+function rfc822(d) {
+  return d.toUTCString();
+}
+function registerRssRoute(app2) {
+  const handler = async (_req, res) => {
+    const db = await getDb();
+    const now = /* @__PURE__ */ new Date();
+    let items = [];
+    if (db) {
+      try {
+        const rows = await db.select({
+          slug: posts.slug,
+          title: posts.title,
+          excerpt: posts.excerpt,
+          content: posts.content,
+          authorName: posts.authorName,
+          publishedAt: posts.publishedAt,
+          updatedAt: posts.updatedAt
+        }).from(posts).where(eq4(posts.status, "published")).orderBy(desc3(posts.publishedAt)).limit(ITEM_LIMIT);
+        items = rows.map((r) => {
+          const link = `${ORIGIN2}/hirek/${r.slug}`;
+          const pubDate = r.publishedAt ? rfc822(new Date(r.publishedAt)) : rfc822(now);
+          const description = htmlToText(r.excerpt || r.content || "");
+          const author = r.authorName || "G2A Marketing";
+          return [
+            "    <item>",
+            `      <title>${escapeXml2(r.title)}</title>`,
+            `      <link>${escapeXml2(link)}</link>`,
+            `      <guid isPermaLink="true">${escapeXml2(link)}</guid>`,
+            `      <pubDate>${pubDate}</pubDate>`,
+            `      <author>info@g2amarketing.hu (${escapeXml2(author)})</author>`,
+            `      <description><![CDATA[${description}]]></description>`,
+            "    </item>"
+          ].join("\n");
+        });
+      } catch (err) {
+        console.warn("[rss] DB query failed, serving empty channel:", err);
+      }
+    }
+    const body = [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
+      "  <channel>",
+      `    <title>${escapeXml2(FEED_TITLE)}</title>`,
+      `    <link>${ORIGIN2}/hirek</link>`,
+      `    <description>${escapeXml2(FEED_DESC)}</description>`,
+      `    <language>${FEED_LANGUAGE}</language>`,
+      `    <lastBuildDate>${rfc822(now)}</lastBuildDate>`,
+      `    <atom:link href="${ORIGIN2}/rss.xml" rel="self" type="application/rss+xml" />`,
+      ...items,
+      "  </channel>",
+      "</rss>",
+      ""
+    ].join("\n");
+    res.setHeader("Content-Type", "application/rss+xml; charset=utf-8");
+    res.setHeader("Cache-Control", "public, max-age=600, s-maxage=3600");
+    res.send(body);
+  };
+  app2.get("/rss.xml", handler);
+  app2.get("/api/rss.xml", handler);
+}
+
 // server/_core/app.ts
 function createApp() {
   const app2 = express();
@@ -3013,6 +3310,8 @@ function createApp() {
   registerOAuthRoutes(app2);
   registerNewsletterRoutes(app2);
   registerResendWebhookRoute(app2);
+  registerSitemapRoute(app2);
+  registerRssRoute(app2);
   app2.use(
     "/api/trpc",
     createExpressMiddleware({

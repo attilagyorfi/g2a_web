@@ -6,7 +6,7 @@ Disallow: /admin
 Disallow: /admin/
 Disallow: /api/
 
-# Sitemap location
+# Sitemap location (dynamic — generated from DB; includes blog posts + case studies)
 Sitemap: https://g2amarketing.hu/sitemap.xml
 
 # Crawl delay

@@ -16,6 +16,8 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { registerNewsletterRoutes } from "./newsletterRoutes";
 import { registerResendWebhookRoute } from "./resendWebhookRoute";
+import { registerSitemapRoute } from "./sitemapRoute";
+import { registerRssRoute } from "./rssRoute";
 
 export function createApp(): Express {
   const app = express();
@@ -34,6 +36,13 @@ export function createApp(): Express {
   // attach a route-scoped raw-body parser inside `registerResendWebhookRoute`
   // since signature verification requires the original bytes.
   registerResendWebhookRoute(app);
+
+  // Dynamic sitemap — GET /sitemap.xml (DB-driven, includes posts + case studies).
+  // Vercel rewrites `/sitemap.xml` → `/api`; in dev Express handles directly.
+  registerSitemapRoute(app);
+
+  // RSS 2.0 feed — GET /rss.xml — latest 20 published blog posts.
+  registerRssRoute(app);
 
   // tRPC API — /api/trpc/*
   app.use(

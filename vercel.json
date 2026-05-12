@@ -4,6 +4,8 @@
   "outputDirectory": "dist/public",
   "framework": null,
   "rewrites": [
+    { "source": "/sitemap.xml", "destination": "/api" },
+    { "source": "/rss.xml", "destination": "/api" },
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/((?!api/).+)", "destination": "/index.html" }
   ],
