@@ -2,8 +2,24 @@ import { useEffect } from "react";
 import { useLanguage, parseLangPath, buildLangPath } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
 import { renderJsonLd } from "@/lib/jsonLd";
+import { ogImageUrl } from "@/lib/cloudinary";
 
 const SITE_ORIGIN = "https://g2amarketing.hu";
+
+/**
+ * Strip the brand-name suffix from a page title before rendering it onto the
+ * OG image. Titles in this codebase commonly end with `" – G2A Marketing"`,
+ * `" – G2A"`, or `" | G2A …"` — the brand is already the subtitle line on the
+ * OG card, so repeating it as part of the headline is visually noisy and
+ * wastes the limited title width.
+ */
+function stripBrandSuffix(title: string): string {
+  return title.replace(/\s*[–|—-]\s*G2A.*$/i, "").trim();
+}
+
+/** Hardcoded last-resort OG image if Cloudinary isn't configured at build time. */
+const FALLBACK_OG_IMAGE =
+  "https://res.cloudinary.com/dzh1unb6d/image/upload/w_1200,h_630,c_pad,b_rgb:0a0a0a,q_auto,f_auto/g2a/og/default-logo.png";
 
 interface SeoHeadProps {
   title?: string;
@@ -33,10 +49,11 @@ export default function SeoHead({
   description = "A G2A Marketing adatvezérelt, kreatív online marketing ügynökség Pécsről. Keresőoptimalizálás, hirdetéskezelés, webfejlesztés, közösségi média és arculattervezés.",
   ogTitle,
   ogDescription,
-  // OG image — Cloudinary-transformed to 1200x630 (Facebook/LinkedIn recommended)
-  // with dark background + center-fitted G2A logo. Falls back to plain logo if
-  // Cloudinary ever returns an error (the URL still resolves to the source PNG).
-  ogImage = "https://res.cloudinary.com/dzh1unb6d/image/upload/w_1200,h_630,c_pad,b_rgb:0a0a0a,q_auto,f_auto/g2a/og/default-logo.png",
+  // OG image — when not explicitly set, auto-render a per-page 1200×630 card
+  // with the page title baked in (via Cloudinary text-overlay transforms).
+  // Callers can still pass `ogImage` for cases where a hero photo / featured
+  // image makes more sense (blog posts, case studies).
+  ogImage,
   canonicalUrl,
   schemaJson,
   pageSchemas,
@@ -46,6 +63,13 @@ export default function SeoHead({
 
   useEffect(() => {
     document.title = title;
+
+    // Resolve the effective OG image:
+    //  1. Explicit prop (e.g. a blog post's featured image)
+    //  2. Cloudinary-generated card with the page title baked in
+    //  3. Plain-logo fallback if Cloudinary isn't configured
+    const resolvedOgImage =
+      ogImage ?? (ogImageUrl(stripBrandSuffix(ogTitle || title), "G2A Marketing") || FALLBACK_OG_IMAGE);
 
     const setMeta = (selector: string, content: string) => {
       let el = document.querySelector(selector) as HTMLMetaElement | null;
@@ -62,13 +86,13 @@ export default function SeoHead({
     setMeta('meta[name="description"]', description);
     setMeta('meta[property="og:title"]', ogTitle || title);
     setMeta('meta[property="og:description"]', ogDescription || description);
-    setMeta('meta[property="og:image"]', ogImage);
+    setMeta('meta[property="og:image"]', resolvedOgImage);
     setMeta('meta[property="og:type"]', "website");
     setMeta('meta[property="og:locale"]', lang === "hu" ? "hu_HU" : lang === "en" ? "en_US" : "zh_CN");
     setMeta('meta[name="twitter:card"]', "summary_large_image");
     setMeta('meta[name="twitter:title"]', ogTitle || title);
     setMeta('meta[name="twitter:description"]', ogDescription || description);
-    setMeta('meta[name="twitter:image"]', ogImage);
+    setMeta('meta[name="twitter:image"]', resolvedOgImage);
 
     if (noIndex) {
       setMeta('meta[name="robots"]', "noindex, nofollow");
