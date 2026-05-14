@@ -21,4 +21,15 @@ export const ENV = {
   // OpenAI — admin AI assist (blog draft, SEO meta, text improve)
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
   openaiModel: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
+  // Admin password-based login — fallback while Manus OAuth isn't set up.
+  // When both are populated, /api/auth/password-login accepts the
+  // matching credentials and issues a session cookie compatible with the
+  // existing OAuth-flow session schema. When empty, the endpoint refuses
+  // and the public site/admin UI hides the password form.
+  adminEmail: process.env.ADMIN_EMAIL ?? "",
+  adminPassword: process.env.ADMIN_PASSWORD ?? "",
+  // Surfaced to the client at build time as VITE_OAUTH_PORTAL_URL — used
+  // by the admin login UI to decide whether to render the OAuth button or
+  // the password fallback. Kept here for symmetry with other ENV reads.
+  oauthPortalUrl: process.env.VITE_OAUTH_PORTAL_URL ?? "",
 };

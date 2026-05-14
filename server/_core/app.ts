@@ -18,6 +18,7 @@ import { registerNewsletterRoutes } from "./newsletterRoutes";
 import { registerResendWebhookRoute } from "./resendWebhookRoute";
 import { registerSitemapRoute } from "./sitemapRoute";
 import { registerRssRoute } from "./rssRoute";
+import { registerPasswordAuthRoute } from "./passwordAuthRoute";
 
 export function createApp(): Express {
   const app = express();
@@ -27,6 +28,10 @@ export function createApp(): Express {
 
   // OAuth callback — /api/oauth/callback
   registerOAuthRoutes(app);
+
+  // Password-based admin login (fallback while Manus OAuth isn't set up).
+  // No-ops at runtime when ADMIN_EMAIL / ADMIN_PASSWORD are unset.
+  registerPasswordAuthRoute(app);
 
   // Newsletter unsubscribe — GET /api/newsletter/unsubscribe?token=...
   registerNewsletterRoutes(app);

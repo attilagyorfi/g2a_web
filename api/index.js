@@ -375,7 +375,18 @@ var ENV = {
   cloudinaryCloudName: process.env.VITE_CLOUDINARY_CLOUD_NAME ?? "",
   // OpenAI — admin AI assist (blog draft, SEO meta, text improve)
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
-  openaiModel: process.env.OPENAI_MODEL ?? "gpt-4o-mini"
+  openaiModel: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
+  // Admin password-based login — fallback while Manus OAuth isn't set up.
+  // When both are populated, /api/auth/password-login accepts the
+  // matching credentials and issues a session cookie compatible with the
+  // existing OAuth-flow session schema. When empty, the endpoint refuses
+  // and the public site/admin UI hides the password form.
+  adminEmail: process.env.ADMIN_EMAIL ?? "",
+  adminPassword: process.env.ADMIN_PASSWORD ?? "",
+  // Surfaced to the client at build time as VITE_OAUTH_PORTAL_URL — used
+  // by the admin login UI to decide whether to render the OAuth button or
+  // the password fallback. Kept here for symmetry with other ENV reads.
+  oauthPortalUrl: process.env.VITE_OAUTH_PORTAL_URL ?? ""
 };
 
 // server/db.ts
@@ -3302,12 +3313,79 @@ function registerRssRoute(app2) {
   app2.get("/api/rss.xml", handler);
 }
 
+// server/_core/passwordAuthRoute.ts
+import { SignJWT as SignJWT2 } from "jose";
+import { timingSafeEqual as timingSafeEqual2 } from "node:crypto";
+var PASSWORD_ADMIN_OPEN_ID = "password-admin";
+var FALLBACK_APP_ID_TAG = "g2a-password-admin";
+function safeEquals(a, b) {
+  if (a.length !== b.length) return false;
+  return timingSafeEqual2(Buffer.from(a, "utf8"), Buffer.from(b, "utf8"));
+}
+function registerPasswordAuthRoute(app2) {
+  app2.post("/api/auth/password-login", async (req, res) => {
+    const { email, password } = req.body ?? {};
+    if (typeof email !== "string" || typeof password !== "string" || !email || !password) {
+      res.status(400).json({ error: "email and password are required" });
+      return;
+    }
+    if (!ENV.adminEmail || !ENV.adminPassword || !ENV.cookieSecret) {
+      res.status(503).json({
+        error: "Password login not configured. Set ADMIN_EMAIL, ADMIN_PASSWORD, and JWT_SECRET in Vercel environment."
+      });
+      return;
+    }
+    const ip = getClientIp(req);
+    const limit = await checkRateLimitDb(`admin-login:${ip}`, {
+      max: 5,
+      windowMs: 15 * 60 * 1e3
+    });
+    if (!limit.allowed) {
+      const minutes = Math.ceil(((limit.retryAt ?? Date.now()) - Date.now()) / 6e4);
+      res.status(429).json({
+        error: `T\xFAl sok bejelentkez\xE9si k\xEDs\xE9rlet. Pr\xF3b\xE1ld \xFAjra ${minutes} perc m\xFAlva.`
+      });
+      return;
+    }
+    const emailOk = safeEquals(email, ENV.adminEmail);
+    const pwdOk = safeEquals(password, ENV.adminPassword);
+    if (!(emailOk && pwdOk)) {
+      res.status(401).json({ error: "Hib\xE1s email vagy jelsz\xF3." });
+      return;
+    }
+    try {
+      await upsertUser({
+        openId: PASSWORD_ADMIN_OPEN_ID,
+        name: "Admin",
+        email,
+        role: "admin",
+        loginMethod: "password",
+        lastSignedIn: /* @__PURE__ */ new Date()
+      });
+      const secretKey = new TextEncoder().encode(ENV.cookieSecret);
+      const expirationSeconds = Math.floor((Date.now() + ONE_YEAR_MS) / 1e3);
+      const sessionToken = await new SignJWT2({
+        openId: PASSWORD_ADMIN_OPEN_ID,
+        appId: ENV.appId || FALLBACK_APP_ID_TAG,
+        name: "Admin"
+      }).setProtectedHeader({ alg: "HS256", typ: "JWT" }).setExpirationTime(expirationSeconds).sign(secretKey);
+      const cookieOptions = getSessionCookieOptions(req);
+      res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+      res.json({ success: true });
+    } catch (err) {
+      console.error("[password-login] Session creation failed:", err);
+      res.status(500).json({ error: "Bels\u0151 hiba a bejelentkez\xE9s sor\xE1n." });
+    }
+  });
+}
+
 // server/_core/app.ts
 function createApp() {
   const app2 = express();
   app2.use(express.json({ limit: "50mb" }));
   app2.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerOAuthRoutes(app2);
+  registerPasswordAuthRoute(app2);
   registerNewsletterRoutes(app2);
   registerResendWebhookRoute(app2);
   registerSitemapRoute(app2);

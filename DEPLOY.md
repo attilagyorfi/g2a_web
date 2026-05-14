@@ -14,7 +14,25 @@ Másold le a [`.env.example`](.env.example) fájlt `.env`-re, és töltsd ki min
 |---|---|---|
 | `DATABASE_URL` | TiDB Cloud konzol → Connect → General | `node -e "require('mysql2/promise').createConnection(process.env.DATABASE_URL).then(c=>c.query('SELECT 1').then(console.log))"` |
 | `JWT_SECRET` | `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` | Min. 32 karakter |
-| `VITE_APP_ID`, `VITE_OAUTH_PORTAL_URL`, `OAUTH_SERVER_URL`, `OWNER_OPEN_ID` | Manus Settings → App Registration | Regisztráld az appot, redirect URI = `https://g2amarketing.hu/api/oauth/callback` |
+
+### Admin login (válassz egyet)
+
+Az admin felület (`/admin`) eléréséhez vagy a Manus OAuth-ot, vagy a beépített jelszó-fallback-et kell beállítani. A kettőt egyszerre is be lehet kapcsolni — a frontend a Manus OAuth-ot preferálja, ha mindkét konfig megvan.
+
+**Opció A — Manus OAuth (preferált, ha a Manus app már megvan):**
+
+| Változó | Honnan | Megjegyzés |
+|---|---|---|
+| `VITE_APP_ID`, `VITE_OAUTH_PORTAL_URL`, `OAUTH_SERVER_URL`, `OWNER_OPEN_ID` | Manus Settings → App Registration | Redirect URI = `https://g2amarketing.hu/api/oauth/callback` |
+
+**Opció B — Jelszó-fallback (használj, amíg az OAuth nincs beállítva):**
+
+| Változó | Mi az | Megjegyzés |
+|---|---|---|
+| `ADMIN_EMAIL` | Belépési email cím | bármilyen — csak helyileg ellenőrzött, nem küld emailt |
+| `ADMIN_PASSWORD` | Belépési jelszó | min. 12 karakter, generálva `node -e "console.log(require('crypto').randomBytes(18).toString('base64url'))"` |
+
+A jelszó-flow rate-limit-elve van (IP-nként 5 próbálkozás / 15 perc DB-backed limiterben). Sikeres belépés után ugyanazt a `app_session_id` cookie-t kapja a böngésző, mint OAuth-flow esetén. Mindkét vált. törlésével a fallback inaktívvá válik.
 
 ### Opcionális
 

@@ -7,9 +7,17 @@ import {
   Image, Star, Briefcase, Globe, Cpu, Heart, Tag,
   ChevronLeft, ChevronRight, LogOut, Shield, BookOpen, ClipboardList
 } from "lucide-react";
+import AdminPasswordLogin from "./AdminPasswordLogin";
 
 // Cloudinary-hosted logo (migrated from legacy WP). Auto-formatted (WebP/AVIF).
 const LOGO_URL = "https://res.cloudinary.com/dzh1unb6d/image/upload/f_auto,q_auto,w_64/g2a/og/default-logo.png";
+
+// True when Manus OAuth env vars are populated at build time. When false the
+// login screen renders a password form (fallback) instead of the OAuth button
+// — so the admin route stays usable even before Manus app registration.
+const OAUTH_CONFIGURED = Boolean(
+  import.meta.env.VITE_OAUTH_PORTAL_URL && import.meta.env.VITE_APP_ID,
+);
 
 const navItems = [
   { href: "/admin", icon: LayoutDashboard, label: "Irányítópult", exact: true },
@@ -43,6 +51,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   if (!isAuthenticated) {
+    // Fallback path while Manus OAuth isn't configured — render the password
+    // form instead of an OAuth button that would just bounce back here.
+    if (!OAUTH_CONFIGURED) {
+      return <AdminPasswordLogin />;
+    }
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "#0f0f0f", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center", maxWidth: "400px", padding: "2rem" }}>
