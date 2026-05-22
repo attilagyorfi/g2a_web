@@ -230,27 +230,20 @@ const auditRouter = router({
 });
 
 // ─── Newsletter Router ────────────────────────────────────────────────────────
-/**
- * Renders the welcome email body.
- * NOTE: every campaign / transactional email MUST include the unsubscribe link
- * (legal requirement under GDPR + CAN-SPAM + EU ePrivacy).
- */
-function renderWelcomeEmailHtml(name: string | undefined, unsubscribeUrl: string): string {
-  const greeting = name ? `Szia ${name}!` : "Szia!";
-  return `<div style="max-width:560px;margin:0 auto;padding:32px 24px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#1f2937">
-  <div style="border-left:4px solid #14B8A6;padding-left:16px;margin-bottom:24px">
-    <h1 style="margin:0;font-size:22px;color:#0f172a">${greeting}</h1>
-    <p style="margin:6px 0 0;color:#64748b;font-size:14px">Köszönjük, hogy feliratkoztál a G2A Marketing hírlevelére.</p>
-  </div>
-  <p style="line-height:1.6;font-size:15px">Időről időre praktikus marketing tartalmat, esettanulmányokat és AI-alapú megoldásokat küldünk a postaládádba — heti maximum 1 emailt, sose kéretlenül.</p>
-  <p style="line-height:1.6;font-size:15px">Ha valamiben tudunk segíteni, válaszolj erre az emailre, vagy keress minket a <a href="https://g2amarketing.hu/kapcsolat" style="color:#0d9488;text-decoration:underline">g2amarketing.hu/kapcsolat</a> oldalon.</p>
-  <hr style="margin:32px 0;border:none;border-top:1px solid #e5e7eb">
-  <p style="font-size:11px;color:#9ca3af;line-height:1.5">
-    Ezt az emailt azért kaptad, mert feliratkoztál a g2amarketing.hu hírlevelére.<br>
-    Ha többé nem szeretnél emailt kapni, <a href="${unsubscribeUrl}" style="color:#9ca3af">kattints ide a leiratkozáshoz</a>.
-  </p>
-  <p style="font-size:11px;color:#cbd5e1;margin-top:8px">G2A Marketing Bt. · Pécs · info@g2amarketing.hu</p>
-</div>`;
+// Email template implementations live in `_core/emailTemplates.ts` so they
+// can be reused by the digest-send cron + manual test scripts. We just
+// re-export the welcome renderer with the legacy signature so any existing
+// callers don't break.
+import { renderWelcomeEmailHtml as _renderWelcomeEmail } from "./_core/emailTemplates";
+
+/** Renders the welcome email body. Every campaign / transactional email MUST
+ *  include the unsubscribe link (GDPR + CAN-SPAM + EU ePrivacy). */
+function renderWelcomeEmailHtml(
+  name: string | undefined,
+  unsubscribeUrl: string,
+  topics?: string[],
+): string {
+  return _renderWelcomeEmail({ name, unsubscribeUrl, topics });
 }
 
 const newsletterRouter = router({
@@ -300,7 +293,7 @@ const newsletterRouter = router({
         await sendEmail({
           to: input.email,
           subject: "Üdv a G2A Marketing hírlevelében!",
-          html: renderWelcomeEmailHtml(input.name, unsubscribeUrl),
+          html: renderWelcomeEmailHtml(input.name, unsubscribeUrl, input.topics),
           text: `${input.name ? `Szia ${input.name}!` : "Szia!"}\n\nKöszönjük, hogy feliratkoztál a G2A Marketing hírlevelére. Heti max 1 emailt küldünk, sose kéretlenül.\n\nLeiratkozás: ${unsubscribeUrl}\n\nG2A Marketing Bt. · Pécs · info@g2amarketing.hu`,
         });
       }

@@ -19,6 +19,7 @@ import { registerResendWebhookRoute } from "./resendWebhookRoute";
 import { registerSitemapRoute } from "./sitemapRoute";
 import { registerRssRoute } from "./rssRoute";
 import { registerPasswordAuthRoute } from "./passwordAuthRoute";
+import { registerDigestCronRoute } from "./digestCronRoute";
 
 export function createApp(): Express {
   const app = express();
@@ -48,6 +49,10 @@ export function createApp(): Express {
 
   // RSS 2.0 feed — GET /rss.xml — latest 20 published blog posts.
   registerRssRoute(app);
+
+  // Weekly newsletter digest cron — GET /api/cron/weekly-digest. Triggered
+  // by the schedule in vercel.json (Fridays 07:00 UTC = 09:00 CEST).
+  registerDigestCronRoute(app);
 
   // tRPC API — /api/trpc/*
   app.use(

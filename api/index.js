@@ -1894,6 +1894,218 @@ function isHoneypotTriggered(input) {
 
 // server/routers.ts
 import { randomBytes } from "node:crypto";
+
+// server/_core/emailTemplates.ts
+var BRAND_TEAL = "#14B8A6";
+var BRAND_DARK = "#0a0a0a";
+var TEXT_PRIMARY = "#0f172a";
+var TEXT_SECONDARY = "#475569";
+var TEXT_MUTED = "#94a3b8";
+var BG_SUBTLE = "#f8fafc";
+var BORDER = "#e5e7eb";
+var FONT_SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif";
+var FONT_MONO = "'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', Courier, monospace";
+function wrapper(inner, preheader) {
+  const preheaderHtml = `
+    <div style="display:none;font-size:1px;color:#fefefe;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden">
+      ${escapeHtml(preheader)}
+    </div>`;
+  return `<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+</head>
+<body style="margin:0;padding:0;background:${BG_SUBTLE};font-family:${FONT_SANS};color:${TEXT_PRIMARY}">
+  ${preheaderHtml}
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};padding:32px 16px">
+    <tr>
+      <td align="center">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,0.06)">
+          <tr><td>${inner}</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+function header(opts) {
+  const tag = opts.tag ? `<div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:8px">${escapeHtml(opts.tag)}</div>` : "";
+  return `
+    <div style="background:${BRAND_DARK};padding:28px 32px;color:#ffffff">
+      ${tag}
+      <div style="font-size:18px;font-weight:700;letter-spacing:0.02em">G2A Marketing</div>
+      <div style="font-size:12px;color:#94a3b8;margin-top:4px">Adatvez\xE9relt marketing \xFCgyn\xF6ks\xE9g \xB7 P\xE9cs</div>
+    </div>`;
+}
+function footer(unsubscribeUrl) {
+  return `
+    <div style="padding:24px 32px;border-top:1px solid ${BORDER};background:${BG_SUBTLE}">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+          <td style="font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED};letter-spacing:0.04em;line-height:1.6">
+            <strong style="color:${TEXT_SECONDARY}">G2A Marketing Bt.</strong><br>
+            7621 P\xE9cs \xB7 info@g2amarketing.hu<br>
+            <a href="https://g2amarketing.hu" style="color:${TEXT_MUTED};text-decoration:none">g2amarketing.hu</a>
+          </td>
+          <td align="right" valign="top">
+            <a href="https://www.linkedin.com/company/g2a-marketing/" style="text-decoration:none;color:${TEXT_MUTED};font-size:11px;font-family:${FONT_MONO};margin-right:12px">LinkedIn</a>
+            <a href="https://www.facebook.com/g2amarketing" style="text-decoration:none;color:${TEXT_MUTED};font-size:11px;font-family:${FONT_MONO}">Facebook</a>
+          </td>
+        </tr>
+      </table>
+      <div style="margin-top:18px;padding-top:14px;border-top:1px solid ${BORDER};font-size:11px;color:${TEXT_MUTED};line-height:1.6">
+        Ezt az emailt az\xE9rt kaptad, mert feliratkozt\xE1l a g2amarketing.hu h\xEDrlevel\xE9re.<br>
+        <a href="${unsubscribeUrl}" style="color:${TEXT_MUTED};text-decoration:underline">Leiratkoz\xE1s egy kattint\xE1ssal</a> \xB7 <a href="https://g2amarketing.hu/adatvedelmi-iranyelvek" style="color:${TEXT_MUTED};text-decoration:underline">Adatv\xE9delmi t\xE1j\xE9koztat\xF3</a>
+      </div>
+    </div>`;
+}
+function escapeHtml(s) {
+  return s.replace(/[&<>'"]/g, (c) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "'": "&#39;",
+    '"': "&quot;"
+  })[c]);
+}
+var TOPIC_CARDS = {
+  strategy: {
+    tag: "STRAT\xC9GIA",
+    title: "B2B marketing strat\xE9gia",
+    desc: "Poz\xEDcion\xE1l\xE1s, ICP-meghat\xE1roz\xE1s, brand-\xE9p\xEDt\xE9s, go-to-market \u2014 m\xE9ly playbookok hetente."
+  },
+  ai: {
+    tag: "AI",
+    title: "AI & automatiz\xE1ci\xF3",
+    desc: "Konkr\xE9t AI workflow-k, prompt-receptek, kipr\xF3b\xE1lt eszk\xF6z\xF6k magyar B2B kontextusban."
+  },
+  paid: {
+    tag: "TELJES\xCDTM\xC9NY",
+    title: "SEO & teljes\xEDtm\xE9nyhirdet\xE9s",
+    desc: "Google Ads, Meta hirdet\xE9sek, organikus SEO \u2014 m\xE9rhet\u0151 eredm\xE9nyekkel, nem tal\xE1lgat\xE1s."
+  },
+  case_studies: {
+    tag: "ESETTANULM\xC1NY",
+    title: "Esettanulm\xE1nyok & adatok",
+    desc: "Anonim \xFCgyf\xE9lprojektek, val\xF3s sz\xE1mokkal \u2014 mi m\u0171k\xF6d\xF6tt \xE9s mi nem."
+  }
+};
+function renderWelcomeEmailHtml(input) {
+  const greeting = input.name ? `Szia ${escapeHtml(input.name)}!` : "Szia!";
+  const activeTopics = input.topics && input.topics.length > 0 ? input.topics.filter((t2) => TOPIC_CARDS[t2]) : Object.keys(TOPIC_CARDS);
+  const cards = activeTopics.map((key) => {
+    const c = TOPIC_CARDS[key];
+    return `
+      <tr>
+        <td style="padding:18px 20px;border:1px solid ${BORDER};border-radius:10px;background:#ffffff">
+          <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.16em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:6px">${c.tag}</div>
+          <div style="font-size:15px;font-weight:700;color:${TEXT_PRIMARY};margin-bottom:6px">${c.title}</div>
+          <div style="font-size:13px;color:${TEXT_SECONDARY};line-height:1.55">${c.desc}</div>
+        </td>
+      </tr>
+      <tr><td style="height:10px"></td></tr>`;
+  }).join("");
+  const body = `
+    ${header({ tag: "\xDCdv\xF6z\xF6llek a fed\xE9lzeten" })}
+
+    <div style="padding:36px 32px 8px">
+      <h1 style="margin:0 0 12px;font-size:26px;line-height:1.25;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.02em">${greeting}</h1>
+      <p style="margin:0 0 22px;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">
+        K\xF6sz\xF6nj\xFCk, hogy feliratkozt\xE1l a h\xEDrlevel\xFCnkre. Heti maximum 1 email, p\xE9ntek reggel \u2014 sose k\xE9retlen\xFCl.
+      </p>
+    </div>
+
+    <div style="padding:0 32px 28px">
+      <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.14em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:14px">Amit kapni fogsz</div>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+        ${cards}
+      </table>
+    </div>
+
+    <div style="padding:0 32px 32px">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+          <td style="background:${TEXT_PRIMARY};border-radius:10px;padding:22px 24px">
+            <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.16em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:8px">K\xF6vetkez\u0151 l\xE9p\xE9s</div>
+            <div style="font-size:15px;line-height:1.55;color:#ffffff;margin-bottom:14px">
+              N\xE9zz k\xF6r\xFCl a blogunkban, ha van id\u0151d. Friss tartalom hetente, gyakorlati B2B \xE9s AI t\xE9m\xE1kban.
+            </div>
+            <a href="https://g2amarketing.hu/hirek" style="display:inline-block;background:${BRAND_TEAL};color:#ffffff;padding:10px 18px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.04em">Olvass be a blogunkba \u2192</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="padding:0 32px 28px;font-size:13px;line-height:1.65;color:${TEXT_SECONDARY}">
+      Ha van b\xE1rmilyen k\xE9rd\xE9sed vagy egy konkr\xE9t marketing kih\xEDv\xE1son dolgozol, v\xE1laszolj erre az emailre \u2014 \xE1tolvassuk \xE9s v\xE1laszolunk szem\xE9lyesen.
+    </div>
+
+    ${footer(input.unsubscribeUrl)}
+  `;
+  return wrapper(body, "\xDCdv a G2A Marketing fed\xE9lzet\xE9n \u2014 mit v\xE1rhatsz a h\xEDrlevel\xFCnkt\u0151l.");
+}
+function renderDigestEmailHtml(input) {
+  const greeting = input.name ? `Szia ${escapeHtml(input.name)}!` : "Szia!";
+  const intro = input.intro || "Itt van a heti gyakorlati B2B \xE9s AI marketing v\xE1logat\xE1sunk \u2014 minden cikk 5-10 perces olvasm\xE1ny.";
+  const articles = input.articles.map((a, i) => {
+    const card = TOPIC_CARDS[a.topic];
+    const tag = card?.tag || a.topic.toUpperCase();
+    const readChip = a.readMin ? `<span style="font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED}">${a.readMin} perc olvas\xE1s</span>` : "";
+    return `
+        ${i === 0 ? "" : `<tr><td style="padding:0 32px"><div style="height:1px;background:${BORDER};margin:24px 0"></div></td></tr>`}
+        <tr>
+          <td style="padding:${i === 0 ? "8px" : "0"} 32px 0">
+            <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.16em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:10px">${tag}</div>
+            <h2 style="margin:0 0 10px;font-size:19px;line-height:1.3;color:${TEXT_PRIMARY};font-weight:700;letter-spacing:-0.01em">
+              <a href="${a.url}" style="color:${TEXT_PRIMARY};text-decoration:none">${escapeHtml(a.title)}</a>
+            </h2>
+            <p style="margin:0 0 14px;font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(a.excerpt)}</p>
+            <div style="margin-bottom:6px">
+              <a href="${a.url}" style="font-size:13px;color:${BRAND_TEAL};text-decoration:none;font-weight:600">Olvasd el \u2192</a>
+              ${readChip ? ` &nbsp;\xB7&nbsp; ${readChip}` : ""}
+            </div>
+          </td>
+        </tr>`;
+  }).join("");
+  const body = `
+    ${header({ tag: input.weekLabel })}
+
+    <div style="padding:32px 32px 12px">
+      <h1 style="margin:0 0 8px;font-size:24px;line-height:1.3;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.02em">${greeting}</h1>
+      <p style="margin:0 0 18px;font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(intro)}</p>
+    </div>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      ${articles}
+    </table>
+
+    <div style="padding:28px 32px 0">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+          <td style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px;padding:18px 22px">
+            <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.16em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:6px">Mit gondolsz?</div>
+            <div style="font-size:14px;line-height:1.6;color:${TEXT_SECONDARY}">
+              Hasznos volt? V\xE1laszolj erre az emailre egyetlen mondattal \u2014 l\xE1tjuk \xE9s v\xE1laszolunk. Ha konkr\xE9t marketing k\xE9rd\xE9sed van,
+              <a href="https://g2amarketing.hu/kapcsolat" style="color:${BRAND_TEAL};text-decoration:none">vedd fel vel\xFCnk a kapcsolatot</a>.
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="height:32px"></div>
+
+    ${footer(input.unsubscribeUrl)}
+  `;
+  return wrapper(body, intro);
+}
+
+// server/routers.ts
 var adminProcedure2 = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== "admin") {
     throw new TRPCError3({ code: "FORBIDDEN", message: "Admin access required" });
@@ -2077,22 +2289,8 @@ ${input.goals || "\u2013"}`,
     return { success: true };
   })
 });
-function renderWelcomeEmailHtml(name, unsubscribeUrl) {
-  const greeting = name ? `Szia ${name}!` : "Szia!";
-  return `<div style="max-width:560px;margin:0 auto;padding:32px 24px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#1f2937">
-  <div style="border-left:4px solid #14B8A6;padding-left:16px;margin-bottom:24px">
-    <h1 style="margin:0;font-size:22px;color:#0f172a">${greeting}</h1>
-    <p style="margin:6px 0 0;color:#64748b;font-size:14px">K\xF6sz\xF6nj\xFCk, hogy feliratkozt\xE1l a G2A Marketing h\xEDrlevel\xE9re.</p>
-  </div>
-  <p style="line-height:1.6;font-size:15px">Id\u0151r\u0151l id\u0151re praktikus marketing tartalmat, esettanulm\xE1nyokat \xE9s AI-alap\xFA megold\xE1sokat k\xFCld\xFCnk a postal\xE1d\xE1dba \u2014 heti maximum 1 emailt, sose k\xE9retlen\xFCl.</p>
-  <p style="line-height:1.6;font-size:15px">Ha valamiben tudunk seg\xEDteni, v\xE1laszolj erre az emailre, vagy keress minket a <a href="https://g2amarketing.hu/kapcsolat" style="color:#0d9488;text-decoration:underline">g2amarketing.hu/kapcsolat</a> oldalon.</p>
-  <hr style="margin:32px 0;border:none;border-top:1px solid #e5e7eb">
-  <p style="font-size:11px;color:#9ca3af;line-height:1.5">
-    Ezt az emailt az\xE9rt kaptad, mert feliratkozt\xE1l a g2amarketing.hu h\xEDrlevel\xE9re.<br>
-    Ha t\xF6bb\xE9 nem szeretn\xE9l emailt kapni, <a href="${unsubscribeUrl}" style="color:#9ca3af">kattints ide a leiratkoz\xE1shoz</a>.
-  </p>
-  <p style="font-size:11px;color:#cbd5e1;margin-top:8px">G2A Marketing Bt. \xB7 P\xE9cs \xB7 info@g2amarketing.hu</p>
-</div>`;
+function renderWelcomeEmailHtml2(name, unsubscribeUrl, topics) {
+  return renderWelcomeEmailHtml({ name, unsubscribeUrl, topics });
 }
 var newsletterRouter = router({
   subscribe: publicProcedure.input(z2.object({
@@ -2135,7 +2333,7 @@ var newsletterRouter = router({
       await sendEmail({
         to: input.email,
         subject: "\xDCdv a G2A Marketing h\xEDrlevel\xE9ben!",
-        html: renderWelcomeEmailHtml(input.name, unsubscribeUrl),
+        html: renderWelcomeEmailHtml2(input.name, unsubscribeUrl, input.topics),
         text: `${input.name ? `Szia ${input.name}!` : "Szia!"}
 
 K\xF6sz\xF6nj\xFCk, hogy feliratkozt\xE1l a G2A Marketing h\xEDrlevel\xE9re. Heti max 1 emailt k\xFCld\xFCnk, sose k\xE9retlen\xFCl.
@@ -2906,7 +3104,7 @@ async function createContext(opts) {
 // server/_core/newsletterRoutes.ts
 function renderHtml(opts) {
   const title = opts.ok ? "Sikeres leiratkoz\xE1s" : "Hib\xE1s link";
-  const body = opts.ok ? `<p>${escapeHtml(opts.email || "")} <strong>leiratkozott</strong> a G2A Marketing h\xEDrlevel\xE9r\u0151l.</p>
+  const body = opts.ok ? `<p>${escapeHtml2(opts.email || "")} <strong>leiratkozott</strong> a G2A Marketing h\xEDrlevel\xE9r\u0151l.</p>
        <p style="color:#64748b;font-size:14px">T\xF6bb emailt nem k\xFCld\xFCnk neked. Ha m\xE9gis maradn\xE1l, \xEDrj nek\xFCnk: <a href="mailto:info@g2amarketing.hu">info@g2amarketing.hu</a>.</p>` : `<p>Ez a leiratkoz\xE1si link \xE9rv\xE9nytelen vagy lej\xE1rt.</p>
        <p style="color:#64748b;font-size:14px">Ha tov\xE1bbra is kapsz emailt t\u0151l\xFCnk, \xEDrj az <a href="mailto:info@g2amarketing.hu">info@g2amarketing.hu</a> c\xEDmre \xE9s k\xE9zzel t\xF6r\xF6l\xFCnk a list\xE1b\xF3l.</p>`;
   return `<!doctype html>
@@ -2934,7 +3132,7 @@ function renderHtml(opts) {
 </body>
 </html>`;
 }
-function escapeHtml(s) {
+function escapeHtml2(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 function registerNewsletterRoutes(app2) {
@@ -3392,6 +3590,164 @@ function registerPasswordAuthRoute(app2) {
   });
 }
 
+// server/_core/digestCronRoute.ts
+import { desc as desc4, eq as eq5 } from "drizzle-orm";
+var ORIGIN3 = "https://g2amarketing.hu";
+var ITEM_COUNT = 4;
+var TOPIC_FALLBACK = "strategy";
+var CATEGORY_TO_TOPIC = {
+  strategy: "strategy",
+  marketing: "strategy",
+  ai: "ai",
+  "ai-automation": "ai",
+  seo: "paid",
+  ppc: "paid",
+  paid: "paid",
+  "case-study": "case_studies",
+  esettanulmany: "case_studies"
+};
+function shortenExcerpt(html, maxLen = 160) {
+  if (!html) return "";
+  const text2 = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  if (text2.length <= maxLen) return text2;
+  const cut = text2.slice(0, maxLen);
+  const period = cut.lastIndexOf(".");
+  return period > maxLen - 50 ? cut.slice(0, period + 1) : cut.trimEnd() + "\u2026";
+}
+function estimateReadingMin(html) {
+  if (!html) return 1;
+  const words = html.replace(/<[^>]+>/g, " ").trim().split(/\s+/).length;
+  return Math.max(1, Math.round(words / 200));
+}
+async function fetchFeaturedPosts() {
+  const dbi = await getDb();
+  if (!dbi) return [];
+  const overrideSlugs = (process.env.DIGEST_NEXT_SLUGS || "").split(",").map((s) => s.trim()).filter(Boolean);
+  if (overrideSlugs.length > 0) {
+    const rows = await dbi.select({
+      slug: posts.slug,
+      title: posts.title,
+      excerpt: posts.excerpt,
+      content: posts.content,
+      categoryId: posts.categoryId
+    }).from(posts);
+    const bySlug = new Map(rows.map((r) => [r.slug, r]));
+    return overrideSlugs.map((s) => bySlug.get(s)).filter((r) => Boolean(r));
+  }
+  return dbi.select({
+    slug: posts.slug,
+    title: posts.title,
+    excerpt: posts.excerpt,
+    content: posts.content,
+    categoryId: posts.categoryId
+  }).from(posts).where(eq5(posts.status, "published")).orderBy(desc4(posts.publishedAt)).limit(ITEM_COUNT);
+}
+async function inferTopic(categoryId) {
+  if (!categoryId) return TOPIC_FALLBACK;
+  const categories2 = await getCategories();
+  const cat = categories2.find((c) => c.id === categoryId);
+  if (!cat || !cat.slug) return TOPIC_FALLBACK;
+  return CATEGORY_TO_TOPIC[cat.slug] || TOPIC_FALLBACK;
+}
+function getWeekLabel() {
+  const d = /* @__PURE__ */ new Date();
+  const year = d.getFullYear();
+  const monthName = d.toLocaleDateString("hu-HU", { month: "long", day: "numeric" });
+  return `${year} \u2014 ${monthName}`;
+}
+function registerDigestCronRoute(app2) {
+  const handler = async (req, res) => {
+    const secret = process.env.CRON_SECRET;
+    if (secret) {
+      const auth = req.headers.authorization || "";
+      if (auth !== `Bearer ${secret}`) {
+        return res.status(401).json({ error: "Unauthorized: missing or wrong Bearer token" });
+      }
+    } else if (process.env.NODE_ENV === "production") {
+      return res.status(503).json({
+        error: "CRON_SECRET not set in production. Refusing to send."
+      });
+    }
+    if (!isEmailConfigured()) {
+      return res.status(503).json({ error: "RESEND_API_KEY not configured" });
+    }
+    const dbi = await getDb();
+    if (!dbi) return res.status(503).json({ error: "Database unavailable" });
+    const featured = await fetchFeaturedPosts();
+    if (featured.length === 0) {
+      return res.status(412).json({ error: "No published posts to feature" });
+    }
+    const articles = await Promise.all(
+      featured.map(async (p) => ({
+        topic: await inferTopic(p.categoryId),
+        title: p.title,
+        excerpt: shortenExcerpt(p.excerpt || p.content),
+        url: `${ORIGIN3}/hirek/${p.slug}`,
+        readMin: estimateReadingMin(p.content)
+      }))
+    );
+    const UNSUB_PLACEHOLDER = "{{unsubscribeUrl}}";
+    const subject = `G2A Heti v\xE1logat\xE1s \u2014 ${getWeekLabel()}`;
+    const html = renderDigestEmailHtml({
+      name: void 0,
+      weekLabel: getWeekLabel(),
+      articles,
+      unsubscribeUrl: UNSUB_PLACEHOLDER
+    });
+    const text2 = articles.map((a) => `[${a.topic.toUpperCase()}] ${a.title}
+${a.url}
+${a.excerpt}
+`).join("\n");
+    const subscribers = await getActiveSubscribersForCampaign(null);
+    if (subscribers.length === 0) {
+      return res.json({ campaignId: null, recipientCount: 0, sent: 0, failed: 0, note: "no subscribers" });
+    }
+    const campaignId = await createEmailCampaign({
+      subject,
+      html,
+      text: text2,
+      segment: null,
+      sentByUserId: null
+      // cron — no human user
+    });
+    if (!campaignId) return res.status(500).json({ error: "Failed to create campaign row" });
+    await updateEmailCampaign(campaignId, {
+      status: "sending",
+      recipientCount: subscribers.length
+    });
+    let sent = 0, failed = 0;
+    for (const sub of subscribers) {
+      const unsubUrl = `${ORIGIN3}/api/newsletter/unsubscribe?token=${sub.unsubscribeToken ?? ""}`;
+      const personalHtml = html.replace(new RegExp(UNSUB_PLACEHOLDER, "g"), unsubUrl);
+      const personalText = text2.replace(new RegExp(UNSUB_PLACEHOLDER, "g"), unsubUrl);
+      try {
+        const ok = await sendEmail({
+          to: sub.email,
+          subject,
+          html: personalHtml,
+          text: personalText,
+          tags: [{ name: "campaign_id", value: String(campaignId) }]
+        });
+        if (ok) sent++;
+        else failed++;
+      } catch (err) {
+        console.error(`[cron-digest] send failed for ${sub.email}:`, err);
+        failed++;
+      }
+      await new Promise((r) => setTimeout(r, 600));
+    }
+    await updateEmailCampaign(campaignId, {
+      status: failed === subscribers.length ? "failed" : "sent",
+      sentCount: sent,
+      failedCount: failed,
+      sentAt: /* @__PURE__ */ new Date()
+    });
+    return res.json({ campaignId, recipientCount: subscribers.length, sent, failed });
+  };
+  app2.get("/api/cron/weekly-digest", handler);
+  app2.post("/api/cron/weekly-digest", handler);
+}
+
 // server/_core/app.ts
 function createApp() {
   const app2 = express();
@@ -3403,6 +3759,7 @@ function createApp() {
   registerResendWebhookRoute(app2);
   registerSitemapRoute(app2);
   registerRssRoute(app2);
+  registerDigestCronRoute(app2);
   app2.use(
     "/api/trpc",
     createExpressMiddleware({
