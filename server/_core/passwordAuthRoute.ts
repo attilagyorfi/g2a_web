@@ -54,6 +54,28 @@ function safeEquals(a: string, b: string): boolean {
 }
 
 export function registerPasswordAuthRoute(app: Express): void {
+  /**
+   * Diagnostic endpoint — reports which env vars the running function can see,
+   * WITHOUT exposing any values. Safe to leave public: returns booleans + the
+   * email's local-part shape only (`info@…hu` style hint), never the password
+   * or the JWT secret.
+   */
+  app.get("/api/_diag/admin-env", (_req: Request, res: Response) => {
+    res.json({
+      ADMIN_EMAIL_set: Boolean(ENV.adminEmail),
+      ADMIN_EMAIL_shape: ENV.adminEmail
+        ? `${ENV.adminEmail.slice(0, 2)}***@***${ENV.adminEmail.slice(-3)}`
+        : null,
+      ADMIN_PASSWORD_set: Boolean(ENV.adminPassword),
+      ADMIN_PASSWORD_length: ENV.adminPassword.length,
+      JWT_SECRET_set: Boolean(ENV.cookieSecret),
+      JWT_SECRET_length: ENV.cookieSecret.length,
+      VITE_APP_ID_set: Boolean(ENV.appId),
+      VITE_OAUTH_PORTAL_URL_set: Boolean(ENV.oauthPortalUrl),
+      NODE_ENV: process.env.NODE_ENV || "unknown",
+    });
+  });
+
   app.post("/api/auth/password-login", async (req: Request, res: Response) => {
     const { email, password } = (req.body ?? {}) as {
       email?: unknown;

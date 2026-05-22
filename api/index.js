@@ -3323,6 +3323,19 @@ function safeEquals(a, b) {
   return timingSafeEqual2(Buffer.from(a, "utf8"), Buffer.from(b, "utf8"));
 }
 function registerPasswordAuthRoute(app2) {
+  app2.get("/api/_diag/admin-env", (_req, res) => {
+    res.json({
+      ADMIN_EMAIL_set: Boolean(ENV.adminEmail),
+      ADMIN_EMAIL_shape: ENV.adminEmail ? `${ENV.adminEmail.slice(0, 2)}***@***${ENV.adminEmail.slice(-3)}` : null,
+      ADMIN_PASSWORD_set: Boolean(ENV.adminPassword),
+      ADMIN_PASSWORD_length: ENV.adminPassword.length,
+      JWT_SECRET_set: Boolean(ENV.cookieSecret),
+      JWT_SECRET_length: ENV.cookieSecret.length,
+      VITE_APP_ID_set: Boolean(ENV.appId),
+      VITE_OAUTH_PORTAL_URL_set: Boolean(ENV.oauthPortalUrl),
+      NODE_ENV: process.env.NODE_ENV || "unknown"
+    });
+  });
   app2.post("/api/auth/password-login", async (req, res) => {
     const { email, password } = req.body ?? {};
     if (typeof email !== "string" || typeof password !== "string" || !email || !password) {
