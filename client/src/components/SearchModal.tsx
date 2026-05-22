@@ -96,6 +96,7 @@ export default function SearchModal({ open, onClose }: Props) {
     <div
       onClick={onClose}
       role="presentation"
+      className="g2a-popup-overlay"
       style={{
         position: "fixed", inset: 0, zIndex: 9000,
         background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",

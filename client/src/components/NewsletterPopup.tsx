@@ -74,6 +74,7 @@ export default function NewsletterPopup() {
 
   return (
     <div
+      className="g2a-popup-overlay"
       role="dialog"
       aria-modal="true"
       aria-labelledby="newsletter-popup-title"

@@ -59,6 +59,7 @@ export default function WechatButton() {
 
       {open && (
         <div
+          className="g2a-popup-overlay"
           role="dialog"
           aria-modal="true"
           aria-label="WeChat QR code"

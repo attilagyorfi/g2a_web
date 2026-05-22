@@ -541,11 +541,27 @@ html.light ::-webkit-scrollbar-track { background: var(--g2a-bg-3); }
   .g2a-process-connector { display: none !important; }
 }
 
-/* Custom cursor: hide default when active (desktop fine pointer only) */
+/* Custom cursor: hide default when active (desktop fine pointer only).
+ * Inside popup/modal overlays we restore the default system cursor —
+ * the custom cursor lives in its own compositing layer that can get
+ * occluded by `backdrop-filter: blur()` overlays on Chrome/Firefox,
+ * so we lean on the OS-native pointer there instead. Mark the overlay
+ * with the `g2a-popup-overlay` class to opt in. */
 @media (pointer: fine) {
   html.custom-cursor-active,
   html.custom-cursor-active * {
     cursor: none !important;
+  }
+  html.custom-cursor-active .g2a-popup-overlay,
+  html.custom-cursor-active .g2a-popup-overlay *,
+  html.custom-cursor-active .g2a-popup-overlay a,
+  html.custom-cursor-active .g2a-popup-overlay button {
+    cursor: auto !important;
+  }
+  html.custom-cursor-active .g2a-popup-overlay a,
+  html.custom-cursor-active .g2a-popup-overlay button,
+  html.custom-cursor-active .g2a-popup-overlay [role="button"] {
+    cursor: pointer !important;
   }
 }
 
