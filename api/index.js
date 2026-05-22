@@ -1897,12 +1897,15 @@ import { randomBytes } from "node:crypto";
 
 // server/_core/emailTemplates.ts
 var BRAND_TEAL = "#14B8A6";
+var BRAND_TEAL_DARK = "#0d9488";
 var BRAND_DARK = "#0a0a0a";
+var BRAND_DARK_PANEL = "#161616";
 var TEXT_PRIMARY = "#0f172a";
 var TEXT_SECONDARY = "#475569";
 var TEXT_MUTED = "#94a3b8";
+var BG_PAGE = "#eef2f6";
 var BG_SUBTLE = "#f8fafc";
-var BORDER = "#e5e7eb";
+var BORDER = "#e2e8f0";
 var FONT_SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif";
 var FONT_MONO = "'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', Courier, monospace";
 function wrapper(inner, preheader) {
@@ -1919,12 +1922,12 @@ function wrapper(inner, preheader) {
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
 </head>
-<body style="margin:0;padding:0;background:${BG_SUBTLE};font-family:${FONT_SANS};color:${TEXT_PRIMARY}">
+<body style="margin:0;padding:0;background:${BG_PAGE};font-family:${FONT_SANS};color:${TEXT_PRIMARY};-webkit-font-smoothing:antialiased">
   ${preheaderHtml}
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};padding:32px 16px">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_PAGE};padding:32px 12px">
     <tr>
       <td align="center">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,0.06)">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(15,23,42,0.07)">
           <tr><td>${inner}</td></tr>
         </table>
       </td>
@@ -1933,36 +1936,45 @@ function wrapper(inner, preheader) {
 </body>
 </html>`;
 }
-function header(opts) {
-  const tag = opts.tag ? `<div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:8px">${escapeHtml(opts.tag)}</div>` : "";
+function darkHeader(opts) {
+  const tag = opts.tag ? `<div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.2em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:10px">${escapeHtml(opts.tag)}</div>` : "";
+  const secondary = opts.secondaryLine ? `<div style="font-size:12px;color:#94a3b8;margin-top:6px;font-family:${FONT_MONO};letter-spacing:0.04em">${escapeHtml(opts.secondaryLine)}</div>` : "";
   return `
-    <div style="background:${BRAND_DARK};padding:28px 32px;color:#ffffff">
-      ${tag}
-      <div style="font-size:18px;font-weight:700;letter-spacing:0.02em">G2A Marketing</div>
-      <div style="font-size:12px;color:#94a3b8;margin-top:4px">Adatvez\xE9relt marketing \xFCgyn\xF6ks\xE9g \xB7 P\xE9cs</div>
-    </div>`;
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK};border-bottom:3px solid ${BRAND_TEAL}">
+      <tr>
+        <td style="padding:28px 36px;color:#ffffff">
+          ${tag}
+          <div style="font-size:20px;font-weight:800;letter-spacing:-0.01em">G2A Marketing</div>
+          ${secondary}
+        </td>
+      </tr>
+    </table>`;
 }
 function footer(unsubscribeUrl) {
   return `
-    <div style="padding:24px 32px;border-top:1px solid ${BORDER};background:${BG_SUBTLE}">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-        <tr>
-          <td style="font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED};letter-spacing:0.04em;line-height:1.6">
-            <strong style="color:${TEXT_SECONDARY}">G2A Marketing Bt.</strong><br>
-            7621 P\xE9cs \xB7 info@g2amarketing.hu<br>
-            <a href="https://g2amarketing.hu" style="color:${TEXT_MUTED};text-decoration:none">g2amarketing.hu</a>
-          </td>
-          <td align="right" valign="top">
-            <a href="https://www.linkedin.com/company/g2a-marketing/" style="text-decoration:none;color:${TEXT_MUTED};font-size:11px;font-family:${FONT_MONO};margin-right:12px">LinkedIn</a>
-            <a href="https://www.facebook.com/g2amarketing" style="text-decoration:none;color:${TEXT_MUTED};font-size:11px;font-family:${FONT_MONO}">Facebook</a>
-          </td>
-        </tr>
-      </table>
-      <div style="margin-top:18px;padding-top:14px;border-top:1px solid ${BORDER};font-size:11px;color:${TEXT_MUTED};line-height:1.6">
-        Ezt az emailt az\xE9rt kaptad, mert feliratkozt\xE1l a g2amarketing.hu h\xEDrlevel\xE9re.<br>
-        <a href="${unsubscribeUrl}" style="color:${TEXT_MUTED};text-decoration:underline">Leiratkoz\xE1s egy kattint\xE1ssal</a> \xB7 <a href="https://g2amarketing.hu/adatvedelmi-iranyelvek" style="color:${TEXT_MUTED};text-decoration:underline">Adatv\xE9delmi t\xE1j\xE9koztat\xF3</a>
-      </div>
-    </div>`;
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK};color:#94a3b8">
+      <tr>
+        <td style="padding:28px 36px">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+              <td style="font-family:${FONT_MONO};font-size:11px;line-height:1.7;letter-spacing:0.04em;color:#cbd5e1">
+                <strong style="color:#ffffff;font-size:13px">G2A Marketing Bt.</strong><br>
+                7621 P\xE9cs \xB7 info@g2amarketing.hu<br>
+                <a href="https://g2amarketing.hu" style="color:#cbd5e1;text-decoration:none">g2amarketing.hu</a>
+              </td>
+              <td align="right" valign="top">
+                <a href="https://www.linkedin.com/company/g2a-marketing/" style="text-decoration:none;color:#cbd5e1;font-size:11px;font-family:${FONT_MONO};margin-right:14px">LinkedIn</a>
+                <a href="https://www.facebook.com/g2amarketing" style="text-decoration:none;color:#cbd5e1;font-size:11px;font-family:${FONT_MONO}">Facebook</a>
+              </td>
+            </tr>
+          </table>
+          <div style="margin-top:22px;padding-top:16px;border-top:1px solid #1f2937;font-size:11px;color:#64748b;line-height:1.7">
+            Ezt az emailt az\xE9rt kaptad, mert feliratkozt\xE1l a g2amarketing.hu h\xEDrlevel\xE9re.<br>
+            <a href="${unsubscribeUrl}" style="color:#94a3b8;text-decoration:underline">Leiratkoz\xE1s egy kattint\xE1ssal</a> \xB7 <a href="https://g2amarketing.hu/adatvedelmi-iranyelvek" style="color:#94a3b8;text-decoration:underline">Adatv\xE9delmi t\xE1j\xE9koztat\xF3</a>
+          </div>
+        </td>
+      </tr>
+    </table>`;
 }
 function escapeHtml(s) {
   return s.replace(/[&<>'"]/g, (c) => ({
@@ -1977,128 +1989,216 @@ var TOPIC_CARDS = {
   strategy: {
     tag: "STRAT\xC9GIA",
     title: "B2B marketing strat\xE9gia",
-    desc: "Poz\xEDcion\xE1l\xE1s, ICP-meghat\xE1roz\xE1s, brand-\xE9p\xEDt\xE9s, go-to-market \u2014 m\xE9ly playbookok hetente."
+    desc: "Poz\xEDcion\xE1l\xE1s, ICP, brand-\xE9p\xEDt\xE9s \xE9s go-to-market playbookok.",
+    icon: "\u25C6"
   },
   ai: {
     tag: "AI",
     title: "AI & automatiz\xE1ci\xF3",
-    desc: "Konkr\xE9t AI workflow-k, prompt-receptek, kipr\xF3b\xE1lt eszk\xF6z\xF6k magyar B2B kontextusban."
+    desc: "AI workflow-k, prompt-receptek, kipr\xF3b\xE1lt eszk\xF6z\xF6k B2B kontextusban.",
+    icon: "\u25B2"
   },
   paid: {
     tag: "TELJES\xCDTM\xC9NY",
     title: "SEO & teljes\xEDtm\xE9nyhirdet\xE9s",
-    desc: "Google Ads, Meta hirdet\xE9sek, organikus SEO \u2014 m\xE9rhet\u0151 eredm\xE9nyekkel, nem tal\xE1lgat\xE1s."
+    desc: "Google Ads, Meta hirdet\xE9sek, organikus SEO \u2014 m\xE9rhet\u0151 eredm\xE9nyekkel.",
+    icon: "\u25CF"
   },
   case_studies: {
     tag: "ESETTANULM\xC1NY",
     title: "Esettanulm\xE1nyok & adatok",
-    desc: "Anonim \xFCgyf\xE9lprojektek, val\xF3s sz\xE1mokkal \u2014 mi m\u0171k\xF6d\xF6tt \xE9s mi nem."
+    desc: "Anonim \xFCgyf\xE9lprojektek val\xF3s sz\xE1mokkal \u2014 mi m\u0171k\xF6d\xF6tt, mi nem.",
+    icon: "\u25A0"
   }
 };
+function topicRow(keys) {
+  const cell = (key) => {
+    const c = TOPIC_CARDS[key];
+    return `
+      <td width="50%" valign="top" style="padding:8px">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px">
+          <tr>
+            <td style="padding:18px 18px 16px">
+              <div style="font-family:${FONT_MONO};font-size:14px;color:${BRAND_TEAL};line-height:1;margin-bottom:10px">${c.icon}</div>
+              <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL_DARK};text-transform:uppercase;margin-bottom:6px;font-weight:600">${c.tag}</div>
+              <div style="font-size:15px;font-weight:700;color:${TEXT_PRIMARY};margin-bottom:6px;line-height:1.35">${c.title}</div>
+              <div style="font-size:13px;color:${TEXT_SECONDARY};line-height:1.55">${c.desc}</div>
+            </td>
+          </tr>
+        </table>
+      </td>`;
+  };
+  const second = keys[1] ? cell(keys[1]) : '<td width="50%"></td>';
+  return `
+    <tr>
+      ${cell(keys[0])}
+      ${second}
+    </tr>`;
+}
 function renderWelcomeEmailHtml(input) {
   const greeting = input.name ? `Szia ${escapeHtml(input.name)}!` : "Szia!";
   const activeTopics = input.topics && input.topics.length > 0 ? input.topics.filter((t2) => TOPIC_CARDS[t2]) : Object.keys(TOPIC_CARDS);
-  const cards = activeTopics.map((key) => {
-    const c = TOPIC_CARDS[key];
-    return `
+  const rows = [];
+  for (let i = 0; i < activeTopics.length; i += 2) {
+    rows.push(topicRow([activeTopics[i], activeTopics[i + 1]].filter(Boolean)));
+  }
+  const body = `
+    ${darkHeader({ tag: "\xDCdv a fed\xE9lzeten", secondaryLine: "Adatvez\xE9relt marketing \xFCgyn\xF6ks\xE9g \xB7 P\xE9cs" })}
+
+    <!-- Hero copy -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
-        <td style="padding:18px 20px;border:1px solid ${BORDER};border-radius:10px;background:#ffffff">
-          <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.16em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:6px">${c.tag}</div>
-          <div style="font-size:15px;font-weight:700;color:${TEXT_PRIMARY};margin-bottom:6px">${c.title}</div>
-          <div style="font-size:13px;color:${TEXT_SECONDARY};line-height:1.55">${c.desc}</div>
+        <td style="padding:40px 36px 24px">
+          <h1 style="margin:0 0 14px;font-size:28px;line-height:1.2;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
+          <p style="margin:0;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">
+            K\xF6sz\xF6nj\xFCk, hogy feliratkozt\xE1l a h\xEDrlevel\xFCnkre. Heti maximum 1 email, p\xE9ntek reggel \u2014 sose k\xE9retlen\xFCl.
+          </p>
         </td>
       </tr>
-      <tr><td style="height:10px"></td></tr>`;
-  }).join("");
-  const body = `
-    ${header({ tag: "\xDCdv\xF6z\xF6llek a fed\xE9lzeten" })}
+    </table>
 
-    <div style="padding:36px 32px 8px">
-      <h1 style="margin:0 0 12px;font-size:26px;line-height:1.25;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.02em">${greeting}</h1>
-      <p style="margin:0 0 22px;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">
-        K\xF6sz\xF6nj\xFCk, hogy feliratkozt\xE1l a h\xEDrlevel\xFCnkre. Heti maximum 1 email, p\xE9ntek reggel \u2014 sose k\xE9retlen\xFCl.
-      </p>
-    </div>
+    <!-- 2\xD72 topic grid -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:0 28px 8px">
+          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:6px;padding:0 8px">Amit kapni fogsz</div>
+        </td>
+      </tr>
+    </table>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="padding:0 28px">
+      ${rows.join("")}
+    </table>
 
-    <div style="padding:0 32px 28px">
-      <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.14em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:14px">Amit kapni fogsz</div>
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-        ${cards}
-      </table>
-    </div>
+    <!-- Dark CTA block -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:24px 36px 0">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK_PANEL};border-radius:12px;border-left:4px solid ${BRAND_TEAL}">
+            <tr>
+              <td style="padding:24px 28px">
+                <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:10px;font-weight:600">K\xF6vetkez\u0151 l\xE9p\xE9s</div>
+                <div style="font-size:17px;line-height:1.4;color:#ffffff;font-weight:700;margin-bottom:8px">N\xE9zz k\xF6r\xFCl a blogunkban</div>
+                <div style="font-size:14px;line-height:1.6;color:#cbd5e1;margin-bottom:18px">Friss tartalom hetente \u2014 gyakorlati B2B \xE9s AI t\xE9m\xE1kban, magyar piaci p\xE9ld\xE1kkal.</div>
+                <a href="https://g2amarketing.hu/hirek" style="display:inline-block;background:${BRAND_TEAL};color:#ffffff;padding:11px 22px;border-radius:6px;font-size:13px;font-weight:700;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.06em">OLVASS BE A BLOGUNKBA \u2192</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
 
-    <div style="padding:0 32px 32px">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-        <tr>
-          <td style="background:${TEXT_PRIMARY};border-radius:10px;padding:22px 24px">
-            <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.16em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:8px">K\xF6vetkez\u0151 l\xE9p\xE9s</div>
-            <div style="font-size:15px;line-height:1.55;color:#ffffff;margin-bottom:14px">
-              N\xE9zz k\xF6r\xFCl a blogunkban, ha van id\u0151d. Friss tartalom hetente, gyakorlati B2B \xE9s AI t\xE9m\xE1kban.
-            </div>
-            <a href="https://g2amarketing.hu/hirek" style="display:inline-block;background:${BRAND_TEAL};color:#ffffff;padding:10px 18px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.04em">Olvass be a blogunkba \u2192</a>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <div style="padding:0 32px 28px;font-size:13px;line-height:1.65;color:${TEXT_SECONDARY}">
-      Ha van b\xE1rmilyen k\xE9rd\xE9sed vagy egy konkr\xE9t marketing kih\xEDv\xE1son dolgozol, v\xE1laszolj erre az emailre \u2014 \xE1tolvassuk \xE9s v\xE1laszolunk szem\xE9lyesen.
-    </div>
+    <!-- Personal note -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:24px 36px 36px">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px">
+            <tr>
+              <td style="padding:18px 22px">
+                <div style="font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">
+                  <strong style="color:${TEXT_PRIMARY}">K\xE9rd\xE9sed van?</strong> V\xE1laszolj erre az emailre \u2014 \xE1tolvassuk \xE9s v\xE1laszolunk szem\xE9lyesen. Ha konkr\xE9t marketing kih\xEDv\xE1son dolgozol, jelezd \u2014 gyakran egy 15 perces besz\xE9lget\xE9s is sokat tiszt\xE1z.
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
 
     ${footer(input.unsubscribeUrl)}
   `;
   return wrapper(body, "\xDCdv a G2A Marketing fed\xE9lzet\xE9n \u2014 mit v\xE1rhatsz a h\xEDrlevel\xFCnkt\u0151l.");
 }
+function digestArticleBlock(a, index) {
+  const card = TOPIC_CARDS[a.topic];
+  const tag = card?.tag || a.topic.toUpperCase();
+  const icon = card?.icon || "\u25C6";
+  const isAlt = index % 2 === 1;
+  const bg = isAlt ? BG_SUBTLE : "#ffffff";
+  const num = String(index + 1).padStart(2, "0");
+  const readChip = a.readMin ? `<span style="font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED};margin-left:14px">\xB7 ${a.readMin} perc olvas\xE1s</span>` : "";
+  return `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${bg}">
+      <tr>
+        <td style="padding:32px 36px">
+
+          <!-- Tag row: topic chip + article number -->
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+              <td>
+                <span style="display:inline-block;background:#ffffff;border:1px solid ${BORDER};color:${BRAND_TEAL_DARK};font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;padding:5px 10px;border-radius:4px">
+                  <span style="color:${BRAND_TEAL}">${icon}</span> &nbsp;${tag}
+                </span>
+              </td>
+              <td align="right" style="font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED};letter-spacing:0.1em">
+                ${num} / 04
+              </td>
+            </tr>
+          </table>
+
+          <!-- Headline -->
+          <h2 style="margin:16px 0 12px;font-size:22px;line-height:1.25;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.02em">
+            <a href="${a.url}" style="color:${TEXT_PRIMARY};text-decoration:none">${escapeHtml(a.title)}</a>
+          </h2>
+
+          <!-- Excerpt -->
+          <p style="margin:0 0 18px;font-size:14.5px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(a.excerpt)}</p>
+
+          <!-- CTA row -->
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td>
+                <a href="${a.url}" style="display:inline-block;background:${TEXT_PRIMARY};color:#ffffff;padding:9px 18px;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.06em">OLVASD EL \u2192</a>
+              </td>
+              <td valign="middle" style="padding-left:8px">${readChip}</td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>`;
+}
 function renderDigestEmailHtml(input) {
   const greeting = input.name ? `Szia ${escapeHtml(input.name)}!` : "Szia!";
-  const intro = input.intro || "Itt van a heti gyakorlati B2B \xE9s AI marketing v\xE1logat\xE1sunk \u2014 minden cikk 5-10 perces olvasm\xE1ny.";
-  const articles = input.articles.map((a, i) => {
-    const card = TOPIC_CARDS[a.topic];
-    const tag = card?.tag || a.topic.toUpperCase();
-    const readChip = a.readMin ? `<span style="font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED}">${a.readMin} perc olvas\xE1s</span>` : "";
-    return `
-        ${i === 0 ? "" : `<tr><td style="padding:0 32px"><div style="height:1px;background:${BORDER};margin:24px 0"></div></td></tr>`}
-        <tr>
-          <td style="padding:${i === 0 ? "8px" : "0"} 32px 0">
-            <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.16em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:10px">${tag}</div>
-            <h2 style="margin:0 0 10px;font-size:19px;line-height:1.3;color:${TEXT_PRIMARY};font-weight:700;letter-spacing:-0.01em">
-              <a href="${a.url}" style="color:${TEXT_PRIMARY};text-decoration:none">${escapeHtml(a.title)}</a>
-            </h2>
-            <p style="margin:0 0 14px;font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(a.excerpt)}</p>
-            <div style="margin-bottom:6px">
-              <a href="${a.url}" style="font-size:13px;color:${BRAND_TEAL};text-decoration:none;font-weight:600">Olvasd el \u2192</a>
-              ${readChip ? ` &nbsp;\xB7&nbsp; ${readChip}` : ""}
-            </div>
-          </td>
-        </tr>`;
-  }).join("");
+  const intro = input.intro || "Itt a heti gyakorlati B2B \xE9s AI marketing v\xE1logat\xE1s \u2014 egy cikk minden t\xE9mak\xF6rb\u0151l, 5-10 perces olvasm\xE1nyok.";
+  const articleBlocks = input.articles.map((a, i) => digestArticleBlock(a, i)).join('<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td style="height:1px;background:' + BORDER + '"></td></tr></table>');
   const body = `
-    ${header({ tag: input.weekLabel })}
+    ${darkHeader({ tag: input.weekLabel, secondaryLine: "Heti v\xE1logat\xE1s" })}
 
-    <div style="padding:32px 32px 12px">
-      <h1 style="margin:0 0 8px;font-size:24px;line-height:1.3;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.02em">${greeting}</h1>
-      <p style="margin:0 0 18px;font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(intro)}</p>
-    </div>
-
+    <!-- Greeting -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-      ${articles}
+      <tr>
+        <td style="padding:36px 36px 8px">
+          <h1 style="margin:0 0 10px;font-size:26px;line-height:1.25;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
+          <p style="margin:0 0 18px;font-size:14.5px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(intro)}</p>
+        </td>
+      </tr>
     </table>
 
-    <div style="padding:28px 32px 0">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-        <tr>
-          <td style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px;padding:18px 22px">
-            <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.16em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:6px">Mit gondolsz?</div>
-            <div style="font-size:14px;line-height:1.6;color:${TEXT_SECONDARY}">
-              Hasznos volt? V\xE1laszolj erre az emailre egyetlen mondattal \u2014 l\xE1tjuk \xE9s v\xE1laszolunk. Ha konkr\xE9t marketing k\xE9rd\xE9sed van,
-              <a href="https://g2amarketing.hu/kapcsolat" style="color:${BRAND_TEAL};text-decoration:none">vedd fel vel\xFCnk a kapcsolatot</a>.
-            </div>
-          </td>
-        </tr>
-      </table>
-    </div>
+    <!-- Top divider with brand colour -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr><td style="padding:0 36px"><div style="height:3px;background:${BRAND_TEAL};border-radius:2px"></div></td></tr>
+    </table>
 
-    <div style="height:32px"></div>
+    <!-- Articles with alternating row backgrounds -->
+    ${articleBlocks}
+
+    <!-- Reply callout -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:24px 36px 36px">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK_PANEL};border-radius:12px;border-left:4px solid ${BRAND_TEAL}">
+            <tr>
+              <td style="padding:22px 26px">
+                <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:8px;font-weight:600">Mit gondolsz?</div>
+                <div style="font-size:14px;line-height:1.6;color:#cbd5e1">
+                  Hasznos volt? V\xE1laszolj erre az emailre egyetlen mondattal \u2014 \xE1tolvassuk \xE9s v\xE1laszolunk. Konkr\xE9t marketing k\xE9rd\xE9sed van? <a href="https://g2amarketing.hu/kapcsolat" style="color:${BRAND_TEAL};text-decoration:none;font-weight:600">Vedd fel vel\xFCnk a kapcsolatot \u2192</a>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
 
     ${footer(input.unsubscribeUrl)}
   `;
