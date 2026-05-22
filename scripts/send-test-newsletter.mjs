@@ -23,9 +23,12 @@ const ROOT = join(__dirname, "..");
 //   npx tsx scripts/send-test-newsletter.mjs --to=...
 // Plain `node scripts/...` fails because Node 20+ deprecated the loader API
 // the tsx programmatic `register()` shim relies on.
-const { renderDigestEmailHtml, renderWelcomeEmailHtml } = await import(
-  pathToFileURL(join(ROOT, "server", "_core", "emailTemplates.ts")).href
-);
+const {
+  renderDigestEmailHtml,
+  renderWelcomeEmailHtml,
+  renderConfirmationEmailHtml,
+  CONFIRMATION_SUBJECTS,
+} = await import(pathToFileURL(join(ROOT, "server", "_core", "emailTemplates.ts")).href);
 
 // ─── CLI ──────────────────────────────────────────────────────────────────
 const argv = process.argv.slice(2);
@@ -35,7 +38,13 @@ const val = (name) => {
   return a ? a.slice(name.length + 3) : null;
 };
 const TO = val("to") || process.env.RESEND_NOTIFY_EMAIL || "93attilagyorfi@gmail.com";
-const MODE = flag("welcome") ? "welcome" : "digest";
+const MODE = flag("welcome")
+  ? "welcome"
+  : flag("audit")
+  ? "audit"
+  : flag("contact")
+  ? "contact"
+  : "digest";
 
 // ─── Article picks per topic ──────────────────────────────────────────────
 const TOPIC_TO_SLUG = {
@@ -106,6 +115,52 @@ async function sendEmail({ to, subject, html, text }) {
 async function main() {
   console.log(`[test-newsletter] Mode: ${MODE} → ${TO}`);
   const unsubscribeUrl = "https://g2a-web.vercel.app/api/newsletter/unsubscribe?token=TESZT-EMAIL-NEM-VALID";
+
+  if (MODE === "audit") {
+    const html = renderConfirmationEmailHtml({
+      name: "Attila",
+      formType: "audit",
+      submission: [
+        { label: "Email", value: TO },
+        { label: "Telefon", value: "+36 30 190 2575" },
+        { label: "Cég", value: "G2A Marketing Bt." },
+        { label: "Weboldal", value: "https://g2amarketing.hu" },
+        { label: "Havi büdzsé", value: "500e - 1M Ft" },
+        { label: "Kihívások", value: "Az új weboldal konverziós ratesét szeretném javítani — jelenleg túl alacsony." },
+        { label: "Célok", value: "+30% organikus forgalom 6 hónap alatt." },
+      ],
+    });
+    const result = await sendEmail({
+      to: TO,
+      subject: CONFIRMATION_SUBJECTS.audit + " [TESZT]",
+      html,
+      text: "Audit kérés visszaigazolás (HTML email).",
+    });
+    console.log(`✔ Audit confirmation email sent. Resend ID: ${result.id}`);
+    return;
+  }
+
+  if (MODE === "contact") {
+    const html = renderConfirmationEmailHtml({
+      name: "Attila",
+      formType: "contact",
+      submission: [
+        { label: "Email", value: TO },
+        { label: "Telefon", value: "+36 30 190 2575" },
+        { label: "Tárgy", value: "Marketing tanácsadás iránti érdeklődés" },
+        { label: "Szolgáltatás", value: "ai-marketing" },
+        { label: "Üzenet", value: "Szeretném tudni, hogyan tudnátok segíteni a B2B leadgenerálásban — különösen LinkedIn ABM-en." },
+      ],
+    });
+    const result = await sendEmail({
+      to: TO,
+      subject: CONFIRMATION_SUBJECTS.contact + " [TESZT]",
+      html,
+      text: "Kapcsolatfelvétel visszaigazolás (HTML email).",
+    });
+    console.log(`✔ Contact confirmation email sent. Resend ID: ${result.id}`);
+    return;
+  }
 
   if (MODE === "welcome") {
     const html = renderWelcomeEmailHtml({

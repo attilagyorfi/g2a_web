@@ -62,6 +62,7 @@ export function registerPasswordAuthRoute(app: Express): void {
    */
   app.get("/api/_diag/admin-env", (_req: Request, res: Response) => {
     res.json({
+      // Admin login
       ADMIN_EMAIL_set: Boolean(ENV.adminEmail),
       ADMIN_EMAIL_shape: ENV.adminEmail
         ? `${ENV.adminEmail.slice(0, 2)}***@***${ENV.adminEmail.slice(-3)}`
@@ -72,6 +73,14 @@ export function registerPasswordAuthRoute(app: Express): void {
       JWT_SECRET_length: ENV.cookieSecret.length,
       VITE_APP_ID_set: Boolean(ENV.appId),
       VITE_OAUTH_PORTAL_URL_set: Boolean(ENV.oauthPortalUrl),
+      // Resend / email
+      RESEND_API_KEY_set: Boolean(ENV.resendApiKey),
+      RESEND_FROM_EMAIL: ENV.resendFromEmail || null,
+      RESEND_NOTIFY_EMAIL: ENV.resendNotifyEmail || null,
+      RESEND_WEBHOOK_SECRET_set: Boolean(ENV.resendWebhookSecret),
+      // Cron
+      CRON_SECRET_set: Boolean(process.env.CRON_SECRET),
+      // Runtime
       NODE_ENV: process.env.NODE_ENV || "unknown",
     });
   });

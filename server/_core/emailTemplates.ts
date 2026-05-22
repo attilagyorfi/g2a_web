@@ -71,21 +71,46 @@ function wrapper(inner: string, preheader: string): string {
 </html>`;
 }
 
-/** Dark header band — wordmark + tag chip. */
+/** Cloudinary-hosted G2A logo at email size (180px wide, 2× DPI = 360px source).
+ *  Auto-format (Cloudinary `f_auto`) serves PNG to Outlook and WebP to Gmail. */
+const LOGO_URL =
+  "https://res.cloudinary.com/dzh1unb6d/image/upload/f_auto,q_auto,w_360/g2a/og/default-logo.png";
+
+/** Dark header band — logo + tag chip on dark background, 3px teal underline. */
 function darkHeader(opts: { tag?: string; secondaryLine?: string }): string {
   const tag = opts.tag
-    ? `<div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.2em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:10px">${escapeHtml(opts.tag)}</div>`
+    ? `<div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.2em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:14px;font-weight:600">${escapeHtml(opts.tag)}</div>`
     : "";
   const secondary = opts.secondaryLine
-    ? `<div style="font-size:12px;color:#94a3b8;margin-top:6px;font-family:${FONT_MONO};letter-spacing:0.04em">${escapeHtml(opts.secondaryLine)}</div>`
+    ? `<div style="font-size:12px;color:#94a3b8;margin-top:8px;font-family:${FONT_MONO};letter-spacing:0.04em">${escapeHtml(opts.secondaryLine)}</div>`
     : "";
   return `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK};border-bottom:3px solid ${BRAND_TEAL}">
       <tr>
         <td style="padding:28px 36px;color:#ffffff">
           ${tag}
-          <div style="font-size:20px;font-weight:800;letter-spacing:-0.01em">G2A Marketing</div>
+          <img src="${LOGO_URL}" alt="G2A Marketing" width="180" height="auto" style="display:block;border:0;outline:none;text-decoration:none;width:180px;height:auto;max-width:180px">
           ${secondary}
+        </td>
+      </tr>
+    </table>`;
+}
+
+/** Personal sign-off block — appended above the footer in welcome, digest,
+ *  and confirmation emails so every message feels written by a human, not
+ *  shipped by a faceless system. */
+function signature(opts: { name?: string; role?: string } = {}): string {
+  const name = opts.name || "Attila";
+  const role = opts.role || "ügyvezető, G2A Marketing";
+  return `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:8px 36px 36px">
+          <div style="font-size:14px;color:${TEXT_SECONDARY};line-height:1.6;margin-bottom:14px">Üdv,</div>
+          <div style="display:inline-block;border-left:3px solid ${BRAND_TEAL};padding-left:14px">
+            <div style="font-size:16px;font-weight:700;color:${TEXT_PRIMARY};letter-spacing:-0.01em">${escapeHtml(name)}</div>
+            <div style="font-size:12px;color:${TEXT_MUTED};font-family:${FONT_MONO};letter-spacing:0.04em;margin-top:3px">${escapeHtml(role)}</div>
+          </div>
         </td>
       </tr>
     </table>`;
@@ -213,13 +238,13 @@ export function renderWelcomeEmailHtml(input: WelcomeEmailInput): string {
   const body = `
     ${darkHeader({ tag: "Üdv a fedélzeten", secondaryLine: "Adatvezérelt marketing ügynökség · Pécs" })}
 
-    <!-- Hero copy -->
+    <!-- Hero copy — first-person, personal -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:40px 36px 24px">
           <h1 style="margin:0 0 14px;font-size:28px;line-height:1.2;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
-          <p style="margin:0;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">
-            Köszönjük, hogy feliratkoztál a hírlevelünkre. Heti maximum 1 email, péntek reggel — sose kéretlenül.
+          <p style="margin:0 0 12px;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">
+            Attila vagyok a G2A Marketingtől — köszönöm, hogy feliratkoztál a hírlevelünkre. Heti maximum 1 email, péntek reggel — sose kéretlenül.
           </p>
         </td>
       </tr>
@@ -258,12 +283,12 @@ export function renderWelcomeEmailHtml(input: WelcomeEmailInput): string {
     <!-- Personal note -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
-        <td style="padding:24px 36px 36px">
+        <td style="padding:24px 36px 8px">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px">
             <tr>
               <td style="padding:18px 22px">
                 <div style="font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">
-                  <strong style="color:${TEXT_PRIMARY}">Kérdésed van?</strong> Válaszolj erre az emailre — átolvassuk és válaszolunk személyesen. Ha konkrét marketing kihíváson dolgozol, jelezd — gyakran egy 15 perces beszélgetés is sokat tisztáz.
+                  <strong style="color:${TEXT_PRIMARY}">Kérdésed van?</strong> Válaszolj erre az emailre — átolvasom és válaszolok személyesen. Ha konkrét marketing kihíváson dolgozol, jelezd — gyakran egy 15 perces beszélgetés is sokat tisztáz.
                 </div>
               </td>
             </tr>
@@ -271,6 +296,8 @@ export function renderWelcomeEmailHtml(input: WelcomeEmailInput): string {
         </td>
       </tr>
     </table>
+
+    ${signature()}
 
     ${footer(input.unsubscribeUrl)}
   `;
@@ -390,13 +417,13 @@ export function renderDigestEmailHtml(input: DigestEmailInput): string {
     <!-- Reply callout -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
-        <td style="padding:24px 36px 36px">
+        <td style="padding:24px 36px 8px">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK_PANEL};border-radius:12px;border-left:4px solid ${BRAND_TEAL}">
             <tr>
               <td style="padding:22px 26px">
                 <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:8px;font-weight:600">Mit gondolsz?</div>
                 <div style="font-size:14px;line-height:1.6;color:#cbd5e1">
-                  Hasznos volt? Válaszolj erre az emailre egyetlen mondattal — átolvassuk és válaszolunk. Konkrét marketing kérdésed van? <a href="https://g2amarketing.hu/kapcsolat" style="color:${BRAND_TEAL};text-decoration:none;font-weight:600">Vedd fel velünk a kapcsolatot →</a>
+                  Hasznos volt? Válaszolj erre az emailre egyetlen mondattal — átolvasom és válaszolok. Konkrét marketing kérdésed van? <a href="https://g2amarketing.hu/kapcsolat" style="color:${BRAND_TEAL};text-decoration:none;font-weight:600">Vedd fel velünk a kapcsolatot →</a>
                 </div>
               </td>
             </tr>
@@ -405,8 +432,173 @@ export function renderDigestEmailHtml(input: DigestEmailInput): string {
       </tr>
     </table>
 
+    ${signature()}
+
     ${footer(input.unsubscribeUrl)}
   `;
 
   return wrapper(body, intro);
 }
+
+// ─── Audit / contact confirmation email ────────────────────────────────────
+
+export type ConfirmationEmailInput = {
+  name: string;
+  /** "audit" | "contact" | "career" — controls the tag + lead-time copy */
+  formType: "audit" | "contact" | "career";
+  /** Echo of what the visitor submitted — shown as a quote block so they
+   *  know we received it correctly. */
+  submission?: { label: string; value: string }[];
+};
+
+const CONFIRMATION_LABELS = {
+  audit: {
+    tag: "AUDIT KÉRÉS",
+    subject: "Köszönjük az audit kérésedet — hamarosan jelentkezünk",
+    heading: "Megkaptam a kérésedet",
+    intro:
+      "Köszönöm, hogy időt szántál a kapcsolatfelvételre. Az alábbiakban összefoglaltam, mit küldtél el — ha bármelyik adat pontatlan, válaszolj erre az emailre.",
+    nextSteps: [
+      "<strong>24 órán belül</strong> megnézem a megadott weboldalt és a hivatkozott digitális jelenlétet.",
+      "<strong>2-3 munkanapon belül</strong> küldök egy első értékelést a fő észrevételekkel.",
+      "<strong>5-7 munkanapon belül</strong> kapsz egy részletes auditot (15-25 oldal) prioritizált akciópontokkal.",
+      "A teljes folyamat <strong>ingyenes</strong>, kötelezettségmentes — nincs üzlettelefonálás, csak a riport.",
+    ],
+    closing:
+      "Ha közben bármi kérdésed van — például egy konkrét marketing kihíváson dolgozol — válaszolj nyugodtan erre az emailre. Olvasok rá.",
+  },
+  contact: {
+    tag: "KAPCSOLATFELVÉTEL",
+    subject: "Köszönjük az üzeneted — hamarosan jelentkezünk",
+    heading: "Megkaptam az üzeneted",
+    intro:
+      "Köszönöm, hogy felvetted velünk a kapcsolatot. Az alábbiakban összefoglaltam, mit küldtél el — ha bármi pontatlan, válaszolj erre az emailre.",
+    nextSteps: [
+      "<strong>1 munkanapon belül</strong> személyesen válaszolok az üzeneted tartalmára.",
+      "Ha bonyolultabb téma, jelzem mikor tudunk <strong>15-30 perces beszélgetést</strong> egyeztetni.",
+      "Sürgős? Hívj nyugodtan: <strong>+36 30 190 2575</strong> (munkanapokon 8-17h között).",
+    ],
+    closing:
+      "Mindezek mellett ha közben bármi kiegészítés jut eszedbe, válaszolj erre az emailre — olvasom.",
+  },
+  career: {
+    tag: "KARRIER JELENTKEZÉS",
+    subject: "Köszönjük a jelentkezésedet — hamarosan jelentkezünk",
+    heading: "Megkaptam a jelentkezésedet",
+    intro:
+      "Köszönöm, hogy jelentkeztél hozzánk. Az alábbiakban összefoglaltam, amit elküldtél — ha bármi pontatlan, válaszolj erre az emailre.",
+    nextSteps: [
+      "<strong>3-5 munkanapon belül</strong> átnézem a jelentkezést és a CV-d.",
+      "Ha továbblépünk, <strong>egy rövid online beszélgetésre</strong> hívlak (kb. 30 perc).",
+      "Második kör: gyakorlati feladat a saját szakterületeden — kontextusban.",
+    ],
+    closing:
+      "Ha közben jut eszedbe bármilyen kérdés — a pozícióról, csapatról, kultúráról — válaszolj erre az emailre. Olvasok rá.",
+  },
+};
+
+export function renderConfirmationEmailHtml(input: ConfirmationEmailInput): string {
+  const cfg = CONFIRMATION_LABELS[input.formType];
+  const greeting = `Szia ${escapeHtml(input.name)}!`;
+
+  const submissionRows =
+    input.submission && input.submission.length > 0
+      ? input.submission
+          .filter((s) => s.value && s.value.trim() !== "" && s.value.trim() !== "–")
+          .map(
+            (s) => `
+            <tr>
+              <td style="padding:8px 0;border-bottom:1px solid ${BORDER};font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED};letter-spacing:0.06em;text-transform:uppercase;width:120px;vertical-align:top">
+                ${escapeHtml(s.label)}
+              </td>
+              <td style="padding:8px 0;border-bottom:1px solid ${BORDER};font-size:14px;color:${TEXT_PRIMARY};line-height:1.5;vertical-align:top">
+                ${escapeHtml(s.value)}
+              </td>
+            </tr>`,
+          )
+          .join("")
+      : "";
+
+  const steps = cfg.nextSteps
+    .map(
+      (s, i) => `
+        <tr>
+          <td valign="top" style="padding:8px 12px 8px 0;width:32px">
+            <div style="background:${BRAND_TEAL};color:#ffffff;font-family:${FONT_MONO};font-size:11px;font-weight:700;width:24px;height:24px;border-radius:50%;text-align:center;line-height:24px">${i + 1}</div>
+          </td>
+          <td style="padding:8px 0;font-size:14px;color:${TEXT_SECONDARY};line-height:1.6">${s}</td>
+        </tr>`,
+    )
+    .join("");
+
+  const body = `
+    ${darkHeader({ tag: cfg.tag, secondaryLine: "Visszaigazolás · G2A Marketing" })}
+
+    <!-- Greeting -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:40px 36px 8px">
+          <h1 style="margin:0 0 14px;font-size:26px;line-height:1.25;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
+          <p style="margin:0;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">${cfg.intro}</p>
+        </td>
+      </tr>
+    </table>
+
+    ${
+      submissionRows
+        ? `
+    <!-- Submission echo -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:24px 36px 8px">
+          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:10px">Amit elküldtél</div>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px">
+            <tr>
+              <td style="padding:6px 18px">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                  ${submissionRows}
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>`
+        : ""
+    }
+
+    <!-- Next steps -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:32px 36px 8px">
+          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:14px">Mi következik</div>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            ${steps}
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Closing note -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:20px 36px 8px">
+          <div style="font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">${cfg.closing}</div>
+        </td>
+      </tr>
+    </table>
+
+    ${signature()}
+
+    ${footer("https://g2amarketing.hu/kapcsolat")}
+  `;
+
+  return wrapper(body, cfg.intro);
+}
+
+/** Convenience export of the subject lines so the router can use them. */
+export const CONFIRMATION_SUBJECTS = {
+  audit: CONFIRMATION_LABELS.audit.subject,
+  contact: CONFIRMATION_LABELS.contact.subject,
+  career: CONFIRMATION_LABELS.career.subject,
+};

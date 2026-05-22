@@ -14,6 +14,10 @@ import { getClientIp } from "./_core/rateLimit";
 import { checkRateLimitDb } from "./_core/dbRateLimit";
 import { isHoneypotTriggered, HONEYPOT_FIELD } from "./_core/spam";
 import { sendEmail, isEmailConfigured } from "./_core/email";
+import {
+  renderConfirmationEmailHtml,
+  CONFIRMATION_SUBJECTS,
+} from "./_core/emailTemplates";
 import { randomBytes } from "node:crypto";
 
 // Admin guard middleware
@@ -188,6 +192,42 @@ const contactRouter = router({
         content: `**Feladó:** ${input.name}\n**Email:** ${input.email}\n**Telefon:** ${input.phone || "–"}\n**Tárgy:** ${input.subject || "–"}\n**Szolgáltatás:** ${input.serviceInterest || "–"}\n\n**Üzenet:**\n${input.message}`,
         replyTo: input.email,
       });
+
+      // Confirmation to the sender. Careers applications get the career
+      // template; everyone else gets the generic contact template.
+      if (isEmailConfigured()) {
+        try {
+          const formType = input.formContext === "careers" ? "career" : "contact";
+          const submissionFields =
+            formType === "career"
+              ? [
+                  { label: "Email", value: input.email },
+                  { label: "Telefon", value: input.phone || "" },
+                  { label: "Pozíció", value: input.subject?.replace(/^Karrier jelentkezés:\s*/, "") || "" },
+                  { label: "Üzenet", value: input.message },
+                ]
+              : [
+                  { label: "Email", value: input.email },
+                  { label: "Telefon", value: input.phone || "" },
+                  { label: "Tárgy", value: input.subject || "" },
+                  { label: "Szolgáltatás", value: input.serviceInterest || "" },
+                  { label: "Üzenet", value: input.message },
+                ];
+          await sendEmail({
+            to: input.email,
+            subject: CONFIRMATION_SUBJECTS[formType],
+            html: renderConfirmationEmailHtml({
+              name: input.name,
+              formType,
+              submission: submissionFields,
+            }),
+            replyTo: "info@g2amarketing.hu",
+          });
+        } catch (err) {
+          console.warn("[contact.submit] confirmation send failed:", err);
+        }
+      }
+
       return { success: true };
     }),
 });
@@ -220,11 +260,41 @@ const auditRouter = router({
       );
       if (guard) return guard;
       await db.createAuditLead(input);
+
+      // Notify admin (RESEND_NOTIFY_EMAIL) — best-effort
       await notifyOwner({
         title: `Új ingyenes audit kérés: ${input.name}`,
         content: `**Név:** ${input.name}\n**Email:** ${input.email}\n**Telefon:** ${input.phone || "–"}\n**Cég:** ${input.company || "–"}\n**Weboldal:** ${input.website || "–"}\n**Havi büdzsé:** ${input.monthlyBudget || "–"}\n\n**Kihívások:**\n${input.currentChallenges || "–"}\n\n**Célok:**\n${input.goals || "–"}`,
         replyTo: input.email,
       });
+
+      // Confirmation to the visitor — "got your request, here's what happens
+      // next". Best-effort; failure shouldn't block the form success state.
+      if (isEmailConfigured()) {
+        try {
+          await sendEmail({
+            to: input.email,
+            subject: CONFIRMATION_SUBJECTS.audit,
+            html: renderConfirmationEmailHtml({
+              name: input.name,
+              formType: "audit",
+              submission: [
+                { label: "Email", value: input.email },
+                { label: "Telefon", value: input.phone || "" },
+                { label: "Cég", value: input.company || "" },
+                { label: "Weboldal", value: input.website || "" },
+                { label: "Havi büdzsé", value: input.monthlyBudget || "" },
+                { label: "Kihívások", value: input.currentChallenges || "" },
+                { label: "Célok", value: input.goals || "" },
+              ],
+            }),
+            replyTo: "info@g2amarketing.hu",
+          });
+        } catch (err) {
+          console.warn("[audit.submit] confirmation send failed:", err);
+        }
+      }
+
       return { success: true };
     }),
 });

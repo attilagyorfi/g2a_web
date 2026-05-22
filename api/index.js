@@ -1605,7 +1605,7 @@ async function cloudinaryUpload(data, contentType, fileName, folder = "g2a-uploa
     public_id: publicId,
     timestamp: timestamp2
   };
-  const signature = signParams(signedParams, apiSecret);
+  const signature2 = signParams(signedParams, apiSecret);
   const form = new FormData();
   const blob = new Blob([data], { type: contentType });
   form.append("file", blob, fileName);
@@ -1613,7 +1613,7 @@ async function cloudinaryUpload(data, contentType, fileName, folder = "g2a-uploa
   form.append("timestamp", String(timestamp2));
   form.append("folder", folder);
   form.append("public_id", publicId);
-  form.append("signature", signature);
+  form.append("signature", signature2);
   const endpoint = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
   const res = await fetch(endpoint, { method: "POST", body: form });
   if (!res.ok) {
@@ -1892,9 +1892,6 @@ function isHoneypotTriggered(input) {
   return Boolean(input.website && input.website.trim().length > 0);
 }
 
-// server/routers.ts
-import { randomBytes } from "node:crypto";
-
 // server/_core/emailTemplates.ts
 var BRAND_TEAL = "#14B8A6";
 var BRAND_TEAL_DARK = "#0d9488";
@@ -1936,16 +1933,33 @@ function wrapper(inner, preheader) {
 </body>
 </html>`;
 }
+var LOGO_URL = "https://res.cloudinary.com/dzh1unb6d/image/upload/f_auto,q_auto,w_360/g2a/og/default-logo.png";
 function darkHeader(opts) {
-  const tag = opts.tag ? `<div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.2em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:10px">${escapeHtml(opts.tag)}</div>` : "";
-  const secondary = opts.secondaryLine ? `<div style="font-size:12px;color:#94a3b8;margin-top:6px;font-family:${FONT_MONO};letter-spacing:0.04em">${escapeHtml(opts.secondaryLine)}</div>` : "";
+  const tag = opts.tag ? `<div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.2em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:14px;font-weight:600">${escapeHtml(opts.tag)}</div>` : "";
+  const secondary = opts.secondaryLine ? `<div style="font-size:12px;color:#94a3b8;margin-top:8px;font-family:${FONT_MONO};letter-spacing:0.04em">${escapeHtml(opts.secondaryLine)}</div>` : "";
   return `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK};border-bottom:3px solid ${BRAND_TEAL}">
       <tr>
         <td style="padding:28px 36px;color:#ffffff">
           ${tag}
-          <div style="font-size:20px;font-weight:800;letter-spacing:-0.01em">G2A Marketing</div>
+          <img src="${LOGO_URL}" alt="G2A Marketing" width="180" height="auto" style="display:block;border:0;outline:none;text-decoration:none;width:180px;height:auto;max-width:180px">
           ${secondary}
+        </td>
+      </tr>
+    </table>`;
+}
+function signature(opts = {}) {
+  const name = opts.name || "Attila";
+  const role = opts.role || "\xFCgyvezet\u0151, G2A Marketing";
+  return `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:8px 36px 36px">
+          <div style="font-size:14px;color:${TEXT_SECONDARY};line-height:1.6;margin-bottom:14px">\xDCdv,</div>
+          <div style="display:inline-block;border-left:3px solid ${BRAND_TEAL};padding-left:14px">
+            <div style="font-size:16px;font-weight:700;color:${TEXT_PRIMARY};letter-spacing:-0.01em">${escapeHtml(name)}</div>
+            <div style="font-size:12px;color:${TEXT_MUTED};font-family:${FONT_MONO};letter-spacing:0.04em;margin-top:3px">${escapeHtml(role)}</div>
+          </div>
         </td>
       </tr>
     </table>`;
@@ -2045,13 +2059,13 @@ function renderWelcomeEmailHtml(input) {
   const body = `
     ${darkHeader({ tag: "\xDCdv a fed\xE9lzeten", secondaryLine: "Adatvez\xE9relt marketing \xFCgyn\xF6ks\xE9g \xB7 P\xE9cs" })}
 
-    <!-- Hero copy -->
+    <!-- Hero copy \u2014 first-person, personal -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:40px 36px 24px">
           <h1 style="margin:0 0 14px;font-size:28px;line-height:1.2;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
-          <p style="margin:0;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">
-            K\xF6sz\xF6nj\xFCk, hogy feliratkozt\xE1l a h\xEDrlevel\xFCnkre. Heti maximum 1 email, p\xE9ntek reggel \u2014 sose k\xE9retlen\xFCl.
+          <p style="margin:0 0 12px;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">
+            Attila vagyok a G2A Marketingt\u0151l \u2014 k\xF6sz\xF6n\xF6m, hogy feliratkozt\xE1l a h\xEDrlevel\xFCnkre. Heti maximum 1 email, p\xE9ntek reggel \u2014 sose k\xE9retlen\xFCl.
           </p>
         </td>
       </tr>
@@ -2090,12 +2104,12 @@ function renderWelcomeEmailHtml(input) {
     <!-- Personal note -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
-        <td style="padding:24px 36px 36px">
+        <td style="padding:24px 36px 8px">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px">
             <tr>
               <td style="padding:18px 22px">
                 <div style="font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">
-                  <strong style="color:${TEXT_PRIMARY}">K\xE9rd\xE9sed van?</strong> V\xE1laszolj erre az emailre \u2014 \xE1tolvassuk \xE9s v\xE1laszolunk szem\xE9lyesen. Ha konkr\xE9t marketing kih\xEDv\xE1son dolgozol, jelezd \u2014 gyakran egy 15 perces besz\xE9lget\xE9s is sokat tiszt\xE1z.
+                  <strong style="color:${TEXT_PRIMARY}">K\xE9rd\xE9sed van?</strong> V\xE1laszolj erre az emailre \u2014 \xE1tolvasom \xE9s v\xE1laszolok szem\xE9lyesen. Ha konkr\xE9t marketing kih\xEDv\xE1son dolgozol, jelezd \u2014 gyakran egy 15 perces besz\xE9lget\xE9s is sokat tiszt\xE1z.
                 </div>
               </td>
             </tr>
@@ -2103,6 +2117,8 @@ function renderWelcomeEmailHtml(input) {
         </td>
       </tr>
     </table>
+
+    ${signature()}
 
     ${footer(input.unsubscribeUrl)}
   `;
@@ -2185,13 +2201,13 @@ function renderDigestEmailHtml(input) {
     <!-- Reply callout -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
-        <td style="padding:24px 36px 36px">
+        <td style="padding:24px 36px 8px">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK_PANEL};border-radius:12px;border-left:4px solid ${BRAND_TEAL}">
             <tr>
               <td style="padding:22px 26px">
                 <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:8px;font-weight:600">Mit gondolsz?</div>
                 <div style="font-size:14px;line-height:1.6;color:#cbd5e1">
-                  Hasznos volt? V\xE1laszolj erre az emailre egyetlen mondattal \u2014 \xE1tolvassuk \xE9s v\xE1laszolunk. Konkr\xE9t marketing k\xE9rd\xE9sed van? <a href="https://g2amarketing.hu/kapcsolat" style="color:${BRAND_TEAL};text-decoration:none;font-weight:600">Vedd fel vel\xFCnk a kapcsolatot \u2192</a>
+                  Hasznos volt? V\xE1laszolj erre az emailre egyetlen mondattal \u2014 \xE1tolvasom \xE9s v\xE1laszolok. Konkr\xE9t marketing k\xE9rd\xE9sed van? <a href="https://g2amarketing.hu/kapcsolat" style="color:${BRAND_TEAL};text-decoration:none;font-weight:600">Vedd fel vel\xFCnk a kapcsolatot \u2192</a>
                 </div>
               </td>
             </tr>
@@ -2200,12 +2216,141 @@ function renderDigestEmailHtml(input) {
       </tr>
     </table>
 
+    ${signature()}
+
     ${footer(input.unsubscribeUrl)}
   `;
   return wrapper(body, intro);
 }
+var CONFIRMATION_LABELS = {
+  audit: {
+    tag: "AUDIT K\xC9R\xC9S",
+    subject: "K\xF6sz\xF6nj\xFCk az audit k\xE9r\xE9sedet \u2014 hamarosan jelentkez\xFCnk",
+    heading: "Megkaptam a k\xE9r\xE9sedet",
+    intro: "K\xF6sz\xF6n\xF6m, hogy id\u0151t sz\xE1nt\xE1l a kapcsolatfelv\xE9telre. Az al\xE1bbiakban \xF6sszefoglaltam, mit k\xFCldt\xE9l el \u2014 ha b\xE1rmelyik adat pontatlan, v\xE1laszolj erre az emailre.",
+    nextSteps: [
+      "<strong>24 \xF3r\xE1n bel\xFCl</strong> megn\xE9zem a megadott weboldalt \xE9s a hivatkozott digit\xE1lis jelenl\xE9tet.",
+      "<strong>2-3 munkanapon bel\xFCl</strong> k\xFCld\xF6k egy els\u0151 \xE9rt\xE9kel\xE9st a f\u0151 \xE9szrev\xE9telekkel.",
+      "<strong>5-7 munkanapon bel\xFCl</strong> kapsz egy r\xE9szletes auditot (15-25 oldal) prioritiz\xE1lt akci\xF3pontokkal.",
+      "A teljes folyamat <strong>ingyenes</strong>, k\xF6telezetts\xE9gmentes \u2014 nincs \xFCzlettelefon\xE1l\xE1s, csak a riport."
+    ],
+    closing: "Ha k\xF6zben b\xE1rmi k\xE9rd\xE9sed van \u2014 p\xE9ld\xE1ul egy konkr\xE9t marketing kih\xEDv\xE1son dolgozol \u2014 v\xE1laszolj nyugodtan erre az emailre. Olvasok r\xE1."
+  },
+  contact: {
+    tag: "KAPCSOLATFELV\xC9TEL",
+    subject: "K\xF6sz\xF6nj\xFCk az \xFCzeneted \u2014 hamarosan jelentkez\xFCnk",
+    heading: "Megkaptam az \xFCzeneted",
+    intro: "K\xF6sz\xF6n\xF6m, hogy felvetted vel\xFCnk a kapcsolatot. Az al\xE1bbiakban \xF6sszefoglaltam, mit k\xFCldt\xE9l el \u2014 ha b\xE1rmi pontatlan, v\xE1laszolj erre az emailre.",
+    nextSteps: [
+      "<strong>1 munkanapon bel\xFCl</strong> szem\xE9lyesen v\xE1laszolok az \xFCzeneted tartalm\xE1ra.",
+      "Ha bonyolultabb t\xE9ma, jelzem mikor tudunk <strong>15-30 perces besz\xE9lget\xE9st</strong> egyeztetni.",
+      "S\xFCrg\u0151s? H\xEDvj nyugodtan: <strong>+36 30 190 2575</strong> (munkanapokon 8-17h k\xF6z\xF6tt)."
+    ],
+    closing: "Mindezek mellett ha k\xF6zben b\xE1rmi kieg\xE9sz\xEDt\xE9s jut eszedbe, v\xE1laszolj erre az emailre \u2014 olvasom."
+  },
+  career: {
+    tag: "KARRIER JELENTKEZ\xC9S",
+    subject: "K\xF6sz\xF6nj\xFCk a jelentkez\xE9sedet \u2014 hamarosan jelentkez\xFCnk",
+    heading: "Megkaptam a jelentkez\xE9sedet",
+    intro: "K\xF6sz\xF6n\xF6m, hogy jelentkezt\xE9l hozz\xE1nk. Az al\xE1bbiakban \xF6sszefoglaltam, amit elk\xFCldt\xE9l \u2014 ha b\xE1rmi pontatlan, v\xE1laszolj erre az emailre.",
+    nextSteps: [
+      "<strong>3-5 munkanapon bel\xFCl</strong> \xE1tn\xE9zem a jelentkez\xE9st \xE9s a CV-d.",
+      "Ha tov\xE1bbl\xE9p\xFCnk, <strong>egy r\xF6vid online besz\xE9lget\xE9sre</strong> h\xEDvlak (kb. 30 perc).",
+      "M\xE1sodik k\xF6r: gyakorlati feladat a saj\xE1t szakter\xFCleteden \u2014 kontextusban."
+    ],
+    closing: "Ha k\xF6zben jut eszedbe b\xE1rmilyen k\xE9rd\xE9s \u2014 a poz\xEDci\xF3r\xF3l, csapatr\xF3l, kult\xFAr\xE1r\xF3l \u2014 v\xE1laszolj erre az emailre. Olvasok r\xE1."
+  }
+};
+function renderConfirmationEmailHtml(input) {
+  const cfg = CONFIRMATION_LABELS[input.formType];
+  const greeting = `Szia ${escapeHtml(input.name)}!`;
+  const submissionRows = input.submission && input.submission.length > 0 ? input.submission.filter((s) => s.value && s.value.trim() !== "" && s.value.trim() !== "\u2013").map(
+    (s) => `
+            <tr>
+              <td style="padding:8px 0;border-bottom:1px solid ${BORDER};font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED};letter-spacing:0.06em;text-transform:uppercase;width:120px;vertical-align:top">
+                ${escapeHtml(s.label)}
+              </td>
+              <td style="padding:8px 0;border-bottom:1px solid ${BORDER};font-size:14px;color:${TEXT_PRIMARY};line-height:1.5;vertical-align:top">
+                ${escapeHtml(s.value)}
+              </td>
+            </tr>`
+  ).join("") : "";
+  const steps = cfg.nextSteps.map(
+    (s, i) => `
+        <tr>
+          <td valign="top" style="padding:8px 12px 8px 0;width:32px">
+            <div style="background:${BRAND_TEAL};color:#ffffff;font-family:${FONT_MONO};font-size:11px;font-weight:700;width:24px;height:24px;border-radius:50%;text-align:center;line-height:24px">${i + 1}</div>
+          </td>
+          <td style="padding:8px 0;font-size:14px;color:${TEXT_SECONDARY};line-height:1.6">${s}</td>
+        </tr>`
+  ).join("");
+  const body = `
+    ${darkHeader({ tag: cfg.tag, secondaryLine: "Visszaigazol\xE1s \xB7 G2A Marketing" })}
+
+    <!-- Greeting -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:40px 36px 8px">
+          <h1 style="margin:0 0 14px;font-size:26px;line-height:1.25;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
+          <p style="margin:0;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">${cfg.intro}</p>
+        </td>
+      </tr>
+    </table>
+
+    ${submissionRows ? `
+    <!-- Submission echo -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:24px 36px 8px">
+          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:10px">Amit elk\xFCldt\xE9l</div>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px">
+            <tr>
+              <td style="padding:6px 18px">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                  ${submissionRows}
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>` : ""}
+
+    <!-- Next steps -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:32px 36px 8px">
+          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:14px">Mi k\xF6vetkezik</div>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            ${steps}
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Closing note -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:20px 36px 8px">
+          <div style="font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">${cfg.closing}</div>
+        </td>
+      </tr>
+    </table>
+
+    ${signature()}
+
+    ${footer("https://g2amarketing.hu/kapcsolat")}
+  `;
+  return wrapper(body, cfg.intro);
+}
+var CONFIRMATION_SUBJECTS = {
+  audit: CONFIRMATION_LABELS.audit.subject,
+  contact: CONFIRMATION_LABELS.contact.subject,
+  career: CONFIRMATION_LABELS.career.subject
+};
 
 // server/routers.ts
+import { randomBytes } from "node:crypto";
 var adminProcedure2 = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== "admin") {
     throw new TRPCError3({ code: "FORBIDDEN", message: "Admin access required" });
@@ -2346,6 +2491,35 @@ var contactRouter = router({
 ${input.message}`,
       replyTo: input.email
     });
+    if (isEmailConfigured()) {
+      try {
+        const formType = input.formContext === "careers" ? "career" : "contact";
+        const submissionFields = formType === "career" ? [
+          { label: "Email", value: input.email },
+          { label: "Telefon", value: input.phone || "" },
+          { label: "Poz\xEDci\xF3", value: input.subject?.replace(/^Karrier jelentkezés:\s*/, "") || "" },
+          { label: "\xDCzenet", value: input.message }
+        ] : [
+          { label: "Email", value: input.email },
+          { label: "Telefon", value: input.phone || "" },
+          { label: "T\xE1rgy", value: input.subject || "" },
+          { label: "Szolg\xE1ltat\xE1s", value: input.serviceInterest || "" },
+          { label: "\xDCzenet", value: input.message }
+        ];
+        await sendEmail({
+          to: input.email,
+          subject: CONFIRMATION_SUBJECTS[formType],
+          html: renderConfirmationEmailHtml({
+            name: input.name,
+            formType,
+            submission: submissionFields
+          }),
+          replyTo: "info@g2amarketing.hu"
+        });
+      } catch (err) {
+        console.warn("[contact.submit] confirmation send failed:", err);
+      }
+    }
     return { success: true };
   })
 });
@@ -2386,6 +2560,30 @@ ${input.currentChallenges || "\u2013"}
 ${input.goals || "\u2013"}`,
       replyTo: input.email
     });
+    if (isEmailConfigured()) {
+      try {
+        await sendEmail({
+          to: input.email,
+          subject: CONFIRMATION_SUBJECTS.audit,
+          html: renderConfirmationEmailHtml({
+            name: input.name,
+            formType: "audit",
+            submission: [
+              { label: "Email", value: input.email },
+              { label: "Telefon", value: input.phone || "" },
+              { label: "C\xE9g", value: input.company || "" },
+              { label: "Weboldal", value: input.website || "" },
+              { label: "Havi b\xFCdzs\xE9", value: input.monthlyBudget || "" },
+              { label: "Kih\xEDv\xE1sok", value: input.currentChallenges || "" },
+              { label: "C\xE9lok", value: input.goals || "" }
+            ]
+          }),
+          replyTo: "info@g2amarketing.hu"
+        });
+      } catch (err) {
+        console.warn("[audit.submit] confirmation send failed:", err);
+      }
+    }
     return { success: true };
   })
 });
@@ -3623,6 +3821,7 @@ function safeEquals(a, b) {
 function registerPasswordAuthRoute(app2) {
   app2.get("/api/_diag/admin-env", (_req, res) => {
     res.json({
+      // Admin login
       ADMIN_EMAIL_set: Boolean(ENV.adminEmail),
       ADMIN_EMAIL_shape: ENV.adminEmail ? `${ENV.adminEmail.slice(0, 2)}***@***${ENV.adminEmail.slice(-3)}` : null,
       ADMIN_PASSWORD_set: Boolean(ENV.adminPassword),
@@ -3631,6 +3830,14 @@ function registerPasswordAuthRoute(app2) {
       JWT_SECRET_length: ENV.cookieSecret.length,
       VITE_APP_ID_set: Boolean(ENV.appId),
       VITE_OAUTH_PORTAL_URL_set: Boolean(ENV.oauthPortalUrl),
+      // Resend / email
+      RESEND_API_KEY_set: Boolean(ENV.resendApiKey),
+      RESEND_FROM_EMAIL: ENV.resendFromEmail || null,
+      RESEND_NOTIFY_EMAIL: ENV.resendNotifyEmail || null,
+      RESEND_WEBHOOK_SECRET_set: Boolean(ENV.resendWebhookSecret),
+      // Cron
+      CRON_SECRET_set: Boolean(process.env.CRON_SECRET),
+      // Runtime
       NODE_ENV: process.env.NODE_ENV || "unknown"
     });
   });
