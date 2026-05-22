@@ -60,6 +60,74 @@ export function registerPasswordAuthRoute(app: Express): void {
    * email's local-part shape only (`info@…hu` style hint), never the password
    * or the JWT secret.
    */
+  /**
+   * Diagnostic: send a single test email using the production Resend
+   * credentials and report the API response. Helps debug "I changed env vars
+   * but mails still don't arrive" mismatches between local and Vercel.
+   *
+   * Auth: requires `?key=<JWT_SECRET>` query parameter — the secret is
+   * already required and configured, and using it avoids spinning up a
+   * dedicated diagnostic password. Returns the full Resend HTTP response
+   * (status + body) on failure so the operator can see exactly what Resend
+   * rejected.
+   *
+   *   GET /api/_diag/send-test?key=<JWT_SECRET>&to=foo@bar.com
+   */
+  app.get("/api/_diag/send-test", async (req: Request, res: Response) => {
+    const provided = (req.query.key as string | undefined) || "";
+    if (!ENV.cookieSecret || provided !== ENV.cookieSecret) {
+      return res.status(401).json({ error: "Wrong or missing ?key=" });
+    }
+    const to = (req.query.to as string | undefined) || ENV.resendNotifyEmail;
+    if (!to) {
+      return res.status(400).json({ error: "No `to` (and RESEND_NOTIFY_EMAIL is empty)" });
+    }
+    if (!ENV.resendApiKey) {
+      return res.status(503).json({ error: "RESEND_API_KEY not set" });
+    }
+
+    const from = ENV.resendFromEmail || "onboarding@resend.dev";
+    const payload = {
+      from,
+      to,
+      subject: "[DIAG] G2A test send — Vercel function",
+      html: `<p>This is a diagnostic email from the Vercel function.</p><p>From: <code>${from}</code></p><p>To: <code>${to}</code></p><p>If you receive this, the Resend creds + env vars are wired correctly.</p>`,
+      text: `Diagnostic email from Vercel.\nFrom: ${from}\nTo: ${to}`,
+    };
+
+    let status = 0;
+    let responseText = "";
+    try {
+      const r = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${ENV.resendApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      status = r.status;
+      responseText = await r.text();
+    } catch (err) {
+      return res.status(500).json({ error: "Fetch failed", detail: String(err) });
+    }
+
+    // Always return 200 from the diag endpoint so the operator sees the
+    // result; encode the Resend status inside the payload.
+    res.json({
+      sent_to: to,
+      from_used: from,
+      resend_status: status,
+      resend_response: (() => {
+        try {
+          return JSON.parse(responseText);
+        } catch {
+          return responseText.slice(0, 500);
+        }
+      })(),
+    });
+  });
+
   app.get("/api/_diag/admin-env", (_req: Request, res: Response) => {
     res.json({
       // Admin login

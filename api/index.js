@@ -3839,6 +3839,57 @@ function safeEquals(a, b) {
   return timingSafeEqual2(Buffer.from(a, "utf8"), Buffer.from(b, "utf8"));
 }
 function registerPasswordAuthRoute(app2) {
+  app2.get("/api/_diag/send-test", async (req, res) => {
+    const provided = req.query.key || "";
+    if (!ENV.cookieSecret || provided !== ENV.cookieSecret) {
+      return res.status(401).json({ error: "Wrong or missing ?key=" });
+    }
+    const to = req.query.to || ENV.resendNotifyEmail;
+    if (!to) {
+      return res.status(400).json({ error: "No `to` (and RESEND_NOTIFY_EMAIL is empty)" });
+    }
+    if (!ENV.resendApiKey) {
+      return res.status(503).json({ error: "RESEND_API_KEY not set" });
+    }
+    const from = ENV.resendFromEmail || "onboarding@resend.dev";
+    const payload = {
+      from,
+      to,
+      subject: "[DIAG] G2A test send \u2014 Vercel function",
+      html: `<p>This is a diagnostic email from the Vercel function.</p><p>From: <code>${from}</code></p><p>To: <code>${to}</code></p><p>If you receive this, the Resend creds + env vars are wired correctly.</p>`,
+      text: `Diagnostic email from Vercel.
+From: ${from}
+To: ${to}`
+    };
+    let status = 0;
+    let responseText = "";
+    try {
+      const r = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${ENV.resendApiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+      status = r.status;
+      responseText = await r.text();
+    } catch (err) {
+      return res.status(500).json({ error: "Fetch failed", detail: String(err) });
+    }
+    res.json({
+      sent_to: to,
+      from_used: from,
+      resend_status: status,
+      resend_response: (() => {
+        try {
+          return JSON.parse(responseText);
+        } catch {
+          return responseText.slice(0, 500);
+        }
+      })()
+    });
+  });
   app2.get("/api/_diag/admin-env", (_req, res) => {
     res.json({
       // Admin login
