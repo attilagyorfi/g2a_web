@@ -988,7 +988,9 @@ export default function KarrierPage() {
                 </FormField>
                 <FormField label={doc.applyForm.cvLabel}>
                   <input
-                    type="url"
+                    type="text"
+                    inputMode="url"
+                    autoComplete="url"
                     value={cv}
                     onChange={(e) => setCv(e.target.value)}
                     placeholder={doc.applyForm.cvPlaceholder}

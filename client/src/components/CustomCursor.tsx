@@ -76,7 +76,11 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Ring – follows with spring lag, scales on interactive-element hover */}
+      {/* Ring – follows with spring lag, scales on interactive-element hover.
+          z-index sits ABOVE popups/modals (which use 10000) so the cursor stays
+          visible even on top of the dimmed overlay; otherwise the global
+          `cursor: none` rule hides the system pointer and the custom one gets
+          painted behind the popup, making the popup feel unresponsive. */}
       <motion.div
         aria-hidden
         style={{
@@ -90,7 +94,7 @@ export default function CustomCursor() {
           borderRadius: "50%",
           border: "1.5px solid #14B8A6",
           pointerEvents: "none",
-          zIndex: 9998,
+          zIndex: 100001,
           x: sx,
           y: sy,
           scale: smoothRingScale,
@@ -112,7 +116,7 @@ export default function CustomCursor() {
           borderRadius: "50%",
           backgroundColor: "var(--g2a-brand-teal)",
           pointerEvents: "none",
-          zIndex: 9999,
+          zIndex: 100002,
           x,
           y,
           opacity,

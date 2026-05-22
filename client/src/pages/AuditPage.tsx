@@ -255,7 +255,11 @@ export default function AuditPage() {
                     </div>
                     <div>
                       <label className="g2a-label">{t("auditPage.fieldWebsite")}</label>
-                      <input className="g2a-input" type="url" value={form.website} onChange={e => setForm(f => ({ ...f, website: e.target.value }))} placeholder="https://www.ceg.hu" />
+                      {/* Plain text input — `type="url"` rejected anything
+                          without an explicit protocol scheme, which most
+                          visitors won't type. We accept `ceg.hu`, `www.ceg.hu`,
+                          or `https://www.ceg.hu` and let the server normalize. */}
+                      <input className="g2a-input" type="text" inputMode="url" autoComplete="url" value={form.website} onChange={e => setForm(f => ({ ...f, website: e.target.value }))} placeholder="pl. www.ceg.hu vagy ceg.hu" />
                     </div>
                     <div>
                       <label className="g2a-label">{t("auditPage.challengesLabel")}</label>

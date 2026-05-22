@@ -101,7 +101,7 @@ function darkHeader(opts: { tag?: string; secondaryLine?: string }): string {
  *  shipped by a faceless system. */
 function signature(opts: { name?: string; role?: string } = {}): string {
   const name = opts.name || "Attila";
-  const role = opts.role || "ügyvezető, G2A Marketing";
+  const role = opts.role || "G2A Marketing";
   return `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>

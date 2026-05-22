@@ -1271,6 +1271,17 @@ async function sendEmail(payload) {
   const result = await sendEmailWithId(payload);
   return result.ok;
 }
+function resolveFromAddress() {
+  const raw = (ENV.resendFromEmail || "").trim();
+  if (!raw) return "onboarding@resend.dev";
+  if (/<[^@\s]+@[^@\s]+>/.test(raw) || /^[^@\s]+@[^@\s]+$/.test(raw)) {
+    return raw;
+  }
+  console.warn(
+    `[Email] RESEND_FROM_EMAIL has no email address (got "${raw}") \u2014 wrapping with default <onboarding@resend.dev>. Fix the env var to "Name <user@your-verified-domain.tld>".`
+  );
+  return `${raw} <onboarding@resend.dev>`;
+}
 async function sendEmailWithId(payload) {
   if (!ENV.resendApiKey) {
     console.warn("[Email] RESEND_API_KEY not set \u2014 skipping email send");
@@ -1289,7 +1300,7 @@ async function sendEmailWithId(payload) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        from: ENV.resendFromEmail,
+        from: resolveFromAddress(),
         to,
         subject: payload.subject,
         html: payload.html,
@@ -1950,7 +1961,7 @@ function darkHeader(opts) {
 }
 function signature(opts = {}) {
   const name = opts.name || "Attila";
-  const role = opts.role || "\xFCgyvezet\u0151, G2A Marketing";
+  const role = opts.role || "G2A Marketing";
   return `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
@@ -2524,6 +2535,14 @@ ${input.message}`,
   })
 });
 var AUDIT_HONEYPOT = "botField";
+function normalizeUrl(input) {
+  if (!input) return "";
+  const trimmed = input.trim();
+  if (!trimmed) return "";
+  if (/^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed)) return trimmed;
+  if (/^(mailto|tel):/i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
 var auditRouter = router({
   submit: publicProcedure.input(z2.object({
     name: z2.string().min(2, "K\xE9rj\xFCk adja meg a nev\xE9t"),
@@ -2543,39 +2562,40 @@ var auditRouter = router({
       { success: true }
     );
     if (guard) return guard;
-    await createAuditLead(input);
+    const normalizedInput = { ...input, website: normalizeUrl(input.website) };
+    await createAuditLead(normalizedInput);
     await notifyOwner({
-      title: `\xDAj ingyenes audit k\xE9r\xE9s: ${input.name}`,
-      content: `**N\xE9v:** ${input.name}
-**Email:** ${input.email}
-**Telefon:** ${input.phone || "\u2013"}
-**C\xE9g:** ${input.company || "\u2013"}
-**Weboldal:** ${input.website || "\u2013"}
-**Havi b\xFCdzs\xE9:** ${input.monthlyBudget || "\u2013"}
+      title: `\xDAj ingyenes audit k\xE9r\xE9s: ${normalizedInput.name}`,
+      content: `**N\xE9v:** ${normalizedInput.name}
+**Email:** ${normalizedInput.email}
+**Telefon:** ${normalizedInput.phone || "\u2013"}
+**C\xE9g:** ${normalizedInput.company || "\u2013"}
+**Weboldal:** ${normalizedInput.website || "\u2013"}
+**Havi b\xFCdzs\xE9:** ${normalizedInput.monthlyBudget || "\u2013"}
 
 **Kih\xEDv\xE1sok:**
-${input.currentChallenges || "\u2013"}
+${normalizedInput.currentChallenges || "\u2013"}
 
 **C\xE9lok:**
-${input.goals || "\u2013"}`,
-      replyTo: input.email
+${normalizedInput.goals || "\u2013"}`,
+      replyTo: normalizedInput.email
     });
     if (isEmailConfigured()) {
       try {
         await sendEmail({
-          to: input.email,
+          to: normalizedInput.email,
           subject: CONFIRMATION_SUBJECTS.audit,
           html: renderConfirmationEmailHtml({
-            name: input.name,
+            name: normalizedInput.name,
             formType: "audit",
             submission: [
-              { label: "Email", value: input.email },
-              { label: "Telefon", value: input.phone || "" },
-              { label: "C\xE9g", value: input.company || "" },
-              { label: "Weboldal", value: input.website || "" },
-              { label: "Havi b\xFCdzs\xE9", value: input.monthlyBudget || "" },
-              { label: "Kih\xEDv\xE1sok", value: input.currentChallenges || "" },
-              { label: "C\xE9lok", value: input.goals || "" }
+              { label: "Email", value: normalizedInput.email },
+              { label: "Telefon", value: normalizedInput.phone || "" },
+              { label: "C\xE9g", value: normalizedInput.company || "" },
+              { label: "Weboldal", value: normalizedInput.website || "" },
+              { label: "Havi b\xFCdzs\xE9", value: normalizedInput.monthlyBudget || "" },
+              { label: "Kih\xEDv\xE1sok", value: normalizedInput.currentChallenges || "" },
+              { label: "C\xE9lok", value: normalizedInput.goals || "" }
             ]
           }),
           replyTo: "info@g2amarketing.hu"
@@ -3832,8 +3852,14 @@ function registerPasswordAuthRoute(app2) {
       VITE_OAUTH_PORTAL_URL_set: Boolean(ENV.oauthPortalUrl),
       // Resend / email
       RESEND_API_KEY_set: Boolean(ENV.resendApiKey),
-      RESEND_FROM_EMAIL: ENV.resendFromEmail || null,
+      RESEND_FROM_EMAIL_raw: ENV.resendFromEmail || null,
+      RESEND_FROM_EMAIL_valid: /<[^@\s]+@[^@\s]+>|^[^@\s]+@[^@\s]+$/.test(
+        (ENV.resendFromEmail || "").trim()
+      ),
       RESEND_NOTIFY_EMAIL: ENV.resendNotifyEmail || null,
+      RESEND_NOTIFY_EMAIL_valid: /^[^@\s]+@[^@\s]+$/.test(
+        (ENV.resendNotifyEmail || "").trim()
+      ),
       RESEND_WEBHOOK_SECRET_set: Boolean(ENV.resendWebhookSecret),
       // Cron
       CRON_SECRET_set: Boolean(process.env.CRON_SECRET),

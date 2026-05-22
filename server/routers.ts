@@ -237,6 +237,22 @@ const contactRouter = router({
 // so the honeypot uses a different name here — `botField`. Real users never
 // see/touch it; bots filling everything fail silently.
 const AUDIT_HONEYPOT = "botField";
+
+/** Add `https://` if the user typed a bare hostname like `ceg.hu` or
+ *  `www.ceg.hu`. Most visitors don't type the protocol, so the previous
+ *  `type="url"` HTML5 validation was rejecting otherwise-valid input. We now
+ *  accept anything and normalize server-side. Returns empty string for empty
+ *  input; falls back to the original string if it parses as a known
+ *  non-http scheme (mailto:, tel:) so we don't silently rewrite it. */
+function normalizeUrl(input: string | null | undefined): string {
+  if (!input) return "";
+  const trimmed = input.trim();
+  if (!trimmed) return "";
+  // Already has a scheme — leave alone
+  if (/^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed)) return trimmed;
+  if (/^(mailto|tel):/i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
 const auditRouter = router({
   submit: publicProcedure
     .input(z.object({
@@ -259,13 +275,16 @@ const auditRouter = router({
         { success: true },
       );
       if (guard) return guard;
-      await db.createAuditLead(input);
+      // Normalize the website URL — visitors typically type bare hostnames
+      // (`ceg.hu`, `www.ceg.hu`) without a protocol.
+      const normalizedInput = { ...input, website: normalizeUrl(input.website) };
+      await db.createAuditLead(normalizedInput);
 
       // Notify admin (RESEND_NOTIFY_EMAIL) — best-effort
       await notifyOwner({
-        title: `Új ingyenes audit kérés: ${input.name}`,
-        content: `**Név:** ${input.name}\n**Email:** ${input.email}\n**Telefon:** ${input.phone || "–"}\n**Cég:** ${input.company || "–"}\n**Weboldal:** ${input.website || "–"}\n**Havi büdzsé:** ${input.monthlyBudget || "–"}\n\n**Kihívások:**\n${input.currentChallenges || "–"}\n\n**Célok:**\n${input.goals || "–"}`,
-        replyTo: input.email,
+        title: `Új ingyenes audit kérés: ${normalizedInput.name}`,
+        content: `**Név:** ${normalizedInput.name}\n**Email:** ${normalizedInput.email}\n**Telefon:** ${normalizedInput.phone || "–"}\n**Cég:** ${normalizedInput.company || "–"}\n**Weboldal:** ${normalizedInput.website || "–"}\n**Havi büdzsé:** ${normalizedInput.monthlyBudget || "–"}\n\n**Kihívások:**\n${normalizedInput.currentChallenges || "–"}\n\n**Célok:**\n${normalizedInput.goals || "–"}`,
+        replyTo: normalizedInput.email,
       });
 
       // Confirmation to the visitor — "got your request, here's what happens
@@ -273,19 +292,19 @@ const auditRouter = router({
       if (isEmailConfigured()) {
         try {
           await sendEmail({
-            to: input.email,
+            to: normalizedInput.email,
             subject: CONFIRMATION_SUBJECTS.audit,
             html: renderConfirmationEmailHtml({
-              name: input.name,
+              name: normalizedInput.name,
               formType: "audit",
               submission: [
-                { label: "Email", value: input.email },
-                { label: "Telefon", value: input.phone || "" },
-                { label: "Cég", value: input.company || "" },
-                { label: "Weboldal", value: input.website || "" },
-                { label: "Havi büdzsé", value: input.monthlyBudget || "" },
-                { label: "Kihívások", value: input.currentChallenges || "" },
-                { label: "Célok", value: input.goals || "" },
+                { label: "Email", value: normalizedInput.email },
+                { label: "Telefon", value: normalizedInput.phone || "" },
+                { label: "Cég", value: normalizedInput.company || "" },
+                { label: "Weboldal", value: normalizedInput.website || "" },
+                { label: "Havi büdzsé", value: normalizedInput.monthlyBudget || "" },
+                { label: "Kihívások", value: normalizedInput.currentChallenges || "" },
+                { label: "Célok", value: normalizedInput.goals || "" },
               ],
             }),
             replyTo: "info@g2amarketing.hu",

@@ -75,8 +75,14 @@ export function registerPasswordAuthRoute(app: Express): void {
       VITE_OAUTH_PORTAL_URL_set: Boolean(ENV.oauthPortalUrl),
       // Resend / email
       RESEND_API_KEY_set: Boolean(ENV.resendApiKey),
-      RESEND_FROM_EMAIL: ENV.resendFromEmail || null,
+      RESEND_FROM_EMAIL_raw: ENV.resendFromEmail || null,
+      RESEND_FROM_EMAIL_valid: /<[^@\s]+@[^@\s]+>|^[^@\s]+@[^@\s]+$/.test(
+        (ENV.resendFromEmail || "").trim(),
+      ),
       RESEND_NOTIFY_EMAIL: ENV.resendNotifyEmail || null,
+      RESEND_NOTIFY_EMAIL_valid: /^[^@\s]+@[^@\s]+$/.test(
+        (ENV.resendNotifyEmail || "").trim(),
+      ),
       RESEND_WEBHOOK_SECRET_set: Boolean(ENV.resendWebhookSecret),
       // Cron
       CRON_SECRET_set: Boolean(process.env.CRON_SECRET),

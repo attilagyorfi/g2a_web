@@ -148,7 +148,9 @@ export default function SeoAuditPage() {
                       <div style={{ position: "relative" }}>
                         <Globe size={16} style={{ position: "absolute", left: "0.875rem", top: "50%", transform: "translateY(-50%)", color: "var(--g2a-text-secondary)", pointerEvents: "none" }} />
                         <input
-                          type="url"
+                          type="text"
+                          inputMode="url"
+                          autoComplete="url"
                           placeholder={t("seoAudit.placeholder")}
                           value={url}
                           onChange={e => setUrl(e.target.value)}

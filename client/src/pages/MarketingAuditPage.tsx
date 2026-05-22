@@ -583,11 +583,13 @@ export default function MarketingAuditPage() {
                   </FormField>
                   <FormField label={doc.formWebsiteLabel} required>
                     <input
-                      type="url"
+                      type="text"
+                      inputMode="url"
+                      autoComplete="url"
                       required
                       value={website}
                       onChange={(e) => setWebsite(e.target.value)}
-                      placeholder="https://"
+                      placeholder="pl. www.ceg.hu vagy ceg.hu"
                       className="g2a-input"
                       style={{ width: "100%" }}
                     />

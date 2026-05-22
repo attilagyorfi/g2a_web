@@ -50,6 +50,30 @@ export async function sendEmail(payload: EmailPayload): Promise<boolean> {
  * Send an email and return the Resend message ID for downstream event
  * attribution (open / click webhook → campaign).
  */
+/**
+ * Resolves the `from` header value:
+ *   - If the configured RESEND_FROM_EMAIL contains an email (parses as either
+ *     `Name <addr@host>` or bare `addr@host`), returns it as-is.
+ *   - If it's a non-email string like `"Attila - G2A Marketing"` (operator
+ *     forgot the `<addr>` part when editing the env var), wraps it as
+ *     `Attila - G2A Marketing <onboarding@resend.dev>` so the send still
+ *     succeeds with a sensible default. Logs a warning so the misconfig
+ *     shows up in the Vercel function logs.
+ *   - If it's empty, falls back to plain `onboarding@resend.dev`.
+ */
+function resolveFromAddress(): string {
+  const raw = (ENV.resendFromEmail || "").trim();
+  if (!raw) return "onboarding@resend.dev";
+  // Already a well-formed address ("Name <addr@host>" or "addr@host")
+  if (/<[^@\s]+@[^@\s]+>/.test(raw) || /^[^@\s]+@[^@\s]+$/.test(raw)) {
+    return raw;
+  }
+  console.warn(
+    `[Email] RESEND_FROM_EMAIL has no email address (got "${raw}") — wrapping with default <onboarding@resend.dev>. Fix the env var to "Name <user@your-verified-domain.tld>".`,
+  );
+  return `${raw} <onboarding@resend.dev>`;
+}
+
 export async function sendEmailWithId(
   payload: EmailPayload,
 ): Promise<{ ok: boolean; messageId?: string }> {
@@ -71,7 +95,7 @@ export async function sendEmailWithId(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: ENV.resendFromEmail,
+        from: resolveFromAddress(),
         to,
         subject: payload.subject,
         html: payload.html,
