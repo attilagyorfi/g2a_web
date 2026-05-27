@@ -280,6 +280,39 @@ var rateLimitHits = mysqlTable("rate_limit_hits", {
   bucketKey: varchar("bucketKey", { length: 192 }).notNull(),
   hitAt: timestamp("hitAt").defaultNow().notNull()
 });
+var socialAccounts = mysqlTable("social_accounts", {
+  id: int("id").autoincrement().primaryKey(),
+  platform: mysqlEnum("platform", ["linkedin", "facebook", "instagram"]).notNull(),
+  accountName: varchar("accountName", { length: 256 }),
+  // display name, e.g. "G2A Marketing"
+  accountId: varchar("accountId", { length: 256 }),
+  // platform-side ID (page ID, etc.)
+  accessToken: text("accessToken"),
+  refreshToken: text("refreshToken"),
+  expiresAt: timestamp("expiresAt"),
+  /** Scope string saved as-is so we can warn if the granted scopes don't
+   *  include the publishing permission. */
+  scope: text("scope"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+});
+var socialPosts = mysqlTable("social_posts", {
+  id: int("id").autoincrement().primaryKey(),
+  postId: int("postId").notNull(),
+  // FK to posts.id (blog post)
+  platform: mysqlEnum("platform", ["linkedin", "facebook", "instagram"]).notNull(),
+  copy: text("copy").notNull(),
+  status: mysqlEnum("status", ["draft", "published", "failed"]).default("draft").notNull(),
+  /** Platform's own post identifier (used to link out, fetch stats). */
+  externalPostId: varchar("externalPostId", { length: 256 }),
+  /** Direct URL to the published post on the platform. */
+  externalUrl: text("externalUrl"),
+  error: text("error"),
+  publishedAt: timestamp("publishedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+});
 var newsletterSubscribers = mysqlTable("newsletter_subscribers", {
   id: int("id").autoincrement().primaryKey(),
   email: varchar("email", { length: 320 }).notNull().unique(),
@@ -926,6 +959,34 @@ async function deleteIndustriesBulk(ids) {
 }
 async function deleteTechnologiesBulk(ids) {
   return bulkDeleteByIds(technologies, technologies.id, ids);
+}
+async function listSocialAccounts() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(socialAccounts).orderBy(socialAccounts.platform);
+}
+async function getLatestSocialPostsForBlogPost(postId) {
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db.select().from(socialPosts).where(eq(socialPosts.postId, postId)).orderBy(desc(socialPosts.createdAt));
+  const latestByPlatform = /* @__PURE__ */ new Map();
+  for (const r of rows) {
+    if (!latestByPlatform.has(r.platform)) {
+      latestByPlatform.set(r.platform, r);
+    }
+  }
+  return Array.from(latestByPlatform.values());
+}
+async function createSocialPost(data) {
+  const db = await getDb();
+  if (!db) return null;
+  const [result] = await db.insert(socialPosts).values({
+    postId: data.postId,
+    platform: data.platform,
+    copy: data.copy,
+    status: data.status ?? "draft"
+  });
+  return result.insertId ?? null;
 }
 
 // server/_core/cookies.ts
@@ -2360,6 +2421,115 @@ var CONFIRMATION_SUBJECTS = {
   career: CONFIRMATION_LABELS.career.subject
 };
 
+// server/_core/socialCopy.ts
+var OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+var PLATFORM_PROMPTS = {
+  linkedin: (lang) => `Te a G2A Marketing LinkedIn copy-\xEDr\xF3ja vagy \u2014 magyar B2B marketing \xFCgyn\xF6ks\xE9g P\xE9csen. ${lang === "hu" ? "Magyarul \xEDrj." : lang === "en" ? "Write in English." : "\u7528\u4E2D\u6587\u5199\u4F5C\u3002"}
+
+C\xE9l: egy LinkedIn poszt, amely egy \xFAj blog cikkre h\xEDvja fel a figyelmet, de nem clickbait \u2014 \xE9rdemi inz\xE1jt-ot is hordoz a cikkb\u0151l.
+
+STRUKT\xDARA (pontosan k\xF6vesd):
+1. ELS\u0150 MONDAT: er\u0151s hook \u2014 egy meglep\u0151 statisztika, k\xE9rd\xE9s, vagy provokat\xEDv megfigyel\xE9s a t\xE9m\xE1r\xF3l. Maximum 12 sz\xF3. Ez fog megjelenni a feed-en a "...see more" el\u0151tt.
+2. \xDCRES SOR
+3. 3-5 mondatos \xE9rdemi sz\xF6veg: r\xF6viden \xF6sszefoglalja a cikk f\u0151 gondolat\xE1t + 1-2 konkr\xE9t takeaway-t. Te-form\xE1t haszn\xE1lj. Konkr\xE9t sz\xE1mok, p\xE9ld\xE1k ha vannak.
+4. \xDCRES SOR
+5. CTA: "R\xE9szletek a cikkben:" + a teljes URL
+6. \xDCRES SOR
+7. 4-6 relev\xE1ns hashtag \u2014 kis bet\u0171k, magyar B2B-relev\xE1nsak (#b2bmarketing, #marketing, #aimarketing, stb.). Speci\xE1lis t\xE9m\xE1khoz ipar\xE1gi hashtag.
+
+SZAB\xC1LYOK:
+- Hossz: 800-1300 karakter (k\xF6zepes-hossz\xFA LinkedIn poszt m\xE9ly-engagement-hez)
+- NE haszn\xE1lj emoji-t (B2B context, professzion\xE1lis hang)
+- NE haszn\xE1lj clickbait-et ("This will SHOCK you!" stb.)
+- NE emlegesd magunkat ("a G2A...", "csapatunk...") \u2014 a c\xE9ges page-en posztolunk, ez nyilv\xE1nval\xF3
+- NE rakj ## vagy ** form\xE1z\xE1st
+- KIZ\xC1R\xD3LAG a k\xE9sz poszt-sz\xF6veget add vissza, semmi magyar\xE1zat`,
+  facebook: (lang) => `Te a G2A Marketing Facebook copy-\xEDr\xF3ja vagy. ${lang === "hu" ? "Magyarul \xEDrj." : lang === "en" ? "Write in English." : "\u7528\u4E2D\u6587\u5199\u4F5C\u3002"}
+
+C\xE9l: egy Facebook poszt egy \xFAj blog cikkr\u0151l. Facebook-on a copy r\xF6vid, besz\xE9lget\u0151s, \xE9rzelmesebb mint LinkedIn-en.
+
+STRUKT\xDARA:
+1. ELS\u0150 MONDAT/K\xC9RD\xC9S: egy konkr\xE9t k\xE9rd\xE9s vagy \xE1ll\xEDt\xE1s ami az olvas\xF3t a saj\xE1t helyzet\xE9be helyezi (max 15 sz\xF3).
+2. \xDCRES SOR
+3. 2-3 mondat: r\xF6viden \xF6sszefoglalja a cikk f\u0151 \xFCzenet\xE9t, mi\xE9rt \xE9rdemes elolvasni.
+4. \xDCRES SOR
+5. CTA: "\u{1F449} Olvasd el a cikket:" + a teljes URL
+6. \xDCRES SOR
+7. 2-3 relev\xE1ns hashtag (Facebook-on a hashtag-ek visszafogottabbak mint Instagram-on)
+
+SZAB\xC1LYOK:
+- Hossz: 300-500 karakter (Facebook algoritmusa a r\xF6videbb posztokat prefer\xE1lja)
+- 1-2 emoji OK, de ne l\xE9gy t\xFAlzott
+- Besz\xE9lget\u0151s, k\xF6zvetlen hangnem (te-forma)
+- NE emlegesd magunkat ("a G2A...", "csapatunk...")
+- KIZ\xC1R\xD3LAG a k\xE9sz poszt-sz\xF6veget add vissza, semmi magyar\xE1zat`,
+  instagram: (lang) => `Te a G2A Marketing Instagram copy-\xEDr\xF3ja vagy. ${lang === "hu" ? "Magyarul \xEDrj." : lang === "en" ? "Write in English." : "\u7528\u4E2D\u6587\u5199\u4F5C\u3002"}
+
+C\xE9l: egy Instagram caption egy \xFAj blog cikkr\u0151l. Instagram-on a tipogr\xE1fia + emoji + hashtag domin\xE1l.
+
+STRUKT\xDARA:
+1. ELS\u0150 SOR (the "hook"): emoji + figyelemfelkelt\u0151 mondat (max 10 sz\xF3). Az Instagram a "...more" el\u0151tt csak ezt mutatja.
+2. \xDCRES SOR
+3. 2-4 r\xF6vid bekezd\xE9s, mindegyik 1-2 mondat. Soronk\xE9nt 1-1 emoji a sorok elej\xE9n (\u2728 \u{1F4A1} \u{1F525} \u{1F4CA} stb.). Magyar\xE1zza a cikk \xE9rt\xE9k\xE9t, f\u0151 insight-jait.
+4. \xDCRES SOR
+5. CTA: "\u{1F517} A linket a bio-ban tal\xE1lod / R\xE9szletek: [URL]" (Instagram nem klikkelheti a linkeket a captionben, de tegy\xFCk be a teljes URL-t).
+6. \xDCRES SOR
+7. 8-15 relev\xE1ns hashtag \u2014 keverve sz\xE9lesebb (#marketing #b2b) \xE9s niche (#aimarketing #kkvmarketing #p\xE9cs) hashtag-eket.
+
+SZAB\xC1LYOK:
+- Hossz: 800-1500 karakter
+- Emoji-k b\u0151ven (sort\xF6r\xE9s, hangs\xFAly)
+- Te-forma, bar\xE1ti hangnem
+- NE emlegesd magunkat n\xE9vvel
+- KIZ\xC1R\xD3LAG a k\xE9sz caption-t add vissza`
+};
+function summarizeContent(html, maxChars = 500) {
+  if (!html) return "";
+  const text2 = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  if (text2.length <= maxChars) return text2;
+  const cut = text2.slice(0, maxChars);
+  const period = cut.lastIndexOf(".");
+  return period > maxChars - 100 ? cut.slice(0, period + 1) : cut.trimEnd() + "\u2026";
+}
+async function generateSocialCopy(input) {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key) throw new Error("OPENAI_API_KEY not set");
+  const lang = input.lang ?? "hu";
+  const system = PLATFORM_PROMPTS[input.platform](lang);
+  const userParts = [
+    `BLOG CIKK C\xCDME: ${input.title}`,
+    input.excerpt ? `LEAD/EXCERPT: ${input.excerpt}` : "",
+    input.content ? `CIKK TARTALM\xC1NAK \xD6SSZEFOGLAL\xD3JA (els\u0151 ~500 karakter):
+${summarizeContent(input.content)}` : "",
+    `URL: ${input.url}`
+  ].filter(Boolean).join("\n\n");
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: OPENAI_MODEL,
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: userParts }
+      ],
+      // Slightly higher temp for social copy — these benefit from variety
+      temperature: 0.75,
+      max_tokens: 1e3
+    })
+  });
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "");
+    throw new Error(`OpenAI ${res.status}: ${detail.slice(0, 300) || res.statusText}`);
+  }
+  const data = await res.json();
+  const text2 = data.choices?.[0]?.message?.content?.trim() ?? "";
+  if (!text2) throw new Error("OpenAI returned empty copy");
+  return text2.replace(/^```[a-z]*\n?/i, "").replace(/\n?```$/i, "").replace(/^["']([\s\S]*)["']$/, "$1").trim();
+}
+
 // server/routers.ts
 import { randomBytes } from "node:crypto";
 var adminProcedure2 = protectedProcedure.use(({ ctx, next }) => {
@@ -3368,6 +3538,62 @@ var adminRouter = router({
     return { series, totals, days: input.days };
   })
 });
+var SOCIAL_PLATFORM = z2.enum(["linkedin", "facebook", "instagram"]);
+var socialRouter = router({
+  /** List all connected social accounts (admin sees status per platform). */
+  listAccounts: adminProcedure2.query(() => listSocialAccounts()),
+  /** All drafts/published posts attached to a given blog post — latest per
+   *  platform. The admin UI uses this to render the per-platform share rows. */
+  listForPost: adminProcedure2.input(z2.object({ postId: z2.number().int().positive() })).query(({ input }) => getLatestSocialPostsForBlogPost(input.postId)),
+  /** Generate AI copy for a (blog post, platform) combination. Doesn't
+   *  persist on its own — the UI lets the admin tweak the result before
+   *  saving via `saveDraft`. */
+  generateCopy: adminProcedure2.input(
+    z2.object({
+      postId: z2.number().int().positive(),
+      platform: SOCIAL_PLATFORM
+    })
+  ).mutation(async ({ input }) => {
+    if (!isAiConfigured()) {
+      throw new TRPCError3({
+        code: "PRECONDITION_FAILED",
+        message: "OPENAI_API_KEY nincs konfigur\xE1lva."
+      });
+    }
+    const post = await getAllPostsAdmin().then(
+      (rows) => rows.find((p) => p.id === input.postId)
+    );
+    if (!post) {
+      throw new TRPCError3({ code: "NOT_FOUND", message: "Blog cikk nem tal\xE1lhat\xF3" });
+    }
+    const url = `https://g2amarketing.hu/hirek/${post.slug}`;
+    const copy = await generateSocialCopy({
+      platform: input.platform,
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
+      url,
+      lang: "hu"
+    });
+    return { copy };
+  }),
+  /** Persist a draft (or overwrite the latest one for this platform). */
+  saveDraft: adminProcedure2.input(
+    z2.object({
+      postId: z2.number().int().positive(),
+      platform: SOCIAL_PLATFORM,
+      copy: z2.string().min(1).max(1e4)
+    })
+  ).mutation(async ({ input }) => {
+    const id = await createSocialPost({
+      postId: input.postId,
+      platform: input.platform,
+      copy: input.copy,
+      status: "draft"
+    });
+    return { id, success: true };
+  })
+});
 var appRouter = router({
   system: systemRouter,
   auth: router({
@@ -3383,7 +3609,8 @@ var appRouter = router({
   audit: auditRouter,
   newsletter: newsletterRouter,
   admin: adminRouter,
-  upload: uploadRouter
+  upload: uploadRouter,
+  social: socialRouter
 });
 
 // server/_core/context.ts

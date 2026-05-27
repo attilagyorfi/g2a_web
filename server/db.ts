@@ -12,6 +12,8 @@ import {
   emailCampaigns,
   emailEvents,
   pages,
+  socialAccounts,
+  socialPosts,
   partners,
   posts,
   services,
@@ -729,4 +731,73 @@ export async function deleteIndustriesBulk(ids: number[]) {
 }
 export async function deleteTechnologiesBulk(ids: number[]) {
   return bulkDeleteByIds(technologies, technologies.id, ids);
+}
+
+// ─── Social accounts + per-post drafts ──────────────────────────────────────
+
+export async function listSocialAccounts() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(socialAccounts).orderBy(socialAccounts.platform);
+}
+
+export async function getSocialAccountByPlatform(
+  platform: "linkedin" | "facebook" | "instagram",
+) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const rows = await db
+    .select()
+    .from(socialAccounts)
+    .where(eq(socialAccounts.platform, platform))
+    .limit(1);
+  return rows[0];
+}
+
+/** Per-platform listing of the *latest* draft for a blog post. The UI shows
+ *  one row per platform — earlier iterations stay in the DB for audit but
+ *  don't surface anywhere. */
+export async function getLatestSocialPostsForBlogPost(postId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  // Drizzle doesn't have a clean "max per group" helper, so fetch all and
+  // dedupe in JS. Per-blog-post list is tiny (≤ 3 platforms × N iterations).
+  const rows = await db
+    .select()
+    .from(socialPosts)
+    .where(eq(socialPosts.postId, postId))
+    .orderBy(desc(socialPosts.createdAt));
+  const latestByPlatform = new Map<string, typeof rows[number]>();
+  for (const r of rows) {
+    if (!latestByPlatform.has(r.platform)) {
+      latestByPlatform.set(r.platform, r);
+    }
+  }
+  return Array.from(latestByPlatform.values());
+}
+
+export async function createSocialPost(data: {
+  postId: number;
+  platform: "linkedin" | "facebook" | "instagram";
+  copy: string;
+  status?: "draft" | "published" | "failed";
+}) {
+  const db = await getDb();
+  if (!db) return null;
+  const [result] = await db.insert(socialPosts).values({
+    postId: data.postId,
+    platform: data.platform,
+    copy: data.copy,
+    status: data.status ?? "draft",
+  });
+  return (result as { insertId?: number }).insertId ?? null;
+}
+
+export async function updateSocialPost(
+  id: number,
+  data: Partial<typeof socialPosts.$inferInsert>,
+) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(socialPosts).set(data).where(eq(socialPosts.id, id));
 }

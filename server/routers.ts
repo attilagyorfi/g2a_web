@@ -18,6 +18,7 @@ import {
   renderConfirmationEmailHtml,
   CONFIRMATION_SUBJECTS,
 } from "./_core/emailTemplates";
+import { generateSocialCopy } from "./_core/socialCopy";
 import { randomBytes } from "node:crypto";
 
 // Admin guard middleware
@@ -1103,6 +1104,77 @@ const adminRouter = router({
     }),
 });
 
+// ─── Social Media Router ──────────────────────────────────────────────────
+// Phase 1: copy generation + draft management. OAuth / publishing flows
+// will be added in phase 2 once the LinkedIn/Meta apps are approved.
+const SOCIAL_PLATFORM = z.enum(["linkedin", "facebook", "instagram"]);
+
+const socialRouter = router({
+  /** List all connected social accounts (admin sees status per platform). */
+  listAccounts: adminProcedure.query(() => db.listSocialAccounts()),
+
+  /** All drafts/published posts attached to a given blog post — latest per
+   *  platform. The admin UI uses this to render the per-platform share rows. */
+  listForPost: adminProcedure
+    .input(z.object({ postId: z.number().int().positive() }))
+    .query(({ input }) => db.getLatestSocialPostsForBlogPost(input.postId)),
+
+  /** Generate AI copy for a (blog post, platform) combination. Doesn't
+   *  persist on its own — the UI lets the admin tweak the result before
+   *  saving via `saveDraft`. */
+  generateCopy: adminProcedure
+    .input(
+      z.object({
+        postId: z.number().int().positive(),
+        platform: SOCIAL_PLATFORM,
+      }),
+    )
+    .mutation(async ({ input }) => {
+      if (!isAiConfigured()) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "OPENAI_API_KEY nincs konfigurálva.",
+        });
+      }
+      // Fetch the blog post first — need title/excerpt/content for the prompt
+      const post = await db.getAllPostsAdmin().then((rows) =>
+        rows.find((p) => p.id === input.postId),
+      );
+      if (!post) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Blog cikk nem található" });
+      }
+      const url = `https://g2amarketing.hu/hirek/${post.slug}`;
+      const copy = await generateSocialCopy({
+        platform: input.platform,
+        title: post.title,
+        excerpt: post.excerpt,
+        content: post.content,
+        url,
+        lang: "hu",
+      });
+      return { copy };
+    }),
+
+  /** Persist a draft (or overwrite the latest one for this platform). */
+  saveDraft: adminProcedure
+    .input(
+      z.object({
+        postId: z.number().int().positive(),
+        platform: SOCIAL_PLATFORM,
+        copy: z.string().min(1).max(10_000),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const id = await db.createSocialPost({
+        postId: input.postId,
+        platform: input.platform,
+        copy: input.copy,
+        status: "draft",
+      });
+      return { id, success: true };
+    }),
+});
+
 export const appRouter = router({
   system: systemRouter,
   auth: router({
@@ -1119,6 +1191,7 @@ export const appRouter = router({
   newsletter: newsletterRouter,
   admin: adminRouter,
   upload: uploadRouter,
+  social: socialRouter,
 });
 
 export type AppRouter = typeof appRouter;

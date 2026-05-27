@@ -295,6 +295,65 @@ export const rateLimitHits = mysqlTable("rate_limit_hits", {
   hitAt: timestamp("hitAt").defaultNow().notNull(),
 });
 
+/**
+ * Connected social media accounts (LinkedIn, Facebook, Instagram).
+ *
+ * One row per platform — we currently support only a single account per
+ * platform (the G2A company page on each). Tokens get refreshed before
+ * expiry by the platform-specific helpers.
+ *
+ * Storing the raw access token in the DB is acceptable for a small admin
+ * tool; for production at scale we'd encrypt-at-rest with KMS. The DB is
+ * locked down (admin-only access, no public exposure of the column).
+ */
+export const socialAccounts = mysqlTable("social_accounts", {
+  id: int("id").autoincrement().primaryKey(),
+  platform: mysqlEnum("platform", ["linkedin", "facebook", "instagram"]).notNull(),
+  accountName: varchar("accountName", { length: 256 }), // display name, e.g. "G2A Marketing"
+  accountId: varchar("accountId", { length: 256 }), // platform-side ID (page ID, etc.)
+  accessToken: text("accessToken"),
+  refreshToken: text("refreshToken"),
+  expiresAt: timestamp("expiresAt"),
+  /** Scope string saved as-is so we can warn if the granted scopes don't
+   *  include the publishing permission. */
+  scope: text("scope"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+/**
+ * Generated/edited social post drafts attached to a blog post.
+ *
+ * Workflow:
+ *   1. Admin opens a blog post in the editor
+ *   2. Clicks "Generate copy" per platform → AI returns a draft, stored as
+ *      `status='draft'` with empty `externalPostId`
+ *   3. Admin tweaks the copy in the textarea → "Save draft" updates the row
+ *   4. (Phase 2) Admin clicks "Publish" → server POSTs to the platform API,
+ *      stores `externalPostId` + `externalUrl`, flips `status='published'`
+ *   5. On failure, `error` is populated and `status='failed'` so the UI
+ *      can show what went wrong and allow retry
+ *
+ * Multiple drafts per (postId, platform) are allowed — admin can iterate on
+ * copy variants without losing earlier ones. UI surfaces only the latest.
+ */
+export const socialPosts = mysqlTable("social_posts", {
+  id: int("id").autoincrement().primaryKey(),
+  postId: int("postId").notNull(), // FK to posts.id (blog post)
+  platform: mysqlEnum("platform", ["linkedin", "facebook", "instagram"]).notNull(),
+  copy: text("copy").notNull(),
+  status: mysqlEnum("status", ["draft", "published", "failed"]).default("draft").notNull(),
+  /** Platform's own post identifier (used to link out, fetch stats). */
+  externalPostId: varchar("externalPostId", { length: 256 }),
+  /** Direct URL to the published post on the platform. */
+  externalUrl: text("externalUrl"),
+  error: text("error"),
+  publishedAt: timestamp("publishedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
 export const newsletterSubscribers = mysqlTable("newsletter_subscribers", {
   id: int("id").autoincrement().primaryKey(),
   email: varchar("email", { length: 320 }).notNull().unique(),
@@ -387,3 +446,5 @@ export type Page = typeof pages.$inferSelect;
 export type SiteSetting = typeof siteSettings.$inferSelect;
 export type CaseStudy = typeof caseStudies.$inferSelect;
 export type AuditLead = typeof auditLeads.$inferSelect;
+export type SocialAccount = typeof socialAccounts.$inferSelect;
+export type SocialPost = typeof socialPosts.$inferSelect;

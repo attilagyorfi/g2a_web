@@ -9,6 +9,7 @@ import LocalizedField from "@/components/LocalizedField";
 import AiImageButton from "@/components/admin/AiImageButton";
 import { parseFormError } from "@/lib/utils";
 import { useConfirm } from "@/components/ConfirmDialog";
+import SocialShareSection from "./SocialShareSection";
 
 type PostForm = {
   title: string; titleEn: string; titleZh: string;
@@ -393,6 +394,11 @@ export default function AdminPostEdit() {
           </div>
         </div>
       </form>
+
+      {/* Social media share section — only shown once the post exists (i.e.
+          has been saved at least once and has an integer ID). New unsaved
+          posts hide this section since there's no ID to attach drafts to. */}
+      {!isNew && postId && <SocialShareSection postId={postId} />}
     </div>
   );
 }
