@@ -4135,12 +4135,12 @@ ${a.excerpt}
 // server/_core/app.ts
 function createApp() {
   const app2 = express();
+  registerResendWebhookRoute(app2);
   app2.use(express.json({ limit: "50mb" }));
   app2.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerOAuthRoutes(app2);
   registerPasswordAuthRoute(app2);
   registerNewsletterRoutes(app2);
-  registerResendWebhookRoute(app2);
   registerSitemapRoute(app2);
   registerRssRoute(app2);
   registerDigestCronRoute(app2);

@@ -23,6 +23,16 @@ import { registerDigestCronRoute } from "./digestCronRoute";
 
 export function createApp(): Express {
   const app = express();
+
+  // Resend webhook — POST /api/webhooks/resend (open/click/bounce events).
+  // CRITICAL: must be registered BEFORE `express.json()` so the raw bytes
+  // are still available for the Svix HMAC-SHA256 signature verification.
+  // The route attaches its own raw-body parser middleware inside.
+  // Previously this hung with a 504 because the JSON parser silently
+  // consumed the request stream first, leaving the webhook's
+  // `req.on("data")` listeners with nothing to fire.
+  registerResendWebhookRoute(app);
+
   // Body parser — generous limit for image uploads + AI image base64 ingest
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
@@ -36,12 +46,6 @@ export function createApp(): Express {
 
   // Newsletter unsubscribe — GET /api/newsletter/unsubscribe?token=...
   registerNewsletterRoutes(app);
-
-  // Resend webhook — POST /api/webhooks/resend (open/click/bounce events).
-  // Registered BEFORE the JSON body parser would normally see it, but we
-  // attach a route-scoped raw-body parser inside `registerResendWebhookRoute`
-  // since signature verification requires the original bytes.
-  registerResendWebhookRoute(app);
 
   // Dynamic sitemap — GET /sitemap.xml (DB-driven, includes posts + case studies).
   // Vercel rewrites `/sitemap.xml` → `/api`; in dev Express handles directly.
