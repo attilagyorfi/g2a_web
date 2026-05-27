@@ -5,7 +5,7 @@ import { getLoginUrl } from "@/const";
 import {
   LayoutDashboard, FileText, Settings, Mail, Newspaper,
   Image, Star, Briefcase, Globe, Cpu, Heart, Tag,
-  ChevronLeft, ChevronRight, LogOut, Shield, BookOpen, ClipboardList
+  ChevronLeft, ChevronRight, LogOut, Shield, BookOpen, ClipboardList, Sparkles
 } from "lucide-react";
 import AdminPasswordLogin from "./AdminPasswordLogin";
 
@@ -34,6 +34,7 @@ const navItems = [
   { href: "/admin/newsletter", icon: FileText, label: "Hírlevél feliratkozók" },
   { href: "/admin/newsletter/campaigns", icon: Mail, label: "Email kampányok" },
   { href: "/admin/seo", icon: Globe, label: "SEO Oldalak" },
+  { href: "/admin/brand-voice", icon: Sparkles, label: "Brand voice" },
   { href: "/admin/settings", icon: Settings, label: "Beállítások" },
 ];
 

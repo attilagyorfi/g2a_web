@@ -101,7 +101,15 @@ export async function generateBlogDraft(input: BlogDraftInput): Promise<BlogDraf
   const tone = input.tone ?? "professional";
   const audience = input.audience || "kis- és középvállalati döntéshozók";
 
-  const system = `Te a G2A Marketing pécsi B2B marketing ügynökség blog-szerzője vagy. A G2A magyar marketing tanácsadás, SEO, közösségi média, weboldal-fejlesztés és AI-megoldások területén ad szolgáltatást. Mindig a látogatót szólítjuk meg te-formában (NEM önözünk).
+  // Brand voice — loaded fresh on every call so admin edits take effect
+  // without a restart. When unset, the prompt below still produces a
+  // reasonable G2A-flavoured draft using the inline boilerplate.
+  // Note: avoid circular import (brandVoice → db → schema is fine, but ai.ts
+  // is imported from many places). We use a dynamic import.
+  const { loadBrandVoice, renderBrandContext } = await import("./brandVoice");
+  const brandContext = renderBrandContext(await loadBrandVoice(), "blog");
+
+  const baseSystem = `Te a G2A Marketing pécsi B2B marketing ügynökség blog-szerzője vagy. A G2A magyar marketing tanácsadás, SEO, közösségi média, weboldal-fejlesztés és AI-megoldások területén ad szolgáltatást. Mindig a látogatót szólítjuk meg te-formában (NEM önözünk).
 
 Szabályok:
 - A teljes válasz ${LANG_NAMES[lang]} nyelven.
@@ -115,6 +123,8 @@ Szabályok:
 - NE találj ki konkrét statisztikákat vagy számokat, ha nem vagy biztos bennük.
 
 Csak JSON-t adj vissza ezzel a sémával: { "title": "...", "excerpt": "...", "content": "...", "metaTitle": "...", "metaDescription": "..." }`;
+
+  const system = brandContext ? `${brandContext}\n\n${baseSystem}` : baseSystem;
 
   const raw = await chat(
     [

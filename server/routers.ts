@@ -19,6 +19,12 @@ import {
   CONFIRMATION_SUBJECTS,
 } from "./_core/emailTemplates";
 import { generateSocialCopy } from "./_core/socialCopy";
+import {
+  loadBrandVoice,
+  saveBrandVoice,
+  EMPTY_BRAND_VOICE,
+  type BrandVoice,
+} from "./_core/brandVoice";
 import { randomBytes } from "node:crypto";
 
 // Admin guard middleware
@@ -1033,6 +1039,51 @@ const adminRouter = router({
   settings: router({
     list: adminProcedure.query(() => db.getAllSiteSettings()),
     upsert: adminProcedure.input(z.object({ key: z.string(), value: z.string() })).mutation(({ input }) => db.upsertSiteSetting(input.key, input.value)),
+  }),
+
+  // Brand voice — used by every AI generator (social copy, blog drafts,
+  // SEO meta) to write in the G2A house style instead of generic agency tone.
+  brandVoice: router({
+    get: adminProcedure.query(async () => {
+      const voice = await loadBrandVoice();
+      return voice ?? EMPTY_BRAND_VOICE;
+    }),
+    update: adminProcedure
+      .input(
+        z.object({
+          companyDescription: z.string().max(4000),
+          audience: z.string().max(2000),
+          toneOfVoice: z.string().max(2000),
+          dos: z.array(z.string().max(300)).max(30),
+          donts: z.array(z.string().max(300)).max(30),
+          examples: z.object({
+            linkedin: z
+              .array(z.object({ context: z.string().max(200).optional(), text: z.string().max(5000) }))
+              .max(10),
+            facebook: z
+              .array(z.object({ context: z.string().max(200).optional(), text: z.string().max(5000) }))
+              .max(10),
+            instagram: z
+              .array(z.object({ context: z.string().max(200).optional(), text: z.string().max(5000) }))
+              .max(10),
+            blog: z
+              .array(z.object({ context: z.string().max(200).optional(), text: z.string().max(5000) }))
+              .max(10)
+              .optional(),
+          }),
+        }),
+      )
+      .mutation(async ({ input }) => {
+        const voice: BrandVoice = {
+          ...input,
+          examples: {
+            ...input.examples,
+            blog: input.examples.blog ?? [],
+          },
+        };
+        await saveBrandVoice(voice);
+        return { success: true };
+      }),
   }),
 
   // Stats

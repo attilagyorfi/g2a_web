@@ -15,6 +15,7 @@
  * textarea so the user can tweak before saving as a draft.
  */
 import { Lang } from "./ai";
+import { loadBrandVoice, renderBrandContext } from "./brandVoice";
 
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
 
@@ -109,7 +110,15 @@ export async function generateSocialCopy(input: GenerateSocialCopyInput): Promis
   if (!key) throw new Error("OPENAI_API_KEY not set");
 
   const lang = input.lang ?? "hu";
-  const system = PLATFORM_PROMPTS[input.platform](lang);
+  // Brand voice — loaded fresh on every call so admin edits take effect
+  // immediately without restarting the server. Falls back to "" if not
+  // configured (the platform-specific prompt still produces reasonable output).
+  const brandVoice = await loadBrandVoice();
+  const brandContext = renderBrandContext(brandVoice, input.platform);
+  const platformPrompt = PLATFORM_PROMPTS[input.platform](lang);
+  const system = brandContext
+    ? `${brandContext}\n\n${platformPrompt}`
+    : platformPrompt;
 
   const userParts = [
     `BLOG CIKK CÍME: ${input.title}`,

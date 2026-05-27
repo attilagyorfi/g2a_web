@@ -1,20 +1,12 @@
-// server/_core/serverless.ts
-import "dotenv/config";
-
-// server/_core/app.ts
-import express from "express";
-import { createExpressMiddleware } from "@trpc/server/adapters/express";
-
-// shared/const.ts
-var COOKIE_NAME = "app_session_id";
-var ONE_YEAR_MS = 1e3 * 60 * 60 * 24 * 365;
-var AXIOS_TIMEOUT_MS = 3e4;
-var UNAUTHED_ERR_MSG = "Please login (10001)";
-var NOT_ADMIN_ERR_MSG = "You do not have required permission (10002)";
-
-// server/db.ts
-import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
+var __defProp = Object.defineProperty;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
 
 // drizzle/schema.ts
 import {
@@ -26,404 +18,417 @@ import {
   timestamp,
   varchar
 } from "drizzle-orm/mysql-core";
-var users = mysqlTable("users", {
-  id: int("id").autoincrement().primaryKey(),
-  openId: varchar("openId", { length: 64 }).notNull().unique(),
-  name: text("name"),
-  email: varchar("email", { length: 320 }),
-  loginMethod: varchar("loginMethod", { length: 64 }),
-  role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-  lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull()
-});
-var siteSettings = mysqlTable("site_settings", {
-  id: int("id").autoincrement().primaryKey(),
-  key: varchar("key", { length: 128 }).notNull().unique(),
-  value: text("value"),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
-});
-var pages = mysqlTable("pages", {
-  id: int("id").autoincrement().primaryKey(),
-  slug: varchar("slug", { length: 256 }).notNull().unique(),
-  title: varchar("title", { length: 512 }),
-  titleEn: varchar("titleEn", { length: 512 }),
-  titleZh: varchar("titleZh", { length: 512 }),
-  metaTitle: varchar("metaTitle", { length: 512 }),
-  metaTitleEn: varchar("metaTitleEn", { length: 512 }),
-  metaTitleZh: varchar("metaTitleZh", { length: 512 }),
-  metaDescription: text("metaDescription"),
-  metaDescriptionEn: text("metaDescriptionEn"),
-  metaDescriptionZh: text("metaDescriptionZh"),
-  ogTitle: varchar("ogTitle", { length: 512 }),
-  ogTitleEn: varchar("ogTitleEn", { length: 512 }),
-  ogTitleZh: varchar("ogTitleZh", { length: 512 }),
-  ogDescription: text("ogDescription"),
-  ogDescriptionEn: text("ogDescriptionEn"),
-  ogDescriptionZh: text("ogDescriptionZh"),
-  ogImage: text("ogImage"),
-  canonicalUrl: text("canonicalUrl"),
-  schemaJson: text("schemaJson"),
-  keywords: text("keywords"),
-  keywordsEn: text("keywordsEn"),
-  keywordsZh: text("keywordsZh"),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
-});
-var categories = mysqlTable("categories", {
-  id: int("id").autoincrement().primaryKey(),
-  name: varchar("name", { length: 256 }).notNull(),
-  nameEn: varchar("nameEn", { length: 256 }),
-  nameZh: varchar("nameZh", { length: 256 }),
-  slug: varchar("slug", { length: 256 }).notNull().unique(),
-  description: text("description"),
-  descriptionEn: text("descriptionEn"),
-  descriptionZh: text("descriptionZh"),
-  createdAt: timestamp("createdAt").defaultNow().notNull()
-});
-var posts = mysqlTable("posts", {
-  id: int("id").autoincrement().primaryKey(),
-  title: varchar("title", { length: 512 }).notNull(),
-  titleEn: varchar("titleEn", { length: 512 }),
-  titleZh: varchar("titleZh", { length: 512 }),
-  slug: varchar("slug", { length: 512 }).notNull().unique(),
-  excerpt: text("excerpt"),
-  excerptEn: text("excerptEn"),
-  excerptZh: text("excerptZh"),
-  content: text("content").notNull(),
-  contentEn: text("contentEn"),
-  contentZh: text("contentZh"),
-  featuredImage: text("featuredImage"),
-  featuredImageAlt: varchar("featuredImageAlt", { length: 512 }),
-  categoryId: int("categoryId"),
-  authorName: varchar("authorName", { length: 256 }).default("G2A Marketing"),
-  status: mysqlEnum("status", ["draft", "published"]).default("draft").notNull(),
-  metaTitle: varchar("metaTitle", { length: 512 }),
-  metaTitleEn: varchar("metaTitleEn", { length: 512 }),
-  metaTitleZh: varchar("metaTitleZh", { length: 512 }),
-  metaDescription: text("metaDescription"),
-  metaDescriptionEn: text("metaDescriptionEn"),
-  metaDescriptionZh: text("metaDescriptionZh"),
-  ogImage: text("ogImage"),
-  publishedAt: timestamp("publishedAt"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
-});
-var services = mysqlTable("services", {
-  id: int("id").autoincrement().primaryKey(),
-  slug: varchar("slug", { length: 256 }).notNull().unique(),
-  number: varchar("number", { length: 8 }),
-  title: varchar("title", { length: 256 }).notNull(),
-  titleEn: varchar("titleEn", { length: 256 }),
-  titleZh: varchar("titleZh", { length: 256 }),
-  shortDescription: text("shortDescription"),
-  shortDescriptionEn: text("shortDescriptionEn"),
-  shortDescriptionZh: text("shortDescriptionZh"),
-  heroTitle: varchar("heroTitle", { length: 512 }),
-  heroTitleEn: varchar("heroTitleEn", { length: 512 }),
-  heroTitleZh: varchar("heroTitleZh", { length: 512 }),
-  heroSubtitle: text("heroSubtitle"),
-  heroSubtitleEn: text("heroSubtitleEn"),
-  heroSubtitleZh: text("heroSubtitleZh"),
-  heroImage: text("heroImage"),
-  heroImageAlt: varchar("heroImageAlt", { length: 512 }),
-  content: text("content"),
-  contentEn: text("contentEn"),
-  contentZh: text("contentZh"),
-  icon: varchar("icon", { length: 128 }),
-  metaTitle: varchar("metaTitle", { length: 512 }),
-  metaTitleEn: varchar("metaTitleEn", { length: 512 }),
-  metaTitleZh: varchar("metaTitleZh", { length: 512 }),
-  metaDescription: text("metaDescription"),
-  metaDescriptionEn: text("metaDescriptionEn"),
-  metaDescriptionZh: text("metaDescriptionZh"),
-  sortOrder: int("sortOrder").default(0),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
-});
-var heroSlides = mysqlTable("hero_slides", {
-  id: int("id").autoincrement().primaryKey(),
-  subtitle: varchar("subtitle", { length: 512 }),
-  subtitleEn: varchar("subtitleEn", { length: 512 }),
-  subtitleZh: varchar("subtitleZh", { length: 512 }),
-  title: varchar("title", { length: 512 }).notNull(),
-  titleEn: varchar("titleEn", { length: 512 }),
-  titleZh: varchar("titleZh", { length: 512 }),
-  backgroundImage: text("backgroundImage"),
-  backgroundImageAlt: varchar("backgroundImageAlt", { length: 512 }),
-  ctaPrimaryText: varchar("ctaPrimaryText", { length: 256 }),
-  ctaPrimaryTextEn: varchar("ctaPrimaryTextEn", { length: 256 }),
-  ctaPrimaryTextZh: varchar("ctaPrimaryTextZh", { length: 256 }),
-  ctaPrimaryUrl: varchar("ctaPrimaryUrl", { length: 512 }),
-  ctaSecondaryText: varchar("ctaSecondaryText", { length: 256 }),
-  ctaSecondaryTextEn: varchar("ctaSecondaryTextEn", { length: 256 }),
-  ctaSecondaryTextZh: varchar("ctaSecondaryTextZh", { length: 256 }),
-  ctaSecondaryUrl: varchar("ctaSecondaryUrl", { length: 512 }),
-  sortOrder: int("sortOrder").default(0),
-  isActive: boolean("isActive").default(true).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull()
-});
-var testimonials = mysqlTable("testimonials", {
-  id: int("id").autoincrement().primaryKey(),
-  quote: text("quote").notNull(),
-  quoteEn: text("quoteEn"),
-  quoteZh: text("quoteZh"),
-  authorName: varchar("authorName", { length: 256 }).notNull(),
-  authorTitle: varchar("authorTitle", { length: 256 }),
-  authorTitleEn: varchar("authorTitleEn", { length: 256 }),
-  authorTitleZh: varchar("authorTitleZh", { length: 256 }),
-  authorCompany: varchar("authorCompany", { length: 256 }),
-  authorImage: text("authorImage"),
-  authorImageAlt: varchar("authorImageAlt", { length: 512 }),
-  isActive: boolean("isActive").default(true).notNull(),
-  sortOrder: int("sortOrder").default(0),
-  createdAt: timestamp("createdAt").defaultNow().notNull()
-});
-var partners = mysqlTable("partners", {
-  id: int("id").autoincrement().primaryKey(),
-  name: varchar("name", { length: 256 }).notNull(),
-  slug: varchar("slug", { length: 256 }),
-  logo: text("logo"),
-  logoAlt: varchar("logoAlt", { length: 512 }),
-  website: text("website"),
-  description: text("description"),
-  descriptionEn: text("descriptionEn"),
-  descriptionZh: text("descriptionZh"),
-  category: varchar("category", { length: 128 }),
-  isActive: boolean("isActive").default(true).notNull(),
-  sortOrder: int("sortOrder").default(0),
-  createdAt: timestamp("createdAt").defaultNow().notNull()
-});
-var industries = mysqlTable("industries", {
-  id: int("id").autoincrement().primaryKey(),
-  name: varchar("name", { length: 256 }).notNull(),
-  nameEn: varchar("nameEn", { length: 256 }),
-  nameZh: varchar("nameZh", { length: 256 }),
-  slug: varchar("slug", { length: 256 }).notNull().unique(),
-  description: text("description"),
-  descriptionEn: text("descriptionEn"),
-  descriptionZh: text("descriptionZh"),
-  icon: varchar("icon", { length: 128 }),
-  image: text("image"),
-  imageAlt: varchar("imageAlt", { length: 512 }),
-  sortOrder: int("sortOrder").default(0),
-  isActive: boolean("isActive").default(true).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull()
-});
-var technologies = mysqlTable("technologies", {
-  id: int("id").autoincrement().primaryKey(),
-  name: varchar("name", { length: 256 }).notNull(),
-  logo: text("logo"),
-  logoAlt: varchar("logoAlt", { length: 512 }),
-  category: mysqlEnum("category", ["marketing", "ai", "analytics", "other"]).default("marketing").notNull(),
-  website: text("website"),
-  description: text("description"),
-  descriptionEn: text("descriptionEn"),
-  descriptionZh: text("descriptionZh"),
-  sortOrder: int("sortOrder").default(0),
-  isActive: boolean("isActive").default(true).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull()
-});
-var values = mysqlTable("values", {
-  id: int("id").autoincrement().primaryKey(),
-  title: varchar("title", { length: 256 }).notNull(),
-  titleEn: varchar("titleEn", { length: 256 }),
-  titleZh: varchar("titleZh", { length: 256 }),
-  description: text("description"),
-  descriptionEn: text("descriptionEn"),
-  descriptionZh: text("descriptionZh"),
-  icon: varchar("icon", { length: 128 }),
-  sortOrder: int("sortOrder").default(0),
-  isActive: boolean("isActive").default(true).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull()
-});
-var contactSubmissions = mysqlTable("contact_submissions", {
-  id: int("id").autoincrement().primaryKey(),
-  name: varchar("name", { length: 256 }).notNull(),
-  email: varchar("email", { length: 320 }).notNull(),
-  phone: varchar("phone", { length: 64 }),
-  subject: varchar("subject", { length: 512 }),
-  message: text("message").notNull(),
-  serviceInterest: varchar("serviceInterest", { length: 256 }),
-  isRead: boolean("isRead").default(false).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull()
-});
-var emailCampaigns = mysqlTable("email_campaigns", {
-  id: int("id").autoincrement().primaryKey(),
-  subject: varchar("subject", { length: 512 }).notNull(),
-  html: text("html").notNull(),
-  text: text("text"),
-  segment: varchar("segment", { length: 128 }),
-  recipientCount: int("recipientCount").default(0).notNull(),
-  sentCount: int("sentCount").default(0).notNull(),
-  failedCount: int("failedCount").default(0).notNull(),
-  status: varchar("status", { length: 32 }).default("draft").notNull(),
-  // draft | sending | sent | failed
-  sentAt: timestamp("sentAt"),
-  sentByUserId: int("sentByUserId"),
-  createdAt: timestamp("createdAt").defaultNow().notNull()
-});
-var emailEvents = mysqlTable("email_events", {
-  id: int("id").autoincrement().primaryKey(),
-  campaignId: int("campaignId"),
-  // FK to emailCampaigns.id (nullable for transactional)
-  recipient: varchar("recipient", { length: 320 }).notNull(),
-  eventType: varchar("eventType", { length: 64 }).notNull(),
-  // e.g. email.opened
-  resendMessageId: varchar("resendMessageId", { length: 128 }),
-  // for de-dup + lookup
-  /** Raw event JSON for forensic-ability — stringified, may include click URL etc. */
-  rawData: text("rawData"),
-  receivedAt: timestamp("receivedAt").defaultNow().notNull()
-});
-var rateLimitHits = mysqlTable("rate_limit_hits", {
-  id: int("id").autoincrement().primaryKey(),
-  bucketKey: varchar("bucketKey", { length: 192 }).notNull(),
-  hitAt: timestamp("hitAt").defaultNow().notNull()
-});
-var socialAccounts = mysqlTable("social_accounts", {
-  id: int("id").autoincrement().primaryKey(),
-  platform: mysqlEnum("platform", ["linkedin", "facebook", "instagram"]).notNull(),
-  accountName: varchar("accountName", { length: 256 }),
-  // display name, e.g. "G2A Marketing"
-  accountId: varchar("accountId", { length: 256 }),
-  // platform-side ID (page ID, etc.)
-  accessToken: text("accessToken"),
-  refreshToken: text("refreshToken"),
-  expiresAt: timestamp("expiresAt"),
-  /** Scope string saved as-is so we can warn if the granted scopes don't
-   *  include the publishing permission. */
-  scope: text("scope"),
-  isActive: boolean("isActive").default(true).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
-});
-var socialPosts = mysqlTable("social_posts", {
-  id: int("id").autoincrement().primaryKey(),
-  postId: int("postId").notNull(),
-  // FK to posts.id (blog post)
-  platform: mysqlEnum("platform", ["linkedin", "facebook", "instagram"]).notNull(),
-  copy: text("copy").notNull(),
-  status: mysqlEnum("status", ["draft", "published", "failed"]).default("draft").notNull(),
-  /** Platform's own post identifier (used to link out, fetch stats). */
-  externalPostId: varchar("externalPostId", { length: 256 }),
-  /** Direct URL to the published post on the platform. */
-  externalUrl: text("externalUrl"),
-  error: text("error"),
-  publishedAt: timestamp("publishedAt"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
-});
-var newsletterSubscribers = mysqlTable("newsletter_subscribers", {
-  id: int("id").autoincrement().primaryKey(),
-  email: varchar("email", { length: 320 }).notNull().unique(),
-  name: varchar("name", { length: 256 }),
-  isActive: boolean("isActive").default(true).notNull(),
-  segment: varchar("segment", { length: 128 }),
-  source: varchar("source", { length: 128 }),
-  tags: text("tags"),
-  // One-click unsubscribe token (64-char URL-safe). Generated on insert.
-  unsubscribeToken: varchar("unsubscribeToken", { length: 64 }).unique(),
-  // Set when user clicks confirmation link (NULL = single-opt-in, never confirmed).
-  confirmedAt: timestamp("confirmedAt"),
-  createdAt: timestamp("createdAt").defaultNow().notNull()
-});
-var caseStudies = mysqlTable("case_studies", {
-  id: int("id").autoincrement().primaryKey(),
-  title: varchar("title", { length: 512 }).notNull(),
-  titleEn: varchar("titleEn", { length: 512 }),
-  titleZh: varchar("titleZh", { length: 512 }),
-  slug: varchar("slug", { length: 512 }).notNull().unique(),
-  client: varchar("client", { length: 256 }),
-  clientEn: varchar("clientEn", { length: 256 }),
-  clientZh: varchar("clientZh", { length: 256 }),
-  industry: varchar("industry", { length: 256 }),
-  industryEn: varchar("industryEn", { length: 256 }),
-  industryZh: varchar("industryZh", { length: 256 }),
-  challenge: text("challenge"),
-  challengeEn: text("challengeEn"),
-  challengeZh: text("challengeZh"),
-  solution: text("solution"),
-  solutionEn: text("solutionEn"),
-  solutionZh: text("solutionZh"),
-  results: text("results"),
-  resultsEn: text("resultsEn"),
-  resultsZh: text("resultsZh"),
-  featuredImage: text("featuredImage"),
-  featuredImageAlt: varchar("featuredImageAlt", { length: 512 }),
-  // Brand logo of the client — shown on the case study card + detail page
-  logoImage: text("logoImage"),
-  logoImageAlt: varchar("logoImageAlt", { length: 512 }),
-  // JSON array of additional screenshots: [{ url, alt }, ...]
-  gallery: text("gallery"),
-  // JSON object of external links: { website, facebook, instagram, linkedin, ... }
-  externalLinks: text("externalLinks"),
-  // Year the project started — for context on the detail page
-  projectYear: varchar("projectYear", { length: 16 }),
-  tags: text("tags"),
-  isActive: boolean("isActive").default(true).notNull(),
-  sortOrder: int("sortOrder").default(0),
-  metaTitle: varchar("metaTitle", { length: 512 }),
-  metaTitleEn: varchar("metaTitleEn", { length: 512 }),
-  metaTitleZh: varchar("metaTitleZh", { length: 512 }),
-  metaDescription: text("metaDescription"),
-  metaDescriptionEn: text("metaDescriptionEn"),
-  metaDescriptionZh: text("metaDescriptionZh"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
-});
-var auditLeads = mysqlTable("audit_leads", {
-  id: int("id").autoincrement().primaryKey(),
-  name: varchar("name", { length: 256 }).notNull(),
-  email: varchar("email", { length: 320 }).notNull(),
-  phone: varchar("phone", { length: 64 }),
-  company: varchar("company", { length: 256 }),
-  website: text("website"),
-  monthlyBudget: varchar("monthlyBudget", { length: 128 }),
-  currentChallenges: text("currentChallenges"),
-  goals: text("goals"),
-  isContacted: boolean("isContacted").default(false).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull()
+var users, siteSettings, pages, categories, posts, services, heroSlides, testimonials, partners, industries, technologies, values, contactSubmissions, emailCampaigns, emailEvents, rateLimitHits, socialAccounts, socialPosts, newsletterSubscribers, caseStudies, auditLeads;
+var init_schema = __esm({
+  "drizzle/schema.ts"() {
+    "use strict";
+    users = mysqlTable("users", {
+      id: int("id").autoincrement().primaryKey(),
+      openId: varchar("openId", { length: 64 }).notNull().unique(),
+      name: text("name"),
+      email: varchar("email", { length: 320 }),
+      loginMethod: varchar("loginMethod", { length: 64 }),
+      role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+      lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull()
+    });
+    siteSettings = mysqlTable("site_settings", {
+      id: int("id").autoincrement().primaryKey(),
+      key: varchar("key", { length: 128 }).notNull().unique(),
+      value: text("value"),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+    });
+    pages = mysqlTable("pages", {
+      id: int("id").autoincrement().primaryKey(),
+      slug: varchar("slug", { length: 256 }).notNull().unique(),
+      title: varchar("title", { length: 512 }),
+      titleEn: varchar("titleEn", { length: 512 }),
+      titleZh: varchar("titleZh", { length: 512 }),
+      metaTitle: varchar("metaTitle", { length: 512 }),
+      metaTitleEn: varchar("metaTitleEn", { length: 512 }),
+      metaTitleZh: varchar("metaTitleZh", { length: 512 }),
+      metaDescription: text("metaDescription"),
+      metaDescriptionEn: text("metaDescriptionEn"),
+      metaDescriptionZh: text("metaDescriptionZh"),
+      ogTitle: varchar("ogTitle", { length: 512 }),
+      ogTitleEn: varchar("ogTitleEn", { length: 512 }),
+      ogTitleZh: varchar("ogTitleZh", { length: 512 }),
+      ogDescription: text("ogDescription"),
+      ogDescriptionEn: text("ogDescriptionEn"),
+      ogDescriptionZh: text("ogDescriptionZh"),
+      ogImage: text("ogImage"),
+      canonicalUrl: text("canonicalUrl"),
+      schemaJson: text("schemaJson"),
+      keywords: text("keywords"),
+      keywordsEn: text("keywordsEn"),
+      keywordsZh: text("keywordsZh"),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+    });
+    categories = mysqlTable("categories", {
+      id: int("id").autoincrement().primaryKey(),
+      name: varchar("name", { length: 256 }).notNull(),
+      nameEn: varchar("nameEn", { length: 256 }),
+      nameZh: varchar("nameZh", { length: 256 }),
+      slug: varchar("slug", { length: 256 }).notNull().unique(),
+      description: text("description"),
+      descriptionEn: text("descriptionEn"),
+      descriptionZh: text("descriptionZh"),
+      createdAt: timestamp("createdAt").defaultNow().notNull()
+    });
+    posts = mysqlTable("posts", {
+      id: int("id").autoincrement().primaryKey(),
+      title: varchar("title", { length: 512 }).notNull(),
+      titleEn: varchar("titleEn", { length: 512 }),
+      titleZh: varchar("titleZh", { length: 512 }),
+      slug: varchar("slug", { length: 512 }).notNull().unique(),
+      excerpt: text("excerpt"),
+      excerptEn: text("excerptEn"),
+      excerptZh: text("excerptZh"),
+      content: text("content").notNull(),
+      contentEn: text("contentEn"),
+      contentZh: text("contentZh"),
+      featuredImage: text("featuredImage"),
+      featuredImageAlt: varchar("featuredImageAlt", { length: 512 }),
+      categoryId: int("categoryId"),
+      authorName: varchar("authorName", { length: 256 }).default("G2A Marketing"),
+      status: mysqlEnum("status", ["draft", "published"]).default("draft").notNull(),
+      metaTitle: varchar("metaTitle", { length: 512 }),
+      metaTitleEn: varchar("metaTitleEn", { length: 512 }),
+      metaTitleZh: varchar("metaTitleZh", { length: 512 }),
+      metaDescription: text("metaDescription"),
+      metaDescriptionEn: text("metaDescriptionEn"),
+      metaDescriptionZh: text("metaDescriptionZh"),
+      ogImage: text("ogImage"),
+      publishedAt: timestamp("publishedAt"),
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+    });
+    services = mysqlTable("services", {
+      id: int("id").autoincrement().primaryKey(),
+      slug: varchar("slug", { length: 256 }).notNull().unique(),
+      number: varchar("number", { length: 8 }),
+      title: varchar("title", { length: 256 }).notNull(),
+      titleEn: varchar("titleEn", { length: 256 }),
+      titleZh: varchar("titleZh", { length: 256 }),
+      shortDescription: text("shortDescription"),
+      shortDescriptionEn: text("shortDescriptionEn"),
+      shortDescriptionZh: text("shortDescriptionZh"),
+      heroTitle: varchar("heroTitle", { length: 512 }),
+      heroTitleEn: varchar("heroTitleEn", { length: 512 }),
+      heroTitleZh: varchar("heroTitleZh", { length: 512 }),
+      heroSubtitle: text("heroSubtitle"),
+      heroSubtitleEn: text("heroSubtitleEn"),
+      heroSubtitleZh: text("heroSubtitleZh"),
+      heroImage: text("heroImage"),
+      heroImageAlt: varchar("heroImageAlt", { length: 512 }),
+      content: text("content"),
+      contentEn: text("contentEn"),
+      contentZh: text("contentZh"),
+      icon: varchar("icon", { length: 128 }),
+      metaTitle: varchar("metaTitle", { length: 512 }),
+      metaTitleEn: varchar("metaTitleEn", { length: 512 }),
+      metaTitleZh: varchar("metaTitleZh", { length: 512 }),
+      metaDescription: text("metaDescription"),
+      metaDescriptionEn: text("metaDescriptionEn"),
+      metaDescriptionZh: text("metaDescriptionZh"),
+      sortOrder: int("sortOrder").default(0),
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+    });
+    heroSlides = mysqlTable("hero_slides", {
+      id: int("id").autoincrement().primaryKey(),
+      subtitle: varchar("subtitle", { length: 512 }),
+      subtitleEn: varchar("subtitleEn", { length: 512 }),
+      subtitleZh: varchar("subtitleZh", { length: 512 }),
+      title: varchar("title", { length: 512 }).notNull(),
+      titleEn: varchar("titleEn", { length: 512 }),
+      titleZh: varchar("titleZh", { length: 512 }),
+      backgroundImage: text("backgroundImage"),
+      backgroundImageAlt: varchar("backgroundImageAlt", { length: 512 }),
+      ctaPrimaryText: varchar("ctaPrimaryText", { length: 256 }),
+      ctaPrimaryTextEn: varchar("ctaPrimaryTextEn", { length: 256 }),
+      ctaPrimaryTextZh: varchar("ctaPrimaryTextZh", { length: 256 }),
+      ctaPrimaryUrl: varchar("ctaPrimaryUrl", { length: 512 }),
+      ctaSecondaryText: varchar("ctaSecondaryText", { length: 256 }),
+      ctaSecondaryTextEn: varchar("ctaSecondaryTextEn", { length: 256 }),
+      ctaSecondaryTextZh: varchar("ctaSecondaryTextZh", { length: 256 }),
+      ctaSecondaryUrl: varchar("ctaSecondaryUrl", { length: 512 }),
+      sortOrder: int("sortOrder").default(0),
+      isActive: boolean("isActive").default(true).notNull(),
+      createdAt: timestamp("createdAt").defaultNow().notNull()
+    });
+    testimonials = mysqlTable("testimonials", {
+      id: int("id").autoincrement().primaryKey(),
+      quote: text("quote").notNull(),
+      quoteEn: text("quoteEn"),
+      quoteZh: text("quoteZh"),
+      authorName: varchar("authorName", { length: 256 }).notNull(),
+      authorTitle: varchar("authorTitle", { length: 256 }),
+      authorTitleEn: varchar("authorTitleEn", { length: 256 }),
+      authorTitleZh: varchar("authorTitleZh", { length: 256 }),
+      authorCompany: varchar("authorCompany", { length: 256 }),
+      authorImage: text("authorImage"),
+      authorImageAlt: varchar("authorImageAlt", { length: 512 }),
+      isActive: boolean("isActive").default(true).notNull(),
+      sortOrder: int("sortOrder").default(0),
+      createdAt: timestamp("createdAt").defaultNow().notNull()
+    });
+    partners = mysqlTable("partners", {
+      id: int("id").autoincrement().primaryKey(),
+      name: varchar("name", { length: 256 }).notNull(),
+      slug: varchar("slug", { length: 256 }),
+      logo: text("logo"),
+      logoAlt: varchar("logoAlt", { length: 512 }),
+      website: text("website"),
+      description: text("description"),
+      descriptionEn: text("descriptionEn"),
+      descriptionZh: text("descriptionZh"),
+      category: varchar("category", { length: 128 }),
+      isActive: boolean("isActive").default(true).notNull(),
+      sortOrder: int("sortOrder").default(0),
+      createdAt: timestamp("createdAt").defaultNow().notNull()
+    });
+    industries = mysqlTable("industries", {
+      id: int("id").autoincrement().primaryKey(),
+      name: varchar("name", { length: 256 }).notNull(),
+      nameEn: varchar("nameEn", { length: 256 }),
+      nameZh: varchar("nameZh", { length: 256 }),
+      slug: varchar("slug", { length: 256 }).notNull().unique(),
+      description: text("description"),
+      descriptionEn: text("descriptionEn"),
+      descriptionZh: text("descriptionZh"),
+      icon: varchar("icon", { length: 128 }),
+      image: text("image"),
+      imageAlt: varchar("imageAlt", { length: 512 }),
+      sortOrder: int("sortOrder").default(0),
+      isActive: boolean("isActive").default(true).notNull(),
+      createdAt: timestamp("createdAt").defaultNow().notNull()
+    });
+    technologies = mysqlTable("technologies", {
+      id: int("id").autoincrement().primaryKey(),
+      name: varchar("name", { length: 256 }).notNull(),
+      logo: text("logo"),
+      logoAlt: varchar("logoAlt", { length: 512 }),
+      category: mysqlEnum("category", ["marketing", "ai", "analytics", "other"]).default("marketing").notNull(),
+      website: text("website"),
+      description: text("description"),
+      descriptionEn: text("descriptionEn"),
+      descriptionZh: text("descriptionZh"),
+      sortOrder: int("sortOrder").default(0),
+      isActive: boolean("isActive").default(true).notNull(),
+      createdAt: timestamp("createdAt").defaultNow().notNull()
+    });
+    values = mysqlTable("values", {
+      id: int("id").autoincrement().primaryKey(),
+      title: varchar("title", { length: 256 }).notNull(),
+      titleEn: varchar("titleEn", { length: 256 }),
+      titleZh: varchar("titleZh", { length: 256 }),
+      description: text("description"),
+      descriptionEn: text("descriptionEn"),
+      descriptionZh: text("descriptionZh"),
+      icon: varchar("icon", { length: 128 }),
+      sortOrder: int("sortOrder").default(0),
+      isActive: boolean("isActive").default(true).notNull(),
+      createdAt: timestamp("createdAt").defaultNow().notNull()
+    });
+    contactSubmissions = mysqlTable("contact_submissions", {
+      id: int("id").autoincrement().primaryKey(),
+      name: varchar("name", { length: 256 }).notNull(),
+      email: varchar("email", { length: 320 }).notNull(),
+      phone: varchar("phone", { length: 64 }),
+      subject: varchar("subject", { length: 512 }),
+      message: text("message").notNull(),
+      serviceInterest: varchar("serviceInterest", { length: 256 }),
+      isRead: boolean("isRead").default(false).notNull(),
+      createdAt: timestamp("createdAt").defaultNow().notNull()
+    });
+    emailCampaigns = mysqlTable("email_campaigns", {
+      id: int("id").autoincrement().primaryKey(),
+      subject: varchar("subject", { length: 512 }).notNull(),
+      html: text("html").notNull(),
+      text: text("text"),
+      segment: varchar("segment", { length: 128 }),
+      recipientCount: int("recipientCount").default(0).notNull(),
+      sentCount: int("sentCount").default(0).notNull(),
+      failedCount: int("failedCount").default(0).notNull(),
+      status: varchar("status", { length: 32 }).default("draft").notNull(),
+      // draft | sending | sent | failed
+      sentAt: timestamp("sentAt"),
+      sentByUserId: int("sentByUserId"),
+      createdAt: timestamp("createdAt").defaultNow().notNull()
+    });
+    emailEvents = mysqlTable("email_events", {
+      id: int("id").autoincrement().primaryKey(),
+      campaignId: int("campaignId"),
+      // FK to emailCampaigns.id (nullable for transactional)
+      recipient: varchar("recipient", { length: 320 }).notNull(),
+      eventType: varchar("eventType", { length: 64 }).notNull(),
+      // e.g. email.opened
+      resendMessageId: varchar("resendMessageId", { length: 128 }),
+      // for de-dup + lookup
+      /** Raw event JSON for forensic-ability — stringified, may include click URL etc. */
+      rawData: text("rawData"),
+      receivedAt: timestamp("receivedAt").defaultNow().notNull()
+    });
+    rateLimitHits = mysqlTable("rate_limit_hits", {
+      id: int("id").autoincrement().primaryKey(),
+      bucketKey: varchar("bucketKey", { length: 192 }).notNull(),
+      hitAt: timestamp("hitAt").defaultNow().notNull()
+    });
+    socialAccounts = mysqlTable("social_accounts", {
+      id: int("id").autoincrement().primaryKey(),
+      platform: mysqlEnum("platform", ["linkedin", "facebook", "instagram"]).notNull(),
+      accountName: varchar("accountName", { length: 256 }),
+      // display name, e.g. "G2A Marketing"
+      accountId: varchar("accountId", { length: 256 }),
+      // platform-side ID (page ID, etc.)
+      accessToken: text("accessToken"),
+      refreshToken: text("refreshToken"),
+      expiresAt: timestamp("expiresAt"),
+      /** Scope string saved as-is so we can warn if the granted scopes don't
+       *  include the publishing permission. */
+      scope: text("scope"),
+      isActive: boolean("isActive").default(true).notNull(),
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+    });
+    socialPosts = mysqlTable("social_posts", {
+      id: int("id").autoincrement().primaryKey(),
+      postId: int("postId").notNull(),
+      // FK to posts.id (blog post)
+      platform: mysqlEnum("platform", ["linkedin", "facebook", "instagram"]).notNull(),
+      copy: text("copy").notNull(),
+      status: mysqlEnum("status", ["draft", "published", "failed"]).default("draft").notNull(),
+      /** Platform's own post identifier (used to link out, fetch stats). */
+      externalPostId: varchar("externalPostId", { length: 256 }),
+      /** Direct URL to the published post on the platform. */
+      externalUrl: text("externalUrl"),
+      error: text("error"),
+      publishedAt: timestamp("publishedAt"),
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+    });
+    newsletterSubscribers = mysqlTable("newsletter_subscribers", {
+      id: int("id").autoincrement().primaryKey(),
+      email: varchar("email", { length: 320 }).notNull().unique(),
+      name: varchar("name", { length: 256 }),
+      isActive: boolean("isActive").default(true).notNull(),
+      segment: varchar("segment", { length: 128 }),
+      source: varchar("source", { length: 128 }),
+      tags: text("tags"),
+      // One-click unsubscribe token (64-char URL-safe). Generated on insert.
+      unsubscribeToken: varchar("unsubscribeToken", { length: 64 }).unique(),
+      // Set when user clicks confirmation link (NULL = single-opt-in, never confirmed).
+      confirmedAt: timestamp("confirmedAt"),
+      createdAt: timestamp("createdAt").defaultNow().notNull()
+    });
+    caseStudies = mysqlTable("case_studies", {
+      id: int("id").autoincrement().primaryKey(),
+      title: varchar("title", { length: 512 }).notNull(),
+      titleEn: varchar("titleEn", { length: 512 }),
+      titleZh: varchar("titleZh", { length: 512 }),
+      slug: varchar("slug", { length: 512 }).notNull().unique(),
+      client: varchar("client", { length: 256 }),
+      clientEn: varchar("clientEn", { length: 256 }),
+      clientZh: varchar("clientZh", { length: 256 }),
+      industry: varchar("industry", { length: 256 }),
+      industryEn: varchar("industryEn", { length: 256 }),
+      industryZh: varchar("industryZh", { length: 256 }),
+      challenge: text("challenge"),
+      challengeEn: text("challengeEn"),
+      challengeZh: text("challengeZh"),
+      solution: text("solution"),
+      solutionEn: text("solutionEn"),
+      solutionZh: text("solutionZh"),
+      results: text("results"),
+      resultsEn: text("resultsEn"),
+      resultsZh: text("resultsZh"),
+      featuredImage: text("featuredImage"),
+      featuredImageAlt: varchar("featuredImageAlt", { length: 512 }),
+      // Brand logo of the client — shown on the case study card + detail page
+      logoImage: text("logoImage"),
+      logoImageAlt: varchar("logoImageAlt", { length: 512 }),
+      // JSON array of additional screenshots: [{ url, alt }, ...]
+      gallery: text("gallery"),
+      // JSON object of external links: { website, facebook, instagram, linkedin, ... }
+      externalLinks: text("externalLinks"),
+      // Year the project started — for context on the detail page
+      projectYear: varchar("projectYear", { length: 16 }),
+      tags: text("tags"),
+      isActive: boolean("isActive").default(true).notNull(),
+      sortOrder: int("sortOrder").default(0),
+      metaTitle: varchar("metaTitle", { length: 512 }),
+      metaTitleEn: varchar("metaTitleEn", { length: 512 }),
+      metaTitleZh: varchar("metaTitleZh", { length: 512 }),
+      metaDescription: text("metaDescription"),
+      metaDescriptionEn: text("metaDescriptionEn"),
+      metaDescriptionZh: text("metaDescriptionZh"),
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+    });
+    auditLeads = mysqlTable("audit_leads", {
+      id: int("id").autoincrement().primaryKey(),
+      name: varchar("name", { length: 256 }).notNull(),
+      email: varchar("email", { length: 320 }).notNull(),
+      phone: varchar("phone", { length: 64 }),
+      company: varchar("company", { length: 256 }),
+      website: text("website"),
+      monthlyBudget: varchar("monthlyBudget", { length: 128 }),
+      currentChallenges: text("currentChallenges"),
+      goals: text("goals"),
+      isContacted: boolean("isContacted").default(false).notNull(),
+      createdAt: timestamp("createdAt").defaultNow().notNull()
+    });
+  }
 });
 
 // server/_core/env.ts
-var ENV = {
-  appId: process.env.VITE_APP_ID ?? "",
-  cookieSecret: process.env.JWT_SECRET ?? "",
-  databaseUrl: process.env.DATABASE_URL ?? "",
-  oAuthServerUrl: process.env.OAUTH_SERVER_URL ?? "",
-  ownerOpenId: process.env.OWNER_OPEN_ID ?? "",
-  isProduction: process.env.NODE_ENV === "production",
-  forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
-  forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
-  // Resend — transactional email (contact/audit lead notifications)
-  resendApiKey: process.env.RESEND_API_KEY ?? "",
-  resendFromEmail: process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev",
-  resendNotifyEmail: process.env.RESEND_NOTIFY_EMAIL ?? "",
-  // Resend webhook signing secret (Svix). Set in Resend dashboard
-  // under Settings → Webhooks → Signing Secret. Without it the webhook
-  // 401s in production; in dev it's accepted unsigned for easy testing.
-  resendWebhookSecret: process.env.RESEND_WEBHOOK_SECRET ?? "",
-  // Cloudinary — image hosting + auto WebP/AVIF
-  cloudinaryUrl: process.env.CLOUDINARY_URL ?? "",
-  cloudinaryCloudName: process.env.VITE_CLOUDINARY_CLOUD_NAME ?? "",
-  // OpenAI — admin AI assist (blog draft, SEO meta, text improve)
-  openaiApiKey: process.env.OPENAI_API_KEY ?? "",
-  openaiModel: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
-  // Admin password-based login — fallback while Manus OAuth isn't set up.
-  // When both are populated, /api/auth/password-login accepts the
-  // matching credentials and issues a session cookie compatible with the
-  // existing OAuth-flow session schema. When empty, the endpoint refuses
-  // and the public site/admin UI hides the password form.
-  adminEmail: process.env.ADMIN_EMAIL ?? "",
-  adminPassword: process.env.ADMIN_PASSWORD ?? "",
-  // Surfaced to the client at build time as VITE_OAUTH_PORTAL_URL — used
-  // by the admin login UI to decide whether to render the OAuth button or
-  // the password fallback. Kept here for symmetry with other ENV reads.
-  oauthPortalUrl: process.env.VITE_OAUTH_PORTAL_URL ?? ""
-};
+var ENV;
+var init_env = __esm({
+  "server/_core/env.ts"() {
+    "use strict";
+    ENV = {
+      appId: process.env.VITE_APP_ID ?? "",
+      cookieSecret: process.env.JWT_SECRET ?? "",
+      databaseUrl: process.env.DATABASE_URL ?? "",
+      oAuthServerUrl: process.env.OAUTH_SERVER_URL ?? "",
+      ownerOpenId: process.env.OWNER_OPEN_ID ?? "",
+      isProduction: process.env.NODE_ENV === "production",
+      forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
+      forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
+      // Resend — transactional email (contact/audit lead notifications)
+      resendApiKey: process.env.RESEND_API_KEY ?? "",
+      resendFromEmail: process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev",
+      resendNotifyEmail: process.env.RESEND_NOTIFY_EMAIL ?? "",
+      // Resend webhook signing secret (Svix). Set in Resend dashboard
+      // under Settings → Webhooks → Signing Secret. Without it the webhook
+      // 401s in production; in dev it's accepted unsigned for easy testing.
+      resendWebhookSecret: process.env.RESEND_WEBHOOK_SECRET ?? "",
+      // Cloudinary — image hosting + auto WebP/AVIF
+      cloudinaryUrl: process.env.CLOUDINARY_URL ?? "",
+      cloudinaryCloudName: process.env.VITE_CLOUDINARY_CLOUD_NAME ?? "",
+      // OpenAI — admin AI assist (blog draft, SEO meta, text improve)
+      openaiApiKey: process.env.OPENAI_API_KEY ?? "",
+      openaiModel: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
+      // Admin password-based login — fallback while Manus OAuth isn't set up.
+      // When both are populated, /api/auth/password-login accepts the
+      // matching credentials and issues a session cookie compatible with the
+      // existing OAuth-flow session schema. When empty, the endpoint refuses
+      // and the public site/admin UI hides the password form.
+      adminEmail: process.env.ADMIN_EMAIL ?? "",
+      adminPassword: process.env.ADMIN_PASSWORD ?? "",
+      // Surfaced to the client at build time as VITE_OAUTH_PORTAL_URL — used
+      // by the admin login UI to decide whether to render the OAuth button or
+      // the password fallback. Kept here for symmetry with other ENV reads.
+      oauthPortalUrl: process.env.VITE_OAUTH_PORTAL_URL ?? ""
+    };
+  }
+});
 
 // server/db.ts
-var _db = null;
+import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/mysql2";
 async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
@@ -475,6 +480,12 @@ async function getUserByOpenId(openId) {
   if (!db) return void 0;
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
   return result.length > 0 ? result[0] : void 0;
+}
+async function getSiteSetting(key) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(siteSettings).where(eq(siteSettings.key, key)).limit(1);
+  return result[0]?.value ?? null;
 }
 async function getAllSiteSettings() {
   const db = await getDb();
@@ -988,6 +999,124 @@ async function createSocialPost(data) {
   });
   return result.insertId ?? null;
 }
+var _db;
+var init_db = __esm({
+  "server/db.ts"() {
+    "use strict";
+    init_schema();
+    init_env();
+    _db = null;
+  }
+});
+
+// server/_core/brandVoice.ts
+var brandVoice_exports = {};
+__export(brandVoice_exports, {
+  EMPTY_BRAND_VOICE: () => EMPTY_BRAND_VOICE,
+  loadBrandVoice: () => loadBrandVoice,
+  renderBrandContext: () => renderBrandContext,
+  saveBrandVoice: () => saveBrandVoice
+});
+async function loadBrandVoice() {
+  const raw = await getSiteSetting(SETTING_KEY);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    return {
+      companyDescription: parsed.companyDescription ?? "",
+      audience: parsed.audience ?? "",
+      toneOfVoice: parsed.toneOfVoice ?? "",
+      dos: Array.isArray(parsed.dos) ? parsed.dos : [],
+      donts: Array.isArray(parsed.donts) ? parsed.donts : [],
+      examples: {
+        linkedin: parsed.examples?.linkedin ?? [],
+        facebook: parsed.examples?.facebook ?? [],
+        instagram: parsed.examples?.instagram ?? [],
+        blog: parsed.examples?.blog ?? []
+      }
+    };
+  } catch (err) {
+    console.warn("[brandVoice] Failed to parse brand_voice setting:", err);
+    return null;
+  }
+}
+async function saveBrandVoice(voice) {
+  await upsertSiteSetting(SETTING_KEY, JSON.stringify(voice));
+}
+function renderBrandContext(voice, platform) {
+  if (!voice) return "";
+  const sections = ["=== BRAND KONTEXTUS ==="];
+  if (voice.companyDescription.trim()) {
+    sections.push(`C\xC9GLE\xCDR\xC1S:
+${voice.companyDescription.trim()}`);
+  }
+  if (voice.audience.trim()) {
+    sections.push(`C\xC9LK\xD6Z\xD6NS\xC9G:
+${voice.audience.trim()}`);
+  }
+  if (voice.toneOfVoice.trim()) {
+    sections.push(`HANG / ST\xCDLUS:
+${voice.toneOfVoice.trim()}`);
+  }
+  if (voice.dos.length > 0) {
+    sections.push(`MINDIG csin\xE1ld:
+${voice.dos.map((d) => `- ${d}`).join("\n")}`);
+  }
+  if (voice.donts.length > 0) {
+    sections.push(`SOSE csin\xE1ld:
+${voice.donts.map((d) => `- ${d}`).join("\n")}`);
+  }
+  if (platform) {
+    const examples = voice.examples[platform] ?? [];
+    if (examples.length > 0) {
+      const exampleText = examples.map((e, i) => {
+        const header = e.context ? `--- P\xE9lda ${i + 1} (${e.context}) ---` : `--- P\xE9lda ${i + 1} ---`;
+        return `${header}
+${e.text.trim()}`;
+      }).join("\n\n");
+      sections.push(
+        `KOR\xC1BBI SIKERES ${platform.toUpperCase()} POSZTOK (ezeket vedd mintak\xE9nt a st\xEDlushoz, NE m\xE1sold sz\xF3 szerint):
+
+${exampleText}`
+      );
+    }
+  }
+  sections.push("=== /BRAND KONTEXTUS ===\n");
+  return sections.join("\n\n");
+}
+var EMPTY_BRAND_VOICE, SETTING_KEY;
+var init_brandVoice = __esm({
+  "server/_core/brandVoice.ts"() {
+    "use strict";
+    init_db();
+    EMPTY_BRAND_VOICE = {
+      companyDescription: "",
+      audience: "",
+      toneOfVoice: "",
+      dos: [],
+      donts: [],
+      examples: { linkedin: [], facebook: [], instagram: [], blog: [] }
+    };
+    SETTING_KEY = "brand_voice";
+  }
+});
+
+// server/_core/serverless.ts
+import "dotenv/config";
+
+// server/_core/app.ts
+import express from "express";
+import { createExpressMiddleware } from "@trpc/server/adapters/express";
+
+// shared/const.ts
+var COOKIE_NAME = "app_session_id";
+var ONE_YEAR_MS = 1e3 * 60 * 60 * 24 * 365;
+var AXIOS_TIMEOUT_MS = 3e4;
+var UNAUTHED_ERR_MSG = "Please login (10001)";
+var NOT_ADMIN_ERR_MSG = "You do not have required permission (10002)";
+
+// server/_core/oauth.ts
+init_db();
 
 // server/_core/cookies.ts
 function isSecureRequest(req) {
@@ -1017,6 +1146,8 @@ var HttpError = class extends Error {
 var ForbiddenError = (msg) => new HttpError(403, msg);
 
 // server/_core/sdk.ts
+init_db();
+init_env();
 import axios from "axios";
 import { parse as parseCookieHeader } from "cookie";
 import { SignJWT, jwtVerify } from "jose";
@@ -1321,9 +1452,11 @@ import { z as z2 } from "zod";
 import { z } from "zod";
 
 // server/_core/notification.ts
+init_env();
 import { TRPCError } from "@trpc/server";
 
 // server/_core/email.ts
+init_env();
 var RESEND_ENDPOINT = "https://api.resend.com/emails";
 function isEmailConfigured() {
   return Boolean(ENV.resendApiKey && ENV.resendNotifyEmail);
@@ -1554,6 +1687,7 @@ var systemRouter = router({
 });
 
 // server/storage.ts
+init_env();
 function getStorageConfig() {
   const baseUrl = ENV.forgeApiUrl;
   const apiKey = ENV.forgeApiKey;
@@ -1604,6 +1738,9 @@ async function storagePut(relKey, data, contentType = "application/octet-stream"
   return { key, url };
 }
 
+// server/routers.ts
+init_db();
+
 // server/_core/translate.ts
 var DEEPL_FREE_HOST = "https://api-free.deepl.com/v2/translate";
 var DEEPL_PRO_HOST = "https://api.deepl.com/v2/translate";
@@ -1640,6 +1777,7 @@ async function translate(text2, target, sourceLang = "hu") {
 }
 
 // server/_core/cloudinary.ts
+init_env();
 import { createHash } from "node:crypto";
 var cached = null;
 function isCloudinaryConfigured() {
@@ -1745,7 +1883,9 @@ async function generateBlogDraft(input) {
   const wordCount = input.wordCount ?? 600;
   const tone = input.tone ?? "professional";
   const audience = input.audience || "kis- \xE9s k\xF6z\xE9pv\xE1llalati d\xF6nt\xE9shoz\xF3k";
-  const system = `Te a G2A Marketing p\xE9csi B2B marketing \xFCgyn\xF6ks\xE9g blog-szerz\u0151je vagy. A G2A magyar marketing tan\xE1csad\xE1s, SEO, k\xF6z\xF6ss\xE9gi m\xE9dia, weboldal-fejleszt\xE9s \xE9s AI-megold\xE1sok ter\xFClet\xE9n ad szolg\xE1ltat\xE1st. Mindig a l\xE1togat\xF3t sz\xF3l\xEDtjuk meg te-form\xE1ban (NEM \xF6n\xF6z\xFCnk).
+  const { loadBrandVoice: loadBrandVoice2, renderBrandContext: renderBrandContext2 } = await Promise.resolve().then(() => (init_brandVoice(), brandVoice_exports));
+  const brandContext = renderBrandContext2(await loadBrandVoice2(), "blog");
+  const baseSystem = `Te a G2A Marketing p\xE9csi B2B marketing \xFCgyn\xF6ks\xE9g blog-szerz\u0151je vagy. A G2A magyar marketing tan\xE1csad\xE1s, SEO, k\xF6z\xF6ss\xE9gi m\xE9dia, weboldal-fejleszt\xE9s \xE9s AI-megold\xE1sok ter\xFClet\xE9n ad szolg\xE1ltat\xE1st. Mindig a l\xE1togat\xF3t sz\xF3l\xEDtjuk meg te-form\xE1ban (NEM \xF6n\xF6z\xFCnk).
 
 Szab\xE1lyok:
 - A teljes v\xE1lasz ${LANG_NAMES[lang]} nyelven.
@@ -1759,6 +1899,9 @@ Szab\xE1lyok:
 - NE tal\xE1lj ki konkr\xE9t statisztik\xE1kat vagy sz\xE1mokat, ha nem vagy biztos benn\xFCk.
 
 Csak JSON-t adj vissza ezzel a s\xE9m\xE1val: { "title": "...", "excerpt": "...", "content": "...", "metaTitle": "...", "metaDescription": "..." }`;
+  const system = brandContext ? `${brandContext}
+
+${baseSystem}` : baseSystem;
   const raw = await chat(
     [
       { role: "system", content: system },
@@ -1915,6 +2058,8 @@ function getClientIp(req) {
 }
 
 // server/_core/dbRateLimit.ts
+init_schema();
+init_db();
 import { and as and2, eq as eq2, gte, lt, sql as sql2 } from "drizzle-orm";
 async function checkRateLimitDb(bucketKey, opts) {
   const db = await getDb();
@@ -2422,6 +2567,7 @@ var CONFIRMATION_SUBJECTS = {
 };
 
 // server/_core/socialCopy.ts
+init_brandVoice();
 var OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
 var PLATFORM_PROMPTS = {
   linkedin: (lang) => `Te a G2A Marketing LinkedIn copy-\xEDr\xF3ja vagy \u2014 magyar B2B marketing \xFCgyn\xF6ks\xE9g P\xE9csen. ${lang === "hu" ? "Magyarul \xEDrj." : lang === "en" ? "Write in English." : "\u7528\u4E2D\u6587\u5199\u4F5C\u3002"}
@@ -2495,7 +2641,12 @@ async function generateSocialCopy(input) {
   const key = process.env.OPENAI_API_KEY;
   if (!key) throw new Error("OPENAI_API_KEY not set");
   const lang = input.lang ?? "hu";
-  const system = PLATFORM_PROMPTS[input.platform](lang);
+  const brandVoice = await loadBrandVoice();
+  const brandContext = renderBrandContext(brandVoice, input.platform);
+  const platformPrompt = PLATFORM_PROMPTS[input.platform](lang);
+  const system = brandContext ? `${brandContext}
+
+${platformPrompt}` : platformPrompt;
   const userParts = [
     `BLOG CIKK C\xCDME: ${input.title}`,
     input.excerpt ? `LEAD/EXCERPT: ${input.excerpt}` : "",
@@ -2531,6 +2682,7 @@ ${summarizeContent(input.content)}` : "",
 }
 
 // server/routers.ts
+init_brandVoice();
 import { randomBytes } from "node:crypto";
 var adminProcedure2 = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== "admin") {
@@ -3479,6 +3631,39 @@ var adminRouter = router({
     list: adminProcedure2.query(() => getAllSiteSettings()),
     upsert: adminProcedure2.input(z2.object({ key: z2.string(), value: z2.string() })).mutation(({ input }) => upsertSiteSetting(input.key, input.value))
   }),
+  // Brand voice — used by every AI generator (social copy, blog drafts,
+  // SEO meta) to write in the G2A house style instead of generic agency tone.
+  brandVoice: router({
+    get: adminProcedure2.query(async () => {
+      const voice = await loadBrandVoice();
+      return voice ?? EMPTY_BRAND_VOICE;
+    }),
+    update: adminProcedure2.input(
+      z2.object({
+        companyDescription: z2.string().max(4e3),
+        audience: z2.string().max(2e3),
+        toneOfVoice: z2.string().max(2e3),
+        dos: z2.array(z2.string().max(300)).max(30),
+        donts: z2.array(z2.string().max(300)).max(30),
+        examples: z2.object({
+          linkedin: z2.array(z2.object({ context: z2.string().max(200).optional(), text: z2.string().max(5e3) })).max(10),
+          facebook: z2.array(z2.object({ context: z2.string().max(200).optional(), text: z2.string().max(5e3) })).max(10),
+          instagram: z2.array(z2.object({ context: z2.string().max(200).optional(), text: z2.string().max(5e3) })).max(10),
+          blog: z2.array(z2.object({ context: z2.string().max(200).optional(), text: z2.string().max(5e3) })).max(10).optional()
+        })
+      })
+    ).mutation(async ({ input }) => {
+      const voice = {
+        ...input,
+        examples: {
+          ...input.examples,
+          blog: input.examples.blog ?? []
+        }
+      };
+      await saveBrandVoice(voice);
+      return { success: true };
+    })
+  }),
   // Stats
   stats: adminProcedure2.query(async () => {
     const [contactsData, subscribersData, postsData, partnersData, auditLeadsData] = await Promise.all([
@@ -3647,6 +3832,7 @@ async function createContext(opts) {
 }
 
 // server/_core/newsletterRoutes.ts
+init_db();
 function renderHtml(opts) {
   const title = opts.ok ? "Sikeres leiratkoz\xE1s" : "Hib\xE1s link";
   const body = opts.ok ? `<p>${escapeHtml2(opts.email || "")} <strong>leiratkozott</strong> a G2A Marketing h\xEDrlevel\xE9r\u0151l.</p>
@@ -3700,6 +3886,8 @@ function registerNewsletterRoutes(app2) {
 }
 
 // server/_core/resendWebhookRoute.ts
+init_env();
+init_db();
 import { createHmac, timingSafeEqual } from "crypto";
 var TOLERANCE_SECONDS = 5 * 60;
 function verifySvixSignature(rawBody, headers, secret) {
@@ -3817,6 +4005,8 @@ function registerResendWebhookRoute(app2) {
 }
 
 // server/_core/sitemapRoute.ts
+init_db();
+init_schema();
 import { desc as desc2, eq as eq3 } from "drizzle-orm";
 var ORIGIN = "https://g2amarketing.hu";
 var LANGS = [
@@ -3975,6 +4165,8 @@ function registerSitemapRoute(app2) {
 }
 
 // server/_core/rssRoute.ts
+init_db();
+init_schema();
 import { desc as desc3, eq as eq4 } from "drizzle-orm";
 var ORIGIN2 = "https://g2amarketing.hu";
 var FEED_TITLE = "G2A Marketing \u2014 Blog";
@@ -4057,8 +4249,10 @@ function registerRssRoute(app2) {
 }
 
 // server/_core/passwordAuthRoute.ts
+init_db();
 import { SignJWT as SignJWT2 } from "jose";
 import { timingSafeEqual as timingSafeEqual2 } from "node:crypto";
+init_env();
 var PASSWORD_ADMIN_OPEN_ID = "password-admin";
 var FALLBACK_APP_ID_TAG = "g2a-password-admin";
 function safeEquals(a, b) {
@@ -4202,6 +4396,9 @@ To: ${to}`
 }
 
 // server/_core/digestCronRoute.ts
+init_db();
+init_db();
+init_schema();
 import { desc as desc4, eq as eq5 } from "drizzle-orm";
 var ORIGIN3 = "https://g2amarketing.hu";
 var ITEM_COUNT = 4;
