@@ -176,29 +176,15 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
-    rollupOptions: {
-      output: {
-        // Split heavy, app-independent vendor bundles out of the main chunk
-        // for better caching + parallel download. We **deliberately do NOT
-        // split React itself** — every previous attempt (or splitting its
-        // peer libs like use-isomorphic-layout-effect, react-remove-scroll,
-        // aria-hidden) produced a runtime race because those libs read
-        // `React.useLayoutEffect` / `React.createContext` at module load and
-        // the split-out namespace doesn't expose those via `import * as
-        // React`. So React + its peers stay in the main bundle; only fully
-        // standalone libs split out.
-        manualChunks(id) {
-          if (id.includes("node_modules/framer-motion/")) return "vendor-framer";
-          if (id.includes("node_modules/lucide-react/")) return "vendor-icons";
-          if (id.includes("node_modules/@tanstack/")) return "vendor-react-query";
-          if (id.includes("node_modules/recharts/")) return "vendor-recharts";
-          if (id.includes("node_modules/embla-carousel")) return "vendor-embla";
-          // Everything else (React, peer libs, app code) → main / route chunks
-          return undefined;
-        },
-      },
-    },
-    chunkSizeWarningLimit: 800,
+    // No manualChunks. Tried splitting framer-motion / @tanstack / lucide
+    // into vendor chunks for caching, but Lighthouse audit reported
+    // `NO_LCP` afterwards — the production build executed but the LCP
+    // event never fired, almost certainly a chunk-load race between
+    // React-using vendor chunks and the main bundle. Reverting and
+    // letting Rollup chunk automatically keeps the page renderable.
+    // The lazy-loaded chrome (App.tsx) + cache headers + preconnect
+    // (vercel.json + index.html) deliver most of the perf win anyway.
+    chunkSizeWarningLimit: 900,
   },
   server: {
     host: true,

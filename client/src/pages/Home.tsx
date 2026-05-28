@@ -331,17 +331,20 @@ export default function Home() {
                 {t("home.hero.badge")}
               </div>
 
+              {/* Hero H1 is rendered as plain text (no RevealText word-stagger)
+                   so it's visible on first paint and Lighthouse can detect it
+                   as the LCP candidate. The previous opacity:0 initial state
+                   confused the LCP detector — no element was visible enough
+                   to qualify, producing a NO_LCP error in PageSpeed Insights.
+                   Sub-hero content still uses RevealText / fadeInUp for visual
+                   polish; only the LCP-critical headline is plain. */}
               <h1 className="g2a-headline-xl" style={{ marginBottom: "1.5rem" }}>
-                <RevealText delay={0.1} stagger={0.05}>
-                  {t("home.hero.title1")}
-                </RevealText>{" "}
-                <RevealText delay={0.4} stagger={0.05} className="g2a-gradient-text">
-                  {t("home.hero.title2")}
-                </RevealText>
+                {t("home.hero.title1")}{" "}
+                <span className="g2a-gradient-text">{t("home.hero.title2")}</span>
               </h1>
 
-              <p className="animate-fadeInUp" style={{
-                animationDelay: "0.35s", fontSize: "clamp(1.05rem, 1.8vw, 1.25rem)",
+              <p style={{
+                fontSize: "clamp(1.05rem, 1.8vw, 1.25rem)",
                 color: "var(--g2a-text-secondary)", lineHeight: "1.7",
                 maxWidth: "640px", marginBottom: "2.5rem",
                 fontFamily: "Geist, sans-serif",
