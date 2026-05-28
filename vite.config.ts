@@ -176,15 +176,28 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
-    // No manualChunks: every attempt to split React into its own chunk while
-    // leaving its peer libs (use-isomorphic-layout-effect, react-remove-scroll,
-    // aria-hidden, …) in vendor-misc produces a runtime race — those libs read
-    // `React.useLayoutEffect` / `React.createContext` at module-load, and the
-    // split-out namespace from vendor-react doesn't expose those properties
-    // when accessed via `import * as React`. Letting Rollup decide chunking
-    // automatically keeps consumers and providers in the same chunk and ships
-    // a working build. Cache loss is small (~250 KB main bundle) compared to
-    // the cost of a non-rendering page.
+    rollupOptions: {
+      output: {
+        // Split heavy, app-independent vendor bundles out of the main chunk
+        // for better caching + parallel download. We **deliberately do NOT
+        // split React itself** — every previous attempt (or splitting its
+        // peer libs like use-isomorphic-layout-effect, react-remove-scroll,
+        // aria-hidden) produced a runtime race because those libs read
+        // `React.useLayoutEffect` / `React.createContext` at module load and
+        // the split-out namespace doesn't expose those via `import * as
+        // React`. So React + its peers stay in the main bundle; only fully
+        // standalone libs split out.
+        manualChunks(id) {
+          if (id.includes("node_modules/framer-motion/")) return "vendor-framer";
+          if (id.includes("node_modules/lucide-react/")) return "vendor-icons";
+          if (id.includes("node_modules/@tanstack/")) return "vendor-react-query";
+          if (id.includes("node_modules/recharts/")) return "vendor-recharts";
+          if (id.includes("node_modules/embla-carousel")) return "vendor-embla";
+          // Everything else (React, peer libs, app code) → main / route chunks
+          return undefined;
+        },
+      },
+    },
     chunkSizeWarningLimit: 800,
   },
   server: {

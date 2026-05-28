@@ -8,19 +8,36 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import PageLoader from "./components/PageLoader";
+import { ConfirmDialogHost } from "./components/ConfirmDialog";
+import { RouteScrollToTop } from "./components/ScrollToTop";
+
+// ─── First-paint-critical chrome (eager) ─────────────────────────────────
+// CustomCursor: small, mounted very early so the teal pointer appears
+// instantly without a render flicker. SmoothScroll: tiny utility, attaches
+// listeners on mount and is cheap.
 import SmoothScroll from "./components/SmoothScroll";
 import CustomCursor from "./components/CustomCursor";
-import GrainOverlay from "./components/GrainOverlay";
-import { ConfirmDialogHost } from "./components/ConfirmDialog";
-import PolygonNetwork from "./components/PolygonNetwork";
-import WhatsAppButton from "./components/WhatsAppButton";
-import WechatButton from "./components/WechatButton";
-import ExitIntentPopup from "./components/ExitIntentPopup";
-import NewsletterPopup from "./components/NewsletterPopup";
-import ThirdPartyScripts from "./components/ThirdPartyScripts";
-import SearchModal from "./components/SearchModal";
-import { CalendlyBadge } from "./components/CalendlyEmbed";
-import { RouteScrollToTop, BackToTopButton } from "./components/ScrollToTop";
+
+// ─── Non-critical chrome (lazy — loaded after first paint) ───────────────
+// These components either trigger later (ExitIntent ~5s, NewsletterPopup
+// ~30s), only show on user action (SearchModal, WechatButton, WeChat QR,
+// BackToTopButton after scroll), or are purely decorative (PolygonNetwork
+// background, GrainOverlay). Lazy-loading them moves ~150-200 KB out of
+// the first-paint bundle without changing user-visible behaviour.
+const GrainOverlay = lazy(() => import("./components/GrainOverlay"));
+const PolygonNetwork = lazy(() => import("./components/PolygonNetwork"));
+const WhatsAppButton = lazy(() => import("./components/WhatsAppButton"));
+const WechatButton = lazy(() => import("./components/WechatButton"));
+const ExitIntentPopup = lazy(() => import("./components/ExitIntentPopup"));
+const NewsletterPopup = lazy(() => import("./components/NewsletterPopup"));
+const ThirdPartyScripts = lazy(() => import("./components/ThirdPartyScripts"));
+const SearchModal = lazy(() => import("./components/SearchModal"));
+const CalendlyBadge = lazy(() =>
+  import("./components/CalendlyEmbed").then((m) => ({ default: m.CalendlyBadge })),
+);
+const BackToTopButton = lazy(() =>
+  import("./components/ScrollToTop").then((m) => ({ default: m.BackToTopButton })),
+);
 
 // ─── Lazy-loaded route chunks ──────────────────────────────────────────────
 // Home + NotFound stay eager (landing + fallback). Everything else is split
@@ -188,18 +205,27 @@ function PublicOnlyChrome() {
   return (
     <>
       <SmoothScroll />
-      <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
-        <PolygonNetwork density={0.42} lineAlpha={0.16} pointAlpha={0.5} />
-      </div>
+      {/* Decorative + late-trigger chrome — all lazy-loaded so they don't
+           bloat the first-paint bundle. Fallback=null because none of them
+           are visible immediately (PolygonNetwork is a faint background,
+           the popups trigger after several seconds, modals open on user
+           action). */}
+      <Suspense fallback={null}>
+        <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+          <PolygonNetwork density={0.42} lineAlpha={0.16} pointAlpha={0.5} />
+        </div>
+      </Suspense>
       <CustomCursor />
-      <WhatsAppButton />
-      <WechatButton />
-      <ExitIntentPopup />
-      <NewsletterPopup />
-      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
-      {/* Calendly floating badge — bottom-right pill that opens booking popup.
-          Hidden on /kapcsolat (already has inline embed) and /admin. */}
-      <CalendlyBadge />
+      <Suspense fallback={null}>
+        <WhatsAppButton />
+        <WechatButton />
+        <ExitIntentPopup />
+        <NewsletterPopup />
+        <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+        {/* Calendly floating badge — bottom-right pill that opens booking popup.
+            Hidden on /kapcsolat (already has inline embed) and /admin. */}
+        <CalendlyBadge />
+      </Suspense>
     </>
   );
 }
@@ -211,14 +237,20 @@ function App() {
         <TooltipProvider>
           <ConfirmDialogHost>
             <PublicOnlyChrome />
-            <GrainOverlay opacity={0.05} />
+            <Suspense fallback={null}>
+              <GrainOverlay opacity={0.05} />
+            </Suspense>
             <Toaster />
             <RouteScrollToTop />
-            <ThirdPartyScripts />
+            <Suspense fallback={null}>
+              <ThirdPartyScripts />
+            </Suspense>
             <div style={{ position: "relative", zIndex: 1 }}>
               <Router />
             </div>
-            <BackToTopButton />
+            <Suspense fallback={null}>
+              <BackToTopButton />
+            </Suspense>
           </ConfirmDialogHost>
         </TooltipProvider>
       </ThemeProvider>
