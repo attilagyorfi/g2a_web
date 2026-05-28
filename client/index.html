@@ -55,10 +55,24 @@
       })();
     </script>
 
-    <!-- Google Fonts: Geist (sans + mono) -->
+    <!-- Google Fonts: Geist (sans + mono). Loaded non-render-blocking via
+         preload + onload swap so the browser can paint without waiting on
+         the font CSS. Combined with display=swap, text shows immediately in
+         the fallback font and seamlessly re-renders when Geist arrives. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
 
     <!-- Cloudinary CDN — every featured image, OG card, logo comes from here.
          Preconnect cuts the TLS handshake out of the critical render path. -->

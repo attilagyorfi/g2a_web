@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import PageLoader from "./components/PageLoader";
 import { ConfirmDialogHost } from "./components/ConfirmDialog";
 import { RouteScrollToTop } from "./components/ScrollToTop";
+import DeferredMount from "./components/DeferredMount";
 
 // ─── First-paint-critical chrome (eager) ─────────────────────────────────
 // CustomCursor: small, mounted very early so the teal pointer appears
@@ -209,11 +210,15 @@ function PublicOnlyChrome() {
            bloat the first-paint bundle. Fallback=null because none of them
            are visible immediately (PolygonNetwork is a faint background,
            the popups trigger after several seconds, modals open on user
-           action). */}
+           action). PolygonNetwork additionally goes through DeferredMount
+           because it runs a constant requestAnimationFrame canvas loop —
+           Lighthouse mistakes the continuous repaints for "no stable LCP". */}
       <Suspense fallback={null}>
-        <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
-          <PolygonNetwork density={0.42} lineAlpha={0.16} pointAlpha={0.5} />
-        </div>
+        <DeferredMount delay={250}>
+          <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+            <PolygonNetwork density={0.42} lineAlpha={0.16} pointAlpha={0.5} />
+          </div>
+        </DeferredMount>
       </Suspense>
       <CustomCursor />
       <Suspense fallback={null}>

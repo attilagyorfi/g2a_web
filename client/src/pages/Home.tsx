@@ -13,6 +13,7 @@ import MagneticButton from "@/components/MagneticButton";
 import AnimatedBlobs from "@/components/AnimatedBlobs";
 import CursorSpotlight from "@/components/CursorSpotlight";
 import FloatingDashboard from "@/components/FloatingDashboard";
+import DeferredMount from "@/components/DeferredMount";
 import SectionDivider from "@/components/illustrations/SectionDivider";
 import ServiceIcon from "@/components/illustrations/ServiceIcon";
 import { pickLocalized } from "@/../../shared/i18n";
@@ -308,17 +309,18 @@ export default function Home() {
           position: "relative", overflow: "hidden",
           paddingTop: "6rem",
         }}>
-          {/* Animated gradient blobs */}
-          <AnimatedBlobs />
+          {/* Animated background chrome — wrapped in DeferredMount so they
+              don't fight the LCP detector. They mount ~200ms after first
+              paint via requestIdleCallback; users perceive no delay since
+              these are decorative-only elements behind the hero text. */}
+          <DeferredMount delay={200}>
+            <AnimatedBlobs />
+            <CursorSpotlight size={560} />
+            <FloatingDashboard />
+          </DeferredMount>
 
-          {/* Cursor-following spotlight */}
-          <CursorSpotlight size={560} />
-
-          {/* Subtle grid pattern */}
+          {/* Subtle grid pattern (static, no animation — keeps it eager) */}
           <div className="g2a-grid-pattern" style={{ position: "absolute", inset: 0, opacity: 0.35, zIndex: 0 }} />
-
-          {/* Floating dashboard collage (right side, desktop only) */}
-          <FloatingDashboard />
 
           {/* Plain div instead of motion.div with scroll-bound opacity —
               Lighthouse needs a stable LCP element. The hero text is
