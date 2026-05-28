@@ -134,6 +134,12 @@ export default function CaseStudyDetailPage() {
   if (!cs) {
     return (
       <>
+        {/* Mistyped slug — don't let crawlers index the empty shell. */}
+        <SeoHead
+          title={`${t("cs.notFound")} — G2A Marketing`}
+          description={t("cs.notFound")}
+          noIndex
+        />
         <ScrollProgressBar />
         <Navigation />
         <main style={{ paddingTop: "100px", minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center" }}>

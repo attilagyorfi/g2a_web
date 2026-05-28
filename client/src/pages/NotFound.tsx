@@ -1,11 +1,13 @@
 import { Link, useLocation } from "wouter";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, Home, Search } from "lucide-react";
+import { ArrowLeft, Home, Search, FileText, ArrowRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
 import BrokenConstellation from "@/components/illustrations/BrokenConstellation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { trpc } from "@/lib/trpc";
+import { pickLocalized } from "@/../../shared/i18n";
 
 /**
  * Brand-aligned 404 page. Replaces the old shadcn-based light-theme card with
@@ -14,10 +16,18 @@ import { useLanguage } from "@/contexts/LanguageContext";
  */
 export default function NotFound() {
   const [location] = useLocation();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const reduce = useReducedMotion();
 
-  // Suggested next destinations
+  // Pull the latest 3 published posts as dynamic "you may also like"
+  // suggestions — better internal-link discovery than static labels.
+  // The query is small (only 3 rows, content excerpts stripped) so it
+  // doesn't slow down the 404 render meaningfully.
+  const { data: latestPostsData } = trpc.content.posts.useQuery({ page: 1, limit: 3 });
+  const latestPosts = latestPostsData?.posts ?? [];
+
+  // Static suggestions — the four pages that drive most "lost visitor"
+  // recovery on a marketing-agency site. Kept short on purpose.
   const suggestions = [
     { href: "/", label: t("notfound.suggestHome") },
     { href: "/szolgaltatasok", label: t("notfound.suggestServices") },
@@ -30,6 +40,7 @@ export default function NotFound() {
       <SeoHead
         title={t("notfound.seoTitle")}
         description={t("notfound.seoDesc")}
+        noIndex
       />
       <Navigation />
       <main
@@ -123,7 +134,9 @@ export default function NotFound() {
                 </motion.div>
               )}
 
-              {/* CTAs */}
+              {/* CTAs — Home, Back, and "Open search" (Cmd/Ctrl+K). The
+                   search opens the existing global SearchModal via the
+                   same custom event Navigation's search button dispatches. */}
               <motion.div
                 initial={reduce ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -141,6 +154,13 @@ export default function NotFound() {
                   style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", border: "none", font: "inherit" }}
                 >
                   <ArrowLeft size={16} /> {t("notfound.ctaBack")}
+                </button>
+                <button
+                  onClick={() => window.dispatchEvent(new Event("g2a:open-search"))}
+                  className="g2a-btn-secondary"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", border: "none", font: "inherit" }}
+                >
+                  <Search size={16} /> Keresés (Ctrl+K)
                 </button>
               </motion.div>
 
@@ -194,6 +214,66 @@ export default function NotFound() {
                     </Link>
                   ))}
                 </div>
+
+                {/* Latest blog posts — internal-link discovery for SEO crawlers
+                     and a friendly "maybe you wanted this" for visitors who hit
+                     a stale or mistyped article URL. Hidden if no posts loaded
+                     (DB unavailable in dev, fresh deploy with no content). */}
+                {latestPosts.length > 0 && (
+                  <div style={{ marginTop: "1.75rem" }}>
+                    <div
+                      style={{
+                        fontFamily: "Geist Mono, monospace",
+                        fontSize: "0.62rem",
+                        color: "var(--g2a-text-muted)",
+                        letterSpacing: "0.08em",
+                        textTransform: "uppercase",
+                        marginBottom: 10,
+                      }}
+                    >
+                      Friss a blogon
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                      {latestPosts.map((p) => {
+                        const title = pickLocalized(p, "title", lang);
+                        return (
+                          <Link key={p.id} href={`/hirek/${p.slug}`} style={{ textDecoration: "none" }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 10,
+                                padding: "8px 12px",
+                                borderRadius: 6,
+                                background: "rgba(255,255,255,0.02)",
+                                border: "1px solid rgba(255,255,255,0.06)",
+                                color: "var(--g2a-text-secondary)",
+                                fontFamily: "Geist, sans-serif",
+                                fontSize: "0.88rem",
+                                cursor: "pointer",
+                                transition: "background 0.18s, color 0.18s",
+                              }}
+                              onMouseEnter={(e) => {
+                                (e.currentTarget as HTMLElement).style.background = "rgba(20,184,166,0.08)";
+                                (e.currentTarget as HTMLElement).style.color = "var(--g2a-text-primary)";
+                              }}
+                              onMouseLeave={(e) => {
+                                (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.02)";
+                                (e.currentTarget as HTMLElement).style.color = "var(--g2a-text-secondary)";
+                              }}
+                            >
+                              <FileText size={13} style={{ color: "var(--g2a-brand-teal)", flexShrink: 0 }} />
+                              <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                {title}
+                              </span>
+                              <ArrowRight size={12} style={{ color: "var(--g2a-text-muted)", flexShrink: 0 }} />
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </motion.div>
             </div>
 

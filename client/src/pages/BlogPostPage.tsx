@@ -42,6 +42,13 @@ export default function BlogPostPage() {
   if (!post) {
     return (
       <>
+        {/* Stale or mistyped article URL — tell crawlers not to index this
+             placeholder so the slug doesn't pollute the search index. */}
+        <SeoHead
+          title={`${t("blog.noResults")} — G2A Marketing`}
+          description={t("blog.notFoundDesc")}
+          noIndex
+        />
         <Navigation />
         <main style={{ paddingTop: "100px", minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <EmptyState
