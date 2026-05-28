@@ -31,7 +31,7 @@ import {
 } from "lucide-react";
 
 // ─── Scroll Reveal Hook ────────────────────────────────────────────────────
-function useRevealAll(containerRef: React.RefObject<HTMLDivElement | null>) {
+function useRevealAll(containerRef: React.RefObject<HTMLElement | null>) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -258,18 +258,16 @@ const FAQS: Record<Language, Faq[]> = {
 
 // ─── Main Component ────────────────────────────────────────────────────────
 export default function Home() {
-  const pageRef = useRef<HTMLDivElement>(null);
+  const pageRef = useRef<HTMLElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   useRevealAll(pageRef);
 
-  // Hero pinned-fade: as the user scrolls past the hero, content scales+fades out
-  const { scrollYProgress: heroProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const heroOpacity = useTransform(heroProgress, [0, 0.85], [1, 0]);
-  const heroScale = useTransform(heroProgress, [0, 1], [1, 0.94]);
-  const heroY = useTransform(heroProgress, [0, 1], [0, -60]);
+  // Hero pinned-fade removed — the previous setup applied a scroll-driven
+  // opacity transform to the hero container, which Lighthouse's LCP detector
+  // treats as an unstable element (constantly changing) and refuses to score.
+  // Static scale/y offsets are kept for visual polish via CSS, but no
+  // motion-value-bound opacity on the LCP region.
+  void heroRef;
 
   const { data: seoData } = trpc.content.pageSeo.useQuery({ slug: "fooldal" });
   const { data: testimonialsList } = trpc.content.testimonials.useQuery();
@@ -302,7 +300,7 @@ export default function Home() {
       <Navigation />
       <CookieBanner />
 
-      <div ref={pageRef}>
+      <main ref={pageRef}>
         {/* ── HERO ─────────────────────────────────────────────────────── */}
         <section ref={heroRef} style={{
           minHeight: "100vh", display: "flex", alignItems: "center",
@@ -322,9 +320,13 @@ export default function Home() {
           {/* Floating dashboard collage (right side, desktop only) */}
           <FloatingDashboard />
 
-          <motion.div
+          {/* Plain div instead of motion.div with scroll-bound opacity —
+              Lighthouse needs a stable LCP element. The hero text is
+              the largest visible block on the page and must hold a
+              constant opacity:1 for LCP detection to succeed. */}
+          <div
             className="g2a-container"
-            style={{ position: "relative", zIndex: 2, padding: "4rem 1.5rem", opacity: heroOpacity, scale: heroScale, y: heroY }}
+            style={{ position: "relative", zIndex: 2, padding: "4rem 1.5rem" }}
           >
             <div style={{ maxWidth: "820px" }}>
               <div className="g2a-section-label animate-fadeIn" style={{ animationDelay: "0.1s" }}>
@@ -390,7 +392,7 @@ export default function Home() {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Scroll indicator */}
           <div style={{
@@ -830,7 +832,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-      </div>
+      </main>
 
       {/* Sticky CTA */}
       <StickyAuditCTA />
