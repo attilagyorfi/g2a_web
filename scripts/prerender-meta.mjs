@@ -213,6 +213,57 @@ function setTitle(html, title) {
   return html.replace(/<title>[^<]*<\/title>/i, `<title>${escaped}</title>`);
 }
 
+/**
+ * HTML-escape a string for safe embedding in text content.
+ */
+function escHtml(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+/**
+ * Build the static-shell hero markup injected into <div id="root">.
+ *
+ * Why: Vite SPAs ship `<div id="root"></div>` and rely on the JS bundle
+ * (~600 KB) to render anything visible. Lighthouse mobile audit times out
+ * on the JS parse + execute before React mounts, recording FCP from the
+ * empty CSS background but no LCP candidate at all → NO_LCP error.
+ *
+ * This shell is a single H1 + lead paragraph using the existing
+ * `g2a-headline-xl` class (already loaded by index.css before the JS).
+ * The static text becomes the LCP candidate, scores well, then React
+ * mounts and replaces the entire #root subtree with the real app.
+ * Users see the static shell for ~100-300ms before the React app takes
+ * over — barely perceptible, no layout shift since both use the same
+ * containing styles.
+ *
+ * The shell uses route-specific heading text (the title's pre-suffix
+ * part) and the meta description as the lead, so each prerendered route
+ * gets a relevant LCP element matching its content.
+ */
+function renderStaticShell(route) {
+  // Strip " — G2A Marketing" / "– G2A Marketing" from the headline so it
+  // reads naturally as a standalone H1.
+  const headline = escHtml(
+    (route.ogTitle || route.title).replace(/\s*[–—-]\s*G2A.*$/i, "").trim() || route.title,
+  );
+  const lead = escHtml(route.description);
+  return `
+    <div data-prerender-shell="1">
+      <header style="position:fixed;top:0;left:0;right:0;height:80px;background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,0.06);z-index:50"></header>
+      <main style="padding-top:120px;padding-bottom:4rem;min-height:100vh;display:flex;align-items:center;background:#0a0a0a">
+        <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem;width:100%">
+          <section style="max-width:820px">
+            <h1 class="g2a-headline-xl" style="margin-bottom:1.5rem;color:#fff">${headline}</h1>
+            <p style="font-size:1.1rem;color:rgba(255,255,255,0.7);line-height:1.7;max-width:640px;font-family:Geist,sans-serif">${lead}</p>
+          </section>
+        </div>
+      </main>
+    </div>`;
+}
+
 function renderRouteHtml(baseHtml, route) {
   const ogTitle = route.ogTitle || route.title;
   const ogImageUrl = ogImage(ogTitle, route.ogSubtitle || "G2A Marketing");
@@ -228,6 +279,16 @@ function renderRouteHtml(baseHtml, route) {
   html = setMetaTag(html, "name", "twitter:title", route.title);
   html = setMetaTag(html, "name", "twitter:description", route.description);
   html = setMetaTag(html, "name", "twitter:image", ogImageUrl);
+
+  // Inject static hero shell into the empty root div so Lighthouse has
+  // an LCP candidate before the JS bundle finishes executing. React
+  // hydration replaces the whole subtree once mounted.
+  const shell = renderStaticShell(route);
+  html = html.replace(
+    /<div id="root">\s*<\/div>/,
+    `<div id="root">${shell}</div>`,
+  );
+
   return html;
 }
 
