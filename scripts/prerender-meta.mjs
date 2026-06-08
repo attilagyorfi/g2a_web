@@ -35,6 +35,18 @@ const INDEX_HTML = join(PUBLIC_DIR, "index.html");
 const ORIGIN = "https://g2amarketing.hu";
 const CLOUD_NAME = "dzh1unb6d";
 
+/**
+ * Preview deploys (Vercel preview / staging) should not be indexed by Google
+ * — otherwise the staging URL ends up competing with the production URL for
+ * the same content. Production deploys keep their normal index,follow.
+ *
+ * Decided via the `VERCEL_ENV` env var Vercel injects at build time:
+ *   "production" → indexable
+ *   "preview" / "development" / unset → noindex,nofollow
+ */
+const IS_PRODUCTION = process.env.VERCEL_ENV === "production";
+const ROBOTS_VALUE = IS_PRODUCTION ? "index, follow" : "noindex, nofollow";
+
 /** URL-encode for Cloudinary text overlay (matches client/src/lib/cloudinary.ts) */
 const encOg = (s) =>
   encodeURIComponent(s).replace(/,/g, "%2C").replace(/\//g, "%2F").replace(/'/g, "%27");
@@ -264,6 +276,46 @@ function renderStaticShell(route) {
     </div>`;
 }
 
+/**
+ * Replace or inject a <link> tag matching a given (rel, attribute-match).
+ * For canonical we match on rel="canonical"; for hreflang we match on
+ * rel="alternate" + hreflang="x" so we can have multiple of them.
+ */
+function replaceOrAppendLink(html, matcher, replacement) {
+  const re = new RegExp(matcher, "i");
+  if (re.test(html)) {
+    return html.replace(re, replacement);
+  }
+  // Inject just before </head>
+  return html.replace("</head>", `    ${replacement}\n  </head>`);
+}
+
+/**
+ * Build the per-route <link> tags: canonical + 3 hreflang alternates + x-default.
+ *
+ * Per-route canonical was the audit's #1 finding — currently every page
+ * shipped `<link rel="canonical" href="https://g2amarketing.hu">` which tells
+ * Google every subpage is a duplicate of the homepage. Now each prerendered
+ * route gets its own canonical pointing to its own URL.
+ *
+ * hreflang in <head> was the audit's #2 finding — only the sitemap had them
+ * before. We inject the full 3-language alternates plus x-default so search
+ * engines see the language cluster on every page even without crawling the
+ * sitemap first.
+ */
+function renderLinkTags(route) {
+  const huUrl = `${ORIGIN}${route.path}`;
+  const enUrl = `${ORIGIN}/en${route.path === "/" ? "" : route.path}`;
+  const zhUrl = `${ORIGIN}/zh${route.path === "/" ? "" : route.path}`;
+  return [
+    `<link rel="canonical" href="${huUrl}" />`,
+    `<link rel="alternate" hreflang="hu" href="${huUrl}" />`,
+    `<link rel="alternate" hreflang="en" href="${enUrl}" />`,
+    `<link rel="alternate" hreflang="zh-CN" href="${zhUrl}" />`,
+    `<link rel="alternate" hreflang="x-default" href="${huUrl}" />`,
+  ];
+}
+
 function renderRouteHtml(baseHtml, route) {
   const ogTitle = route.ogTitle || route.title;
   const ogImageUrl = ogImage(ogTitle, route.ogSubtitle || "G2A Marketing");
@@ -272,6 +324,7 @@ function renderRouteHtml(baseHtml, route) {
   let html = baseHtml;
   html = setTitle(html, route.title);
   html = setMetaTag(html, "name", "description", route.description);
+  html = setMetaTag(html, "name", "robots", ROBOTS_VALUE);
   html = setMetaTag(html, "property", "og:title", route.title);
   html = setMetaTag(html, "property", "og:description", route.description);
   html = setMetaTag(html, "property", "og:url", url);
@@ -279,6 +332,25 @@ function renderRouteHtml(baseHtml, route) {
   html = setMetaTag(html, "name", "twitter:title", route.title);
   html = setMetaTag(html, "name", "twitter:description", route.description);
   html = setMetaTag(html, "name", "twitter:image", ogImageUrl);
+
+  // Per-route canonical (was: hardcoded to https://g2amarketing.hu on every page)
+  html = replaceOrAppendLink(
+    html,
+    '<link\\s+rel="canonical"[^>]*/?>',
+    `<link rel="canonical" href="${url}" />`,
+  );
+
+  // Per-route hreflang cluster — strip ALL existing hreflang links first
+  // (the base index.html might have stale ones), then inject the fresh set.
+  html = html.replace(
+    /<link\s+rel="alternate"\s+hreflang="[^"]*"[^>]*\/?>\s*/gi,
+    "",
+  );
+  const hreflangLinks = renderLinkTags(route).slice(1); // skip canonical (already done)
+  html = html.replace(
+    "</head>",
+    `    ${hreflangLinks.join("\n    ")}\n  </head>`,
+  );
 
   // Inject static hero shell into the empty root div so Lighthouse has
   // an LCP candidate before the JS bundle finishes executing. React
