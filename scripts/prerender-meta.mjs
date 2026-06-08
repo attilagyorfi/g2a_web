@@ -24,16 +24,47 @@
  *
  * Run: `node scripts/prerender-meta.mjs` (called from `build:vercel`)
  */
-import { readFileSync, writeFileSync, mkdirSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { ROUTES, SERVICES, INDUSTRIES, allRoutes } from "./prerender-routes.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const PUBLIC_DIR = join(ROOT, "dist", "public");
 const INDEX_HTML = join(PUBLIC_DIR, "index.html");
+const TRANSLATIONS_PATH = join(__dirname, "prerender-translations.json");
 const ORIGIN = "https://g2amarketing.hu";
 const CLOUD_NAME = "dzh1unb6d";
+
+/** Loaded once at startup. Empty object if missing (English/Chinese pages
+ *  fall back to the Hungarian source — better than failing the build). */
+const TRANSLATIONS = existsSync(TRANSLATIONS_PATH)
+  ? JSON.parse(readFileSync(TRANSLATIONS_PATH, "utf8"))
+  : {};
+
+/** Locale config — drives the prefix in URLs + the lang attribute on <html>. */
+const LOCALES = [
+  { code: "hu", prefix: "", lang: "hu", ogLocale: "hu_HU" },
+  { code: "en", prefix: "/en", lang: "en", ogLocale: "en_US" },
+  { code: "zh", prefix: "/zh", lang: "zh-CN", ogLocale: "zh_CN" },
+];
+
+/**
+ * Resolve the metadata for a given route + locale, falling back to the HU
+ * source if no translation is available for that route.
+ */
+function localize(route, locale) {
+  if (locale === "hu") return route;
+  const t = TRANSLATIONS[route.path]?.[locale];
+  if (!t || !t.title) return route; // graceful fallback
+  return {
+    ...route,
+    title: t.title,
+    description: t.description || route.description,
+    ogTitle: t.ogTitle || route.ogTitle,
+  };
+}
 
 /**
  * Preview deploys (Vercel preview / staging) should not be indexed by Google
@@ -72,129 +103,6 @@ function ogImage(title, subtitle = "G2A Marketing") {
  * Title format: short subject + brand. The OG image generator strips the brand
  * suffix before baking it into the card so the headline stays clean.
  */
-const ROUTES = [
-  {
-    path: "/",
-    title: "G2A Marketing — Adatvezérelt Online Marketing Ügynökség Pécs",
-    description: "Adatvezérelt marketing ügynökség Pécsről. SEO, Google Ads, Meta hirdetések, webfejlesztés, közösségi média és stratégiai marketing — KKV-knak és nagyvállalatoknak.",
-    ogTitle: "G2A Marketing",
-    ogSubtitle: "Adatvezérelt marketing ügynökség",
-  },
-  {
-    path: "/rolunk",
-    title: "Rólunk — G2A Marketing",
-    description: "Ismerd meg a G2A Marketing csapatát. Küldetésünk, értékeink, történetünk — egy pécsi ügynökség, amelyik üzletet és nem csak forgalmat növel.",
-    ogTitle: "Rólunk",
-  },
-  {
-    path: "/karrier",
-    title: "Karrier — G2A Marketing",
-    description: "Csatlakozz a G2A Marketing csapatához. Aktuális nyitott pozíciók, kultúránk, és hogyan jelentkezz.",
-    ogTitle: "Karrier",
-  },
-  {
-    path: "/kapcsolat",
-    title: "Kapcsolat — G2A Marketing Pécs",
-    description: "Vedd fel velünk a kapcsolatot. Pécs, info@g2amarketing.hu, +36 30 190 2575. Ingyenes konzultáció KKV-knak.",
-    ogTitle: "Kapcsolat",
-  },
-  {
-    path: "/referenciak",
-    title: "Referenciák & Esettanulmányok — G2A Marketing",
-    description: "Valós marketing eredmények valós ügyfelektől. Esettanulmányok egészségügy, autóipar, B2B és más iparágakból.",
-    ogTitle: "Referenciák",
-  },
-  {
-    path: "/hirek",
-    title: "Hírek & Blog — G2A Marketing",
-    description: "Marketing tippek, trendek és iparági hírek a G2A Marketing csapatától. AI, ESG, KKV-marketing, B2B stratégia.",
-    ogTitle: "Blog & Hírek",
-  },
-  {
-    path: "/ingyenes-audit",
-    title: "Ingyenes marketing audit — G2A Marketing",
-    description: "Kérj ingyenes marketing auditot. 7-10 munkanap, részletes elemzés a teljes online jelenlétedről, akcióterv prioritás szerint.",
-    ogTitle: "Ingyenes marketing audit",
-  },
-  {
-    path: "/marketing-audit",
-    title: "Marketing audit — G2A Marketing",
-    description: "Részletes marketing audit szolgáltatás. Weboldal, hirdetéskezelés, SEO, közösségi média, analitika — egy átfogó értékelésben.",
-    ogTitle: "Marketing audit",
-  },
-  {
-    path: "/ingyenes-seo-audit",
-    title: "Ingyenes SEO audit — G2A Marketing",
-    description: "Ingyenes SEO audit weboldaladhoz. Technikai SEO, on-page, off-page, helyi keresőoptimalizálás — egy 20+ oldalas riport, hands-on akciókkal.",
-    ogTitle: "Ingyenes SEO audit",
-  },
-  {
-    path: "/hirlevel",
-    title: "Hírlevél — G2A Marketing",
-    description: "Iratkozz fel a G2A Marketing hírlevelére. Praktikus marketing tartalmat, esettanulmányokat és AI-megoldásokat küldünk — heti max 1 email, sose kéretlenül.",
-    ogTitle: "Hírlevél",
-  },
-  {
-    path: "/szakertelem",
-    title: "Szakértelem — G2A Marketing",
-    description: "Iparági szakértelmünk: egészségügy, autóipar, B2B, ESG, technológia, közigazgatás. Specializált csapat minden vertikálishoz.",
-    ogTitle: "Szakértelem",
-  },
-  {
-    path: "/technologia",
-    title: "Technológia — G2A Marketing",
-    description: "Technológiák, amiket használunk: AI, MarTech stack, analytics, automation. Hands-on tapasztalat 50+ eszközzel.",
-    ogTitle: "Technológia",
-  },
-  {
-    path: "/partnereink",
-    title: "Partnereink — G2A Marketing",
-    description: "Stratégiai partnereink: Google, Meta, Microsoft Advertising, és a magyar B2B ökoszisztéma kulcsszereplői.",
-    ogTitle: "Partnereink",
-  },
-  {
-    path: "/szolgaltatasok",
-    title: "Szolgáltatások — G2A Marketing",
-    description: "Teljes körű marketing szolgáltatások: SEO, Google Ads, Meta hirdetések, AI marketing, tartalommarketing, ESG kommunikáció, employer branding, nemzetközi marketing.",
-    ogTitle: "Szolgáltatások",
-  },
-  {
-    path: "/adatvedelmi-iranyelvek",
-    title: "Adatvédelmi irányelvek — G2A Marketing",
-    description: "Adatvédelmi tájékoztató és cookie-szabályzat a g2amarketing.hu oldalon. GDPR + Eker. tv. + ePrivacy konform.",
-    ogTitle: "Adatvédelmi irányelvek",
-  },
-  {
-    path: "/aszf",
-    title: "ÁSZF — G2A Marketing",
-    description: "Általános Szerződési Feltételek a G2A Marketing Bt. szolgáltatásaihoz.",
-    ogTitle: "ÁSZF",
-  },
-];
-
-/** Service subpages — same metadata shape, slug-driven. */
-const SERVICES = [
-  { slug: "ai-marketing", title: "AI Marketing — G2A Marketing", description: "AI-alapú marketing megoldások: tartalomgenerálás, perszonalizáció, prediktív analitika, agentic kampánykezelés. Praktikus eszközök KKV-knak.", ogTitle: "AI Marketing" },
-  { slug: "ppc-google-ads", title: "PPC & Google Ads — G2A Marketing", description: "Google Ads és PPC kampánykezelés. Search, Display, YouTube, Performance Max. Mérhető ROAS, transzparens riport.", ogTitle: "PPC & Google Ads" },
-  { slug: "meta-hirdetes", title: "Meta hirdetés — G2A Marketing", description: "Facebook + Instagram hirdetések. Kreatív, célzás, retargeting, advantage+ kampányok. iOS 14+ utáni signal-recovery.", ogTitle: "Meta hirdetés" },
-  { slug: "tartalommarketing", title: "Tartalommarketing — G2A Marketing", description: "B2B és B2C tartalommarketing: blog, lead magnet, e-book, videó, podcast. SEO-driven content stratégia.", ogTitle: "Tartalommarketing" },
-  { slug: "marketing-automatizacio", title: "Marketing automatizáció — G2A Marketing", description: "HubSpot, Mailchimp, Klaviyo, Brevo bevezetés. Email automation, lead nurturing, lifecycle marketing.", ogTitle: "Marketing automatizáció" },
-  { slug: "esg-kommunikacio", title: "ESG kommunikáció — G2A Marketing", description: "ESG (Environmental, Social, Governance) kommunikációs tanácsadás. FIGYELEM: az SZTFH nem akkreditált ESG jelentéstevő szolgáltató vagyunk — csak kommunikációs oldalon segítünk.", ogTitle: "ESG kommunikáció" },
-  { slug: "employer-branding", title: "Employer branding — G2A Marketing", description: "Munkáltatói márkaépítés. Karrier oldal, LinkedIn, EVP, recruitment marketing — kifejezetten technológiai és egészségügyi cégeknek.", ogTitle: "Employer branding" },
-  { slug: "nemzetkozi-marketing", title: "Nemzetközi marketing — G2A Marketing", description: "Magyar cégek külpiaci marketingje: nyelvi lokalizáció, multi-market PPC, kínai (WeChat, Baidu) és európai piacok.", ogTitle: "Nemzetközi marketing" },
-];
-
-/** Industry landing pages — high-priority B2B SEO targets. */
-const INDUSTRIES = [
-  { slug: "marketing-egeszsegugyi-cegeknek", title: "Marketing egészségügyi cégeknek — G2A Marketing", description: "Marketing magánrendelőknek, klinikáknak, egészségügyi szolgáltatóknak. Etikai szabályozás-kompatibilis kommunikáció, betegszerzés.", ogTitle: "Marketing egészségügyi cégeknek" },
-  { slug: "marketing-szepsegipari-cegeknek", title: "Marketing szépségipari cégeknek — G2A Marketing", description: "Szépségipari marketing: szépségszalonok, kozmetikai márkák, esztétikai klinikák. Instagram-vezérelt B2C növekedés.", ogTitle: "Marketing szépségipari cégeknek" },
-  { slug: "marketing-mernoki-irodaknak", title: "Marketing mérnöki irodáknak — G2A Marketing", description: "B2B marketing mérnöki és tervezői irodáknak. Műszaki tartalommarketing, LinkedIn, hosszú értékesítési ciklus.", ogTitle: "Marketing mérnöki irodáknak" },
-  { slug: "marketing-autoipari-cegeknek", title: "Marketing autóipari cégeknek — G2A Marketing", description: "Autóipari marketing: márkakereskedések, alkatrész-forgalmazók, szervizek. Local SEO + leadgenerálás.", ogTitle: "Marketing autóipari cégeknek" },
-  { slug: "marketing-ugyvedii-irodaknak", title: "Marketing ügyvédi irodáknak — G2A Marketing", description: "Marketing ügyvédi és jogi irodáknak. Magyar Ügyvédi Kamara reklámkorlátozás-konform kommunikáció.", ogTitle: "Marketing ügyvédi irodáknak" },
-  { slug: "marketing-technologiai-cegeknek", title: "Marketing technológiai cégeknek — G2A Marketing", description: "B2B SaaS és tech marketing: pozícionálás, product-led growth, content marketing, ABM, demógyűjtés.", ogTitle: "Marketing technológiai cégeknek" },
-  { slug: "marketing-onkormanyzati-projekteknek", title: "Marketing önkormányzati projekteknek — G2A Marketing", description: "EU-támogatott önkormányzati projektek kommunikációja és lakossági kampányok. Közbeszerzés-kompatibilis ajánlatok.", ogTitle: "Marketing önkormányzati projekteknek" },
-  { slug: "marketing-b2b-cegeknek", title: "Marketing B2B cégeknek — G2A Marketing", description: "B2B marketing stratégia gyártóknak, nagykereskedőknek, szolgáltatóknak. LinkedIn, ABM, hosszú deal-ciklus.", ogTitle: "Marketing B2B cégeknek" },
-];
 
 /**
  * Apply a meta-tag replacement to a string. Handles both `name="x"` and
@@ -291,24 +199,25 @@ function replaceOrAppendLink(html, matcher, replacement) {
 }
 
 /**
- * Build the per-route <link> tags: canonical + 3 hreflang alternates + x-default.
+ * Build the per-route, per-locale <link> tags: canonical + hreflang cluster.
  *
- * Per-route canonical was the audit's #1 finding — currently every page
- * shipped `<link rel="canonical" href="https://g2amarketing.hu">` which tells
- * Google every subpage is a duplicate of the homepage. Now each prerendered
- * route gets its own canonical pointing to its own URL.
- *
- * hreflang in <head> was the audit's #2 finding — only the sitemap had them
- * before. We inject the full 3-language alternates plus x-default so search
- * engines see the language cluster on every page even without crawling the
- * sitemap first.
+ * Canonical points to the **current locale's** URL (audit §2.1) so EN/ZH
+ * pages don't get auto-deduped to the HU version. hreflang covers all 3
+ * languages plus x-default → HU (audit §2.2).
  */
-function renderLinkTags(route) {
-  const huUrl = `${ORIGIN}${route.path}`;
-  const enUrl = `${ORIGIN}/en${route.path === "/" ? "" : route.path}`;
-  const zhUrl = `${ORIGIN}/zh${route.path === "/" ? "" : route.path}`;
+function localizedUrl(route, locale) {
+  // Home + locale prefix: "/", "/en", "/zh" — no trailing slash on prefix-only
+  if (route.path === "/") return `${ORIGIN}${locale.prefix || "/"}`;
+  return `${ORIGIN}${locale.prefix}${route.path}`;
+}
+
+function renderLinkTags(route, locale) {
+  const selfUrl = localizedUrl(route, locale);
+  const huUrl = localizedUrl(route, LOCALES[0]);
+  const enUrl = localizedUrl(route, LOCALES[1]);
+  const zhUrl = localizedUrl(route, LOCALES[2]);
   return [
-    `<link rel="canonical" href="${huUrl}" />`,
+    `<link rel="canonical" href="${selfUrl}" />`,
     `<link rel="alternate" hreflang="hu" href="${huUrl}" />`,
     `<link rel="alternate" hreflang="en" href="${enUrl}" />`,
     `<link rel="alternate" hreflang="zh-CN" href="${zhUrl}" />`,
@@ -316,24 +225,29 @@ function renderLinkTags(route) {
   ];
 }
 
-function renderRouteHtml(baseHtml, route) {
-  const ogTitle = route.ogTitle || route.title;
+function renderRouteHtml(baseHtml, route, locale) {
+  const localized = localize(route, locale.code);
+  const ogTitle = localized.ogTitle || localized.title;
   const ogImageUrl = ogImage(ogTitle, route.ogSubtitle || "G2A Marketing");
-  const url = `${ORIGIN}${route.path}`;
+  const url = localizedUrl(route, locale);
 
   let html = baseHtml;
-  html = setTitle(html, route.title);
-  html = setMetaTag(html, "name", "description", route.description);
+  html = setTitle(html, localized.title);
+  html = setMetaTag(html, "name", "description", localized.description);
   html = setMetaTag(html, "name", "robots", ROBOTS_VALUE);
-  html = setMetaTag(html, "property", "og:title", route.title);
-  html = setMetaTag(html, "property", "og:description", route.description);
+  html = setMetaTag(html, "property", "og:title", localized.title);
+  html = setMetaTag(html, "property", "og:description", localized.description);
   html = setMetaTag(html, "property", "og:url", url);
   html = setMetaTag(html, "property", "og:image", ogImageUrl);
-  html = setMetaTag(html, "name", "twitter:title", route.title);
-  html = setMetaTag(html, "name", "twitter:description", route.description);
+  html = setMetaTag(html, "property", "og:locale", locale.ogLocale);
+  html = setMetaTag(html, "name", "twitter:title", localized.title);
+  html = setMetaTag(html, "name", "twitter:description", localized.description);
   html = setMetaTag(html, "name", "twitter:image", ogImageUrl);
 
-  // Per-route canonical (was: hardcoded to https://g2amarketing.hu on every page)
+  // <html lang="..."> — audit §2.6 wants this per locale
+  html = html.replace(/<html\s+lang="[^"]*"/i, `<html lang="${locale.lang}"`);
+
+  // Per-route canonical
   html = replaceOrAppendLink(
     html,
     '<link\\s+rel="canonical"[^>]*/?>',
@@ -346,7 +260,7 @@ function renderRouteHtml(baseHtml, route) {
     /<link\s+rel="alternate"\s+hreflang="[^"]*"[^>]*\/?>\s*/gi,
     "",
   );
-  const hreflangLinks = renderLinkTags(route).slice(1); // skip canonical (already done)
+  const hreflangLinks = renderLinkTags(route, locale).slice(1); // skip canonical (already done)
   html = html.replace(
     "</head>",
     `    ${hreflangLinks.join("\n    ")}\n  </head>`,
@@ -355,7 +269,7 @@ function renderRouteHtml(baseHtml, route) {
   // Inject static hero shell into the empty root div so Lighthouse has
   // an LCP candidate before the JS bundle finishes executing. React
   // hydration replaces the whole subtree once mounted.
-  const shell = renderStaticShell(route);
+  const shell = renderStaticShell(localized);
   html = html.replace(
     /<div id="root">\s*<\/div>/,
     `<div id="root">${shell}</div>`,
@@ -376,14 +290,21 @@ function renderRouteHtml(baseHtml, route) {
  * `dist/public/szolgaltatasok/ai-marketing/index.html`. mkdirSync ensures
  * the parent directory exists.
  */
-function writeRouteFile(route, html) {
-  if (route.path === "/") {
-    // Root — overwrite the main index.html so the homepage gets the
-    // brand-tuned title/description too.
+/**
+ * Write a prerendered HTML for (route, locale). The output path depends on
+ * both: HU lives under `/{path}/index.html` (root), EN under `/en/{path}/`,
+ * ZH under `/zh/{path}/`. The Home route is special — HU goes to the root
+ * index.html so the SPA fallback rewrite serves the correct shell.
+ */
+function writeRouteFile(route, locale, html) {
+  // HU + Home → root index.html (overwrites the Vite output)
+  if (locale.code === "hu" && route.path === "/") {
     writeFileSync(INDEX_HTML, html, "utf8");
     return;
   }
-  const trimmed = route.path.replace(/^\/+/, "");
+  const localePath = locale.prefix; // "", "/en", "/zh"
+  const routePath = route.path === "/" ? "" : route.path;
+  const trimmed = `${localePath}${routePath}`.replace(/^\/+/, "");
   const outPath = join(PUBLIC_DIR, trimmed, "index.html");
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, html, "utf8");
@@ -391,29 +312,17 @@ function writeRouteFile(route, html) {
 
 // ─── Main ────────────────────────────────────────────────────────────────────
 const baseHtml = readFileSync(INDEX_HTML, "utf8");
-
-const allRoutes = [
-  ...ROUTES,
-  ...SERVICES.map((s) => ({
-    path: `/szolgaltatasok/${s.slug}`,
-    title: s.title,
-    description: s.description,
-    ogTitle: s.ogTitle,
-  })),
-  ...INDUSTRIES.map((i) => ({
-    path: `/iparagi/${i.slug}`,
-    title: i.title,
-    description: i.description,
-    ogTitle: i.ogTitle,
-  })),
-];
+const routes = allRoutes();
 
 let written = 0;
-for (const route of allRoutes) {
-  const html = renderRouteHtml(baseHtml, route);
-  writeRouteFile(route, html);
-  written++;
+for (const route of routes) {
+  for (const locale of LOCALES) {
+    const html = renderRouteHtml(baseHtml, route, locale);
+    writeRouteFile(route, locale, html);
+    written++;
+  }
 }
 
-console.log(`✔ Prerendered meta for ${written} routes → dist/public/`);
+console.log(`✔ Prerendered ${written} HTML files (${routes.length} routes × ${LOCALES.length} locales)`);
 console.log(`  Static (${ROUTES.length}) + services (${SERVICES.length}) + industries (${INDUSTRIES.length})`);
+console.log(`  Locales: ${LOCALES.map((l) => l.code).join(", ")}`);

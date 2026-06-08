@@ -45,7 +45,7 @@ interface SeoHeadProps {
 }
 
 export default function SeoHead({
-  title = "G2A Marketing – Adatvezérelt Online Marketing Ügynökség",
+  title = "G2A Marketing — Adatvezérelt B2B Marketing Ügynökség Pécs",
   description = "A G2A Marketing adatvezérelt, kreatív online marketing ügynökség Pécsről. Keresőoptimalizálás, hirdetéskezelés, webfejlesztés, közösségi média és arculattervezés.",
   ogTitle,
   ogDescription,

@@ -294,7 +294,7 @@ export default function Home() {
   return (
     <>
       <SeoHead
-        title={seoData?.metaTitle || "G2A Marketing – Adatvezérelt B2B Marketing Ügynökség | Pécs"}
+        title={seoData?.metaTitle || "G2A Marketing — Adatvezérelt B2B Marketing Ügynökség Pécs"}
         description={seoData?.metaDescription || "Stratégiai marketing, AI-alapú megoldások és mérhető növekedés. SEO, PPC, webfejlesztés és teljes marketing ökoszisztéma B2B cégeknek."}
       />
       <ScrollProgressBar />

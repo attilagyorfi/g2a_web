@@ -1,0 +1,418 @@
+{
+  "/": {
+    "hash": "ac8cbe6cf35dd234",
+    "en": {
+      "title": "G2A Marketing — Data-Driven B2B Marketing Agency in Pécs",
+      "description": "A data-driven marketing agency based in Pécs. SEO, Google Ads, Meta Ads, web development, social media, and strategic marketing — for SMEs and large corporations.",
+      "ogTitle": "G2A Marketing"
+    },
+    "zh": {
+      "title": "G2A Marketing — 数据驱动型B2B营销机构（佩奇）",
+      "description": "来自佩奇的数据驱动型营销机构。提供SEO、Google Ads、Meta广告、网站开发、社交媒体及战略营销服务——面向中小企业及大型企业。",
+      "ogTitle": "G2A 市场营销"
+    }
+  },
+  "/rolunk": {
+    "hash": "22d1f079b45e8997",
+    "en": {
+      "title": "About Us — G2A Marketing",
+      "description": "Meet the G2A Marketing team. Our mission, our values, our story—an agency based in Pécs that grows your business, not just your sales.",
+      "ogTitle": "About Us"
+    },
+    "zh": {
+      "title": "关于我们 — G2A Marketing",
+      "description": "来认识一下G2A营销团队。我们的使命、价值观和故事——一家位于佩奇的代理机构，致力于提升业务价值，而不仅仅是增加销售额。",
+      "ogTitle": "关于我们"
+    }
+  },
+  "/karrier": {
+    "hash": "9b192228b27794bd",
+    "en": {
+      "title": "Careers — G2A Marketing",
+      "description": "Join the G2A Marketing team. Current job openings, our company culture, and how to apply.",
+      "ogTitle": "Careers"
+    },
+    "zh": {
+      "title": "职业发展 — G2A 市场营销",
+      "description": "加入 G2A 市场营销团队。了解当前的职位空缺、我们的企业文化以及如何申请。",
+      "ogTitle": "职业发展"
+    }
+  },
+  "/kapcsolat": {
+    "hash": "004f1a135d309d42",
+    "en": {
+      "title": "Contact — G2A Marketing Pécs",
+      "description": "Contact us. Pécs, info@g2amarketing.hu, +36 30 190 2575. Free consultation for small and medium-sized businesses.",
+      "ogTitle": "Contact"
+    },
+    "zh": {
+      "title": "联系我们 — G2A Marketing 佩奇",
+      "description": "请联系我们。佩奇，info@g2amarketing.hu，+36 30 190 2575。面向中小企业的免费咨询。",
+      "ogTitle": "联系"
+    }
+  },
+  "/referenciak": {
+    "hash": "b461177d1eb967c9",
+    "en": {
+      "title": "References & Case Studies — G2A Marketing",
+      "description": "Real marketing results from real clients. Case studies from the healthcare, automotive, B2B, and other industries.",
+      "ogTitle": "References"
+    },
+    "zh": {
+      "title": "案例与成功案例 — G2A Marketing",
+      "description": "来自真实客户的实际营销成果。涵盖医疗保健、汽车、B2B及其他行业的案例研究。",
+      "ogTitle": "参考文献"
+    }
+  },
+  "/hirek": {
+    "hash": "e64550c7270aca48",
+    "en": {
+      "title": "News & Blog — G2A Marketing",
+      "description": "Marketing tips, trends, and industry news from the G2A Marketing team. AI, ESG, SME marketing, B2B strategy.",
+      "ogTitle": "Blog & News"
+    },
+    "zh": {
+      "title": "新闻与博客 — G2A 市场营销",
+      "description": "来自G2A营销团队的营销技巧、趋势及行业资讯。涵盖AI、ESG、中小企业营销及B2B战略。",
+      "ogTitle": "博客与新闻"
+    }
+  },
+  "/ingyenes-audit": {
+    "hash": "3a7764867e67a008",
+    "en": {
+      "title": "Free Marketing Audit — G2A Marketing",
+      "description": "Request a free marketing audit. We’ll get in touch within 24 hours and send you a detailed audit report within 5–7 business days.",
+      "ogTitle": "Free marketing audit"
+    },
+    "zh": {
+      "title": "免费营销审计 — G2A Marketing",
+      "description": "申请免费营销审计。我们将在24小时内与您联系，并在5-7个工作日内向您提交详细的审计报告。",
+      "ogTitle": "免费营销审计"
+    }
+  },
+  "/marketing-audit": {
+    "hash": "7b15f5c3fd56fa71",
+    "en": {
+      "title": "Marketing Audit — G2A Marketing",
+      "description": "Comprehensive marketing audit service. Website, ad management, SEO, social media, analytics—all covered in a single, comprehensive assessment.",
+      "ogTitle": "Marketing audit"
+    },
+    "zh": {
+      "title": "营销审计 — G2A Marketing",
+      "description": "详细的营销审计服务。网站、广告管理、SEO、社交媒体、数据分析——一应俱全的全面评估。",
+      "ogTitle": "市场营销审计"
+    }
+  },
+  "/ingyenes-seo-audit": {
+    "hash": "ed0dd6e4b887ca71",
+    "en": {
+      "title": "Free SEO Audit — G2A Marketing",
+      "description": "Free SEO audit for your website. Technical SEO, on-page, off-page, and local SEO—we’ll get in touch within 24 hours, and you’ll receive a detailed report in 5–7 business days.",
+      "ogTitle": "Free SEO Audit"
+    },
+    "zh": {
+      "title": "免费SEO审计 — G2A Marketing",
+      "description": "为您网站提供免费SEO审计。涵盖技术SEO、站内优化、站外优化及本地搜索引擎优化——我们将在24小时内与您联系，5-7个工作日内提供详细报告。",
+      "ogTitle": "免费SEO审计"
+    }
+  },
+  "/hirlevel": {
+    "hash": "117bb3ffc05e60e0",
+    "en": {
+      "title": "Newsletter — G2A Marketing",
+      "description": "Sign up for the G2A Marketing newsletter. We’ll send you practical marketing content, case studies, and AI solutions—no more than one email per week, and never unsolicited.",
+      "ogTitle": "Newsletter"
+    },
+    "zh": {
+      "title": "电子报 — G2A 市场营销",
+      "description": "订阅 G2A 营销通讯。我们将为您发送实用的营销内容、案例研究和 AI 解决方案——每周最多一封邮件，绝不发送垃圾邮件。",
+      "ogTitle": "新闻简报"
+    }
+  },
+  "/szakertelem": {
+    "hash": "ca5aef06026cdccd",
+    "en": {
+      "title": "Industries — G2A Marketing",
+      "description": "Our industry expertise: healthcare, automotive, B2B, ESG, technology, and public administration. We have a specialized team for every vertical.",
+      "ogTitle": "Industries"
+    },
+    "zh": {
+      "title": "行业 — G2A Marketing",
+      "description": "我们的行业专长：医疗健康、汽车、B2B、ESG、科技、公共管理。每个垂直领域均配备专业团队。",
+      "ogTitle": "行业"
+    }
+  },
+  "/technologia": {
+    "hash": "c44610110db6dfeb",
+    "en": {
+      "title": "Technology — G2A Marketing",
+      "description": "Technologies we use: AI, MarTech stack, analytics, automation. Hands-on experience with over 50 tools.",
+      "ogTitle": "Technology"
+    },
+    "zh": {
+      "title": "技术 — G2A 市场营销",
+      "description": "我们使用的技术：AI、营销技术栈、数据分析、自动化。拥有50多种工具的实际操作经验。",
+      "ogTitle": "技术"
+    }
+  },
+  "/partnereink": {
+    "hash": "8a186c46d36e6004",
+    "en": {
+      "title": "Our Partners — G2A Marketing",
+      "description": "Our strategic partners: Google, Meta, Microsoft Advertising, and key players in the Hungarian B2B ecosystem.",
+      "ogTitle": "Our Partners"
+    },
+    "zh": {
+      "title": "合作伙伴 — G2A Marketing",
+      "description": "我们的战略合作伙伴包括：Google、Meta、Microsoft Advertising，以及匈牙利B2B生态系统的关键参与者。",
+      "ogTitle": "合作伙伴"
+    }
+  },
+  "/szolgaltatasok": {
+    "hash": "76fce4bb794bd8ee",
+    "en": {
+      "title": "Services — G2A Marketing",
+      "description": "Comprehensive marketing services: SEO, Google Ads, Meta Ads, AI marketing, content marketing, ESG communications, employer branding, international marketing.",
+      "ogTitle": "Services"
+    },
+    "zh": {
+      "title": "服务 — G2A Marketing",
+      "description": "全方位营销服务：SEO、Google Ads、Meta广告、AI营销、内容营销、ESG传播、雇主品牌建设、国际营销。",
+      "ogTitle": "服务"
+    }
+  },
+  "/adatvedelmi-iranyelvek": {
+    "hash": "107a267bc0609c54",
+    "en": {
+      "title": "Privacy Policy — G2A Marketing",
+      "description": "Privacy Policy and Cookie Policy on g2amarketing.hu. GDPR, E-Commerce Directive, and ePrivacy Directive compliant.",
+      "ogTitle": "Privacy Policy"
+    },
+    "zh": {
+      "title": "隐私政策 — G2A Marketing",
+      "description": "g2amarketing.hu 网站的数据保护声明和 Cookie 政策。符合 GDPR、Eker.tv 及 ePrivacy 规定。",
+      "ogTitle": "隐私政策"
+    }
+  },
+  "/aszf": {
+    "hash": "8bda959cbb449d08",
+    "en": {
+      "title": "Terms and Conditions — G2A Marketing",
+      "description": "General Terms and Conditions for the Services of G2A Marketing Bt.",
+      "ogTitle": "Terms and Conditions"
+    },
+    "zh": {
+      "title": "一般条款与条件 — G2A Marketing",
+      "description": "G2A Marketing Bt. 服务的一般条款与条件。",
+      "ogTitle": "《一般条款与条件》"
+    }
+  },
+  "/szolgaltatasok/ai-marketing": {
+    "hash": "01759e702d376c72",
+    "en": {
+      "title": "AI Marketing — G2A Marketing",
+      "description": "AI-based marketing solutions: content generation, personalization, predictive analytics, and automated campaign management. Practical tools for small and medium-sized businesses.",
+      "ogTitle": "AI Marketing"
+    },
+    "zh": {
+      "title": "AI营销 — G2A营销",
+      "description": "基于人工智能的营销解决方案：内容生成、个性化、预测分析、智能活动管理。面向中小企业的实用工具。",
+      "ogTitle": "人工智能营销"
+    }
+  },
+  "/szolgaltatasok/ppc-google-ads": {
+    "hash": "6fbc4427198dd6b5",
+    "en": {
+      "title": "PPC & Google Ads — G2A Marketing",
+      "description": "Google Ads and PPC campaign management. Search, Display, YouTube, Performance Max. Measurable ROAS, transparent reporting.",
+      "ogTitle": "PPC & Google Ads"
+    },
+    "zh": {
+      "title": "PPC 与 Google Ads — G2A 营销",
+      "description": "Google Ads 和 PPC 广告活动管理。搜索广告、展示广告、YouTube 广告、Performance Max。可衡量的 ROAS，透明的报告。",
+      "ogTitle": "PPC 与 Google Ads"
+    }
+  },
+  "/szolgaltatasok/meta-hirdetes": {
+    "hash": "adc59812c53cdcf3",
+    "en": {
+      "title": "Meta Ad — G2A Marketing",
+      "description": "Facebook and Instagram ads. Creative design, targeting, retargeting, and Advantage+ campaigns. Signal recovery for iOS 14 and later.",
+      "ogTitle": "Meta ad"
+    },
+    "zh": {
+      "title": "Meta广告 — G2A营销",
+      "description": "Facebook + Instagram 广告。创意设计、定向投放、再营销、Advantage+ 广告系列。iOS 14 及更高版本后的信号恢复。",
+      "ogTitle": "Meta广告"
+    }
+  },
+  "/szolgaltatasok/tartalommarketing": {
+    "hash": "fcf1081fd77a8831",
+    "en": {
+      "title": "Content Marketing — G2A Marketing",
+      "description": "B2B and B2C content marketing: blogs, lead magnets, e-books, videos, podcasts. SEO-driven content strategy.",
+      "ogTitle": "Content Marketing"
+    },
+    "zh": {
+      "title": "内容营销 — G2A Marketing",
+      "description": "B2B 和 B2C 内容营销：博客、引流磁铁、电子书、视频、播客。以 SEO 为核心的内容策略。",
+      "ogTitle": "内容营销"
+    }
+  },
+  "/szolgaltatasok/marketing-automatizacio": {
+    "hash": "88d36f3ea4cd2b18",
+    "en": {
+      "title": "Marketing Automation — G2A Marketing",
+      "description": "Implementation of HubSpot, Mailchimp, Klaviyo, and Brevo. Email automation, lead nurturing, and lifecycle marketing.",
+      "ogTitle": "Marketing automation"
+    },
+    "zh": {
+      "title": "营销自动化 — G2A Marketing",
+      "description": "HubSpot、Mailchimp、Klaviyo、Brevo的实施。电子邮件自动化、潜在客户培育、生命周期营销。",
+      "ogTitle": "营销自动化"
+    }
+  },
+  "/szolgaltatasok/esg-kommunikacio": {
+    "hash": "16adc7dc8f8ea53f",
+    "en": {
+      "title": "ESG Communication — G2A Marketing",
+      "description": "ESG (Environmental, Social, Governance) communications consulting. PLEASE NOTE: We are not an SZTFH-accredited ESG reporting service provider—we only provide assistance with communications.",
+      "ogTitle": "ESG Communication"
+    },
+    "zh": {
+      "title": "ESG传播 — G2A Marketing",
+      "description": "ESG（环境、社会、治理）传播咨询。请注意：我们并非经SZTFH认证的ESG报告服务提供商——我们仅在传播方面提供协助。",
+      "ogTitle": "ESG 沟通"
+    }
+  },
+  "/szolgaltatasok/employer-branding": {
+    "hash": "2525e93b580a15d1",
+    "en": {
+      "title": "Employer branding — G2A Marketing",
+      "description": "Employer branding. Career site, LinkedIn, EVP, recruitment marketing — specifically for technology and healthcare companies.",
+      "ogTitle": "Employer branding"
+    },
+    "zh": {
+      "title": "雇主品牌建设 — G2A Marketing",
+      "description": "雇主品牌建设。职业页面、LinkedIn、雇主价值主张（EVP）、招聘营销——专为科技和医疗健康企业量身定制。",
+      "ogTitle": "雇主品牌建设"
+    }
+  },
+  "/szolgaltatasok/nemzetkozi-marketing": {
+    "hash": "2204c13c40631700",
+    "en": {
+      "title": "International Marketing — G2A Marketing",
+      "description": "International marketing for Hungarian companies: language localization, multi-market PPC, Chinese (WeChat, Baidu) and European markets.",
+      "ogTitle": "International Marketing"
+    },
+    "zh": {
+      "title": "国际营销 — G2A Marketing",
+      "description": "匈牙利企业的海外市场营销：语言本地化、多市场PPC、中国（微信、百度）及欧洲市场。",
+      "ogTitle": "国际营销"
+    }
+  },
+  "/iparagi/marketing-egeszsegugyi-cegeknek": {
+    "hash": "e9b940f7d6c85711",
+    "en": {
+      "title": "Healthcare Marketing for Clinics and Private Practitioners — G2A Marketing",
+      "description": "Marketing for private practices, clinics, and healthcare providers. Ethically compliant communication and patient acquisition.",
+      "ogTitle": "Marketing for Healthcare Companies"
+    },
+    "zh": {
+      "title": "面向诊所和私人医生的医疗营销 — G2A Marketing",
+      "description": "面向私人诊所、医疗机构及医疗服务提供商的营销服务。符合伦理规范的宣传推广及患者招募。",
+      "ogTitle": "面向医疗保健企业的市场营销"
+    }
+  },
+  "/iparagi/marketing-szepsegipari-cegeknek": {
+    "hash": "8e67fa7567296023",
+    "en": {
+      "title": "Beauty Industry Marketing for Salons and Clinics — G2A Marketing",
+      "description": "Beauty industry marketing: beauty salons, cosmetics brands, aesthetic clinics. Instagram-driven B2C growth.",
+      "ogTitle": "Marketing for Beauty Companies"
+    },
+    "zh": {
+      "title": "面向美容沙龙和诊所的营销服务 — G2A Marketing",
+      "description": "美容行业营销：美容沙龙、化妆品品牌、医美诊所。以Instagram为驱动的B2C业务增长。",
+      "ogTitle": "面向美容行业的市场营销"
+    }
+  },
+  "/iparagi/marketing-mernoki-irodaknak": {
+    "hash": "23c5d545e1f51ed6",
+    "en": {
+      "title": "Engineering Marketing for Design Firms — G2A Marketing",
+      "description": "B2B marketing for engineering and design firms. Technical content marketing, LinkedIn, long sales cycle.",
+      "ogTitle": "Marketing for Engineering Firms"
+    },
+    "zh": {
+      "title": "面向工程营销设计公司的服务 — G2A Marketing",
+      "description": "面向工程与设计公司的B2B营销。技术内容营销、LinkedIn、长销售周期。",
+      "ogTitle": "面向工程咨询公司的市场营销"
+    }
+  },
+  "/iparagi/marketing-autoipari-cegeknek": {
+    "hash": "5caf1e607f2afe55",
+    "en": {
+      "title": "Automotive Marketing for Dealers and Service Centers — G2A Marketing",
+      "description": "Automotive marketing: dealerships, parts distributors, service centers. Local SEO + lead generation.",
+      "ogTitle": "Marketing for Automotive Companies"
+    },
+    "zh": {
+      "title": "面向汽车经销商和维修店的汽车行业营销 — G2A Marketing",
+      "description": "汽车行业营销：品牌经销商、零部件分销商、维修服务商。本地搜索引擎优化（Local SEO）+ 潜在客户开发。",
+      "ogTitle": "面向汽车行业的市场营销"
+    }
+  },
+  "/iparagi/marketing-ugyvedii-irodaknak": {
+    "hash": "9da85745f108e3c6",
+    "en": {
+      "title": "Law Firm Marketing — G2A Marketing",
+      "description": "Marketing for law firms. Communications compliant with the Hungarian Bar Association’s advertising restrictions.",
+      "ogTitle": "Marketing for Law Firms"
+    },
+    "zh": {
+      "title": "面向律师事务所的营销服务 — G2A Marketing",
+      "description": "面向律师事务所和法律机构的营销服务。符合匈牙利律师协会广告限制规定的宣传。",
+      "ogTitle": "面向营销律师事务所"
+    }
+  },
+  "/iparagi/marketing-technologiai-cegeknek": {
+    "hash": "66bc794feb70f842",
+    "en": {
+      "title": "B2B tech marketing for SaaS and IT companies — G2A Marketing",
+      "description": "B2B SaaS and tech marketing: positioning, product-led growth, content marketing, ABM, lead generation.",
+      "ogTitle": "For marketing technology companies"
+    },
+    "zh": {
+      "title": "面向SaaS和IT企业的B2B技术营销 — G2A Marketing",
+      "description": "B2B SaaS 和科技营销：市场定位、产品驱动增长、内容营销、ABM、潜在客户开发。",
+      "ogTitle": "面向营销技术公司"
+    }
+  },
+  "/iparagi/marketing-onkormanyzati-projekteknek": {
+    "hash": "cc8816a4f8d5cabf",
+    "en": {
+      "title": "Local Government Marketing for EU Projects — G2A Marketing",
+      "description": "Communication for EU-funded municipal projects and public awareness campaigns. Proposals compliant with public procurement regulations.",
+      "ogTitle": "Marketing for Municipal Projects"
+    },
+    "zh": {
+      "title": "面向地方政府的欧盟项目营销 — G2A Marketing",
+      "description": "欧盟资助的地方政府项目的宣传及面向公众的宣传活动。符合公共采购要求的投标方案。",
+      "ogTitle": "地方政府项目的市场营销"
+    }
+  },
+  "/iparagi/marketing-b2b-cegeknek": {
+    "hash": "69733bc38e709c94",
+    "en": {
+      "title": "B2B Marketing for Manufacturers and Wholesalers — G2A Marketing",
+      "description": "B2B marketing strategy for manufacturers, wholesalers, and service providers. LinkedIn, ABM, long sales cycle.",
+      "ogTitle": "Marketing for B2B Companies"
+    },
+    "zh": {
+      "title": "面向制造商和批发商的B2B营销 — G2A Marketing",
+      "description": "面向制造商、批发商和服务提供商的B2B营销策略。涵盖LinkedIn、ABM及长周期交易。",
+      "ogTitle": "面向B2B企业的营销"
+    }
+  }
+}
