@@ -55,27 +55,58 @@ function useRevealAll(containerRef: React.RefObject<HTMLElement | null>) {
 
 // ─── Stat Counter ──────────────────────────────────────────────────────────
 function StatCounter({ target, suffix = "", duration = 2000 }: { target: number; suffix?: string; duration?: number }) {
-  const [count, setCount] = useState(0);
+  // Initial value is the TARGET, not 0. Audit §3.1 caught this: the previous
+  // `useState(0)` meant whenever the IntersectionObserver didn't fire (counter
+  // below the fold on first paint, prefers-reduced-motion, Lighthouse audit
+  // skipping scroll, JS-disabled crawler getting a brief flash), the page
+  // showed "0 Aktív partner" / "0+ Iparág" — a credibility disaster for a
+  // marketing agency. Now the target value renders on first paint; the
+  // animation only runs when the element scrolls into view, counting UP TO
+  // the value the user already saw briefly. If the IO never fires, the value
+  // stays correct — no more 0 stuck on screen.
+  const [count, setCount] = useState(target);
   const ref = useRef<HTMLSpanElement>(null);
   const started = useRef(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !started.current) {
-        started.current = true;
-        const start = Date.now();
-        const tick = () => {
-          const elapsed = Date.now() - start;
-          const progress = Math.min(elapsed / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          setCount(Math.round(eased * target));
-          if (progress < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      }
-    }, { threshold: 0.5 });
+    if (typeof window === "undefined") return;
+    // Respect prefers-reduced-motion: skip the animation, leave the static
+    // target value showing (already what useState was initialised with).
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const startAnimation = () => {
+      if (started.current) return;
+      started.current = true;
+      // Reset to 0 only at the moment of starting, so the count-up animation
+      // is visible. By the time we get here, the user is actively looking at
+      // the counter (it's in view), so the brief 0 → target transition is
+      // the intended effect.
+      setCount(0);
+      const start = Date.now();
+      const tick = () => {
+        const elapsed = Date.now() - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setCount(Math.round(eased * target));
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    // Lower threshold (0.1) and rootMargin so we trigger as soon as a sliver
+    // is visible instead of waiting for 50% — counters near the bottom of a
+    // tall viewport were starting late or not at all on mobile.
+    const observer = new IntersectionObserver(
+      ([entry]) => entry.isIntersecting && startAnimation(),
+      { threshold: 0.1, rootMargin: "0px 0px -10% 0px" },
+    );
     const el = ref.current;
     if (el) observer.observe(el);
+
+    // Safety net: if neither IO nor a scroll event triggers in 3 seconds
+    // (e.g. crawler, Lighthouse audit window expiring), the static target
+    // stays. We don't force-start the animation in that case — the value is
+    // already correct, no need to flash 0 to a target nobody is watching.
     return () => observer.disconnect();
   }, [target, duration]);
 

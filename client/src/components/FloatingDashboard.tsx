@@ -7,6 +7,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { TrendingUp, Sparkles, Bell, Activity } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
  * Collage of floating "dashboard" cards — KPI numbers, mini chart, AI badge, lead notification, progress ring.
@@ -16,6 +17,7 @@ import { TrendingUp, Sparkles, Bell, Activity } from "lucide-react";
  */
 export default function FloatingDashboard() {
   const reduce = useReducedMotion();
+  const { t } = useLanguage();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const tx = useMotionValue(0);
   const ty = useMotionValue(0);
@@ -85,14 +87,14 @@ export default function FloatingDashboard() {
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
             <TrendingUp size={14} style={{ color: "var(--g2a-brand-teal)" }} />
             <span style={{ fontSize: "0.65rem", letterSpacing: "0.08em", color: "var(--g2a-text-muted)", textTransform: "uppercase", fontFamily: "Geist Mono, monospace" }}>
-              Organic Traffic
+              {t("home.hero.dashboard.organicTraffic")}
             </span>
           </div>
           <div style={{ fontSize: "2.4rem", fontWeight: 700, color: "var(--g2a-text-primary)", lineHeight: 1, fontFamily: "Geist, sans-serif", letterSpacing: "-0.03em" }}>
             +340<span style={{ color: "var(--g2a-brand-teal)" }}>%</span>
           </div>
           <div style={{ fontSize: "0.7rem", color: "var(--g2a-text-secondary)", marginTop: 4 }}>
-            vs előző negyedév
+            {t("home.hero.dashboard.vsLastQuarter")}
           </div>
         </FloatCard>
 
@@ -105,7 +107,7 @@ export default function FloatingDashboard() {
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
             <Activity size={14} style={{ color: "var(--g2a-brand-teal)" }} />
             <span style={{ fontSize: "0.65rem", letterSpacing: "0.08em", color: "var(--g2a-text-muted)", textTransform: "uppercase", fontFamily: "Geist Mono, monospace" }}>
-              Conversions
+              {t("home.hero.dashboard.conversions")}
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "flex-end", gap: 6, height: 56 }}>
@@ -141,10 +143,10 @@ export default function FloatingDashboard() {
             </div>
             <div>
               <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--g2a-text-primary)", fontFamily: "Geist, sans-serif" }}>
-                AI Audit kész
+                {t("home.hero.dashboard.aiAuditReady")}
               </div>
               <div style={{ fontSize: "0.7rem", color: "var(--g2a-text-secondary)", fontFamily: "Geist Mono, monospace" }}>
-                12 javaslat generálva
+                {t("home.hero.dashboard.recommendationsGenerated")}
               </div>
             </div>
           </div>
@@ -159,15 +161,15 @@ export default function FloatingDashboard() {
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
             <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--g2a-brand-teal)", boxShadow: "0 0 8px #14B8A6" }} />
             <span style={{ fontSize: "0.65rem", letterSpacing: "0.08em", color: "var(--g2a-text-muted)", textTransform: "uppercase", fontFamily: "Geist Mono, monospace" }}>
-              Új lead
+              {t("home.hero.dashboard.newLead")}
             </span>
             <Bell size={11} style={{ color: "var(--g2a-text-muted)", marginLeft: "auto" }} />
           </div>
           <div style={{ fontSize: "0.8rem", color: "var(--g2a-text-primary)", fontFamily: "Geist, sans-serif", fontWeight: 500 }}>
-            Egészségügyi audit kérés
+            {t("home.hero.dashboard.healthcareAudit")}
           </div>
           <div style={{ fontSize: "0.7rem", color: "var(--g2a-text-muted)", marginTop: 2 }}>
-            5 perce
+            {t("home.hero.dashboard.timeAgo")}
           </div>
         </FloatCard>
 
@@ -181,7 +183,7 @@ export default function FloatingDashboard() {
             <ProgressRing value={98} />
             <div>
               <div style={{ fontSize: "0.65rem", letterSpacing: "0.08em", color: "var(--g2a-text-muted)", textTransform: "uppercase", fontFamily: "Geist Mono, monospace" }}>
-                Elégedettség
+                {t("home.hero.dashboard.satisfaction")}
               </div>
               <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--g2a-text-primary)", fontFamily: "Geist, sans-serif" }}>
                 98%
