@@ -8,11 +8,48 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { pickLocalized } from "@/../../shared/i18n";
 import ProcessIllustration from "@/components/illustrations/ProcessIllustration";
 import ServiceIcon from "@/components/illustrations/ServiceIcon";
+import SERVICE_CONFIGS_I18N from "@/data/serviceConfigs";
+
+/**
+ * Normalised card shape — covers both data sources (DB services + the
+ * hand-curated SERVICE_CONFIGS_I18N entries that live as orphan routes
+ * under /szolgaltatasok/{slug}). Audit §3.5 caught that the index only
+ * listed the 7 DB services; the other 8 service routes existed and were
+ * footer-linked but never surfaced here.
+ */
+type ServiceCard = {
+  slug: string;
+  title: string;
+  shortDescription: string;
+  number: string;
+};
 
 export default function ServicesPage() {
   const { t, lang } = useLanguage();
   const { data: services } = trpc.content.services.useQuery();
   const { data: pageSeo } = trpc.content.pageSeo.useQuery({ slug: "/szolgaltatasok" });
+
+  // Merge: DB-driven services first (preserve their numbering), then the
+  // SERVICE_CONFIGS_I18N entries by slug. Dedupe by slug — if a config
+  // entry has the same slug as a DB service, the DB version wins.
+  const dbCards: ServiceCard[] = (services || []).map((s) => ({
+    slug: s.slug,
+    title: pickLocalized(s, "title", lang) ?? s.title,
+    shortDescription: pickLocalized(s, "shortDescription", lang) ?? "",
+    number: s.number || "01",
+  }));
+  const dbSlugs = new Set(dbCards.map((c) => c.slug));
+  const configMap = SERVICE_CONFIGS_I18N[lang] ?? SERVICE_CONFIGS_I18N.hu;
+  const configCards: ServiceCard[] = Object.values(configMap)
+    .filter((c) => !dbSlugs.has(c.slug))
+    .map((c, i) => ({
+      slug: c.slug,
+      title: c.title,
+      shortDescription: c.subtitle,
+      // Continue numbering past the DB cards: 08, 09, 10…
+      number: String(dbCards.length + 1 + i).padStart(2, "0"),
+    }));
+  const allCards = [...dbCards, ...configCards];
 
   return (
     <>
@@ -39,22 +76,22 @@ export default function ServicesPage() {
         <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
           <div className="g2a-container">
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1.5rem" }}>
-              {(services || []).map(service => (
-                <Link key={service.id} href={`/szolgaltatasok/${service.slug}`} style={{ textDecoration: "none" }}>
+              {allCards.map(card => (
+                <Link key={card.slug} href={`/szolgaltatasok/${card.slug}`} style={{ textDecoration: "none" }}>
                   <div className="g2a-card" style={{ height: "100%", cursor: "pointer" }}>
                     <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "1.25rem" }}>
                       <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "48px", height: "48px", borderRadius: "10px", background: "rgba(20,184,166,0.1)" }}>
-                        <ServiceIcon slug={service.slug} size={26} />
+                        <ServiceIcon slug={card.slug} size={26} />
                       </span>
                       <span style={{ fontFamily: "Geist Mono, monospace", fontSize: "3rem", fontWeight: 700, color: "rgba(20,184,166,0.12)", lineHeight: 1 }}>
-                        {service.number || "01"}
+                        {card.number}
                       </span>
                     </div>
                     <h2 style={{ color: "var(--g2a-text-primary)", fontFamily: "Geist Mono, monospace", fontSize: "1.125rem", fontWeight: 600, marginBottom: "0.75rem" }}>
-                      {pickLocalized(service, "title", lang)}
+                      {card.title}
                     </h2>
                     <p style={{ color: "#888", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1.5rem" }}>
-                      {pickLocalized(service, "shortDescription", lang)}
+                      {card.shortDescription}
                     </p>
                     <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", color: "var(--g2a-brand-teal)", fontSize: "0.875rem", fontWeight: 500 }}>
                       {t("services.details")} <ArrowRight size={14} />

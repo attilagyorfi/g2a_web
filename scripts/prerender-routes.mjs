@@ -62,12 +62,9 @@ export const ROUTES = [
     description: "Kérj ingyenes marketing auditot. 24 órán belül felvesszük a kapcsolatot, 5-7 munkanapon belül átadjuk a részletes audit-riportot.",
     ogTitle: "Ingyenes marketing audit",
   },
-  {
-    path: "/marketing-audit",
-    title: "Marketing audit — G2A Marketing",
-    description: "Részletes marketing audit szolgáltatás. Weboldal, hirdetéskezelés, SEO, közösségi média, analitika — egy átfogó értékelésben.",
-    ogTitle: "Marketing audit",
-  },
+  // /marketing-audit removed — Vercel 301 redirects to /ingyenes-audit
+  // (audit §3.3 consolidation, was kulcsszó-kannibalizáció with the other
+  // free-audit landing page).
   {
     path: "/ingyenes-seo-audit",
     title: "Ingyenes SEO audit — G2A Marketing",

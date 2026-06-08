@@ -54,7 +54,9 @@ const ContactPage = lazy(() => import("./pages/ContactPage"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const AszfPage = lazy(() => import("./pages/AszfPage"));
 const HirlevelPage = lazy(() => import("./pages/HirlevelPage"));
-const MarketingAuditPage = lazy(() => import("./pages/MarketingAuditPage"));
+// MarketingAuditPage import removed — /marketing-audit is now a Vercel 301
+// to /ingyenes-audit (audit §3.3 consolidation). The component file is kept
+// so the previous content is recoverable, just no longer route-mounted.
 const KarrierPage = lazy(() => import("./pages/KarrierPage"));
 const RolunkPage = lazy(() => import("./pages/RolunkPage"));
 const NewServicePage = lazy(() => import("./pages/NewServicePage"));
@@ -115,7 +117,7 @@ function PublicRouter() {
       <Route path="/adatvedelmi-iranyelvek" component={PrivacyPage} />
       <Route path="/aszf" component={AszfPage} />
       <Route path="/hirlevel" component={HirlevelPage} />
-      <Route path="/marketing-audit" component={MarketingAuditPage} />
+      {/* /marketing-audit → /ingyenes-audit, handled by vercel.json 301 (audit §3.3) */}
       <Route path="/karrier" component={KarrierPage} />
       <Route path="/ingyenes-seo-audit" component={SeoAuditPage} />
       <Route path="/404" component={NotFound} />

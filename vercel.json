@@ -3,6 +3,23 @@
   "buildCommand": "pnpm run build:vercel",
   "outputDirectory": "dist/public",
   "framework": null,
+  "redirects": [
+    {
+      "source": "/marketing-audit",
+      "destination": "/ingyenes-audit",
+      "permanent": true
+    },
+    {
+      "source": "/en/marketing-audit",
+      "destination": "/en/ingyenes-audit",
+      "permanent": true
+    },
+    {
+      "source": "/zh/marketing-audit",
+      "destination": "/zh/ingyenes-audit",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "/api" },
     { "source": "/rss.xml", "destination": "/api" },
