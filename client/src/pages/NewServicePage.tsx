@@ -11,6 +11,7 @@ import { ArrowRight, CheckCircle, Phone, Mail, Clock, ChevronDown, ChevronUp } f
 import { useLanguage } from "@/contexts/LanguageContext";
 import ServiceHeroDemo, { hasServiceHeroDemo } from "@/components/service-demos/ServiceHeroDemo";
 import { getServiceConfig } from "@/data/serviceConfigs";
+import RelatedServices from "@/components/RelatedServices";
 
 
 type Props = {
@@ -305,6 +306,11 @@ export default function NewServicePage({ params }: Props) {
             </div>
           </div>
         </section>
+
+        {/* Pillar/sibling cross-links — audit §3.6 hierarchy signal.
+            Renders only for slugs in the RELATED_MAP (PPC/Meta cluster,
+            i18n cluster). All other service pages skip it cleanly. */}
+        <RelatedServices slug={params.slug} />
 
         <Footer />
       </div>

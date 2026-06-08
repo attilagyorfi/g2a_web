@@ -10,6 +10,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { pickLocalized } from "@/../../shared/i18n";
 import ServiceHeroDemo, { hasServiceHeroDemo } from "@/components/service-demos/ServiceHeroDemo";
 import { SkeletonHeroPage } from "@/components/Skeleton";
+import RelatedServices from "@/components/RelatedServices";
 
 export default function ServicePage() {
   const params = useParams<{ slug: string }>();
@@ -202,6 +203,11 @@ export default function ServicePage() {
             </div>
           </div>
         </section>
+
+        {/* Pillar/sibling cross-links — only renders for slugs listed in the
+            RELATED_MAP (currently hirdeteskezeles + nemzetkozi-marketing
+            clusters per audit §3.6). */}
+        <RelatedServices slug={params.slug || ""} />
       </main>
       <Footer />
     </>
