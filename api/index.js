@@ -1925,17 +1925,28 @@ function markdownToHtml(raw) {
 function inlineMd(s) {
   return s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>").replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, "<em>$1</em>").replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>').replace(/`([^`]+)`/g, "$1");
 }
+function languageLock(lang) {
+  switch (lang) {
+    case "zh":
+      return "\u26A0 \u5173\u952E\u8BED\u8A00\u8981\u6C42 \u26A0\n\u4F60\u5FC5\u987B\u7528\u7B80\u4F53\u4E2D\u6587\u64B0\u5199\u6240\u6709\u8F93\u51FA\u5185\u5BB9\u3002title\u3001excerpt\u3001content\u3001metaTitle\u3001metaDescription \u5B57\u6BB5\u4E2D\u7684\u6BCF\u4E00\u4E2A\u5B57\u90FD\u5FC5\u987B\u662F\u7B80\u4F53\u4E2D\u6587\u3002\u7EDD\u5BF9\u4E0D\u80FD\u4F7F\u7528\u5308\u7259\u5229\u8BED\u3001\u82F1\u8BED\u6216\u4EFB\u4F55\u5176\u4ED6\u8BED\u8A00\u3002\u5373\u4F7F\u4E0B\u9762\u7684\u6307\u4EE4\u662F\u5308\u7259\u5229\u8BED\u5199\u7684\uFF0C\u4F60\u7684\u56DE\u7B54\u4E5F\u5FC5\u987B\u5B8C\u5168\u662F\u7B80\u4F53\u4E2D\u6587\u3002\n";
+    case "en":
+      return "\u26A0 CRITICAL LANGUAGE REQUIREMENT \u26A0\nYou MUST write ALL output in English. Every field (title, excerpt, content, metaTitle, metaDescription) must be in English only. Do NOT use Hungarian or any other language. Even though the instructions below are in Hungarian, your entire response must be in English.\n";
+    case "hu":
+    default:
+      return "";
+  }
+}
 async function generateBlogDraft(input) {
   const lang = input.lang ?? "hu";
-  const wordCount = input.wordCount ?? 600;
+  const wordCount = input.wordCount ?? 1700;
   const tone = input.tone ?? "professional";
   const audience = input.audience || "kis- \xE9s k\xF6z\xE9pv\xE1llalati d\xF6nt\xE9shoz\xF3k";
   const { loadBrandVoice: loadBrandVoice2, renderBrandContext: renderBrandContext2 } = await Promise.resolve().then(() => (init_brandVoice(), brandVoice_exports));
   const brandContext = renderBrandContext2(await loadBrandVoice2(), "blog");
-  const baseSystem = `Te a G2A Marketing p\xE9csi B2B marketing \xFCgyn\xF6ks\xE9g blog-szerz\u0151je vagy. A G2A magyar marketing tan\xE1csad\xE1s, SEO, k\xF6z\xF6ss\xE9gi m\xE9dia, weboldal-fejleszt\xE9s \xE9s AI-megold\xE1sok ter\xFClet\xE9n ad szolg\xE1ltat\xE1st. Mindig a l\xE1togat\xF3t sz\xF3l\xEDtjuk meg te-form\xE1ban (NEM \xF6n\xF6z\xFCnk).
+  const baseSystem = `${languageLock(lang)}Te a G2A Marketing p\xE9csi B2B marketing \xFCgyn\xF6ks\xE9g blog-szerz\u0151je vagy. A G2A magyar marketing tan\xE1csad\xE1s, SEO, k\xF6z\xF6ss\xE9gi m\xE9dia, weboldal-fejleszt\xE9s \xE9s AI-megold\xE1sok ter\xFClet\xE9n ad szolg\xE1ltat\xE1st. Mindig a l\xE1togat\xF3t sz\xF3l\xEDtjuk meg te-form\xE1ban (NEM \xF6n\xF6z\xFCnk).
 
 Szab\xE1lyok:
-- A teljes v\xE1lasz ${LANG_NAMES[lang]} nyelven.
+- A teljes v\xE1lasz ${LANG_NAMES[lang]} nyelven. ${lang === "zh" ? "(\u5FC5\u987B\u662F\u7B80\u4F53\u4E2D\u6587 \u2014 Simplified Chinese.)" : lang === "en" ? "(English only.)" : ""}
 - Hangnem: ${tone}.
 - C\xE9l olvas\xF3: ${audience}.
 
@@ -1955,7 +1966,7 @@ K\xF6telez\u0151 strukt\xFAra (pontosan \xEDgy n\xE9zzen ki, ne m\xE1sk\xE9pp):
 
 - KIZ\xC1R\xD3LAG ezek a tagek engedettek: <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <a href="...">.
 - A H1-et NE add hozz\xE1 \u2014 azt a cikk \`title\` mez\u0151je adja.
-- 4-7 <h2> alfejezet, ~${wordCount} sz\xF3 \xF6ssz.
+- \u26A0 TERJEDELEM: 8-12 <h2> alfejezet, ~${wordCount} sz\xF3 \xF6ssz (kb. 7-9 perc olvas\xE1si id\u0151). Ez k\xF6telez\u0151 minimum \u2014 NE adj r\xF6videbb cikket. Minden alfejezetben legyen 2-4 \xE9rdemi bekezd\xE9s \xE9s/vagy lista, ne csup\xE1n egy mondat. Hozz konkr\xE9t p\xE9ld\xE1kat, mini-eseteket, l\xE9p\xE9s-list\xE1kat, gyakori buktat\xF3kat \xE9s cselekv\xE9si aj\xE1nl\xE1sokat.
 - Minden bekezd\xE9st <p>...</p> tag fogjon k\xF6zre. Soron bel\xFCli kiemel\xE9st <strong> vagy <em> tag adjon, NEM ** vagy *.
 - "title" SEO-bar\xE1t, max 65 karakter, az olvas\xF3 haszn\xE1t \xEDg\xE9ri.
 - "excerpt" 1-2 mondat (max 200 karakter), a teljes cikk l\xE9nyege.
@@ -1973,7 +1984,7 @@ ${baseSystem}` : baseSystem;
       { role: "system", content: system },
       { role: "user", content: `T\xE9ma: ${input.topic}` }
     ],
-    { temperature: 0.7, maxTokens: 2500, jsonMode: true }
+    { temperature: 0.7, maxTokens: 6e3, jsonMode: true }
   );
   let parsed;
   try {
@@ -2038,11 +2049,13 @@ var SIZE_MAP = {
   "1792x1024": "1536x1024",
   "1024x1792": "1024x1536"
 };
+var NO_TEXT_SUFFIX = " IMPORTANT: the image must contain NO text, NO letters, NO numbers, NO words, NO captions, NO labels, NO logos, NO typography, NO writing of any kind anywhere in the image. No signs, no posters, no UI text, no watermarks. Pure visual composition only.";
 async function generateImage(input) {
   const key = process.env.OPENAI_API_KEY;
   if (!key) throw new Error("OPENAI_API_KEY not set \u2014 image generation disabled");
   const size = SIZE_MAP[input.size ?? "1792x1024"];
   const quality = input.quality === "hd" ? "high" : "medium";
+  const finalPrompt = `${input.prompt}${NO_TEXT_SUFFIX}`;
   const res = await fetch(OPENAI_IMAGES_ENDPOINT, {
     method: "POST",
     headers: {
@@ -2051,7 +2064,7 @@ async function generateImage(input) {
     },
     body: JSON.stringify({
       model: IMAGE_MODEL,
-      prompt: input.prompt,
+      prompt: finalPrompt,
       n: 1,
       size,
       quality
@@ -3632,7 +3645,7 @@ var adminRouter = router({
     generateBlogDraft: adminProcedure2.input(z2.object({
       topic: z2.string().min(3),
       audience: z2.string().optional(),
-      wordCount: z2.number().int().min(200).max(2e3).optional(),
+      wordCount: z2.number().int().min(200).max(3e3).optional(),
       lang: z2.enum(["hu", "en", "zh"]).optional(),
       tone: z2.enum(["professional", "conversational", "technical"]).optional()
     })).mutation(({ input }) => generateBlogDraft(input)),
@@ -3643,7 +3656,7 @@ var adminRouter = router({
     generateMultilangBlogDraft: adminProcedure2.input(z2.object({
       topic: z2.string().min(3),
       audience: z2.string().optional(),
-      wordCount: z2.number().int().min(200).max(2e3).optional(),
+      wordCount: z2.number().int().min(200).max(3e3).optional(),
       tone: z2.enum(["professional", "conversational", "technical"]).optional()
     })).mutation(({ input }) => generateMultilangBlogDraft(input)),
     generateSeoMeta: adminProcedure2.input(z2.object({

@@ -216,7 +216,7 @@ export default function AdminPostEdit() {
               </button>
             </div>
             <p style={{ color: "#888", fontSize: "0.8rem", marginBottom: "1.25rem", lineHeight: 1.5 }}>
-              Add meg a cikk témáját — az OpenAI ({aiModel}) generál címet, kivonatot, ~600 szavas HTML tartalmat és SEO meta-t mindhárom nyelven (HU + EN + ZH). A meglévő tartalom felülíródik.
+              Add meg a cikk témáját — az OpenAI ({aiModel}) generál címet, kivonatot, ~1700 szavas (7-9 perc olvasási idejű) HTML tartalmat és SEO meta-t mindhárom nyelven (HU + EN + ZH). A meglévő tartalom felülíródik.
             </p>
             <div style={{ marginBottom: "1rem" }}>
               <label style={labelStyle}>Téma *</label>

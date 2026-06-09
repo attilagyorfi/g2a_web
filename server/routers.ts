@@ -943,7 +943,7 @@ const adminRouter = router({
       .input(z.object({
         topic: z.string().min(3),
         audience: z.string().optional(),
-        wordCount: z.number().int().min(200).max(2000).optional(),
+        wordCount: z.number().int().min(200).max(3000).optional(),
         lang: z.enum(["hu", "en", "zh"]).optional(),
         tone: z.enum(["professional", "conversational", "technical"]).optional(),
       }))
@@ -956,7 +956,7 @@ const adminRouter = router({
       .input(z.object({
         topic: z.string().min(3),
         audience: z.string().optional(),
-        wordCount: z.number().int().min(200).max(2000).optional(),
+        wordCount: z.number().int().min(200).max(3000).optional(),
         tone: z.enum(["professional", "conversational", "technical"]).optional(),
       }))
       .mutation(({ input }) => generateMultilangBlogDraft(input)),

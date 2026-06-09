@@ -175,9 +175,32 @@ function inlineMd(s: string): string {
     .replace(/`([^`]+)`/g, "$1");
 }
 
+/**
+ * Lock the model into the requested output language. This is prepended
+ * BEFORE any other instructions so it can't be drowned out by the
+ * Hungarian boilerplate further down. We've seen the model regress to
+ * Hungarian when asked for Chinese — a strong, native-language opener
+ * fixes that reliably.
+ */
+function languageLock(lang: Lang): string {
+  switch (lang) {
+    case "zh":
+      return "⚠ 关键语言要求 ⚠\n你必须用简体中文撰写所有输出内容。title、excerpt、content、metaTitle、metaDescription 字段中的每一个字都必须是简体中文。绝对不能使用匈牙利语、英语或任何其他语言。即使下面的指令是匈牙利语写的，你的回答也必须完全是简体中文。\n";
+    case "en":
+      return "⚠ CRITICAL LANGUAGE REQUIREMENT ⚠\nYou MUST write ALL output in English. Every field (title, excerpt, content, metaTitle, metaDescription) must be in English only. Do NOT use Hungarian or any other language. Even though the instructions below are in Hungarian, your entire response must be in English.\n";
+    case "hu":
+    default:
+      return "";
+  }
+}
+
 export async function generateBlogDraft(input: BlogDraftInput): Promise<BlogDraft> {
   const lang = input.lang ?? "hu";
-  const wordCount = input.wordCount ?? 600;
+  // Target reading time ~7-9 min. Hungarian/English ≈ 220 wpm, so a
+  // typical post lands around 1500-2000 words. Chinese is character-
+  // based (≈ 300 chars/min), so we ask for the same "word count" target
+  // and let the model treat it as character count for zh.
+  const wordCount = input.wordCount ?? 1700;
   const tone = input.tone ?? "professional";
   const audience = input.audience || "kis- és középvállalati döntéshozók";
 
@@ -189,10 +212,10 @@ export async function generateBlogDraft(input: BlogDraftInput): Promise<BlogDraf
   const { loadBrandVoice, renderBrandContext } = await import("./brandVoice");
   const brandContext = renderBrandContext(await loadBrandVoice(), "blog");
 
-  const baseSystem = `Te a G2A Marketing pécsi B2B marketing ügynökség blog-szerzője vagy. A G2A magyar marketing tanácsadás, SEO, közösségi média, weboldal-fejlesztés és AI-megoldások területén ad szolgáltatást. Mindig a látogatót szólítjuk meg te-formában (NEM önözünk).
+  const baseSystem = `${languageLock(lang)}Te a G2A Marketing pécsi B2B marketing ügynökség blog-szerzője vagy. A G2A magyar marketing tanácsadás, SEO, közösségi média, weboldal-fejlesztés és AI-megoldások területén ad szolgáltatást. Mindig a látogatót szólítjuk meg te-formában (NEM önözünk).
 
 Szabályok:
-- A teljes válasz ${LANG_NAMES[lang]} nyelven.
+- A teljes válasz ${LANG_NAMES[lang]} nyelven. ${lang === "zh" ? "(必须是简体中文 — Simplified Chinese.)" : lang === "en" ? "(English only.)" : ""}
 - Hangnem: ${tone}.
 - Cél olvasó: ${audience}.
 
@@ -212,7 +235,7 @@ Kötelező struktúra (pontosan így nézzen ki, ne másképp):
 
 - KIZÁRÓLAG ezek a tagek engedettek: <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <a href="...">.
 - A H1-et NE add hozzá — azt a cikk \`title\` mezője adja.
-- 4-7 <h2> alfejezet, ~${wordCount} szó össz.
+- ⚠ TERJEDELEM: 8-12 <h2> alfejezet, ~${wordCount} szó össz (kb. 7-9 perc olvasási idő). Ez kötelező minimum — NE adj rövidebb cikket. Minden alfejezetben legyen 2-4 érdemi bekezdés és/vagy lista, ne csupán egy mondat. Hozz konkrét példákat, mini-eseteket, lépés-listákat, gyakori buktatókat és cselekvési ajánlásokat.
 - Minden bekezdést <p>...</p> tag fogjon közre. Soron belüli kiemelést <strong> vagy <em> tag adjon, NEM ** vagy *.
 - "title" SEO-barát, max 65 karakter, az olvasó hasznát ígéri.
 - "excerpt" 1-2 mondat (max 200 karakter), a teljes cikk lényege.
@@ -225,12 +248,16 @@ A "content" érték HTML stringként szerepeljen (escape-elve a JSON-ban).`;
 
   const system = brandContext ? `${brandContext}\n\n${baseSystem}` : baseSystem;
 
+  // maxTokens budget for a ~1700-word HTML post: words → ~1.3-1.5 tokens
+  // each (Hungarian/English), plus HTML markup overhead (~+15%) and the
+  // JSON envelope. Chinese is tokenised per character at ~1 token each.
+  // 6000 tokens leaves comfortable headroom for the largest case.
   const raw = await chat(
     [
       { role: "system", content: system },
       { role: "user", content: `Téma: ${input.topic}` },
     ],
-    { temperature: 0.7, maxTokens: 2500, jsonMode: true },
+    { temperature: 0.7, maxTokens: 6000, jsonMode: true },
   );
 
   let parsed: BlogDraft;
@@ -392,12 +419,25 @@ const SIZE_MAP: Record<NonNullable<GenerateImageInput["size"]>, string> = {
  * Returns the PNG bytes directly. Callers can pipe them into Cloudinary
  * or save them however they want — no separate download step needed.
  */
+/**
+ * Always-appended suffix that suppresses text/typography in the output.
+ * gpt-image-1 (and DALL·E before it) loves to drop logos, captions, or
+ * heading-style text into hero images even when the prompt doesn't ask
+ * for any — bad for editorial blog/feature images, where any embedded
+ * text reads as a watermark or distracts from the headline overlay we
+ * compose separately. Repeating the instruction multiple ways is the
+ * most reliable lever; a single "no text" sometimes gets ignored.
+ */
+const NO_TEXT_SUFFIX =
+  " IMPORTANT: the image must contain NO text, NO letters, NO numbers, NO words, NO captions, NO labels, NO logos, NO typography, NO writing of any kind anywhere in the image. No signs, no posters, no UI text, no watermarks. Pure visual composition only.";
+
 export async function generateImage(input: GenerateImageInput): Promise<GenerateImageResult> {
   const key = process.env.OPENAI_API_KEY;
   if (!key) throw new Error("OPENAI_API_KEY not set — image generation disabled");
 
   const size = SIZE_MAP[input.size ?? "1792x1024"];
   const quality = input.quality === "hd" ? "high" : "medium";
+  const finalPrompt = `${input.prompt}${NO_TEXT_SUFFIX}`;
 
   const res = await fetch(OPENAI_IMAGES_ENDPOINT, {
     method: "POST",
@@ -407,7 +447,7 @@ export async function generateImage(input: GenerateImageInput): Promise<Generate
     },
     body: JSON.stringify({
       model: IMAGE_MODEL,
-      prompt: input.prompt,
+      prompt: finalPrompt,
       n: 1,
       size,
       quality,
