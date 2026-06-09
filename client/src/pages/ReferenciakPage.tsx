@@ -11,6 +11,7 @@ import { ArrowRight, TrendingUp, Target, Globe, CheckCircle, ExternalLink, Faceb
 import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { pickLocalized } from "@/../../shared/i18n";
+import { translateCaseStudyTag } from "@/lib/caseStudyTags";
 
 const INDUSTRY_LABELS: Record<string, string> = {
   egeszsegugy: "Egészségügy",
@@ -384,7 +385,7 @@ export default function ReferenciakPage() {
                                 fontFamily: "Geist Mono, monospace",
                                 letterSpacing: "0.02em",
                               }}>
-                                {tag}
+                                {translateCaseStudyTag(tag, lang)}
                               </span>
                             ))}
                           </div>

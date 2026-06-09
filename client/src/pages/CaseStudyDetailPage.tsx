@@ -10,6 +10,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { pickLocalized } from "@/../../shared/i18n";
+import { translateCaseStudyTag } from "@/lib/caseStudyTags";
 
 const INDUSTRY_LABELS: Record<string, string> = {
   egeszsegugy: "Egészségügy",
@@ -363,7 +364,7 @@ export default function CaseStudyDetailPage() {
                         fontFamily: "Geist Mono, monospace",
                         letterSpacing: "0.02em",
                       }}>
-                        {tag}
+                        {translateCaseStudyTag(tag, lang)}
                       </span>
                     ))}
                   </motion.div>
