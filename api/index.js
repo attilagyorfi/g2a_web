@@ -1850,6 +1850,7 @@ function isAiConfigured() {
 function getAiModel() {
   return process.env.OPENAI_MODEL || "gpt-4o-mini";
 }
+var DEFAULT_CHAT_TIMEOUT_MS = 5e4;
 async function chat(messages, opts = {}) {
   const key = process.env.OPENAI_API_KEY;
   if (!key) throw new Error("OPENAI_API_KEY not set \u2014 AI features are disabled");
@@ -1860,14 +1861,28 @@ async function chat(messages, opts = {}) {
     max_tokens: opts.maxTokens ?? 2e3
   };
   if (opts.jsonMode) body.response_format = { type: "json_object" };
-  const res = await fetch(ENDPOINT, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(body)
-  });
+  const timeoutMs = opts.timeoutMs ?? DEFAULT_CHAT_TIMEOUT_MS;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  let res;
+  try {
+    res = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    });
+  } catch (err) {
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new Error(`OpenAI timeout after ${timeoutMs}ms \u2014 try a shorter prompt or smaller maxTokens`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
   if (!res.ok) {
     const detail = await res.text().catch(() => "");
     throw new Error(`OpenAI ${res.status}: ${detail.slice(0, 300) || res.statusText}`);

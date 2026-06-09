@@ -35,7 +35,19 @@ type ChatOptions = {
   maxTokens?: number;
   /** Force JSON mode — model must return parseable JSON. */
   jsonMode?: boolean;
+  /** Per-call timeout in ms. Default 50_000 (50s). */
+  timeoutMs?: number;
 };
+
+/**
+ * Per-call hard ceiling. The multi-pass blog generator parallels six
+ * OpenAI calls and the Vercel function has a 300s budget — but a
+ * single elephant tail-end request can still hog the function until
+ * the entire budget is gone. 50s per call leaves headroom for retry
+ * + the second phase to start, while the slowest acceptable response
+ * we've seen empirically is ~45s.
+ */
+const DEFAULT_CHAT_TIMEOUT_MS = 50_000;
 
 async function chat(messages: ChatMessage[], opts: ChatOptions = {}): Promise<string> {
   const key = process.env.OPENAI_API_KEY;
@@ -49,14 +61,33 @@ async function chat(messages: ChatMessage[], opts: ChatOptions = {}): Promise<st
   };
   if (opts.jsonMode) body.response_format = { type: "json_object" };
 
-  const res = await fetch(ENDPOINT, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
+  // AbortController-driven per-call timeout so a single stuck request
+  // can't drain the Vercel function budget. Using AbortSignal.timeout
+  // would be cleaner but it's flaky on the Node.js 18 baseline; manual
+  // setTimeout + abort is portable everywhere.
+  const timeoutMs = opts.timeoutMs ?? DEFAULT_CHAT_TIMEOUT_MS;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  let res: Response;
+  try {
+    res = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+  } catch (err) {
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new Error(`OpenAI timeout after ${timeoutMs}ms — try a shorter prompt or smaller maxTokens`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
 
   if (!res.ok) {
     const detail = await res.text().catch(() => "");
