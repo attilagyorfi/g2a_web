@@ -185,6 +185,27 @@ export function articleSchema(opts: {
   authorName?: string;
   /** Defaults to "BlogPosting"; pass "TechArticle" for technical posts. */
   type?: "BlogPosting" | "TechArticle" | "Article";
+  /**
+   * BCP-47 language tag the article is written in ("hu", "en", "zh").
+   * Defaults to "hu". Google uses this to confirm the page-language
+   * signal — must match the <html lang> and the actual content.
+   */
+  inLanguage?: "hu" | "en" | "zh";
+  /**
+   * Word count of the article body. Lifts the chance of being
+   * surfaced for "long-form" article rich-result patterns and helps
+   * estimated reading time in some SERP treatments.
+   */
+  wordCount?: number;
+  /**
+   * Plain-text body of the article (HTML tags stripped). Pass when
+   * the article content is fully available client-side; helps Google
+   * extract the article body without re-rendering. Truncated at 5000
+   * chars to keep the JSON envelope tight.
+   */
+  articleBody?: string;
+  /** Optional keyword string (comma-separated). */
+  keywords?: string;
 }) {
   const item: Record<string, unknown> = {
     "@type": opts.type ?? "BlogPosting",
@@ -193,7 +214,7 @@ export function articleSchema(opts: {
     url: opts.url,
     mainEntityOfPage: opts.url,
     publisher: { "@id": ORG_ID },
-    inLanguage: "hu",
+    inLanguage: opts.inLanguage ?? "hu",
   };
   if (opts.imageUrl) item.image = opts.imageUrl;
   if (opts.publishedAt) item.datePublished = opts.publishedAt;
@@ -203,6 +224,9 @@ export function articleSchema(opts: {
   } else {
     item.author = { "@id": ORG_ID };
   }
+  if (opts.wordCount && opts.wordCount > 0) item.wordCount = opts.wordCount;
+  if (opts.articleBody) item.articleBody = opts.articleBody.slice(0, 5000);
+  if (opts.keywords) item.keywords = opts.keywords;
   return item;
 }
 

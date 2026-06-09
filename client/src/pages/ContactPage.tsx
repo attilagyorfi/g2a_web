@@ -357,6 +357,62 @@ export default function ContactPage() {
             </div>
           </div>
         </section>
+
+        {/* Google Maps embed — audit P2. Uses the no-key public embed
+            URL with a textual query (street + city) so the pin is
+            accurate even if the GPS coordinates in jsonLd.ts drift.
+            loading="lazy" defers iframe fetch until the user scrolls
+            near it — keeps the page's initial JS budget unaffected. */}
+        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg)", paddingTop: 0 }}>
+          <div className="g2a-container">
+            <h2 style={{ color: "var(--g2a-text-primary)", fontFamily: "Geist Mono, monospace", fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.75rem" }}>
+              {t("contact.mapTitle")}
+            </h2>
+            <p style={{ color: "var(--g2a-text-secondary)", fontSize: "0.95rem", marginBottom: "1.5rem", maxWidth: 640 }}>
+              {t("contact.mapSubtitle")}
+            </p>
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                aspectRatio: "16 / 7",
+                minHeight: 320,
+                borderRadius: 12,
+                overflow: "hidden",
+                border: "1px solid var(--g2a-border)",
+                background: "var(--g2a-bg-2)",
+              }}
+            >
+              <iframe
+                title={t("contact.mapTitle")}
+                src="https://maps.google.com/maps?q=P%C3%A9cs%2C%20P%C3%A9ter%20utca%201&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0, position: "absolute", inset: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+            </div>
+            <div style={{ marginTop: "1rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+              <a
+                href="https://www.google.com/maps/dir/?api=1&destination=P%C3%A9cs%20P%C3%A9ter%20utca%201"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  padding: "0.5rem 1rem", borderRadius: 6,
+                  background: "rgba(20,184,166,0.12)", border: "1px solid rgba(20,184,166,0.3)",
+                  color: "var(--g2a-brand-teal)", textDecoration: "none",
+                  fontFamily: "Geist Mono, monospace", fontSize: "0.8rem", fontWeight: 600,
+                }}
+              >
+                <MapPin size={14} />
+                {t("contact.mapGetDirections")}
+              </a>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </>

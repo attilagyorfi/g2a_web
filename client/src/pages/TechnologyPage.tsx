@@ -56,6 +56,44 @@ export default function TechnologyPage() {
             </p>
           </div>
         </section>
+        {/* Methodology / "why this stack" block — audit P2.
+            Previously the page jumped straight from a one-paragraph
+            intro to a flat tool grid, which read as a shopping list.
+            This narrative bridge tells the visitor what the stack is
+            actually for and how we pick tools. */}
+        <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg)", paddingTop: 0 }}>
+          <div className="g2a-container">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2rem", maxWidth: 1100 }}>
+              <div>
+                <h3 style={{ color: "var(--g2a-text-primary)", fontFamily: "Geist Mono, monospace", fontSize: "1rem", fontWeight: 600, marginBottom: "0.75rem" }}>
+                  <span style={{ color: "var(--g2a-brand-teal)" }}>01 </span>
+                  {t("technology.methodology.fitTitle")}
+                </h3>
+                <p style={{ color: "var(--g2a-text-secondary)", fontSize: "0.95rem", lineHeight: 1.65 }}>
+                  {t("technology.methodology.fitDesc")}
+                </p>
+              </div>
+              <div>
+                <h3 style={{ color: "var(--g2a-text-primary)", fontFamily: "Geist Mono, monospace", fontSize: "1rem", fontWeight: 600, marginBottom: "0.75rem" }}>
+                  <span style={{ color: "var(--g2a-brand-teal)" }}>02 </span>
+                  {t("technology.methodology.dataTitle")}
+                </h3>
+                <p style={{ color: "var(--g2a-text-secondary)", fontSize: "0.95rem", lineHeight: 1.65 }}>
+                  {t("technology.methodology.dataDesc")}
+                </p>
+              </div>
+              <div>
+                <h3 style={{ color: "var(--g2a-text-primary)", fontFamily: "Geist Mono, monospace", fontSize: "1rem", fontWeight: 600, marginBottom: "0.75rem" }}>
+                  <span style={{ color: "var(--g2a-brand-teal)" }}>03 </span>
+                  {t("technology.methodology.ownTitle")}
+                </h3>
+                <p style={{ color: "var(--g2a-text-secondary)", fontSize: "0.95rem", lineHeight: 1.65 }}>
+                  {t("technology.methodology.ownDesc")}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
         <section className="g2a-section" style={{ backgroundColor: "var(--g2a-bg-2)" }}>
           <div className="g2a-container">
             {Object.entries(grouped).map(([cat, techs]) => (

@@ -15,11 +15,31 @@ import { pickLocalized } from "@/../../shared/i18n";
 
 const ACCENT = "#14B8A6";
 
-/** Estimate reading time in minutes from raw HTML/text — assumes 200 wpm. */
-function estimateReadingTime(html: string): number {
-  const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-  const words = text.split(" ").filter(Boolean).length;
-  return Math.max(1, Math.round(words / 200));
+/** Strip HTML tags and collapse whitespace — shared helper for the
+ *  word-count, reading-time, and JSON-LD articleBody computations. */
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+/**
+ * Word count by locale. Hungarian/English split on whitespace,
+ * Chinese counts CJK characters since there's no word delimiter
+ * (estimated ratio ≈ 1 character = 1 "word" unit for SERP purposes).
+ */
+function countWords(text: string, lang: "hu" | "en" | "zh"): number {
+  if (!text) return 0;
+  if (lang === "zh") {
+    const cjk = text.match(/[一-鿿]/g);
+    return cjk ? cjk.length : 0;
+  }
+  return text.split(/\s+/).filter(Boolean).length;
+}
+
+/** Estimate reading time in minutes — 220 wpm for HU/EN, 300 cpm for ZH. */
+function estimateReadingTime(html: string, lang: "hu" | "en" | "zh" = "hu"): number {
+  const words = countWords(stripHtml(html), lang);
+  const rate = lang === "zh" ? 300 : 220;
+  return Math.max(1, Math.round(words / rate));
 }
 
 export default function BlogPostPage() {
@@ -72,7 +92,11 @@ export default function BlogPostPage() {
   const content = pickLocalized(post, "content", lang) || post.content;
   const metaTitle = pickLocalized(post, "metaTitle", lang);
   const metaDesc = pickLocalized(post, "metaDescription", lang);
-  const readMin = estimateReadingTime(content || "");
+  // Computed once for both the reading-time chip and the JSON-LD
+  // wordCount field — avoids stripping the HTML twice.
+  const plainText = stripHtml(content || "");
+  const wordCount = countWords(plainText, lang);
+  const readMin = estimateReadingTime(content || "", lang);
 
   return (
     <>
@@ -99,6 +123,14 @@ export default function BlogPostPage() {
               ? new Date(post.updatedAt).toISOString()
               : undefined,
             authorName: post.authorName || undefined,
+            // §3.9b — locale-aware structured data. inLanguage must
+            // match the actual content + <html lang>; wordCount lifts
+            // the "long-form article" Rich Result signal; articleBody
+            // (trimmed to 5000 chars by the schema helper) gives Google
+            // a clean text extraction without re-rendering.
+            inLanguage: lang,
+            wordCount: wordCount > 0 ? wordCount : undefined,
+            articleBody: plainText || undefined,
           }),
         ]}
       />
