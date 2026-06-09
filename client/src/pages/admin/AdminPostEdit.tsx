@@ -65,6 +65,12 @@ export default function AdminPostEdit() {
   const [showDraftModal, setShowDraftModal] = useState(false);
   const [draftTopic, setDraftTopic] = useState("");
   const [draftTone, setDraftTone] = useState<"professional" | "conversational" | "technical">("professional");
+  // Extra outputs from the two-pass draft generator — surfaced as
+  // separate UI panels rather than dumped into the content field.
+  // Per-locale so each language tab gets its own alternatives.
+  const [draftAltTitles, setDraftAltTitles] = useState<{ hu: string[]; en: string[]; zh: string[] }>({ hu: [], en: [], zh: [] });
+  const [draftEditorNotes, setDraftEditorNotes] = useState<{ hu: string[]; en: string[]; zh: string[] }>({ hu: [], en: [], zh: [] });
+  const [showEditorNotes, setShowEditorNotes] = useState(false);
 
   const aiConfigured = aiStatus.data?.configured ?? false;
   const aiModel = aiStatus.data?.model ?? "";
@@ -101,9 +107,22 @@ export default function AdminPostEdit() {
         // version and the same slug is used across all three locales.
         slug: prev.slug || draft.hu.title.toLowerCase().replace(/[áàâä]/g, "a").replace(/[éèêë]/g, "e").replace(/[íìîï]/g, "i").replace(/[óòôöő]/g, "o").replace(/[úùûüű]/g, "u").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80),
       }));
+      // Stash the extras (alt titles + editor notes) per locale so the
+      // admin can pick a different title or peek at what the editor
+      // pass changed.
+      setDraftAltTitles({
+        hu: draft.hu.alternativeTitles ?? [],
+        en: draft.en.alternativeTitles ?? [],
+        zh: draft.zh.alternativeTitles ?? [],
+      });
+      setDraftEditorNotes({
+        hu: draft.hu.editorNotes ?? [],
+        en: draft.en.editorNotes ?? [],
+        zh: draft.zh.editorNotes ?? [],
+      });
       setShowDraftModal(false);
       setDraftTopic("");
-      toast.success(`AI blog draft generálva HU + EN + ZH nyelven (${aiModel})`);
+      toast.success(`AI blog draft generálva HU + EN + ZH nyelven, szerkesztői pass alkalmazva (${aiModel})`);
     } catch (err) {
       toast.error(parseFormError(err, "AI draft generálás sikertelen"));
     }
@@ -216,7 +235,7 @@ export default function AdminPostEdit() {
               </button>
             </div>
             <p style={{ color: "#888", fontSize: "0.8rem", marginBottom: "1.25rem", lineHeight: 1.5 }}>
-              Add meg a cikk témáját — az OpenAI ({aiModel}) generál címet, kivonatot, ~1700 szavas (7-9 perc olvasási idejű) HTML tartalmat és SEO meta-t mindhárom nyelven (HU + EN + ZH). A meglévő tartalom felülíródik.
+              Add meg a cikk témáját — két-fázisú pipeline fut le ({aiModel}): először strukturált draft, majd szerkesztői pass, ami az AI-szagú mondatokat átírja és a stílust HubSpot-szerű B2B hangra polírozza. Output: ~900-1200 szavas HTML cikk + 5 cím-javaslat + szerkesztői megjegyzések, mindhárom nyelven (HU + EN + ZH). 3 nyelv × 2 pass ≈ 20-40 mp. A meglévő tartalom felülíródik.
             </p>
             <div style={{ marginBottom: "1rem" }}>
               <label style={labelStyle}>Téma *</label>
@@ -279,6 +298,58 @@ export default function AdminPostEdit() {
                 placeholderEn="Post title"
                 placeholderZh="文章标题"
               />
+              {/* Alternative title suggestions from the AI generator —
+                  one button per language tab. Clicking promotes the
+                  suggestion into the matching title field. */}
+              {(draftAltTitles.hu.length > 0 || draftAltTitles.en.length > 0 || draftAltTitles.zh.length > 0) && (
+                <div style={{ marginTop: -8, padding: "0.85rem 1rem", background: "rgba(168,85,247,0.06)", border: "1px solid rgba(168,85,247,0.25)", borderRadius: 7 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                    <span style={{ ...labelStyle, marginBottom: 0, color: "#c084fc" }}>
+                      AI cím-javaslatok (kattints kicseréléshez)
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setDraftAltTitles({ hu: [], en: [], zh: [] })}
+                      style={{ background: "transparent", border: "none", color: "#888", cursor: "pointer", fontFamily: "Geist Mono, monospace", fontSize: "0.65rem" }}
+                    >
+                      elrejt
+                    </button>
+                  </div>
+                  {(["hu", "en", "zh"] as const).map((loc) => {
+                    const titles = draftAltTitles[loc];
+                    if (titles.length === 0) return null;
+                    const fieldKey = loc === "hu" ? "title" : loc === "en" ? "titleEn" : "titleZh";
+                    const langLabel = loc === "hu" ? "HU" : loc === "en" ? "EN" : "ZH";
+                    return (
+                      <div key={loc} style={{ marginBottom: 6 }}>
+                        <div style={{ fontFamily: "Geist Mono, monospace", fontSize: "0.6rem", color: "#888", marginBottom: 4 }}>
+                          {langLabel}
+                        </div>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                          {titles.map((t, i) => (
+                            <button
+                              key={`${loc}-${i}`}
+                              type="button"
+                              onClick={() => setForm(p => ({ ...p, [fieldKey]: t }))}
+                              title={`${langLabel}-cím cseréje erre`}
+                              style={{
+                                padding: "5px 9px", borderRadius: 5,
+                                background: "rgba(255,255,255,0.04)",
+                                border: "1px solid rgba(255,255,255,0.1)",
+                                color: "#ccc", cursor: "pointer",
+                                fontFamily: "Geist, sans-serif", fontSize: "0.72rem",
+                                textAlign: "left", maxWidth: "100%",
+                              }}
+                            >
+                              {t}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
               <div>
                 <label style={labelStyle}>URL slug *</label>
                 <input value={form.slug} onChange={e => setForm(p => ({ ...p, slug: e.target.value }))} required style={inputStyle} placeholder="url-slug" />
@@ -306,6 +377,40 @@ export default function AdminPostEdit() {
                 placeholderEn="<p>Post content...</p>"
                 placeholderZh="<p>文章内容...</p>"
               />
+              {/* Editor-pass notes — what the second-pass review changed.
+                  Collapsible because it's purely informational and would
+                  clutter the editor when not needed. */}
+              {(draftEditorNotes.hu.length > 0 || draftEditorNotes.en.length > 0 || draftEditorNotes.zh.length > 0) && (
+                <div style={{ padding: "0.85rem 1rem", background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.2)", borderRadius: 7 }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowEditorNotes((v) => !v)}
+                    style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", background: "transparent", border: "none", color: "#5eead4", cursor: "pointer", fontFamily: "Geist Mono, monospace", fontSize: "0.75rem", padding: 0 }}
+                  >
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                      <Sparkles size={12} /> AI szerkesztői megjegyzések ({(draftEditorNotes.hu.length + draftEditorNotes.en.length + draftEditorNotes.zh.length)} darab)
+                    </span>
+                    <span style={{ color: "#888", fontSize: "0.68rem" }}>{showEditorNotes ? "elrejt ▴" : "megnyit ▾"}</span>
+                  </button>
+                  {showEditorNotes && (
+                    <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 8 }}>
+                      {(["hu", "en", "zh"] as const).map((loc) => {
+                        const notes = draftEditorNotes[loc];
+                        if (notes.length === 0) return null;
+                        const langLabel = loc === "hu" ? "HU" : loc === "en" ? "EN" : "ZH";
+                        return (
+                          <div key={loc}>
+                            <div style={{ fontFamily: "Geist Mono, monospace", fontSize: "0.6rem", color: "#888", marginBottom: 4 }}>{langLabel}</div>
+                            <ul style={{ margin: 0, paddingLeft: 18, color: "#bbb", fontSize: "0.78rem", lineHeight: 1.55 }}>
+                              {notes.map((n, i) => <li key={i} style={{ marginBottom: 3 }}>{n}</li>)}
+                            </ul>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             <div style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
