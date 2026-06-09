@@ -93,7 +93,87 @@ export type BlogDraft = {
   metaDescription: string;
 };
 
+/** One blog draft per locale — what the admin Post editor fills in. */
+export type MultilangBlogDraft = {
+  hu: BlogDraft;
+  en: BlogDraft;
+  zh: BlogDraft;
+};
+
 const LANG_NAMES: Record<Lang, string> = { hu: "magyar", en: "English", zh: "中文" };
+
+/**
+ * Convert leftover markdown syntax to HTML. The prompt instructs the
+ * model to emit clean HTML, but in practice it sometimes regresses to
+ * markdown — especially when older brand-voice example posts were
+ * authored in markdown style. This converter runs as a safety net so
+ * the blog page never renders raw "##" or "**bold**" to visitors.
+ *
+ * We only handle the syntax the model actually produces in regressions:
+ * ATX headings (## / ###), bullet & numbered lists (- / 1.), bold
+ * (**...**), italic (*...*), and double-newline paragraph splitting.
+ * Anything that already looks like HTML passes through untouched.
+ */
+function markdownToHtml(raw: string): string {
+  if (!raw) return raw;
+  // If the content already starts with a real HTML tag AND contains no
+  // markdown heading/list markers, treat it as clean HTML and skip the
+  // conversion. This avoids touching well-formed output.
+  const looksHtml = /^\s*<(p|h2|h3|ul|ol|div)\b/i.test(raw);
+  const hasMdMarkers = /(^|\n)\s{0,3}(#{2,3}\s|[-*]\s|\d+\.\s)/.test(raw) || /\*\*[^*]+\*\*/.test(raw);
+  if (looksHtml && !hasMdMarkers) return raw;
+
+  // Split into blocks on blank lines, then classify each block.
+  const blocks = raw.replace(/\r\n/g, "\n").split(/\n\s*\n+/);
+  const out: string[] = [];
+
+  for (const blockRaw of blocks) {
+    const block = blockRaw.trim();
+    if (!block) continue;
+
+    // ATX headings
+    const h3 = block.match(/^###\s+(.+)$/);
+    if (h3) { out.push(`<h3>${inlineMd(h3[1])}</h3>`); continue; }
+    const h2 = block.match(/^##\s+(.+)$/);
+    if (h2) { out.push(`<h2>${inlineMd(h2[1])}</h2>`); continue; }
+    const h1 = block.match(/^#\s+(.+)$/);
+    if (h1) { out.push(`<h2>${inlineMd(h1[1])}</h2>`); continue; } // demote h1 → h2
+
+    // Bullet list — every line starts with "-" or "*"
+    const bulletLines = block.split("\n");
+    if (bulletLines.every((l) => /^\s{0,3}[-*]\s+/.test(l))) {
+      const items = bulletLines.map((l) => `<li>${inlineMd(l.replace(/^\s{0,3}[-*]\s+/, ""))}</li>`).join("");
+      out.push(`<ul>${items}</ul>`);
+      continue;
+    }
+
+    // Numbered list — every line starts with "1.", "2." etc.
+    if (bulletLines.every((l) => /^\s{0,3}\d+\.\s+/.test(l))) {
+      const items = bulletLines.map((l) => `<li>${inlineMd(l.replace(/^\s{0,3}\d+\.\s+/, ""))}</li>`).join("");
+      out.push(`<ol>${items}</ol>`);
+      continue;
+    }
+
+    // Block that contains an existing HTML opening tag — keep as-is.
+    if (/^<(p|h2|h3|ul|ol|div|blockquote)/i.test(block)) {
+      out.push(block);
+      continue;
+    }
+
+    // Default — wrap as paragraph, convert single newlines to spaces.
+    out.push(`<p>${inlineMd(block.replace(/\n/g, " "))}</p>`);
+  }
+  return out.join("\n");
+}
+
+/** Inline markdown: **bold**, *italic*, [text](url). Strips backticks. */
+function inlineMd(s: string): string {
+  return s
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, "<em>$1</em>")
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+    .replace(/`([^`]+)`/g, "$1");
+}
 
 export async function generateBlogDraft(input: BlogDraftInput): Promise<BlogDraft> {
   const lang = input.lang ?? "hu";
@@ -115,14 +195,33 @@ Szabályok:
 - A teljes válasz ${LANG_NAMES[lang]} nyelven.
 - Hangnem: ${tone}.
 - Cél olvasó: ${audience}.
-- A "content" mezőben strukturált markdown (## fejezetek, bullet listák, kiemelt szakaszok) ~${wordCount} szóval.
-- A "title" SEO-barát, max 65 karakter, az olvasó hasznát ígéri.
+
+⚠ KRITIKUS FORMÁTUM-SZABÁLY ⚠
+A "content" mezőben **TISZTA HTML markup**-ot adj vissza. SZIGORÚAN TILOS bárhol markdown szintaxist használni: TILOS a "##", "###", "**...**", "- " sorkezdés, "> " idézet, "\`...\`" backtick. Ezek a karakterek SOHA nem jelenhetnek meg a content-ben szerkezet-jelölőként. Ez kötelező: a BlogPostPage \`dangerouslySetInnerHTML\`-lel rendereli, a markdown szóról szóra megjelenne a látogatónak.
+
+Kötelező struktúra (pontosan így nézzen ki, ne másképp):
+
+  <p>Nyitó bekezdés — 2-3 mondat, ami megfogja az olvasót.</p>
+  <h2>Első alfejezet címe</h2>
+  <p>Magyarázó bekezdés.</p>
+  <ul><li>Lista elem 1</li><li>Lista elem 2</li></ul>
+  <h2>Második alfejezet</h2>
+  <p>További tartalom.</p>
+  <h3>Részletek (opcionális)</h3>
+  <p>Stb.</p>
+
+- KIZÁRÓLAG ezek a tagek engedettek: <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <a href="...">.
+- A H1-et NE add hozzá — azt a cikk \`title\` mezője adja.
+- 4-7 <h2> alfejezet, ~${wordCount} szó össz.
+- Minden bekezdést <p>...</p> tag fogjon közre. Soron belüli kiemelést <strong> vagy <em> tag adjon, NEM ** vagy *.
+- "title" SEO-barát, max 65 karakter, az olvasó hasznát ígéri.
 - "excerpt" 1-2 mondat (max 200 karakter), a teljes cikk lényege.
 - "metaTitle" max 60 char, kulcsszót tartalmaz.
 - "metaDescription" 140-160 char közt, hívószóval.
 - NE találj ki konkrét statisztikákat vagy számokat, ha nem vagy biztos bennük.
 
-Csak JSON-t adj vissza ezzel a sémával: { "title": "...", "excerpt": "...", "content": "...", "metaTitle": "...", "metaDescription": "..." }`;
+Csak JSON-t adj vissza ezzel a sémával: { "title": "...", "excerpt": "...", "content": "<p>...</p>...", "metaTitle": "...", "metaDescription": "..." }
+A "content" érték HTML stringként szerepeljen (escape-elve a JSON-ban).`;
 
   const system = brandContext ? `${brandContext}\n\n${baseSystem}` : baseSystem;
 
@@ -140,14 +239,40 @@ Csak JSON-t adj vissza ezzel a sémával: { "title": "...", "excerpt": "...", "c
   } catch {
     throw new Error("OpenAI invalid JSON response");
   }
-  // Defensive defaults
+  // Defensive defaults + safety-net markdown→HTML conversion. The
+  // prompt insists on HTML, but if the model regresses (especially when
+  // brand-voice examples were written in markdown), this guarantees
+  // the content actually renders correctly.
   return {
     title: parsed.title?.trim() ?? "",
     excerpt: parsed.excerpt?.trim() ?? "",
-    content: parsed.content?.trim() ?? "",
+    content: markdownToHtml(parsed.content?.trim() ?? ""),
     metaTitle: parsed.metaTitle?.trim() ?? "",
     metaDescription: parsed.metaDescription?.trim() ?? "",
   };
+}
+
+/**
+ * Generate a blog draft in all three site languages in parallel.
+ *
+ * The site is HU/EN/ZH everywhere, and the admin used to manually write
+ * each translation (or run translations after the HU was done). This
+ * function fans out one prompt per locale to OpenAI in parallel so the
+ * Post editor can populate every language tab from a single button click.
+ *
+ * Roughly 3× the token cost of a single-language draft but completes in
+ * essentially the same wall-clock time (OpenAI's parallel-request handling
+ * is fast). On gpt-4o-mini that's still well under 1 cent per article.
+ */
+export async function generateMultilangBlogDraft(
+  input: Omit<BlogDraftInput, "lang">,
+): Promise<MultilangBlogDraft> {
+  const [hu, en, zh] = await Promise.all([
+    generateBlogDraft({ ...input, lang: "hu" }),
+    generateBlogDraft({ ...input, lang: "en" }),
+    generateBlogDraft({ ...input, lang: "zh" }),
+  ]);
+  return { hu, en, zh };
 }
 
 // ─── Use case 2: SEO meta generation ──────────────────────────────────────────
@@ -253,6 +378,10 @@ export async function generateImage(input: GenerateImageInput): Promise<Generate
   const key = process.env.OPENAI_API_KEY;
   if (!key) throw new Error("OPENAI_API_KEY not set — image generation disabled");
 
+  // OpenAI removed the `style` parameter from the dall-e-3 Images endpoint
+  // in mid-2025 — sending it now returns 400 "Unknown parameter: 'style'".
+  // The vivid/natural distinction was always best-effort anyway; the
+  // descriptive prompt itself is the main lever for image style.
   const res = await fetch(DALL_E_ENDPOINT, {
     method: "POST",
     headers: {
@@ -265,7 +394,6 @@ export async function generateImage(input: GenerateImageInput): Promise<Generate
       n: 1,
       size: input.size ?? "1792x1024",
       quality: input.quality ?? "standard",
-      style: input.style ?? "natural",
     }),
   });
 

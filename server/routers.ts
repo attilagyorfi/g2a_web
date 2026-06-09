@@ -9,7 +9,7 @@ import { storagePut } from "./storage";
 import * as db from "./db";
 import { translate, isTranslateConfigured } from "./_core/translate";
 import { cloudinaryUpload, isCloudinaryConfigured } from "./_core/cloudinary";
-import { generateBlogDraft, generateImage, generateSeoMeta, improveText, isAiConfigured, getAiModel } from "./_core/ai";
+import { generateBlogDraft, generateMultilangBlogDraft, generateImage, generateSeoMeta, improveText, isAiConfigured, getAiModel } from "./_core/ai";
 import { getClientIp } from "./_core/rateLimit";
 import { checkRateLimitDb } from "./_core/dbRateLimit";
 import { isHoneypotTriggered, HONEYPOT_FIELD } from "./_core/spam";
@@ -948,6 +948,18 @@ const adminRouter = router({
         tone: z.enum(["professional", "conversational", "technical"]).optional(),
       }))
       .mutation(({ input }) => generateBlogDraft(input)),
+    /**
+     * Run the draft generator in parallel for HU + EN + ZH. The admin UI
+     * gets one return value to fill all three language tabs in one go.
+     */
+    generateMultilangBlogDraft: adminProcedure
+      .input(z.object({
+        topic: z.string().min(3),
+        audience: z.string().optional(),
+        wordCount: z.number().int().min(200).max(2000).optional(),
+        tone: z.enum(["professional", "conversational", "technical"]).optional(),
+      }))
+      .mutation(({ input }) => generateMultilangBlogDraft(input)),
     generateSeoMeta: adminProcedure
       .input(z.object({
         topic: z.string().min(3),

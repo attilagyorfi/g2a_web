@@ -16,9 +16,46 @@
  * for audit but are hidden from the UI.
  */
 import { useState, useEffect } from "react";
-import { Sparkles, Save, Linkedin, Facebook, Instagram, Send, Loader2, CheckCircle2 } from "lucide-react";
+import { Sparkles, Save, Linkedin, Facebook, Instagram, Loader2, CheckCircle2, ExternalLink, Copy } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+
+/**
+ * Site origin used to build canonical post URLs from a slug. In the browser
+ * we just use `window.location.origin`, which is correct for both prod
+ * (g2amarketing.hu) and preview deployments. SSR/prerender doesn't hit this
+ * file because admin pages aren't prerendered.
+ */
+function postPublicUrl(slug: string): string {
+  if (!slug) return "";
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  return `${origin}/blog/${slug}`;
+}
+
+/**
+ * Build the platform-specific external share dialog URL. We don't have
+ * a server-side publish integration yet (OAuth phase 2), but each platform
+ * exposes a parameterised share dialog that opens in a new tab and lets
+ * the admin paste the pre-copied caption.
+ *
+ * Notes per platform:
+ *   - LinkedIn: only accepts a URL — caption must be pasted manually
+ *   - Facebook: same — sharer.php only accepts a URL
+ *   - Instagram: no public web share URL at all. We open Meta Business
+ *     Suite where the admin can attach the caption and image.
+ */
+function shareUrl(platform: "linkedin" | "facebook" | "instagram", url: string): string {
+  const encoded = encodeURIComponent(url);
+  switch (platform) {
+    case "linkedin":
+      return `https://www.linkedin.com/sharing/share-offsite/?url=${encoded}`;
+    case "facebook":
+      return `https://www.facebook.com/sharer/sharer.php?u=${encoded}`;
+    case "instagram":
+      // Instagram has no web sharer; open Meta Business Suite composer.
+      return "https://business.facebook.com/latest/composer";
+  }
+}
 
 type Platform = "linkedin" | "facebook" | "instagram";
 
@@ -34,7 +71,15 @@ const PLATFORMS: Array<{
   { key: "instagram", label: "Instagram", icon: <Instagram size={16} />, color: "#e1306c", charTarget: "800-1500" },
 ];
 
-export default function SocialShareSection({ postId }: { postId: number }) {
+export default function SocialShareSection({
+  postId,
+  slug,
+  status,
+}: {
+  postId: number;
+  slug: string;
+  status: "draft" | "published";
+}) {
   const utils = trpc.useUtils();
   const { data: drafts, isLoading } = trpc.social.listForPost.useQuery({ postId });
   const { data: accounts } = trpc.social.listAccounts.useQuery();
@@ -102,6 +147,44 @@ export default function SocialShareSection({ postId }: { postId: number }) {
   const isAccountConnected = (platform: Platform) =>
     accounts?.some((a) => a.platform === platform && a.isActive && a.accessToken) ?? false;
 
+  /**
+   * Manual share path — until the OAuth phase 2 integration lands, the
+   * admin can still get the post out the door in one click: we copy the
+   * generated caption to the clipboard and pop open the platform's share
+   * dialog with the post URL pre-filled. They paste, attach the image,
+   * and hit publish on the platform side.
+   *
+   * If the post is still a draft, we warn first since the share dialog
+   * would link to a 404 (drafts don't render publicly).
+   */
+  const handleShare = async (platform: Platform) => {
+    const copy = copies[platform].trim();
+    if (!copy) {
+      toast.error("Nincs copy ezen a platformon — generálj előbb.");
+      return;
+    }
+    if (!slug) {
+      toast.error("Mentsd el a cikket (slug szükséges) a megosztáshoz.");
+      return;
+    }
+    if (status !== "published") {
+      const ok = window.confirm(
+        "A cikk még nincs közzétéve (draft) — a megosztott link 404-et fog adni a látogatóknak. Folytatod?",
+      );
+      if (!ok) return;
+    }
+    const url = postPublicUrl(slug);
+    try {
+      await navigator.clipboard.writeText(copy);
+      toast.success(`${PLATFORMS.find((x) => x.key === platform)?.label}: copy a vágólapon, dialógus nyílik új ablakban.`);
+    } catch {
+      // Clipboard can be blocked by permissions — fall through to the
+      // popup anyway so the admin can still complete the share manually.
+      toast.message("Vágólap nem elérhető — másold ki kézzel a textarea-ból.");
+    }
+    window.open(shareUrl(platform, url), "_blank", "noopener,noreferrer,width=720,height=720");
+  };
+
   return (
     <div style={{ marginTop: "2rem", padding: "1.5rem", background: "#161616", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12 }}>
       <div style={{ marginBottom: "1.25rem" }}>
@@ -109,7 +192,7 @@ export default function SocialShareSection({ postId }: { postId: number }) {
           Megosztás közösségi médián
         </h2>
         <p style={{ color: "#888", fontSize: "0.85rem", lineHeight: 1.5 }}>
-          AI-vel generált platform-specifikus copy mindegyik csatornára. Generálás után szerkesztheted, majd ment-draft-elheted. A publikálás OAuth-fiókok csatlakoztatása után aktiválódik (Fázis 2).
+          AI-vel generált platform-specifikus copy mindegyik csatornára. <strong style={{ color: "#ccc" }}>Másol + megnyit</strong> gombbal a copy a vágólapra kerül és új ablakban nyílik a platform megosztó dialógusa — beilleszted és postolod. (Az automatikus, egy-kattintásos publikálás OAuth-fázis 2-ben aktiválódik.)
         </p>
       </div>
 
@@ -214,20 +297,28 @@ export default function SocialShareSection({ postId }: { postId: number }) {
                     </button>
                     <button
                       type="button"
-                      disabled
-                      title="Aktiválódik amint a platform fiók csatlakoztatva van (Fázis 2)."
+                      onClick={() => handleShare(p.key)}
+                      disabled={copy.trim().length === 0 || !slug}
+                      title={
+                        !slug
+                          ? "Mentsd el a cikket előbb"
+                          : copy.trim().length === 0
+                          ? "Generálj copy-t előbb"
+                          : `Másol a vágólapra + megnyitja a ${p.label} megosztás dialógust új ablakban`
+                      }
                       style={{
                         display: "inline-flex", alignItems: "center", gap: 6,
                         padding: "7px 12px", borderRadius: 5,
-                        background: "rgba(255,255,255,0.03)",
-                        border: "1px solid rgba(255,255,255,0.06)",
-                        color: "#444",
+                        background: copy.trim().length > 0 && slug ? `${p.color}28` : "rgba(255,255,255,0.03)",
+                        border: `1px solid ${copy.trim().length > 0 && slug ? `${p.color}66` : "rgba(255,255,255,0.06)"}`,
+                        color: copy.trim().length > 0 && slug ? "#fff" : "#444",
                         fontFamily: "Geist Mono, monospace", fontSize: "0.72rem", fontWeight: 600,
-                        cursor: "not-allowed",
+                        cursor: copy.trim().length === 0 || !slug ? "not-allowed" : "pointer",
                       }}
                     >
-                      <Send size={12} />
-                      Posztolás
+                      <Copy size={11} />
+                      <ExternalLink size={11} />
+                      Másol + megnyit
                     </button>
                   </div>
                 </div>

@@ -58,7 +58,9 @@ export default function AdminPostEdit() {
 
   // ─── AI assist (OpenAI) ─────────────────────────────────────────────────────
   const aiStatus = trpc.admin.ai.status.useQuery(undefined, { staleTime: 5 * 60 * 1000 });
-  const blogDraftMutation = trpc.admin.ai.generateBlogDraft.useMutation();
+  // Drives the AI draft generator. The site is HU/EN/ZH, so we always
+  // generate all three languages in one go and populate every locale tab.
+  const blogDraftMutation = trpc.admin.ai.generateMultilangBlogDraft.useMutation();
   const seoMetaMutation = trpc.admin.ai.generateSeoMeta.useMutation();
   const [showDraftModal, setShowDraftModal] = useState(false);
   const [draftTopic, setDraftTopic] = useState("");
@@ -69,25 +71,39 @@ export default function AdminPostEdit() {
 
   const handleGenerateDraft = async () => {
     if (!draftTopic.trim()) { toast.error("Adj meg egy témát"); return; }
-    if (form.title.trim()) {
-      const ok = await confirm({ title: "Felülírás megerősítése", message: "A meglévő tartalom (cím, kivonat, tartalom, SEO) felülíródik. Folytatod?", destructive: false, confirmLabel: "Felülírás" });
+    if (form.title.trim() || form.titleEn.trim() || form.titleZh.trim()) {
+      const ok = await confirm({ title: "Felülírás megerősítése", message: "A meglévő tartalom (cím, kivonat, tartalom, SEO) felülíródik mindhárom nyelven. Folytatod?", destructive: false, confirmLabel: "Felülírás" });
       if (!ok) return;
     }
     try {
-      const draft = await blogDraftMutation.mutateAsync({ topic: draftTopic, tone: draftTone, lang: "hu" });
+      const draft = await blogDraftMutation.mutateAsync({ topic: draftTopic, tone: draftTone });
       setForm(prev => ({
         ...prev,
-        title: draft.title,
-        excerpt: draft.excerpt,
-        content: draft.content,
-        metaTitle: draft.metaTitle,
-        metaDescription: draft.metaDescription,
-        // Auto-derive a slug from the title if currently empty
-        slug: prev.slug || draft.title.toLowerCase().replace(/[áàâä]/g, "a").replace(/[éèêë]/g, "e").replace(/[íìîï]/g, "i").replace(/[óòôöő]/g, "o").replace(/[úùûüű]/g, "u").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80),
+        // HU
+        title: draft.hu.title,
+        excerpt: draft.hu.excerpt,
+        content: draft.hu.content,
+        metaTitle: draft.hu.metaTitle,
+        metaDescription: draft.hu.metaDescription,
+        // EN
+        titleEn: draft.en.title,
+        excerptEn: draft.en.excerpt,
+        contentEn: draft.en.content,
+        metaTitleEn: draft.en.metaTitle,
+        metaDescriptionEn: draft.en.metaDescription,
+        // ZH
+        titleZh: draft.zh.title,
+        excerptZh: draft.zh.excerpt,
+        contentZh: draft.zh.content,
+        metaTitleZh: draft.zh.metaTitle,
+        metaDescriptionZh: draft.zh.metaDescription,
+        // Slug derives from the HU title only — Hungarian is the canonical
+        // version and the same slug is used across all three locales.
+        slug: prev.slug || draft.hu.title.toLowerCase().replace(/[áàâä]/g, "a").replace(/[éèêë]/g, "e").replace(/[íìîï]/g, "i").replace(/[óòôöő]/g, "o").replace(/[úùûüű]/g, "u").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80),
       }));
       setShowDraftModal(false);
       setDraftTopic("");
-      toast.success(`AI blog draft generálva (${aiModel})`);
+      toast.success(`AI blog draft generálva HU + EN + ZH nyelven (${aiModel})`);
     } catch (err) {
       toast.error(parseFormError(err, "AI draft generálás sikertelen"));
     }
@@ -200,7 +216,7 @@ export default function AdminPostEdit() {
               </button>
             </div>
             <p style={{ color: "#888", fontSize: "0.8rem", marginBottom: "1.25rem", lineHeight: 1.5 }}>
-              Add meg a cikk témáját — az OpenAI ({aiModel}) generál címet, kivonatot, ~600 szavas tartalmat és SEO meta-t magyarul. A meglévő tartalom felülíródik.
+              Add meg a cikk témáját — az OpenAI ({aiModel}) generál címet, kivonatot, ~600 szavas HTML tartalmat és SEO meta-t mindhárom nyelven (HU + EN + ZH). A meglévő tartalom felülíródik.
             </p>
             <div style={{ marginBottom: "1rem" }}>
               <label style={labelStyle}>Téma *</label>
@@ -243,7 +259,7 @@ export default function AdminPostEdit() {
                 }}
               >
                 {blogDraftMutation.isPending ? <Loader2 size={13} style={{ animation: "spin 0.8s linear infinite" }} /> : <Sparkles size={13} />}
-                {blogDraftMutation.isPending ? "Generálás..." : "Generálás"}
+                {blogDraftMutation.isPending ? "Generálás (HU+EN+ZH)..." : "Generálás (3 nyelv)"}
               </button>
             </div>
           </div>
@@ -395,10 +411,24 @@ export default function AdminPostEdit() {
         </div>
       </form>
 
-      {/* Social media share section — only shown once the post exists (i.e.
-          has been saved at least once and has an integer ID). New unsaved
-          posts hide this section since there's no ID to attach drafts to. */}
-      {!isNew && postId && <SocialShareSection postId={postId} />}
+      {/* Social media share section — needs a saved post (i.e. an integer
+          ID exists) because drafts attach to that ID. For new unsaved
+          posts we surface a placeholder so the admin discovers the
+          feature exists rather than silently hiding it. */}
+      {!isNew && postId ? (
+        <SocialShareSection
+          postId={postId}
+          slug={form.slug}
+          status={form.status}
+        />
+      ) : (
+        <div style={{ marginTop: "2rem", padding: "1.25rem 1.5rem", background: "#161616", border: "1px dashed rgba(255,255,255,0.12)", borderRadius: 12, color: "#888", fontFamily: "Geist Mono, monospace", fontSize: "0.82rem", lineHeight: 1.6 }}>
+          <strong style={{ color: "#ccc", display: "block", marginBottom: 4, fontSize: "0.95rem" }}>
+            Megosztás közösségi médián
+          </strong>
+          A LinkedIn / Facebook / Instagram megosztó modul a cikk első mentése után jelenik meg itt. Mentsd el a cikket fent a <em style={{ color: "#5eead4" }}>Mentés</em> gombbal, és visszatöltődés után tudsz platformokra szabott AI-copyt generálni és kattintással megosztani.
+        </div>
+      )}
     </div>
   );
 }

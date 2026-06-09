@@ -1878,6 +1878,53 @@ async function chat(messages, opts = {}) {
   return text2;
 }
 var LANG_NAMES = { hu: "magyar", en: "English", zh: "\u4E2D\u6587" };
+function markdownToHtml(raw) {
+  if (!raw) return raw;
+  const looksHtml = /^\s*<(p|h2|h3|ul|ol|div)\b/i.test(raw);
+  const hasMdMarkers = /(^|\n)\s{0,3}(#{2,3}\s|[-*]\s|\d+\.\s)/.test(raw) || /\*\*[^*]+\*\*/.test(raw);
+  if (looksHtml && !hasMdMarkers) return raw;
+  const blocks = raw.replace(/\r\n/g, "\n").split(/\n\s*\n+/);
+  const out = [];
+  for (const blockRaw of blocks) {
+    const block = blockRaw.trim();
+    if (!block) continue;
+    const h3 = block.match(/^###\s+(.+)$/);
+    if (h3) {
+      out.push(`<h3>${inlineMd(h3[1])}</h3>`);
+      continue;
+    }
+    const h2 = block.match(/^##\s+(.+)$/);
+    if (h2) {
+      out.push(`<h2>${inlineMd(h2[1])}</h2>`);
+      continue;
+    }
+    const h1 = block.match(/^#\s+(.+)$/);
+    if (h1) {
+      out.push(`<h2>${inlineMd(h1[1])}</h2>`);
+      continue;
+    }
+    const bulletLines = block.split("\n");
+    if (bulletLines.every((l) => /^\s{0,3}[-*]\s+/.test(l))) {
+      const items = bulletLines.map((l) => `<li>${inlineMd(l.replace(/^\s{0,3}[-*]\s+/, ""))}</li>`).join("");
+      out.push(`<ul>${items}</ul>`);
+      continue;
+    }
+    if (bulletLines.every((l) => /^\s{0,3}\d+\.\s+/.test(l))) {
+      const items = bulletLines.map((l) => `<li>${inlineMd(l.replace(/^\s{0,3}\d+\.\s+/, ""))}</li>`).join("");
+      out.push(`<ol>${items}</ol>`);
+      continue;
+    }
+    if (/^<(p|h2|h3|ul|ol|div|blockquote)/i.test(block)) {
+      out.push(block);
+      continue;
+    }
+    out.push(`<p>${inlineMd(block.replace(/\n/g, " "))}</p>`);
+  }
+  return out.join("\n");
+}
+function inlineMd(s) {
+  return s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>").replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, "<em>$1</em>").replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>').replace(/`([^`]+)`/g, "$1");
+}
 async function generateBlogDraft(input) {
   const lang = input.lang ?? "hu";
   const wordCount = input.wordCount ?? 600;
@@ -1891,14 +1938,33 @@ Szab\xE1lyok:
 - A teljes v\xE1lasz ${LANG_NAMES[lang]} nyelven.
 - Hangnem: ${tone}.
 - C\xE9l olvas\xF3: ${audience}.
-- A "content" mez\u0151ben struktur\xE1lt markdown (## fejezetek, bullet list\xE1k, kiemelt szakaszok) ~${wordCount} sz\xF3val.
-- A "title" SEO-bar\xE1t, max 65 karakter, az olvas\xF3 haszn\xE1t \xEDg\xE9ri.
+
+\u26A0 KRITIKUS FORM\xC1TUM-SZAB\xC1LY \u26A0
+A "content" mez\u0151ben **TISZTA HTML markup**-ot adj vissza. SZIGOR\xDAAN TILOS b\xE1rhol markdown szintaxist haszn\xE1lni: TILOS a "##", "###", "**...**", "- " sorkezd\xE9s, "> " id\xE9zet, "\`...\`" backtick. Ezek a karakterek SOHA nem jelenhetnek meg a content-ben szerkezet-jel\xF6l\u0151k\xE9nt. Ez k\xF6telez\u0151: a BlogPostPage \`dangerouslySetInnerHTML\`-lel rendereli, a markdown sz\xF3r\xF3l sz\xF3ra megjelenne a l\xE1togat\xF3nak.
+
+K\xF6telez\u0151 strukt\xFAra (pontosan \xEDgy n\xE9zzen ki, ne m\xE1sk\xE9pp):
+
+  <p>Nyit\xF3 bekezd\xE9s \u2014 2-3 mondat, ami megfogja az olvas\xF3t.</p>
+  <h2>Els\u0151 alfejezet c\xEDme</h2>
+  <p>Magyar\xE1z\xF3 bekezd\xE9s.</p>
+  <ul><li>Lista elem 1</li><li>Lista elem 2</li></ul>
+  <h2>M\xE1sodik alfejezet</h2>
+  <p>Tov\xE1bbi tartalom.</p>
+  <h3>R\xE9szletek (opcion\xE1lis)</h3>
+  <p>Stb.</p>
+
+- KIZ\xC1R\xD3LAG ezek a tagek engedettek: <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <a href="...">.
+- A H1-et NE add hozz\xE1 \u2014 azt a cikk \`title\` mez\u0151je adja.
+- 4-7 <h2> alfejezet, ~${wordCount} sz\xF3 \xF6ssz.
+- Minden bekezd\xE9st <p>...</p> tag fogjon k\xF6zre. Soron bel\xFCli kiemel\xE9st <strong> vagy <em> tag adjon, NEM ** vagy *.
+- "title" SEO-bar\xE1t, max 65 karakter, az olvas\xF3 haszn\xE1t \xEDg\xE9ri.
 - "excerpt" 1-2 mondat (max 200 karakter), a teljes cikk l\xE9nyege.
 - "metaTitle" max 60 char, kulcssz\xF3t tartalmaz.
 - "metaDescription" 140-160 char k\xF6zt, h\xEDv\xF3sz\xF3val.
 - NE tal\xE1lj ki konkr\xE9t statisztik\xE1kat vagy sz\xE1mokat, ha nem vagy biztos benn\xFCk.
 
-Csak JSON-t adj vissza ezzel a s\xE9m\xE1val: { "title": "...", "excerpt": "...", "content": "...", "metaTitle": "...", "metaDescription": "..." }`;
+Csak JSON-t adj vissza ezzel a s\xE9m\xE1val: { "title": "...", "excerpt": "...", "content": "<p>...</p>...", "metaTitle": "...", "metaDescription": "..." }
+A "content" \xE9rt\xE9k HTML stringk\xE9nt szerepeljen (escape-elve a JSON-ban).`;
   const system = brandContext ? `${brandContext}
 
 ${baseSystem}` : baseSystem;
@@ -1918,10 +1984,18 @@ ${baseSystem}` : baseSystem;
   return {
     title: parsed.title?.trim() ?? "",
     excerpt: parsed.excerpt?.trim() ?? "",
-    content: parsed.content?.trim() ?? "",
+    content: markdownToHtml(parsed.content?.trim() ?? ""),
     metaTitle: parsed.metaTitle?.trim() ?? "",
     metaDescription: parsed.metaDescription?.trim() ?? ""
   };
+}
+async function generateMultilangBlogDraft(input) {
+  const [hu, en, zh] = await Promise.all([
+    generateBlogDraft({ ...input, lang: "hu" }),
+    generateBlogDraft({ ...input, lang: "en" }),
+    generateBlogDraft({ ...input, lang: "zh" })
+  ]);
+  return { hu, en, zh };
 }
 async function generateSeoMeta(input) {
   const lang = input.lang ?? "hu";
@@ -1973,8 +2047,7 @@ async function generateImage(input) {
       prompt: input.prompt,
       n: 1,
       size: input.size ?? "1792x1024",
-      quality: input.quality ?? "standard",
-      style: input.style ?? "natural"
+      quality: input.quality ?? "standard"
     })
   });
   if (!res.ok) {
@@ -3554,6 +3627,16 @@ var adminRouter = router({
       lang: z2.enum(["hu", "en", "zh"]).optional(),
       tone: z2.enum(["professional", "conversational", "technical"]).optional()
     })).mutation(({ input }) => generateBlogDraft(input)),
+    /**
+     * Run the draft generator in parallel for HU + EN + ZH. The admin UI
+     * gets one return value to fill all three language tabs in one go.
+     */
+    generateMultilangBlogDraft: adminProcedure2.input(z2.object({
+      topic: z2.string().min(3),
+      audience: z2.string().optional(),
+      wordCount: z2.number().int().min(200).max(2e3).optional(),
+      tone: z2.enum(["professional", "conversational", "technical"]).optional()
+    })).mutation(({ input }) => generateMultilangBlogDraft(input)),
     generateSeoMeta: adminProcedure2.input(z2.object({
       topic: z2.string().min(3),
       slug: z2.string().optional(),
