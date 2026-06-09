@@ -13,6 +13,13 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { pickLocalized } from "@/../../shared/i18n";
 import { translateCaseStudyTag } from "@/lib/caseStudyTags";
 
+/**
+ * DB-slug → display label for the industry filter chip and detail
+ * card. Slugs in the DB are ascii-only (admin form quirk), so the
+ * label adds the proper Hungarian accents + leading capital. New
+ * industries the admin adds are auto-prettified via prettifySlug()
+ * below if not listed here.
+ */
 const INDUSTRY_LABELS: Record<string, string> = {
   egeszsegugy: "Egészségügy",
   b2b: "B2B",
@@ -22,7 +29,27 @@ const INDUSTRY_LABELS: Record<string, string> = {
   mernoki: "Mérnöki",
   technologia: "Technológia",
   onkormanyzat: "Önkormányzat",
+  // Audit: these were rendered as raw lower-case ascii slugs
+  // ("kereskedelem", "vendeglatas", "kozlekedes", "kreativ"). Adding
+  // them here restores proper Hungarian orthography.
+  kereskedelem: "Kereskedelem",
+  vendeglatas: "Vendéglátás",
+  kozlekedes: "Közlekedés",
+  kreativ: "Kreatív",
+  ipari: "Ipari",
+  fintech: "Fintech",
+  saas: "SaaS",
 };
+
+/**
+ * Fallback formatter for industry slugs we don't recognise: capitalise
+ * the first letter so a freshly-added "logisztika" doesn't render as
+ * lowercase next to the curated labels.
+ */
+function prettifySlug(slug: string): string {
+  if (!slug) return slug;
+  return slug.charAt(0).toUpperCase() + slug.slice(1);
+}
 
 const INDUSTRY_COLORS: Record<string, string> = {
   egeszsegugy: "#10b981",
@@ -204,7 +231,7 @@ export default function ReferenciakPage() {
                     border: `1px solid ${activeIndustry === ind ? "var(--g2a-amber)" : "var(--g2a-border)"}`,
                   }}
                 >
-                  {ind === "osszes" ? t("references.filterAll") : (INDUSTRY_LABELS[ind] || ind)}
+                  {ind === "osszes" ? t("references.filterAll") : (INDUSTRY_LABELS[ind] || prettifySlug(ind))}
                 </button>
               ))}
             </div>
@@ -339,7 +366,7 @@ export default function ReferenciakPage() {
                             color: color,
                             marginBottom: "0.5rem",
                           }}>
-                            {lang === "hu" ? (INDUSTRY_LABELS[(cs.industry ?? "")] || industry || "Marketing") : (industry || "Marketing")}
+                            {lang === "hu" ? (INDUSTRY_LABELS[(cs.industry ?? "")] || prettifySlug(industry || "") || "Marketing") : (industry || "Marketing")}
                           </span>
                           <h3 style={{ fontWeight: 700, fontSize: "1.1rem", color: "var(--g2a-text-primary)", margin: 0, lineHeight: 1.3 }}>
                             {client || title}

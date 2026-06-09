@@ -21,7 +21,23 @@ const INDUSTRY_LABELS: Record<string, string> = {
   mernoki: "Mérnöki",
   technologia: "Technológia",
   onkormanyzat: "Önkormányzat",
+  // Audit fix: missing curated labels for industries the admin had
+  // added with bare ascii slugs. Restores proper Hungarian spelling.
+  kereskedelem: "Kereskedelem",
+  vendeglatas: "Vendéglátás",
+  kozlekedes: "Közlekedés",
+  kreativ: "Kreatív",
+  ipari: "Ipari",
+  fintech: "Fintech",
+  saas: "SaaS",
 };
+
+/** Fallback formatter for industry slugs not listed above — capitalise
+ *  the first letter so freshly-added slugs render reasonably. */
+function prettifySlug(slug: string): string {
+  if (!slug) return slug;
+  return slug.charAt(0).toUpperCase() + slug.slice(1);
+}
 
 const INDUSTRY_COLORS: Record<string, string> = {
   egeszsegugy: "#10b981",
@@ -301,7 +317,7 @@ export default function CaseStudyDetailPage() {
                     textTransform: "uppercase",
                   }}>
                     <Briefcase size={9} />
-                    {lang === "hu" ? (INDUSTRY_LABELS[(cs.industry ?? "")] || industry || "Marketing") : (industry || "Marketing")}
+                    {lang === "hu" ? (INDUSTRY_LABELS[(cs.industry ?? "")] || prettifySlug(industry || "") || "Marketing") : (industry || "Marketing")}
                   </span>
                 </motion.div>
 
@@ -499,7 +515,7 @@ export default function CaseStudyDetailPage() {
                     </div>
                     <div>
                       <div style={{ color: "var(--g2a-text-muted)", fontSize: "0.75rem", marginBottom: "0.25rem" }}>{t("cs.industryLabel")}</div>
-                      <div style={{ color: "var(--g2a-text-primary)", fontWeight: 600 }}>{lang === "hu" ? (INDUSTRY_LABELS[(cs.industry ?? "")] || industry || "—") : (industry || "—")}</div>
+                      <div style={{ color: "var(--g2a-text-primary)", fontWeight: 600 }}>{lang === "hu" ? (INDUSTRY_LABELS[(cs.industry ?? "")] || prettifySlug(industry || "") || "—") : (industry || "—")}</div>
                     </div>
                     {cs.projectYear && (
                       <div>

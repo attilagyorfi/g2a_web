@@ -201,27 +201,32 @@ export default function Navigation() {
               )}
             </div>
 
-            {/* Industries dropdown – hover triggered */}
+            {/* Industries dropdown – hover triggered. Label itself is
+                a real Link to the /szakertelem industries hub (mirrors
+                the Services menu pattern), so clicking takes you to
+                the overview page; the hover dropdown still surfaces
+                the 8 direct subpage links for quick access. */}
             <div
               ref={industriesRef}
               style={{ position: "relative" }}
               onMouseEnter={handleIndustriesEnter}
               onMouseLeave={handleIndustriesLeave}
             >
-              <button
-                onClick={() => setIndustriesHovered((v) => !v)}
-                aria-label={t("nav.industries")}
-                aria-expanded={industriesHovered}
-                style={{
-                  display: "flex", alignItems: "center", gap: "0.25rem",
-                  padding: "0.5rem 0.875rem", borderRadius: "6px",
-                  fontFamily: "Geist, sans-serif", fontSize: "0.875rem", fontWeight: 500,
-                  color: industriesHovered ? "#14B8A6" : "var(--g2a-text-secondary)",
-                  background: "none", border: "none", cursor: "pointer", transition: "color 0.2s",
-                }}>
-                {t("nav.industries")}
-                <ChevronDown size={13} style={{ transform: industriesHovered ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
-              </button>
+              <Link href="/szakertelem" style={{ textDecoration: "none" }}>
+                <button
+                  aria-label={t("nav.industries")}
+                  aria-expanded={industriesHovered}
+                  style={{
+                    display: "flex", alignItems: "center", gap: "0.25rem",
+                    padding: "0.5rem 0.875rem", borderRadius: "6px",
+                    fontFamily: "Geist, sans-serif", fontSize: "0.875rem", fontWeight: 500,
+                    color: industriesHovered ? "#14B8A6" : "var(--g2a-text-secondary)",
+                    background: "none", border: "none", cursor: "pointer", transition: "color 0.2s",
+                  }}>
+                  {t("nav.industries")}
+                  <ChevronDown size={13} style={{ transform: industriesHovered ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+                </button>
+              </Link>
               {industriesHovered && (
                 <div style={{
                   position: "absolute", top: "calc(100% + 2px)", left: "50%", transform: "translateX(-50%)",
@@ -244,6 +249,11 @@ export default function Navigation() {
                       </div>
                     </Link>
                   ))}
+                  <div style={{ borderTop: `1px solid ${dropdownBorder}`, marginTop: "0.5rem", paddingTop: "0.625rem" }}>
+                    <Link href="/szakertelem" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "0.375rem", color: "var(--g2a-brand-teal)", fontFamily: "Geist, sans-serif", fontSize: "0.8rem", fontWeight: 600, padding: "0 0.75rem" }}>
+                      {lang === "hu" ? "Összes iparág" : lang === "en" ? "All industries" : "全部行业"} <ArrowRight size={13} />
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>
