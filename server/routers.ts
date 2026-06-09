@@ -13,6 +13,7 @@ import { generateBlogDraft, generateMultilangBlogDraft, generateImage, generateS
 import { getClientIp } from "./_core/rateLimit";
 import { checkRateLimitDb } from "./_core/dbRateLimit";
 import { isHoneypotTriggered, HONEYPOT_FIELD } from "./_core/spam";
+import { verifyTurnstile, isTurnstileConfigured } from "./_core/turnstile";
 import { sendEmail, isEmailConfigured } from "./_core/email";
 import {
   renderConfirmationEmailHtml,
@@ -49,7 +50,7 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
  */
 async function guardPublicFormOrSilent<T>(
   ctx: { req: import("express").Request },
-  input: { website?: string | null | undefined },
+  input: { website?: string | null | undefined; turnstileToken?: string | null | undefined },
   formKey: string,
   silentSuccess: T,
 ): Promise<T | null> {
@@ -59,6 +60,25 @@ async function guardPublicFormOrSilent<T>(
     return silentSuccess;
   }
   const ip = getClientIp(ctx.req);
+
+  // Cloudflare Turnstile — only enforced when TURNSTILE_SECRET_KEY is
+  // set. Without the env var, verifyTurnstile() soft-passes so the
+  // form stays working in local dev / pre-rollout. On bad tokens we
+  // throw FORBIDDEN so the client can ask the user to re-do the check;
+  // missing tokens (when configured) throw the same so we don't
+  // silently silently accept submissions that bypassed the widget.
+  if (isTurnstileConfigured()) {
+    const verdict = await verifyTurnstile(input.turnstileToken, ip);
+    if (!verdict.ok) {
+      // eslint-disable-next-line no-console
+      console.warn(`[turnstile] Verification failed for ${formKey}: ${verdict.reason}`);
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Bot-ellenőrzés sikertelen. Frissítsd az oldalt és próbáld újra.",
+      });
+    }
+  }
+
   const limit = await checkRateLimitDb(`${formKey}:${ip}`, { max: 5, windowMs: 15 * 60 * 1000 });
   if (!limit.allowed) {
     const minutes = Math.ceil(((limit.retryAt ?? Date.now()) - Date.now()) / 60000);
@@ -179,6 +199,11 @@ const contactRouter = router({
       serviceInterest: z.string().optional(),
       // Honeypot — must remain empty for the submission to be persisted
       [HONEYPOT_FIELD]: z.string().optional(),
+      // Cloudflare Turnstile widget token — verified server-side
+      // against the secret key. Optional in the schema so legacy
+      // clients still work; the guard enforces presence when the
+      // feature flag is on.
+      turnstileToken: z.string().optional(),
       // Optional form-origin marker. Lets shared endpoints (e.g. /karrier
       // posts to contact.submit) keep separate rate-limit buckets so a job
       // applicant doesn't burn through the contact form's quota.
@@ -190,8 +215,8 @@ const contactRouter = router({
       if (guard) return guard;
       // Strip honeypot + form-origin marker before persistence — neither
       // belongs in the contact_submissions table.
-      const { [HONEYPOT_FIELD]: _hp, formContext: _fc, ...submission } = input;
-      void _hp; void _fc;
+      const { [HONEYPOT_FIELD]: _hp, formContext: _fc, turnstileToken: _tt, ...submission } = input;
+      void _hp; void _fc; void _tt;
       await db.createContactSubmission(submission);
       // Notify admin (best-effort — never blocks form submission)
       await notifyOwner({
@@ -272,19 +297,27 @@ const auditRouter = router({
       currentChallenges: z.string().optional(),
       goals: z.string().optional(),
       [AUDIT_HONEYPOT]: z.string().optional(),
+      turnstileToken: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       // Honeypot uses a custom field name here; build a normalized object for the guard.
       const guard = await guardPublicFormOrSilent(
         ctx,
-        { website: (input as Record<string, unknown>)[AUDIT_HONEYPOT] as string | undefined },
+        {
+          website: (input as Record<string, unknown>)[AUDIT_HONEYPOT] as string | undefined,
+          turnstileToken: input.turnstileToken,
+        },
         "audit",
         { success: true },
       );
       if (guard) return guard;
+      // Strip the Turnstile token before persistence — it's verified
+      // server-side and has no place in the audit_leads table.
+      const { turnstileToken: _tt, ...inputForDb } = input;
+      void _tt;
       // Normalize the website URL — visitors typically type bare hostnames
       // (`ceg.hu`, `www.ceg.hu`) without a protocol.
-      const normalizedInput = { ...input, website: normalizeUrl(input.website) };
+      const normalizedInput = { ...inputForDb, website: normalizeUrl(inputForDb.website) };
       await db.createAuditLead(normalizedInput);
 
       // Notify admin (RESEND_NOTIFY_EMAIL) — best-effort
@@ -357,6 +390,11 @@ const newsletterRouter = router({
       // (the admin can also add tags manually).
       topics: z.array(z.string().max(64)).max(10).optional(),
       [HONEYPOT_FIELD]: z.string().optional(),
+      // Cloudflare Turnstile widget token — verified server-side
+      // against the secret key. Optional in the schema so legacy
+      // clients still work; the guard enforces presence when the
+      // feature flag is on.
+      turnstileToken: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       const guard = await guardPublicFormOrSilent(ctx, input, "newsletter", { success: true, alreadySubscribed: false });

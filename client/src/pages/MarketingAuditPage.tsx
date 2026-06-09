@@ -18,6 +18,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
+import TurnstileWidget, { isTurnstileEnabled } from "@/components/TurnstileWidget";
 import {
   CheckCircle2,
   Search,
@@ -398,6 +399,8 @@ export default function MarketingAuditPage() {
   const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [consent, setConsent] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRequired = isTurnstileEnabled();
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
     "idle",
   );
@@ -418,6 +421,11 @@ export default function MarketingAuditPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!consent) return;
+    if (turnstileRequired && !turnstileToken) {
+      // Soft-fail — keep the user on the page; the widget will issue
+      // a token shortly and the button becomes enabled.
+      return;
+    }
     setStatus("loading");
     submit.mutate({
       name,
@@ -426,6 +434,7 @@ export default function MarketingAuditPage() {
       website: website || undefined,
       currentChallenges: message || undefined,
       botField: honeypot, // honeypot — server-side AUDIT_HONEYPOT
+      turnstileToken: turnstileToken || undefined,
     });
   };
 
@@ -643,10 +652,17 @@ export default function MarketingAuditPage() {
                     </span>
                   </label>
 
+                  {/* Cloudflare Turnstile — feature-flagged; renders
+                      nothing when VITE_TURNSTILE_SITE_KEY is unset. */}
+                  <TurnstileWidget
+                    onToken={setTurnstileToken}
+                    onExpire={() => setTurnstileToken("")}
+                  />
+
                   <button
                     type="submit"
                     className="g2a-btn-primary"
-                    disabled={status === "loading" || !consent}
+                    disabled={status === "loading" || !consent || (turnstileRequired && !turnstileToken)}
                     style={{
                       width: "100%",
                       justifyContent: "center",

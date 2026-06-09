@@ -2339,6 +2339,44 @@ function isHoneypotTriggered(input) {
   return Boolean(input.website && input.website.trim().length > 0);
 }
 
+// server/_core/turnstile.ts
+var VERIFY_ENDPOINT = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+function isTurnstileConfigured() {
+  return Boolean(process.env.TURNSTILE_SECRET_KEY?.trim());
+}
+async function verifyTurnstile(token, remoteIp) {
+  const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
+  if (!secret) return { ok: true };
+  if (!token || !token.trim()) {
+    return { ok: false, reason: "missing-token" };
+  }
+  const body = new URLSearchParams();
+  body.set("secret", secret);
+  body.set("response", token);
+  if (remoteIp) body.set("remoteip", remoteIp);
+  try {
+    const res = await fetch(VERIFY_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: body.toString(),
+      // 8s ceiling — Cloudflare normally answers in ≤500ms; this is
+      // a safety net to ensure form submission isn't held hostage by a
+      // network glitch on their end.
+      signal: AbortSignal.timeout(8e3)
+    });
+    if (!res.ok) {
+      return { ok: false, reason: `cloudflare-${res.status}` };
+    }
+    const json2 = await res.json();
+    if (json2.success) return { ok: true };
+    const code = (json2["error-codes"] || []).join(",") || "unknown";
+    return { ok: false, reason: `cloudflare:${code}` };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return { ok: false, reason: `network:${msg}` };
+  }
+}
+
 // server/_core/emailTemplates.ts
 var BRAND_TEAL = "#14B8A6";
 var BRAND_TEAL_DARK = "#0d9488";
@@ -2926,6 +2964,16 @@ async function guardPublicFormOrSilent(ctx, input, formKey, silentSuccess) {
     return silentSuccess;
   }
   const ip = getClientIp(ctx.req);
+  if (isTurnstileConfigured()) {
+    const verdict = await verifyTurnstile(input.turnstileToken, ip);
+    if (!verdict.ok) {
+      console.warn(`[turnstile] Verification failed for ${formKey}: ${verdict.reason}`);
+      throw new TRPCError3({
+        code: "FORBIDDEN",
+        message: "Bot-ellen\u0151rz\xE9s sikertelen. Friss\xEDtsd az oldalt \xE9s pr\xF3b\xE1ld \xFAjra."
+      });
+    }
+  }
   const limit = await checkRateLimitDb(`${formKey}:${ip}`, { max: 5, windowMs: 15 * 60 * 1e3 });
   if (!limit.allowed) {
     const minutes = Math.ceil(((limit.retryAt ?? Date.now()) - Date.now()) / 6e4);
@@ -3030,6 +3078,11 @@ var contactRouter = router({
     serviceInterest: z2.string().optional(),
     // Honeypot — must remain empty for the submission to be persisted
     [HONEYPOT_FIELD]: z2.string().optional(),
+    // Cloudflare Turnstile widget token — verified server-side
+    // against the secret key. Optional in the schema so legacy
+    // clients still work; the guard enforces presence when the
+    // feature flag is on.
+    turnstileToken: z2.string().optional(),
     // Optional form-origin marker. Lets shared endpoints (e.g. /karrier
     // posts to contact.submit) keep separate rate-limit buckets so a job
     // applicant doesn't burn through the contact form's quota.
@@ -3038,9 +3091,10 @@ var contactRouter = router({
     const bucket = input.formContext === "careers" ? "careers" : "contact";
     const guard = await guardPublicFormOrSilent(ctx, input, bucket, { success: true });
     if (guard) return guard;
-    const { [HONEYPOT_FIELD]: _hp, formContext: _fc, ...submission } = input;
+    const { [HONEYPOT_FIELD]: _hp, formContext: _fc, turnstileToken: _tt, ...submission } = input;
     void _hp;
     void _fc;
+    void _tt;
     await createContactSubmission(submission);
     await notifyOwner({
       title: `\xDAj kapcsolatfelv\xE9tel: ${input.name}`,
@@ -3105,16 +3159,22 @@ var auditRouter = router({
     monthlyBudget: z2.string().optional(),
     currentChallenges: z2.string().optional(),
     goals: z2.string().optional(),
-    [AUDIT_HONEYPOT]: z2.string().optional()
+    [AUDIT_HONEYPOT]: z2.string().optional(),
+    turnstileToken: z2.string().optional()
   })).mutation(async ({ input, ctx }) => {
     const guard = await guardPublicFormOrSilent(
       ctx,
-      { website: input[AUDIT_HONEYPOT] },
+      {
+        website: input[AUDIT_HONEYPOT],
+        turnstileToken: input.turnstileToken
+      },
       "audit",
       { success: true }
     );
     if (guard) return guard;
-    const normalizedInput = { ...input, website: normalizeUrl(input.website) };
+    const { turnstileToken: _tt, ...inputForDb } = input;
+    void _tt;
+    const normalizedInput = { ...inputForDb, website: normalizeUrl(inputForDb.website) };
     await createAuditLead(normalizedInput);
     await notifyOwner({
       title: `\xDAj ingyenes audit k\xE9r\xE9s: ${normalizedInput.name}`,
@@ -3175,7 +3235,12 @@ var newsletterRouter = router({
     // Allowed values are validated client-side; server accepts any string
     // (the admin can also add tags manually).
     topics: z2.array(z2.string().max(64)).max(10).optional(),
-    [HONEYPOT_FIELD]: z2.string().optional()
+    [HONEYPOT_FIELD]: z2.string().optional(),
+    // Cloudflare Turnstile widget token — verified server-side
+    // against the secret key. Optional in the schema so legacy
+    // clients still work; the guard enforces presence when the
+    // feature flag is on.
+    turnstileToken: z2.string().optional()
   })).mutation(async ({ input, ctx }) => {
     const guard = await guardPublicFormOrSilent(ctx, input, "newsletter", { success: true, alreadySubscribed: false });
     if (guard) return guard;

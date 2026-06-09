@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { parseFormError } from "@/lib/utils";
 import CalendlyEmbed, { isCalendlyConfigured } from "@/components/CalendlyEmbed";
+import TurnstileWidget, { isTurnstileEnabled } from "@/components/TurnstileWidget";
 
 const MESSAGE_MIN = 10;
 
@@ -20,9 +21,15 @@ export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "", website: "" });
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  // Turnstile token — populated by the widget callback. When the
+  // feature flag is off (no site key), this stays empty and the
+  // server also soft-passes.
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const messageLen = form.message.trim().length;
   const messageTooShort = messageLen > 0 && messageLen < MESSAGE_MIN;
+  const turnstileRequired = isTurnstileEnabled();
+  const canSubmit = !submitting && messageLen >= MESSAGE_MIN && (!turnstileRequired || turnstileToken !== "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,14 +38,21 @@ export default function ContactPage() {
       toast.error(t("contact.errorMessageMin"));
       return;
     }
+    if (turnstileRequired && !turnstileToken) {
+      toast.error(t("contact.turnstileWait"));
+      return;
+    }
     setSubmitting(true);
     try {
-      await submitMutation.mutateAsync(form);
+      await submitMutation.mutateAsync({ ...form, turnstileToken: turnstileToken || undefined });
       setSuccess(true);
       setForm({ name: "", email: "", phone: "", subject: "", message: "", website: "" });
+      setTurnstileToken("");
       toast.success(t("contact.messageSentToast"));
     } catch (err: unknown) {
       toast.error(parseFormError(err, t("common.error")));
+      // Token is single-use — clear it so the widget re-issues on retry.
+      setTurnstileToken("");
     } finally {
       setSubmitting(false);
     }
@@ -228,7 +242,14 @@ export default function ContactPage() {
                         </p>
                       )}
                     </div>
-                    <button type="submit" className="g2a-btn-primary" disabled={submitting} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%" }}>
+                    {/* Cloudflare Turnstile widget — renders nothing
+                        when feature flag is off (VITE_TURNSTILE_SITE_KEY
+                        unset), so this is safe for local dev. */}
+                    <TurnstileWidget
+                      onToken={setTurnstileToken}
+                      onExpire={() => setTurnstileToken("")}
+                    />
+                    <button type="submit" className="g2a-btn-primary" disabled={!canSubmit} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%" }}>
                       <Send size={16} />
                       {submitting ? t("common.loading") : t("contact.send")}
                     </button>

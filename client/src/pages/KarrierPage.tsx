@@ -23,6 +23,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
+import TurnstileWidget, { isTurnstileEnabled } from "@/components/TurnstileWidget";
 import {
   Briefcase,
   Heart,
@@ -495,6 +496,8 @@ export default function KarrierPage() {
   const [honeypot, setHoneypot] = useState("");
   const [consent, setConsent] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRequired = isTurnstileEnabled();
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
     "idle",
   );
@@ -516,6 +519,7 @@ export default function KarrierPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!consent) return;
+    if (turnstileRequired && !turnstileToken) return;
     setStatus("loading");
     submit.mutate({
       name,
@@ -525,6 +529,7 @@ export default function KarrierPage() {
       message: `Pozíció: ${position || "spontán"}\nCV link: ${cv || "—"}\n\nMotiváció:\n${motivation}`,
       website: honeypot, // server-side HONEYPOT_FIELD === "website"
       formContext: "careers", // separate rate-limit bucket from /kapcsolat
+      turnstileToken: turnstileToken || undefined,
     });
   };
 
@@ -1048,10 +1053,15 @@ export default function KarrierPage() {
                   </span>
                 </label>
 
+                <TurnstileWidget
+                  onToken={setTurnstileToken}
+                  onExpire={() => setTurnstileToken("")}
+                />
+
                 <button
                   type="submit"
                   className="g2a-btn-primary"
-                  disabled={status === "loading" || !consent}
+                  disabled={status === "loading" || !consent || (turnstileRequired && !turnstileToken)}
                   style={{
                     width: "100%",
                     justifyContent: "center",
