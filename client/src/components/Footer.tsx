@@ -24,7 +24,7 @@ const SERVICES = [
 
 const COMPANY = [
   { key: "nav.about", href: "/rolunk" },
-  { key: "nav.expertise", href: "/szakertelem" },
+  { key: "nav.industries", href: "/szakertelem" },
   { key: "nav.technology", href: "/technologia" },
   { key: "nav.partners", href: "/partnereink" },
   { key: "nav.references", href: "/referenciak" },

@@ -99,7 +99,7 @@ const VALUES_LIST: Record<Language, Value[]> = {
     },
     {
       title: "Globális szemlélet",
-      desc: "Pécsi gyökerek, magyar piaci ismeret, nemzetközi tapasztalat (Varsói Egyetem vendégoktató, kínai partnerségek). Tudjuk a különbséget egy magyar vs lengyel B2B buyer-persona között.",
+      desc: "Pécsi gyökerek, magyar piaci ismeret, nemzetközi tapasztalat (egyetemi vendégoktatás IBS Budapest, PTE és Varsói Egyetem; kínai partnerségek). Tudjuk a különbséget egy magyar vs lengyel B2B buyer-persona között.",
     },
     {
       title: "Agilis működés",
@@ -125,7 +125,7 @@ const VALUES_LIST: Record<Language, Value[]> = {
     },
     {
       title: "Global perspective",
-      desc: "Pécs roots, Hungarian market knowledge, international experience (University of Warsaw guest lecturer, Chinese partnerships). We know the difference between a Hungarian and Polish B2B buyer persona.",
+      desc: "Pécs roots, Hungarian market knowledge, international experience (guest lecturer at IBS Budapest, University of Pécs and University of Warsaw; Chinese partnerships). We know the difference between a Hungarian and Polish B2B buyer persona.",
     },
     {
       title: "Agile operations",
@@ -151,7 +151,7 @@ const VALUES_LIST: Record<Language, Value[]> = {
     },
     {
       title: "全球视野",
-      desc: "佩奇根基、匈牙利市场知识、国际经验(华沙大学客座讲师、中国合作伙伴关系)。我们了解匈牙利与波兰 B2B 买方画像之间的差异。",
+      desc: "佩奇根基、匈牙利市场知识、国际经验(IBS 布达佩斯、佩奇大学与华沙大学客座讲师;中国合作伙伴关系)。我们了解匈牙利与波兰 B2B 买方画像之间的差异。",
     },
     {
       title: "敏捷运作",

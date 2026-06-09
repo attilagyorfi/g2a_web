@@ -205,7 +205,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Expertise page
     "expertise.sectionLabel": "Szakterületek",
     "expertise.title": "Iparágak, ahol otthon vagyunk",
-    "expertise.desc": "Tapasztalatunk számos szektorra kiterjed. Pontosan értjük az adott piac kihívásait és lehetőségeit.",
+    "expertise.desc": "Tapasztalatunk számos szektorra kiterjed. Pontosan értjük az adott piac kihívásait és lehetőségeit. Kattints bármelyik iparágra a részletes szolgáltatásokért.",
+    "expertise.seoTitle": "Iparágak — G2A Marketing",
     // Partners page
     "partners.sectionLabel": "Referenciák",
     "partners.title": "Partnereink és referenciáink",
@@ -443,7 +444,7 @@ const translations: Record<Language, Record<string, string>> = {
     "about.mission.missionTitle": "Misszió",
     "about.mission.missionBody": "Stratégiai és technológiai partnerként segítünk magyar KKV-knak és B2B vállalatoknak adatvezérelt marketingrendszert építeni — a kutatástól a megvalósításig. Hisszük, hogy a marketing nem költség, hanem mérhető megtérülésű befektetés, ha jól csináljuk.",
     "about.mission.visionTitle": "Vízió",
-    "about.mission.visionBody": "Olyan ügynökség akarunk lenni, amelynél a magyar középvállalat szakembereinek 5 év múlva is megéri dolgozni — mert nálunk az AI nem helyettesíti, hanem felerősíti a szakmai döntést. 2030-ra Közép-Európa legautoritáltabb hangja akarunk lenni a B2B és KKV-marketing területén.",
+    "about.mission.visionBody": "Olyan ügynökség akarunk lenni, amelynél a magyar középvállalat szakembereinek 5 év múlva is megéri dolgozni — mert nálunk az AI nem helyettesíti, hanem felerősíti a szakmai döntést. 2030-ra Közép-Európa legmeghatározóbb hangja akarunk lenni a B2B és KKV-marketing területén.",
     "about.whyUs.label": "Miért G2A?",
     "about.whyUs.title": "Mi különböztet meg minket?",
     "about.whyUs.point1Title": "Stratégia, nem kampány",
@@ -798,7 +799,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Expertise page
     "expertise.sectionLabel": "Specialties",
     "expertise.title": "Industries we know inside out",
-    "expertise.desc": "Our experience spans many sectors. We understand the specific challenges and opportunities of each market.",
+    "expertise.desc": "Our experience spans many sectors. We understand the specific challenges and opportunities of each market. Click any industry for the detailed offering.",
+    "expertise.seoTitle": "Industries — G2A Marketing",
     // Partners page
     "partners.sectionLabel": "References",
     "partners.title": "Our Partners & References",
@@ -1380,7 +1382,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Expertise
     "expertise.sectionLabel": "专业领域",
     "expertise.title": "我们深耕的行业",
-    "expertise.desc": "我们的经验覆盖多个行业,深入理解各个市场的挑战与机遇。",
+    "expertise.desc": "我们的经验覆盖多个行业，深入理解各个市场的挑战与机遇。点击任一行业查看详细服务。",
+    "expertise.seoTitle": "行业 — G2A Marketing",
     // Partners
     "partners.sectionLabel": "客户",
     "partners.title": "我们的合作伙伴",

@@ -69,7 +69,7 @@ type IndustryContent = {
 const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
   hu: {
     "marketing-egeszsegugyi-cegeknek": {
-      title: "Marketing egészségügyi cégeknek",
+      title: "Egészségügyi marketing, ami pácienseket hoz",
       subtitle: "Klinikák, magánorvosok, fogászatok és wellness intézmények számára",
       metaTitle: "Egészségügyi marketing klinikáknak és magánorvosoknak | G2A Marketing",
       metaDesc:
@@ -166,7 +166,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-szepsegipari-cegeknek": {
-      title: "Marketing szépségipari cégeknek",
+      title: "Szépségipari marketing, ami foglalásokat hoz",
       subtitle: "Szépségszalonok, kozmetikák, fodrászatok és wellness vállalkozások számára",
       metaTitle: "Szépségipari marketing — Instagram, Meta Ads, foglalás | G2A Marketing",
       metaDesc:
@@ -263,7 +263,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-mernoki-irodaknak": {
-      title: "Marketing mérnöki és építőipari cégeknek",
+      title: "Mérnöki marketing, ami megbízásokat hoz",
       subtitle: "Tervezőirodák, statikai irodák, gépészmérnöki vállalkozások és építőipari szolgáltatók",
       metaTitle: "Mérnöki és építőipari B2B marketing | G2A Marketing",
       metaDesc:
@@ -360,7 +360,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-autoipari-cegeknek": {
-      title: "Marketing autóipari cégeknek",
+      title: "Autóipari marketing, ami próbavezetésekhez vezet",
       subtitle: "Autókereskedők, márkaszervízek, autóparkok és autóipari beszállítók",
       metaTitle: "Autóipari marketing — kereskedők és szervízek | G2A Marketing",
       metaDesc:
@@ -457,7 +457,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-ugyvedii-irodaknak": {
-      title: "Marketing ügyvédi és jogi irodáknak",
+      title: "Ügyvédi marketing, ami ügyfeleket hoz",
       subtitle: "Ügyvédi irodák, közjegyzők, könyvelő-jogi tanácsadók és pénzügyi tanácsadók",
       metaTitle: "Ügyvédi és jogi marketing — szakmai hitelesség | G2A Marketing",
       metaDesc:
@@ -554,7 +554,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-technologiai-cegeknek": {
-      title: "Marketing technológiai és SaaS cégeknek",
+      title: "B2B tech marketing, ami demókhoz vezet",
       subtitle: "SaaS vállalatok, IT-tanácsadók, tech startupok és software fejlesztők",
       metaTitle: "SaaS és tech B2B marketing — nemzetközi növekedés | G2A Marketing",
       metaDesc:
@@ -651,7 +651,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-onkormanyzati-projekteknek": {
-      title: "Marketing önkormányzati és közintézményi projekteknek",
+      title: "Önkormányzati marketing, ami lakossági részvételt hoz",
       subtitle: "Önkormányzatok, közintézmények, közösségi projektek és civil szervezetek számára",
       metaTitle: "Önkormányzati marketing — közösségi kommunikáció | G2A Marketing",
       metaDesc:
@@ -748,7 +748,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-b2b-cegeknek": {
-      title: "Marketing B2B vállalatoknak",
+      title: "B2B marketing, ami minősített leadeket hoz",
       subtitle: "Vállalati ügyfeleket kiszolgáló cégek, ipari beszállítók, professzionális szolgáltatók",
       metaTitle: "B2B marketing — leadgenerálás, ABM, LinkedIn | G2A Marketing",
       metaDesc:
@@ -847,7 +847,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
   },
   en: {
     "marketing-egeszsegugyi-cegeknek": {
-      title: "Marketing for Healthcare Companies",
+      title: "Healthcare marketing that brings in patients",
       subtitle: "For clinics, private practitioners, dental practices and wellness providers",
       metaTitle: "Healthcare marketing for clinics and private practices | G2A Marketing",
       metaDesc:
@@ -944,7 +944,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-szepsegipari-cegeknek": {
-      title: "Marketing for the Beauty Industry",
+      title: "Beauty marketing that drives bookings",
       subtitle: "For beauty salons, cosmetologists and wellness businesses",
       metaTitle: "Beauty Industry Marketing – G2A Marketing | Social Media, Instagram, Meta Ads",
       metaDesc: "Specialised marketing solutions for beauty salons and cosmetologists. Instagram, Meta Ads, online booking systems and social media strategy.",
@@ -1018,7 +1018,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-mernoki-irodaknak": {
-      title: "Marketing for Engineering Firms",
+      title: "Engineering marketing that wins commissions",
       subtitle: "For design studios, engineering firms and technical companies",
       metaTitle: "Engineering Firm Marketing – G2A Marketing | B2B Lead Generation, SEO, LinkedIn",
       metaDesc: "Specialised B2B marketing for engineering firms and design studios. SEO, LinkedIn, web development and lead generation.",
@@ -1092,7 +1092,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-autoipari-cegeknek": {
-      title: "Marketing for the Automotive Industry",
+      title: "Automotive marketing that converts test drives",
       subtitle: "For car dealerships, service centres and automotive businesses",
       metaTitle: "Automotive Marketing – G2A Marketing | Google Ads, Meta Ads, SEO",
       metaDesc: "Specialised marketing for car dealerships and automotive businesses. Google Ads, Meta Ads, SEO and lead generation.",
@@ -1166,7 +1166,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-ugyvedii-irodaknak": {
-      title: "Marketing for Law Firms",
+      title: "Legal marketing that attracts clients",
       subtitle: "For law firms and legal practices",
       metaTitle: "Law Firm Marketing – G2A Marketing | SEO, Google Ads, Brand Design",
       metaDesc: "Specialised marketing for law firms. SEO, Google Ads, premium brand design and content marketing.",
@@ -1240,7 +1240,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-technologiai-cegeknek": {
-      title: "Marketing for Technology Companies",
+      title: "B2B tech marketing that books demos",
       subtitle: "For SaaS companies, tech startups and IT firms",
       metaTitle: "Tech Marketing – G2A Marketing | B2B SaaS, LinkedIn, SEO",
       metaDesc: "Specialised B2B marketing for technology companies and SaaS businesses. LinkedIn Ads, SEO, content marketing and international expansion.",
@@ -1314,7 +1314,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-onkormanyzati-projekteknek": {
-      title: "Marketing for Municipal Projects",
+      title: "Public-sector marketing that drives engagement",
       subtitle: "For municipalities, public institutions and community projects",
       metaTitle: "Municipal Marketing – G2A Marketing | Community Communication",
       metaDesc: "Specialised marketing for municipalities and public institutions. Community communication, web development, social media and information campaigns.",
@@ -1388,7 +1388,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-b2b-cegeknek": {
-      title: "Marketing for B2B Companies",
+      title: "B2B marketing that delivers qualified leads",
       subtitle: "For companies serving enterprise clients and B2B businesses",
       metaTitle: "B2B Marketing – G2A Marketing | Lead Generation, LinkedIn, SEO",
       metaDesc: "Specialised B2B marketing solutions for companies serving enterprise clients. Lead generation, LinkedIn Ads, SEO and marketing automation.",
@@ -1464,7 +1464,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
   },
   zh: {
     "marketing-egeszsegugyi-cegeknek": {
-      title: "医疗健康行业营销",
+      title: "为诊所与私人医生带来患者的医疗营销",
       subtitle: "为诊所、私人医生、牙科诊所与健康养生机构服务",
       metaTitle: "面向诊所与私人医生的医疗营销 | G2A Marketing",
       metaDesc:
@@ -1561,7 +1561,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-szepsegipari-cegeknek": {
-      title: "美容行业营销",
+      title: "为美容沙龙与品牌带来预约的美业营销",
       subtitle: "为美容沙龙、美容师、美发与健康养生企业服务",
       metaTitle: "美容行业营销 — Instagram、Meta 广告与预约 | G2A Marketing",
       metaDesc:
@@ -1658,7 +1658,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-mernoki-irodaknak": {
-      title: "工程咨询公司营销",
+      title: "为设计事务所与供应商赢得业务的工程营销",
       subtitle: "为设计事务所、工程公司与技术企业提供",
       metaTitle: "工程公司营销 – G2A Marketing | B2B 线索生成、SEO、LinkedIn",
       metaDesc: "为工程公司与设计事务所提供专业 B2B 营销。SEO、LinkedIn、网站开发与线索生成。",
@@ -1732,7 +1732,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-autoipari-cegeknek": {
-      title: "汽车行业营销",
+      title: "为经销商与维修中心带来试驾的汽车营销",
       subtitle: "为汽车经销商、维修中心与汽车行业企业提供",
       metaTitle: "汽车行业营销 – G2A Marketing | Google Ads、Meta 广告、SEO",
       metaDesc: "为汽车经销商与汽车行业企业提供专业营销。Google Ads、Meta 广告、SEO 与线索生成。",
@@ -1806,7 +1806,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-ugyvedii-irodaknak": {
-      title: "律师事务所营销",
+      title: "为律师事务所与顾问吸引客户的法律营销",
       subtitle: "为律师事务所与法律服务机构提供",
       metaTitle: "律师事务所营销 – G2A Marketing | SEO、Google Ads、品牌设计",
       metaDesc: "为律师事务所提供专业营销。SEO、Google Ads、高端品牌设计与内容营销。",
@@ -1880,7 +1880,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-technologiai-cegeknek": {
-      title: "科技公司营销",
+      title: "为 SaaS 与 IT 企业带来演示预约的 B2B 科技营销",
       subtitle: "为 SaaS 公司、科技创业公司与 IT 企业提供",
       metaTitle: "科技公司营销 – G2A Marketing | B2B SaaS、LinkedIn、SEO",
       metaDesc: "为科技公司与 SaaS 企业提供专业 B2B 营销。LinkedIn 广告、SEO、内容营销与国际化拓展。",
@@ -1954,7 +1954,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-onkormanyzati-projekteknek": {
-      title: "政府机构与公共项目营销",
+      title: "为欧盟项目与活动带来公众参与的公共部门营销",
       subtitle: "为地方政府、公共机构与社区项目提供",
       metaTitle: "政府机构营销 – G2A Marketing | 社区沟通",
       metaDesc: "为地方政府与公共机构提供专业营销。社区沟通、网站开发、社交媒体与信息宣传活动。",
@@ -2028,7 +2028,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       ],
     },
     "marketing-b2b-cegeknek": {
-      title: "B2B 企业营销",
+      title: "为制造商与批发商带来合格线索的 B2B 营销",
       subtitle: "为服务企业客户的公司与 B2B 企业提供",
       metaTitle: "B2B 营销 – G2A Marketing | 线索生成、LinkedIn、SEO",
       metaDesc: "为服务企业客户的公司提供专业 B2B 营销方案。线索生成、LinkedIn 广告、SEO 与营销自动化。",

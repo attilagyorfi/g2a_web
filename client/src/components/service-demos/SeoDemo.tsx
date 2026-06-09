@@ -35,6 +35,30 @@ export default function SeoDemo() {
         overflow: "hidden",
       }}
     >
+      {/* "Sample" badge — audit §3.10. Keyword positions and delta numbers
+          (e.g. "#1 marketing ügynökség pécs", "+4") used to read like real
+          live rankings. This chip signals they're illustrative without
+          watering down the visual. */}
+      <span
+        style={{
+          position: "absolute",
+          top: 10,
+          right: 10,
+          zIndex: 2,
+          padding: "3px 8px",
+          fontSize: "0.55rem",
+          fontFamily: "Geist Mono, monospace",
+          letterSpacing: "0.14em",
+          color: "rgba(255,255,255,0.7)",
+          background: "rgba(0,0,0,0.5)",
+          border: "1px solid rgba(255,255,255,0.18)",
+          borderRadius: 4,
+          textTransform: "uppercase",
+          backdropFilter: "blur(6px)",
+        }}
+      >
+        Minta
+      </span>
       <div
         style={{
           position: "absolute",

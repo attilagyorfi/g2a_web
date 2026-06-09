@@ -40,6 +40,30 @@ export default function AuditHeroDemo() {
         overflow: "hidden",
       }}
     >
+      {/* "Sample / illustration" badge — audit §3.10. Demo numbers in the
+          score ring and dimensions used to look like real client data,
+          which felt misleading on a marketing-agency site. This chip makes
+          the placeholder status visually obvious without hiding the demo. */}
+      <span
+        style={{
+          position: "absolute",
+          top: 10,
+          right: 10,
+          zIndex: 2,
+          padding: "3px 8px",
+          fontSize: "0.55rem",
+          fontFamily: "Geist Mono, monospace",
+          letterSpacing: "0.14em",
+          color: "rgba(255,255,255,0.7)",
+          background: "rgba(0,0,0,0.5)",
+          border: "1px solid rgba(255,255,255,0.18)",
+          borderRadius: 4,
+          textTransform: "uppercase",
+          backdropFilter: "blur(6px)",
+        }}
+      >
+        Minta
+      </span>
       {/* Header — URL bar mock */}
       <motion.div
         initial={reduce ? false : { opacity: 0, y: -4 }}
