@@ -349,6 +349,11 @@ const translations: Record<Language, Record<string, string>> = {
     "home.cases.subtitle": "Nem ígérünk – bizonyítunk. Íme néhány partnerünk projektje.",
     // Home — hero scroll hint + problems CTA
     "home.hero.scrollHint": "Görgess",
+    // Audit hero demo (audit §3.2 — was hardcoded HU on all locales)
+    "auditDemo.content": "Tartalom",
+    "auditDemo.overallScore": "SEO Audit · összpontszám",
+    "auditDemo.recommendationsGenerated": "12 javaslat generálva",
+    "auditDemo.metaInfo": "~2 perc · ingyenes · regisztráció nélkül",
     "home.solutions.viewSolution": "Megoldás megtekintése",
     // Home — AI section
     "home.ai.label": "AI & Innováció",
@@ -941,6 +946,11 @@ const translations: Record<Language, Record<string, string>> = {
     "home.cases.title": "Real results from real clients",
     "home.cases.subtitle": "We don't make promises — we show proof. A glimpse of what we've built with our partners.",
     "home.hero.scrollHint": "Scroll",
+    // Audit hero demo (audit §3.2 — was hardcoded HU on all locales)
+    "auditDemo.content": "Content",
+    "auditDemo.overallScore": "SEO Audit · overall score",
+    "auditDemo.recommendationsGenerated": "12 recommendations generated",
+    "auditDemo.metaInfo": "~2 min · free · no signup",
     "home.solutions.viewSolution": "View solution",
     "home.ai.label": "AI & Innovation",
     "home.ai.title": "How we use AI",
@@ -1524,6 +1534,11 @@ const translations: Record<Language, Record<string, string>> = {
     "home.cases.title": "真实客户的真实成果",
     "home.cases.subtitle": "我们不做承诺 —— 我们用成果说话。看看我们与合作伙伴共同打造的项目。",
     "home.hero.scrollHint": "向下滚动",
+    // Audit hero demo (audit §3.2 — was hardcoded HU on all locales)
+    "auditDemo.content": "内容",
+    "auditDemo.overallScore": "SEO 审核 · 综合评分",
+    "auditDemo.recommendationsGenerated": "已生成 12 条建议",
+    "auditDemo.metaInfo": "约 2 分钟 · 免费 · 无需注册",
     "home.solutions.viewSolution": "查看解决方案",
     "home.ai.label": "AI 与创新",
     "home.ai.title": "我们如何运用 AI",

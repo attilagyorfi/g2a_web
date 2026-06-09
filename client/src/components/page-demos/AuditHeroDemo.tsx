@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Search, Zap, ShieldCheck, FileText } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const ACCENT = "#14B8A6";
 
@@ -9,12 +10,13 @@ const ACCENT = "#14B8A6";
  */
 export default function AuditHeroDemo() {
   const reduce = useReducedMotion();
+  const { t } = useLanguage();
 
   const dimensions = [
     { icon: <Search size={13} />, name: "SEO", score: 92, color: "#10b981" },
     { icon: <Zap size={13} />, name: "Performance", score: 78, color: "#fbbf24" },
     { icon: <ShieldCheck size={13} />, name: "Accessibility", score: 88, color: "#10b981" },
-    { icon: <FileText size={13} />, name: "Tartalom", score: 65, color: "#f97316" },
+    { icon: <FileText size={13} />, name: t("auditDemo.content"), score: 65, color: "#f97316" },
   ];
 
   // Overall score ring
@@ -115,13 +117,13 @@ export default function AuditHeroDemo() {
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ fontFamily: "Geist Mono, monospace", fontSize: "0.6rem", color: "var(--g2a-text-muted)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-            SEO Audit · összpontszám
+            {t("auditDemo.overallScore")}
           </div>
           <div style={{ fontFamily: "Geist, sans-serif", fontWeight: 700, fontSize: "0.95rem", color: "var(--g2a-text-primary)", marginTop: 2 }}>
-            12 javaslat generálva
+            {t("auditDemo.recommendationsGenerated")}
           </div>
           <div style={{ fontFamily: "Geist Mono, monospace", fontSize: "0.6rem", color: "var(--g2a-text-muted)", marginTop: 2 }}>
-            ~2 perc · ingyenes · regisztráció nélkül
+            {t("auditDemo.metaInfo")}
           </div>
         </div>
       </div>
