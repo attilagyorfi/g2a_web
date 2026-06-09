@@ -989,6 +989,9 @@ const adminRouter = router({
         prompt: z.string().min(8).max(1000),
         size: z.enum(["1024x1024", "1792x1024", "1024x1792"]).optional(),
         quality: z.enum(["standard", "hd"]).optional(),
+        // `style` ("vivid" / "natural") is accepted but ignored — the
+        // legacy DALL·E 3 parameter is gone. We keep the field in the
+        // schema so older clients don't get a validation error.
         style: z.enum(["vivid", "natural"]).optional(),
         /** Cloudinary folder for the uploaded asset. Default "g2a/ai-generated". */
         folder: z.string().optional(),
@@ -996,29 +999,25 @@ const adminRouter = router({
         filenameHint: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        // 1. Call OpenAI to generate the image
+        // 1. Call OpenAI (gpt-image-1) — bytes come back inline as base64,
+        //    no temporary URL to fetch.
         const result = await generateImage({
           prompt: input.prompt,
           size: input.size,
           quality: input.quality,
-          style: input.style,
         });
+        const buffer = result.imageBuffer;
 
-        // 2. Download the image bytes from OpenAI's temporary URL
-        const dl = await fetch(result.url);
-        if (!dl.ok) {
-          throw new TRPCError({ code: "BAD_GATEWAY", message: `Failed to download generated image: ${dl.status}` });
-        }
-        const arrayBuf = await dl.arrayBuffer();
-        const buffer = Buffer.from(arrayBuf);
-
-        // 3. Re-host on Cloudinary if configured (else return the temp URL with a warning)
+        // 2. Re-host on Cloudinary if configured. If not, fall back to a
+        //    data: URL so the admin can at least see / save the image —
+        //    it's a few hundred KB inline, which is fine for the editor.
         if (!isCloudinaryConfigured()) {
+          const dataUrl = `data:image/png;base64,${buffer.toString("base64")}`;
           return {
-            url: result.url,
+            url: dataUrl,
             revisedPrompt: result.revisedPrompt,
             ephemeral: true as const,
-            warning: "Cloudinary nincs konfigurálva — a kép URL ~1 óra múlva lejár.",
+            warning: "Cloudinary nincs konfigurálva — a kép inline (data URL) formában érkezik. Cloudinary beállításával CDN-re kerül.",
           };
         }
 

@@ -2031,23 +2031,32 @@ ${input.context.slice(0, 2e3)}`);
     description: parsed.description?.trim() ?? ""
   };
 }
-var DALL_E_ENDPOINT = "https://api.openai.com/v1/images/generations";
-var DALL_E_MODEL = "dall-e-3";
+var OPENAI_IMAGES_ENDPOINT = "https://api.openai.com/v1/images/generations";
+var IMAGE_MODEL = "gpt-image-1";
+var SIZE_MAP = {
+  "1024x1024": "1024x1024",
+  "1792x1024": "1536x1024",
+  "1024x1792": "1024x1536"
+};
 async function generateImage(input) {
   const key = process.env.OPENAI_API_KEY;
   if (!key) throw new Error("OPENAI_API_KEY not set \u2014 image generation disabled");
-  const res = await fetch(DALL_E_ENDPOINT, {
+  const size = SIZE_MAP[input.size ?? "1792x1024"];
+  const quality = input.quality === "hd" ? "high" : "medium";
+  const res = await fetch(OPENAI_IMAGES_ENDPOINT, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${key}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model: DALL_E_MODEL,
+      model: IMAGE_MODEL,
       prompt: input.prompt,
       n: 1,
-      size: input.size ?? "1792x1024",
-      quality: input.quality ?? "standard"
+      size,
+      quality
+      // gpt-image-1 always returns base64. The response_format param
+      // was removed from this model — we don't send it.
     })
   });
   if (!res.ok) {
@@ -2056,9 +2065,9 @@ async function generateImage(input) {
   }
   const json2 = await res.json();
   const item = json2.data?.[0];
-  if (!item?.url) throw new Error("OpenAI returned no image URL");
+  if (!item?.b64_json) throw new Error("OpenAI returned no image data");
   return {
-    url: item.url,
+    imageBuffer: Buffer.from(item.b64_json, "base64"),
     revisedPrompt: item.revised_prompt ?? input.prompt
   };
 }
@@ -3660,6 +3669,9 @@ var adminRouter = router({
       prompt: z2.string().min(8).max(1e3),
       size: z2.enum(["1024x1024", "1792x1024", "1024x1792"]).optional(),
       quality: z2.enum(["standard", "hd"]).optional(),
+      // `style` ("vivid" / "natural") is accepted but ignored — the
+      // legacy DALL·E 3 parameter is gone. We keep the field in the
+      // schema so older clients don't get a validation error.
       style: z2.enum(["vivid", "natural"]).optional(),
       /** Cloudinary folder for the uploaded asset. Default "g2a/ai-generated". */
       folder: z2.string().optional(),
@@ -3669,21 +3681,16 @@ var adminRouter = router({
       const result = await generateImage({
         prompt: input.prompt,
         size: input.size,
-        quality: input.quality,
-        style: input.style
+        quality: input.quality
       });
-      const dl = await fetch(result.url);
-      if (!dl.ok) {
-        throw new TRPCError3({ code: "BAD_GATEWAY", message: `Failed to download generated image: ${dl.status}` });
-      }
-      const arrayBuf = await dl.arrayBuffer();
-      const buffer = Buffer.from(arrayBuf);
+      const buffer = result.imageBuffer;
       if (!isCloudinaryConfigured()) {
+        const dataUrl = `data:image/png;base64,${buffer.toString("base64")}`;
         return {
-          url: result.url,
+          url: dataUrl,
           revisedPrompt: result.revisedPrompt,
           ephemeral: true,
-          warning: "Cloudinary nincs konfigur\xE1lva \u2014 a k\xE9p URL ~1 \xF3ra m\xFAlva lej\xE1r."
+          warning: "Cloudinary nincs konfigur\xE1lva \u2014 a k\xE9p inline (data URL) form\xE1ban \xE9rkezik. Cloudinary be\xE1ll\xEDt\xE1s\xE1val CDN-re ker\xFCl."
         };
       }
       const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "ai-image";

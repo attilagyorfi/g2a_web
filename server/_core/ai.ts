@@ -344,56 +344,75 @@ export type ImproveTextInput = {
 export type GenerateImageInput = {
   /** Plain text prompt — describes the image content. Best results from concrete, visual descriptions. */
   prompt: string;
-  /** "1024x1024" (square) | "1792x1024" (wide, hero) | "1024x1792" (tall). Default: 1792x1024. */
+  /**
+   * Legacy DALL·E 3 sizes accepted for backwards-compat with existing
+   * callers; mapped to the closest gpt-image-1 aspect internally:
+   *   1024x1024 → 1024x1024 (square)
+   *   1792x1024 → 1536x1024 (landscape hero)
+   *   1024x1792 → 1024x1536 (portrait)
+   */
   size?: "1024x1024" | "1792x1024" | "1024x1792";
-  /** "standard" (cheaper, ~$0.04) or "hd" (more detail, ~$0.08). Default: standard. */
+  /** "standard" → gpt-image-1 "medium", "hd" → "high". */
   quality?: "standard" | "hd";
-  /** "vivid" (hyper-real, dramatic) or "natural" (more realistic, less stylized). Default: natural. */
-  style?: "vivid" | "natural";
 };
 
 export type GenerateImageResult = {
-  /** Direct URL to the generated image (Azure CDN, valid for ~1 hour). */
-  url: string;
+  /** PNG bytes of the generated image. Caller decides where to host it. */
+  imageBuffer: Buffer;
   /** Revised prompt OpenAI actually used (it adds safety phrasing). */
   revisedPrompt: string;
 };
 
-const DALL_E_ENDPOINT = "https://api.openai.com/v1/images/generations";
-const DALL_E_MODEL = "dall-e-3";
+const OPENAI_IMAGES_ENDPOINT = "https://api.openai.com/v1/images/generations";
+const IMAGE_MODEL = "gpt-image-1";
+
+// gpt-image-1 native sizes — we map the older DALL·E 3 dimensions to the
+// closest supported aspect.
+const SIZE_MAP: Record<NonNullable<GenerateImageInput["size"]>, string> = {
+  "1024x1024": "1024x1024",
+  "1792x1024": "1536x1024",
+  "1024x1792": "1024x1536",
+};
 
 /**
- * Generate an image via OpenAI DALL·E 3.
+ * Generate an image via OpenAI's gpt-image-1 model.
  *
- * Cost (2026-04 pricing):
- *  - 1024×1024 standard: $0.040
- *  - 1792×1024 standard: $0.080  ← default for service hero images (16:9)
- *  - 1024×1024 HD: $0.080
- *  - 1792×1024 HD: $0.120
+ * Why gpt-image-1 (not dall-e-3): OpenAI released gpt-image-1 in April
+ * 2025 as the recommended successor. DALL·E 3 still exists but newer
+ * API keys / accounts often hit 400s on its endpoint (parameter schema
+ * drift, content-policy regressions). gpt-image-1 is the stable path
+ * forward — same /v1/images/generations endpoint, same auth, different
+ * model name and response shape (base64 instead of an ephemeral URL).
  *
- * Returns a URL to the image. The URL is short-lived (~1 hour) — caller
- * should download the bytes and re-host (typically on Cloudinary).
+ * Cost (2026 pricing, approx):
+ *  - 1024×1024 medium: ~$0.04
+ *  - 1536×1024 medium: ~$0.06
+ *  - high tier: roughly 2× medium
+ *
+ * Returns the PNG bytes directly. Callers can pipe them into Cloudinary
+ * or save them however they want — no separate download step needed.
  */
 export async function generateImage(input: GenerateImageInput): Promise<GenerateImageResult> {
   const key = process.env.OPENAI_API_KEY;
   if (!key) throw new Error("OPENAI_API_KEY not set — image generation disabled");
 
-  // OpenAI removed the `style` parameter from the dall-e-3 Images endpoint
-  // in mid-2025 — sending it now returns 400 "Unknown parameter: 'style'".
-  // The vivid/natural distinction was always best-effort anyway; the
-  // descriptive prompt itself is the main lever for image style.
-  const res = await fetch(DALL_E_ENDPOINT, {
+  const size = SIZE_MAP[input.size ?? "1792x1024"];
+  const quality = input.quality === "hd" ? "high" : "medium";
+
+  const res = await fetch(OPENAI_IMAGES_ENDPOINT, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${key}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: DALL_E_MODEL,
+      model: IMAGE_MODEL,
       prompt: input.prompt,
       n: 1,
-      size: input.size ?? "1792x1024",
-      quality: input.quality ?? "standard",
+      size,
+      quality,
+      // gpt-image-1 always returns base64. The response_format param
+      // was removed from this model — we don't send it.
     }),
   });
 
@@ -402,11 +421,13 @@ export async function generateImage(input: GenerateImageInput): Promise<Generate
     throw new Error(`OpenAI Images ${res.status}: ${detail.slice(0, 300) || res.statusText}`);
   }
 
-  const json = (await res.json()) as { data?: { url?: string; revised_prompt?: string }[] };
+  const json = (await res.json()) as {
+    data?: { b64_json?: string; revised_prompt?: string }[];
+  };
   const item = json.data?.[0];
-  if (!item?.url) throw new Error("OpenAI returned no image URL");
+  if (!item?.b64_json) throw new Error("OpenAI returned no image data");
   return {
-    url: item.url,
+    imageBuffer: Buffer.from(item.b64_json, "base64"),
     revisedPrompt: item.revised_prompt ?? input.prompt,
   };
 }
