@@ -1,4 +1,4 @@
-import { Phone, Mail, Clock, MapPin, Facebook, Youtube, Linkedin } from "lucide-react";
+import { Phone, Mail, Facebook, Youtube, Linkedin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CalendlyTextLink } from "@/components/CalendlyEmbed";
 import NewsletterSection from "@/components/NewsletterSection";
@@ -203,14 +203,11 @@ export default function Footer({ hideNewsletter = false }: { hideNewsletter?: bo
                 <Mail size={14} style={{ color: "var(--g2a-text-accent)", flexShrink: 0 }} />
                 info@g2amarketing.hu
               </a>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "var(--g2a-text-secondary)", fontSize: "0.875rem" }}>
-                <Clock size={14} style={{ color: "var(--g2a-text-accent)", flexShrink: 0 }} />
-                {t("footer.workingHoursValue")}
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "var(--g2a-text-secondary)", fontSize: "0.875rem" }}>
-                <MapPin size={14} style={{ color: "var(--g2a-text-accent)", flexShrink: 0 }} />
-                {t("contact.addressValue")}
-              </div>
+              {/* Working hours + city pin removed — the office isn't
+                  visitor-facing, so opening times and a "Pécs" map pin
+                  implied something we don't offer. The Impressum row
+                  further down still carries the legally required
+                  registered-office line. */}
             </div>
 
             {/* Calendly direct-booking link — kept as the single secondary CTA

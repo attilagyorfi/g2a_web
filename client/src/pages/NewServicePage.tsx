@@ -7,7 +7,7 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { parseFormError } from "@/lib/utils";
 import { Link } from "wouter";
-import { ArrowRight, CheckCircle, Phone, Mail, Clock, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowRight, CheckCircle, Phone, Mail, ChevronDown, ChevronUp } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import ServiceHeroDemo, { hasServiceHeroDemo } from "@/components/service-demos/ServiceHeroDemo";
 import { getServiceConfig } from "@/data/serviceConfigs";
@@ -231,10 +231,9 @@ export default function NewServicePage({ params }: Props) {
                     <Mail size={16} style={{ color: "var(--g2a-brand-teal)" }} />
                     <a href="mailto:info@g2amarketing.hu" style={{ color: "var(--g2a-text)", textDecoration: "none" }}>info@g2amarketing.hu</a>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", color: "var(--g2a-text-muted)" }}>
-                    <Clock size={16} style={{ color: "var(--g2a-brand-teal)" }} />
-                    <span style={{ color: "var(--g2a-text)" }}>{t("footer.workingHoursValue")}</span>
-                  </div>
+                  {/* Working-hours row removed — same reason as on the
+                      Kapcsolat page; the office isn't visitor-facing
+                      so opening times shouldn't read as a walk-in cue. */}
                 </div>
               </div>
               <div style={{ background: "var(--g2a-bg)", border: "1px solid var(--g2a-border)", borderRadius: "1rem", padding: "2rem" }}>

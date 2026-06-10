@@ -289,11 +289,13 @@ export default function AuditPage() {
                 </div>
               )}
 
+              {/* Working-hours chip removed — the office isn't
+                  visitor-facing, opening times shouldn't read as a
+                  walk-in invitation. */}
               <div style={{ display: "flex", justifyContent: "center", gap: "2.5rem", marginTop: "2rem", flexWrap: "wrap" }}>
                 {[
                   { icon: <Phone size={14} />, text: "+36 30 190 2575" },
                   { icon: <Mail size={14} />, text: "info@g2amarketing.hu" },
-                  { icon: <Clock size={14} />, text: t("footer.workingHoursValue") },
                 ].map((c, i) => (
                   <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--g2a-text-muted)", fontSize: "0.875rem" }}>
                     <span style={{ color: "var(--g2a-brand-teal)" }}>{c.icon}</span> {c.text}

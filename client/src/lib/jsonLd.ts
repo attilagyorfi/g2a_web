@@ -94,6 +94,13 @@ function organization() {
 }
 
 function localBusiness() {
+  // Address + geo are kept because the company registration legally
+  // attaches to a Hungarian street address (it's in the Impressum
+  // anyway) and the local SEO signal helps "marketing ügynökség Pécs"
+  // queries surface us. We deliberately DO NOT emit
+  // `openingHoursSpecification` — that implies the office is
+  // walk-in-friendly, which it isn't. All client work is remote /
+  // scheduled via Calendly; there's no visitor reception.
   return {
     "@type": "ProfessionalService",
     "@id": LOCALBIZ_ID,
@@ -115,14 +122,6 @@ function localBusiness() {
       latitude: COMPANY.latitude,
       longitude: COMPANY.longitude,
     },
-    openingHoursSpecification: [
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        opens: "09:00",
-        closes: "17:00",
-      },
-    ],
     parentOrganization: { "@id": ORG_ID },
     areaServed: [
       { "@type": "Country", name: "Hungary" },

@@ -21,6 +21,7 @@ import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
 import { Mail, Loader2, Check } from "lucide-react";
+import TurnstileWidget, { isTurnstileEnabled } from "@/components/TurnstileWidget";
 
 type Variant = "compact" | "full";
 
@@ -61,6 +62,10 @@ export default function NewsletterForm({
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
     "idle",
   );
+  // Cloudflare Turnstile — feature-flagged. Token is populated by the
+  // widget callback; submit is gated on it when the flag is on.
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRequired = isTurnstileEnabled();
 
   const subscribe = trpc.newsletter.subscribe.useMutation({
     onSuccess: () => {
@@ -78,6 +83,9 @@ export default function NewsletterForm({
     if (!email || !name) return;
     if (variant === "full" && !consent) return;
     if (variant === "full" && topics.size === 0) return;
+    // When Turnstile is configured but no token yet, soft-fail —
+    // the widget will issue one shortly and the button re-enables.
+    if (turnstileRequired && !turnstileToken) return;
     setStatus("loading");
     subscribe.mutate({
       email,
@@ -85,6 +93,7 @@ export default function NewsletterForm({
       website,
       topics:
         variant === "full" ? Array.from(topics) : Array.from(NEWSLETTER_TOPICS),
+      turnstileToken: turnstileToken || undefined,
     });
   };
 
@@ -338,10 +347,19 @@ export default function NewsletterForm({
           </span>
         </label>
 
+        {/* Cloudflare Turnstile — full variant only (compact footer
+            band doesn't have room and uses the existing honeypot +
+            rate-limit defence alone). Renders nothing when the
+            feature flag is off. */}
+        <TurnstileWidget
+          onToken={setTurnstileToken}
+          onExpire={() => setTurnstileToken("")}
+        />
+
         <button
           type="submit"
           className="g2a-btn-primary"
-          disabled={status === "loading" || !consent || topics.size === 0}
+          disabled={status === "loading" || !consent || topics.size === 0 || (turnstileRequired && !turnstileToken)}
           style={{
             width: "100%",
             justifyContent: "center",
