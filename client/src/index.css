@@ -528,6 +528,12 @@ html.light ::-webkit-scrollbar-track { background: var(--g2a-bg-3); }
   .g2a-service-hero-demo { display: none; }
 }
 
+/* Admin dashboard activity / health row stacks below 880px so the
+   activity feed doesn't get cramped on tablet width. */
+@media (max-width: 880px) {
+  .g2a-admin-dashboard-grid { grid-template-columns: 1fr !important; }
+}
+
 /* Process pipeline — horizontal on desktop, stacked on tablet/mobile */
 .g2a-process-pipeline {
   display: flex;

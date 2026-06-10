@@ -4024,6 +4024,129 @@ var adminRouter = router({
       { contacts: 0, auditLeads: 0, subscribers: 0 }
     );
     return { series, totals, days: input.days };
+  }),
+  /**
+   * Unified activity feed across the three lead-collection tables.
+   * Gives the dashboard a single "what just happened" scrollback so
+   * the admin can see new contacts, audit requests, and newsletter
+   * signups interleaved by time without bouncing between three list
+   * pages.
+   *
+   * Limit caps at 50 rows; the UI typically shows 8-10. Each row is
+   * normalised to a small shape with a `type` discriminator so the
+   * client can render the right icon and link per row.
+   */
+  recentActivity: adminProcedure2.input(z2.object({ limit: z2.number().int().min(1).max(50).default(10) })).query(async ({ input }) => {
+    const [contactsData, subscribersData, auditLeadsData] = await Promise.all([
+      getContactSubmissions(),
+      getAllNewsletterSubscribers(),
+      getAllAuditLeads()
+    ]);
+    const events = [
+      ...contactsData.map((c) => ({
+        type: "contact",
+        id: c.id,
+        title: c.name || c.email,
+        subtitle: c.subject || c.email,
+        at: typeof c.createdAt === "string" ? c.createdAt : c.createdAt?.toISOString() ?? (/* @__PURE__ */ new Date(0)).toISOString(),
+        href: `/admin/contacts`,
+        unread: !c.isRead
+      })),
+      ...auditLeadsData.map((l) => ({
+        type: "audit",
+        id: l.id,
+        title: l.name || l.email,
+        subtitle: l.company || l.website || l.email,
+        at: typeof l.createdAt === "string" ? l.createdAt : l.createdAt?.toISOString() ?? (/* @__PURE__ */ new Date(0)).toISOString(),
+        href: `/admin/audit-leads`,
+        unread: !l.isContacted
+      })),
+      ...subscribersData.map((s) => ({
+        type: "newsletter",
+        id: s.id,
+        title: s.name || s.email,
+        subtitle: s.email,
+        at: typeof s.createdAt === "string" ? s.createdAt : s.createdAt?.toISOString() ?? (/* @__PURE__ */ new Date(0)).toISOString(),
+        href: `/admin/newsletter`,
+        // Newsletter signups are informational only — never marked unread.
+        unread: false
+      }))
+    ];
+    events.sort((a, b) => b.at.localeCompare(a.at));
+    return { events: events.slice(0, input.limit), totalEvents: events.length };
+  }),
+  /**
+   * Backend integration status snapshot. Lets the admin see at a
+   * glance whether each external service is wired up via env vars.
+   *
+   * We deliberately do NOT call out to the actual APIs (no
+   * heartbeat) — that would slow the dashboard load and burn cost.
+   * Configuration presence is the right signal: if a key is missing
+   * we know the feature is dark; if it's set we trust the runtime
+   * was tested at the relevant feature surface (forms, generators).
+   */
+  systemHealth: adminProcedure2.query(async () => {
+    return {
+      openai: {
+        configured: Boolean(process.env.OPENAI_API_KEY?.trim()),
+        model: process.env.OPENAI_MODEL || "gpt-4o-mini"
+      },
+      resend: {
+        configured: Boolean(process.env.RESEND_API_KEY?.trim()),
+        notifyAddress: process.env.RESEND_NOTIFY_EMAIL || null
+      },
+      cloudinary: {
+        configured: Boolean(process.env.CLOUDINARY_CLOUD_NAME?.trim() && process.env.CLOUDINARY_API_KEY?.trim()),
+        cloudName: process.env.CLOUDINARY_CLOUD_NAME || null
+      },
+      turnstile: {
+        // VITE_ vars aren't readable from Node at runtime in production
+        // Vercel — they're inlined at build time. We use the server-side
+        // secret as the proxy for "feature on", since both are set together.
+        configured: Boolean(process.env.TURNSTILE_SECRET_KEY?.trim())
+      },
+      deepl: {
+        configured: Boolean(process.env.DEEPL_API_KEY?.trim())
+      },
+      database: {
+        configured: Boolean(process.env.DATABASE_URL?.trim() || process.env.TIDB_HOST?.trim())
+      },
+      calendly: {
+        configured: Boolean(process.env.VITE_CALENDLY_URL || process.env.CALENDLY_URL)
+      }
+    };
+  }),
+  /**
+   * Content + AI usage snapshot — what's been published recently,
+   * what AI features are in play. Cheap roll-up over the posts table
+   * — we don't track per-call AI cost yet, so this gives the admin
+   * "content velocity" instead of a token meter.
+   */
+  contentSummary: adminProcedure2.query(async () => {
+    const posts2 = await getAllPostsAdmin();
+    const now = Date.now();
+    const oneDay = 24 * 60 * 60 * 1e3;
+    const lastNDays = (n) => posts2.filter((p) => {
+      const created = p.createdAt instanceof Date ? p.createdAt.getTime() : new Date(p.createdAt).getTime();
+      return !Number.isNaN(created) && now - created < n * oneDay;
+    }).length;
+    const recentPublished = posts2.filter((p) => p.status === "published").sort((a, b) => {
+      const aT = new Date(a.publishedAt ?? a.createdAt ?? 0).getTime();
+      const bT = new Date(b.publishedAt ?? b.createdAt ?? 0).getTime();
+      return bT - aT;
+    }).slice(0, 5).map((p) => ({
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      publishedAt: p.publishedAt ?? null
+    }));
+    return {
+      postsLast7Days: lastNDays(7),
+      postsLast30Days: lastNDays(30),
+      draftCount: posts2.filter((p) => p.status === "draft").length,
+      publishedCount: posts2.filter((p) => p.status === "published").length,
+      recentPublished
+    };
   })
 });
 var SOCIAL_PLATFORM = z2.enum(["linkedin", "facebook", "instagram"]);
