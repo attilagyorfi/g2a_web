@@ -1,14 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
-import CookieBanner from "@/components/CookieBanner";
-import NewsletterForm from "@/components/NewsletterForm";
 import SeoHead from "@/components/SeoHead";
-import Marquee from "@/components/Marquee";
 import RevealText from "@/components/RevealText";
+// Lazy: CookieBanner only renders for first-time visitors and sits
+// fixed-bottom; NewsletterForm + Marquee are below-the-fold. Pulling
+// these out of the eager Home bundle shaves real bytes off the
+// initial paint without delaying anything visible.
+const CookieBanner = lazy(() => import("@/components/CookieBanner"));
+const NewsletterForm = lazy(() => import("@/components/NewsletterForm"));
+const Marquee = lazy(() => import("@/components/Marquee"));
 import MagneticButton from "@/components/MagneticButton";
 import AnimatedBlobs from "@/components/AnimatedBlobs";
 import CursorSpotlight from "@/components/CursorSpotlight";
@@ -330,7 +334,7 @@ export default function Home() {
       />
       <ScrollProgressBar />
       <Navigation />
-      <CookieBanner />
+      <Suspense fallback={null}><CookieBanner /></Suspense>
 
       <main ref={pageRef}>
         {/* ── HERO ─────────────────────────────────────────────────────── */}
@@ -448,21 +452,23 @@ export default function Home() {
             borderTop: "1px solid var(--g2a-border)",
             borderBottom: "1px solid var(--g2a-border)",
           }}>
-            <Marquee speed={50} gap={48}>
-              {partnersList.map((p, i) => (
-                <div
-                  key={i}
-                  className="g2a-marquee-item"
-                  style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexShrink: 0 }}
-                >
-                  {p.logo ? (
-                    <img src={p.logo} alt={p.logoAlt || p.name} style={{ height: "32px", width: "auto", maxWidth: "120px", objectFit: "contain" }} />
-                  ) : (
-                    <span style={{ fontFamily: "Geist, sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--g2a-text-secondary)", whiteSpace: "nowrap" }}>{p.name}</span>
-                  )}
-                </div>
-              ))}
-            </Marquee>
+            <Suspense fallback={<div style={{ height: 32 }} />}>
+              <Marquee speed={50} gap={48}>
+                {partnersList.map((p, i) => (
+                  <div
+                    key={i}
+                    className="g2a-marquee-item"
+                    style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexShrink: 0 }}
+                  >
+                    {p.logo ? (
+                      <img src={p.logo} alt={p.logoAlt || p.name} style={{ height: "32px", width: "auto", maxWidth: "120px", objectFit: "contain" }} loading="lazy" decoding="async" />
+                    ) : (
+                      <span style={{ fontFamily: "Geist, sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--g2a-text-secondary)", whiteSpace: "nowrap" }}>{p.name}</span>
+                    )}
+                  </div>
+                ))}
+              </Marquee>
+            </Suspense>
           </section>
         )}
 
@@ -805,7 +811,9 @@ export default function Home() {
                 {t("home.newsletter.desc")}
               </p>
               <div className="reveal reveal-delay-3">
-                <NewsletterForm variant="compact" />
+                <Suspense fallback={<div style={{ height: 52 }} />}>
+                  <NewsletterForm variant="compact" />
+                </Suspense>
                 <p
                   style={{
                     color: "var(--g2a-text-muted)",
