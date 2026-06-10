@@ -72,6 +72,63 @@ export default function AdminPostEdit() {
   const [draftEditorNotes, setDraftEditorNotes] = useState<{ hu: string[]; en: string[]; zh: string[] }>({ hu: [], en: [], zh: [] });
   const [showEditorNotes, setShowEditorNotes] = useState(false);
 
+  // Client-side simulated progress for the multilang draft generator.
+  // The tRPC mutation is synchronous (single roundtrip, no streaming),
+  // so we don't get real progress events from the server. But we DO
+  // know the pipeline shape — three drafts run in parallel for ~15s,
+  // then three editorial passes run in parallel for ~15s — and we can
+  // surface that to the admin so the 20-40s wait doesn't read as
+  // a silent freeze. Stage transitions use a fixed schedule keyed off
+  // mutation start time; if the real pipeline finishes faster (cached
+  // hits, smaller topic), the UI snaps to 100% immediately on success.
+  type DraftStage = {
+    label: string;
+    detail: string;
+    minSeconds: number;
+  };
+  const DRAFT_STAGES: DraftStage[] = [
+    { label: "1/2 — Strukturált draft (HU, EN, ZH)", detail: "Három párhuzamos OpenAI hívás indul a témakör alapján.", minSeconds: 0 },
+    { label: "1/2 — HU draft folyamatban", detail: "Magyar nyelvű cikk strukturális rétege készül.", minSeconds: 5 },
+    { label: "1/2 — EN + ZH draftok véglegesítése", detail: "Az angol és kínai változat is befejezi az első passz-t.", minSeconds: 12 },
+    { label: "2/2 — Szerkesztői pass (HU, EN, ZH)", detail: "AI-szagú mondatok átírása, átvezetések finomítása, példák betoldása.", minSeconds: 18 },
+    { label: "2/2 — Polírozás véglegesítése", detail: "Címjavaslatok, szerkesztői megjegyzések összeállítása.", minSeconds: 28 },
+    { label: "Adatok összesítése", detail: "Mindhárom nyelv betöltése a szerkesztőbe…", minSeconds: 38 },
+  ];
+  const [draftElapsedSec, setDraftElapsedSec] = useState(0);
+  const [draftStartTime, setDraftStartTime] = useState<number | null>(null);
+
+  // Ticker effect — increments elapsed seconds while the mutation runs,
+  // resets on success/error.
+  useEffect(() => {
+    if (!blogDraftMutation.isPending) {
+      setDraftElapsedSec(0);
+      setDraftStartTime(null);
+      return;
+    }
+    if (draftStartTime === null) {
+      setDraftStartTime(Date.now());
+    }
+    const id = window.setInterval(() => {
+      if (draftStartTime !== null) {
+        setDraftElapsedSec(Math.floor((Date.now() - draftStartTime) / 1000));
+      }
+    }, 500);
+    return () => window.clearInterval(id);
+  }, [blogDraftMutation.isPending, draftStartTime]);
+
+  // Find the active stage based on elapsed time. The last stage that
+  // matches `elapsed >= minSeconds` wins.
+  const activeStageIndex = DRAFT_STAGES.reduce(
+    (acc, stage, idx) => (draftElapsedSec >= stage.minSeconds ? idx : acc),
+    0,
+  );
+  // Soft progress estimate — caps at 95% so we never imply "done"
+  // before the mutation actually resolves; success handler will snap
+  // to 100% via the cleanup effect.
+  const progressPct = blogDraftMutation.isPending
+    ? Math.min(95, Math.round((draftElapsedSec / 40) * 100))
+    : 0;
+
   const aiConfigured = aiStatus.data?.configured ?? false;
   const aiModel = aiStatus.data?.model ?? "";
 
@@ -237,25 +294,87 @@ export default function AdminPostEdit() {
             <p style={{ color: "#888", fontSize: "0.8rem", marginBottom: "1.25rem", lineHeight: 1.5 }}>
               Add meg a cikk témáját — két-fázisú pipeline fut le ({aiModel}): először strukturált draft, majd szerkesztői pass, ami az AI-szagú mondatokat átírja és a stílust HubSpot-szerű B2B hangra polírozza. Output: ~900-1200 szavas HTML cikk + 5 cím-javaslat + szerkesztői megjegyzések, mindhárom nyelven (HU + EN + ZH). 3 nyelv × 2 pass ≈ 20-40 mp. A meglévő tartalom felülíródik.
             </p>
-            <div style={{ marginBottom: "1rem" }}>
-              <label style={labelStyle}>Téma *</label>
-              <input
-                value={draftTopic}
-                onChange={(e) => setDraftTopic(e.target.value)}
-                placeholder="pl. Hogyan érdemes Google Ads kampányt indítani 2026-ban kis büdzsével"
-                style={inputStyle}
-                autoFocus
-                onKeyDown={(e) => { if (e.key === "Enter" && !blogDraftMutation.isPending) { e.preventDefault(); handleGenerateDraft(); } }}
-              />
-            </div>
-            <div style={{ marginBottom: "1.5rem" }}>
-              <label style={labelStyle}>Hangnem</label>
-              <select value={draftTone} onChange={(e) => setDraftTone(e.target.value as typeof draftTone)} style={inputStyle}>
-                <option value="professional">Professzionális (default)</option>
-                <option value="conversational">Beszélgetős</option>
-                <option value="technical">Technikai / részletes</option>
-              </select>
-            </div>
+            {/* Inputs + progress are rendered as alternatives — while a
+                generation is in flight, the topic input would be edited
+                blindly and is useless. */}
+            {blogDraftMutation.isPending ? (
+              <div style={{ marginBottom: "1.5rem" }}>
+                {/* Progress bar */}
+                <div style={{ position: "relative", height: 6, background: "rgba(255,255,255,0.06)", borderRadius: 999, overflow: "hidden", marginBottom: "1rem" }}>
+                  <div
+                    style={{
+                      position: "absolute", inset: 0, right: "auto",
+                      width: `${progressPct}%`,
+                      background: "linear-gradient(90deg, #a855f7 0%, #14B8A6 100%)",
+                      borderRadius: 999,
+                      transition: "width 0.6s ease",
+                      boxShadow: "0 0 12px rgba(168,85,247,0.45)",
+                    }}
+                  />
+                </div>
+                {/* Active stage label + elapsed time */}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                  <span style={{ color: "#c084fc", fontFamily: "Geist Mono, monospace", fontSize: "0.78rem", fontWeight: 600 }}>
+                    {DRAFT_STAGES[activeStageIndex].label}
+                  </span>
+                  <span style={{ color: "#888", fontFamily: "Geist Mono, monospace", fontSize: "0.72rem" }}>
+                    {draftElapsedSec}s
+                  </span>
+                </div>
+                <p style={{ color: "#888", fontSize: "0.78rem", lineHeight: 1.5, marginBottom: "1rem" }}>
+                  {DRAFT_STAGES[activeStageIndex].detail}
+                </p>
+                {/* Stage timeline — checkmarks for completed phases */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 6, padding: "0.85rem 1rem", background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 6 }}>
+                  {DRAFT_STAGES.map((stage, idx) => {
+                    const done = idx < activeStageIndex;
+                    const active = idx === activeStageIndex;
+                    return (
+                      <div key={idx} style={{ display: "flex", alignItems: "center", gap: 8, opacity: done || active ? 1 : 0.45 }}>
+                        <span style={{
+                          width: 14, height: 14, borderRadius: "50%", flexShrink: 0,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          background: done ? "#10b981" : active ? "rgba(168,85,247,0.25)" : "rgba(255,255,255,0.08)",
+                          border: active ? "1px solid #c084fc" : "1px solid transparent",
+                        }}>
+                          {done && <span style={{ color: "#fff", fontSize: 9, lineHeight: 1, fontWeight: 700 }}>✓</span>}
+                          {active && <Loader2 size={9} style={{ color: "#c084fc", animation: "spin 0.8s linear infinite" }} />}
+                        </span>
+                        <span style={{
+                          color: done ? "#10b981" : active ? "#fff" : "#888",
+                          fontFamily: "Geist Mono, monospace", fontSize: "0.7rem",
+                          fontWeight: active ? 600 : 400,
+                        }}>
+                          {stage.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <>
+                <div style={{ marginBottom: "1rem" }}>
+                  <label style={labelStyle}>Téma *</label>
+                  <input
+                    value={draftTopic}
+                    onChange={(e) => setDraftTopic(e.target.value)}
+                    placeholder="pl. Hogyan érdemes Google Ads kampányt indítani 2026-ban kis büdzsével"
+                    style={inputStyle}
+                    autoFocus
+                    onKeyDown={(e) => { if (e.key === "Enter" && !blogDraftMutation.isPending) { e.preventDefault(); handleGenerateDraft(); } }}
+                  />
+                </div>
+                <div style={{ marginBottom: "1.5rem" }}>
+                  <label style={labelStyle}>Hangnem</label>
+                  <select value={draftTone} onChange={(e) => setDraftTone(e.target.value as typeof draftTone)} style={inputStyle}>
+                    <option value="professional">Professzionális (default)</option>
+                    <option value="conversational">Beszélgetős</option>
+                    <option value="technical">Technikai / részletes</option>
+                  </select>
+                </div>
+              </>
+            )}
             <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
               <button
                 type="button"
