@@ -60,9 +60,12 @@ type AuditDoc = {
 
 const DOCS: Record<Language, AuditDoc> = {
   hu: {
-    seoTitle: "Ingyenes marketing audit – G2A Marketing | Versenytárselemzés és akcióterv",
+    // Audit B2: keep title ≤ 60 char, description ≤ 155. The previous
+    // values were 78 / 165 — Google was truncating the CTA tail of
+    // the snippet. The new copy keeps the keyword + value prop tight.
+    seoTitle: "Ingyenes Marketing Audit — Teljes Elemzés | G2A",
     seoDesc:
-      "Kérj ingyenes marketing auditot: weboldal, SEO, PPC és social media analízis, versenytárselemzés és személyre szabott akcióterv. Átlátható, akcióorientált jelentés.",
+      "Ingyenes marketing audit: weboldal, SEO, Google Ads, Meta és versenytárs-elemzés. 24 órán belül jelentkezünk, az auditot 5-7 munkanap alatt kapod.",
     badge: "Ingyenes szolgáltatás",
     title: "Ingyenes marketing audit — tudd meg, hol tart a marketinged",
     lead:
@@ -168,9 +171,9 @@ const DOCS: Record<Language, AuditDoc> = {
       "Az audit teljesen ingyenes és kötöttségmentes. Nem kell megrendelést leadni utána. Maximum heti 5 új audit-kérelmet tudunk fogadni a részletesség biztosítása érdekében.",
   },
   en: {
-    seoTitle: "Free Marketing Audit – G2A Marketing | Competitor analysis & action plan",
+    seoTitle: "Free Marketing Audit — Full Analysis | G2A Marketing",
     seoDesc:
-      "Request a free marketing audit: website, SEO, PPC and social media analysis, competitor benchmarking, and a personalised action plan. Transparent, action-oriented report.",
+      "Free marketing audit: website, SEO, Google Ads, Meta and competitor analysis. We reply within 24 hours; the detailed audit follows in 5-7 business days.",
     badge: "Free service",
     title: "Free marketing audit — find out where your marketing stands",
     lead:
@@ -277,9 +280,9 @@ const DOCS: Record<Language, AuditDoc> = {
       "The audit is fully free and commitment-free. No order required afterwards. We accept a maximum of 5 new audit requests per week to ensure depth.",
   },
   zh: {
-    seoTitle: "免费营销审计 – G2A Marketing | 竞争对手分析与行动方案",
+    seoTitle: "免费营销评估 — 完整在线分析 | G2A Marketing",
     seoDesc:
-      "申请免费营销审计:网站、SEO、PPC 与社交媒体分析、竞争对手基准对比与定制化行动方案。透明、可执行的报告。",
+      "免费营销评估：网站、SEO、Google Ads、Meta 与竞争对手分析。我们 24 小时内联系你，详细评估在 5-7 个工作日内交付。",
     badge: "免费服务",
     title: "免费营销审计 — 了解您的营销现状",
     lead:

@@ -30,16 +30,20 @@ type HirlevelDoc = {
 
 const DOCS: Record<Language, HirlevelDoc> = {
   hu: {
-    seoTitle: "Hírlevél – G2A Marketing | Heti B2B marketing tippek",
+    // Audit B2: ≤ 60 / ≤ 155 char. Drops the "600+ olvasó" claim
+    // per C4 — surfacing the value (1 idea + 1 tactic + 1 tool)
+    // instead of an unverifiable subscriber count.
+    seoTitle: "Hírlevél — Heti 1 email a B2B marketingről | G2A",
     seoDesc:
-      "Iratkozz fel a G2A Marketing heti hírlevelére: B2B marketing trendek, AI-eszközök, gyakorlati taktikák. Spam-mentes, egy kattintással leiratkozhatsz.",
+      "Pénteken reggel 1 email: 1 stratégiai gondolat, 1 taktika, 1 azonnal használható AI-eszköz. Egy kattintással leiratkozhatsz.",
     badge: "Hírlevél",
     title: "Heti egy email — semmi más",
     lead:
       "Pénteken reggel egy email a postafiókodban: 1 stratégiai gondolat, 1 konkrét taktika és 1 AI- vagy marketing-eszköz, amit aznap el tudsz kezdeni használni. Spam-mentes, és egyetlen kattintással leiratkozhatsz.",
     formTitle: "Iratkozz fel",
     formSubtitle:
-      "Több mint 600 marketinges és KKV-tulajdonos olvas — csatlakozz hozzájuk.",
+      // Audit C4: count claim removed until verifiable.
+      "Csatlakozz a marketingesekhez és KKV-tulajdonosokhoz, akik olvassák.",
     expect: {
       heading: "Mire számíthatsz",
       intro: "Pénteki adagok, mindig konkrét és azonnal használható tartalom:",
@@ -87,16 +91,18 @@ const DOCS: Record<Language, HirlevelDoc> = {
     },
   },
   en: {
-    seoTitle: "Newsletter – G2A Marketing | Weekly B2B marketing insights",
+    seoTitle: "Newsletter — One Weekly Email on B2B Marketing | G2A",
     seoDesc:
-      "Subscribe to the G2A Marketing weekly newsletter: B2B marketing trends, AI tooling, practical tactics. Spam-free, one-click unsubscribe.",
+      "Friday morning, one email: 1 strategic idea, 1 concrete tactic, 1 ready-to-use AI tool. Spam-free, one-click unsubscribe.",
     badge: "Newsletter",
     title: "One email a week — nothing else",
     lead:
       "Friday morning, one email in your inbox: 1 strategic thought, 1 concrete tactic and 1 AI or marketing tool you can start using the same day. Spam-free, with a one-click unsubscribe.",
     formTitle: "Subscribe",
     formSubtitle:
-      "Over 600 marketers and SMB owners read along — join them.",
+      // Audit C4: subscriber count claim removed pending verifiable
+      // figure. Replace once we have a confirmed list size.
+      "Join marketers and SMB owners reading along.",
     expect: {
       heading: "What to expect",
       intro: "Friday doses, always concrete and immediately usable:",
@@ -144,15 +150,16 @@ const DOCS: Record<Language, HirlevelDoc> = {
     },
   },
   zh: {
-    seoTitle: "通讯订阅 – G2A Marketing | 每周 B2B 营销洞察",
+    seoTitle: "简报 — 每周一封 B2B 营销邮件 | G2A Marketing",
     seoDesc:
-      "订阅 G2A Marketing 每周通讯:B2B 营销趋势、AI 工具与可操作战术。无垃圾邮件,一键退订。",
+      "周五早晨一封邮件：1 个战略思路、1 个具体战术、1 个即用型 AI 工具。无垃圾邮件，一键退订。",
     badge: "通讯",
     title: "每周一封 — 仅此而已",
     lead:
       "周五早晨,一封邮件抵达邮箱:1 个战略思考、1 个可操作战术、1 款当天即可上手的 AI 或营销工具。无垃圾邮件,一键退订。",
     formTitle: "立即订阅",
-    formSubtitle: "超过 600 位营销人与中小企业主在读 — 一起加入。",
+    // Audit C4: count claim removed until verifiable.
+    formSubtitle: "与营销人和中小企业主一起阅读。",
     expect: {
       heading: "您将获得",
       intro: "周五的固定份额,始终具体并可立即使用:",

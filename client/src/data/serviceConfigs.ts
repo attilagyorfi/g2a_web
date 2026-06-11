@@ -34,9 +34,9 @@ const HU: Record<string, ServiceConfig> = {
     subtitle: "Mesterséges intelligencia a marketing minden szakaszában",
     heroDesc:
       "A mesterséges intelligencia új távlatokat nyit a marketingben: pontosabb célzás, személyre szabott tartalom, prediktív elemzés. Csökkentjük a manuális munkát, és új bevételi lehetőségeket teremtünk.",
-    metaTitle: "AI Marketing – Mesterséges intelligencia a marketingben | G2A Marketing",
+    metaTitle: "AI Marketing Ügynökség 2026 | G2A Marketing",
     metaDesc:
-      "Személyre szabott tartalmak, prediktív elemzés, automatizált hirdetésoptimalizáció és chatbotok. Tedd adatvezéreltté marketinged mesterséges intelligenciával.",
+      "AI marketing, ami megtérül: prediktív elemzés, személyre szabott tartalom, automatizált hirdetésoptimalizáció. Megmutatjuk, hol gyorsít az AI — és hol nem.",
     icon: "bot",
     color: "#7c3aed",
     intro:
@@ -123,9 +123,9 @@ const HU: Record<string, ServiceConfig> = {
     subtitle: "Fizetett hirdetés, ami megtérül — minden Google csatornán",
     heroDesc:
       "Fizetett hirdetések nélkülözhetetlenek, ha gyorsan akarsz új ügyfeleket. Adatvezérelt PPC kampányokat építünk a Google keresőben, Display Networkön, Shoppingon és YouTube-on — mindig az üzleti céljaidhoz igazítva.",
-    metaTitle: "PPC és Google Ads szakértői szolgáltatás | G2A Marketing",
+    metaTitle: "Google Ads & PPC Ügynökség 2026 — Mérhető ROI | G2A",
     metaDesc:
-      "Adatvezérelt PPC kampányok: Search, Display, Shopping, YouTube és Performance Max. Több platform, egyetlen stratégia — mérhető ROI a G2A Marketinggel.",
+      "Adatvezérelt Google Ads kampányok: Search, Shopping, YouTube, Performance Max. Átlátható árazás, heti optimalizáció. Kérd az ingyenes Google Ads auditot.",
     icon: "target",
     color: "#ea4335",
     intro:
@@ -212,9 +212,9 @@ const HU: Record<string, ServiceConfig> = {
     subtitle: "Közösségi média hirdetés, ami konverziót szállít",
     heroDesc:
       "A közösségi média hirdetésekkel pontosan azt a célcsoportot érjük el, amely a legnagyobb valószínűséggel válik ügyféllé. Kreatív és adatvezérelt kampányokat tervezünk a Meta (Facebook, Instagram) és LinkedIn platformokon — amelyek nem csak elérést, hanem valódi konverziót hoznak.",
-    metaTitle: "Meta Ads és közösségi média hirdetés | G2A Marketing",
+    metaTitle: "Meta Ads Ügynökség 2026 — Hirdetés, ami konvertál | G2A",
     metaDesc:
-      "Eredményorientált Facebook, Instagram és LinkedIn hirdetéskezelés. Célközönség-szegmentálás, kreatív készítés, A/B tesztelés és ROI-optimalizálás.",
+      "Eredményorientált Facebook, Instagram és LinkedIn hirdetéskezelés: Reels-first kreatív, Conversion API, A/B teszt. Kérd az ingyenes Meta Ads auditot.",
     icon: "smartphone",
     color: "#1877f2",
     intro:
@@ -301,9 +301,9 @@ const HU: Record<string, ServiceConfig> = {
     subtitle: "Értékteremtő történetek, amelyek eladnak",
     heroDesc:
       "A tartalommarketing nem csak cikkek gyártásáról szól; stratégiát alkotunk, amely hitelesen közvetíti márkád értékeit és a közönséged problémáira kínál megoldást. Blogtól videóig, podcasttől hírlevélig — segítünk a tervezésben, gyártásban és terjesztésben.",
-    metaTitle: "Tartalommarketing és szövegírás | G2A Marketing",
+    metaTitle: "Tartalommarketing 2026 — SEO és AI-keresőkre | G2A",
     metaDesc:
-      "Építs márkahitelességet és organikus forgalmat. Blogírás, videó- és podcast-tartalom, hírlevelek, edukatív anyagok KKV-knak és B2B cégeknek.",
+      "Márkahitelesség és organikus forgalom: blog, videó, podcast, hírlevél. Pillar-cluster stratégia, AI-keresőre optimalizált tartalom. Ingyenes tartalom audit.",
     icon: "pen",
     color: "#10b981",
     intro:
@@ -390,9 +390,9 @@ const HU: Record<string, ServiceConfig> = {
     subtitle: "Hatékonyság mesterséges intelligenciával támogatva",
     heroDesc:
       "Időt és erőforrást takaríthatsz meg, ha ismétlődő marketingfolyamataidat automatizálod. Felépítjük az email- és CRM rendszeredet úgy, hogy minden érdeklődő a megfelelő üzenetet kapja a megfelelő pillanatban.",
-    metaTitle: "Marketing automatizáció — Email és CRM | G2A Marketing",
+    metaTitle: "Marketing Automatizáció 2026 — Email, CRM | G2A",
     metaDesc:
-      "Építs automatizált marketingfolyamatokat: email automatizáció, CRM integráció, lead nurturing, sales funnel és szegmentálás. AI-támogatott szegmentáció.",
+      "Automatizált marketingfolyamatok: email automatizáció, CRM integráció, lead scoring és AI-szegmentáció. Kevesebb kézi munka, több konverzió.",
     icon: "zap",
     color: "#f59e0b",
     intro:
@@ -479,9 +479,9 @@ const HU: Record<string, ServiceConfig> = {
     subtitle: "Fenntarthatóság hitelesen — greenwashing nélkül",
     heroDesc:
       "A fenntarthatósági erőfeszítéseidet úgy kommunikáljuk, hogy a vásárlók, befektetők és a beszállítói lánc ténylegesen elhiggyék — adatokkal alátámasztva, az EU Green Claims Directive és a hazai jogszabályi környezet szellemében. A hivatalos ESG-jelentéstételt és -tanúsítást SZTFH-regisztrált partnerek végzik.",
-    metaTitle: "ESG Kommunikáció és fenntarthatósági marketing | G2A Marketing",
+    metaTitle: "ESG Kommunikáció 2026 — Greenwashing nélkül | G2A",
     metaDesc:
-      "Greenwashing-mentes ESG és CSR kommunikáció: stakeholder üzenetek, zöld marketing, weboldali ESG-szekció, rating-előkészítés. Hivatalos ESG-jelentést SZTFH-regisztrált partnerek készítenek.",
+      "Hiteles, adatokkal alátámasztott ESG- és CSR-kommunikáció: stakeholder-üzenetek, zöld marketing, rating-előkészítés — greenwashing nélkül.",
     icon: "leaf",
     color: "#22c55e",
     intro:
@@ -572,9 +572,9 @@ const HU: Record<string, ServiceConfig> = {
     subtitle: "Munkáltatói márka, ami tehetséget vonz",
     heroDesc:
       "A magyar munkaerő-piac 2025-2026-ban historikus kihívást támasztott: 2.5%-os munkanélküliségi ráta, magas fluktuáció, generációs különbségek a Z és Y munkavállalók között. Az erős munkáltatói márka nem luxus — kritikus üzleti előny.",
-    metaTitle: "Employer Branding — munkáltatói márkaépítés | G2A Marketing",
+    metaTitle: "Employer Branding 2026 — Vonzó munkáltatói márka | G2A",
     metaDesc:
-      "EVP-fejlesztés, karrieroldal, toborzási marketing, Glassdoor + Profession.hu reputáció. Vonzd és tartsd meg a legjobb tehetségeket.",
+      "EVP-fejlesztés, karrieroldal, toborzási marketing és munkavállalói storytelling. Vonzd és tartsd meg a legjobbakat. Ingyenes employer branding konzultáció.",
     icon: "users",
     color: "#8b5cf6",
     intro:
@@ -661,9 +661,9 @@ const HU: Record<string, ServiceConfig> = {
     subtitle: "Globális piac, lokális szemlélet",
     heroDesc:
       "Külföldi piacokra lépnél? A siker titka a lokalizáció: nem elég lefordítani a weboldalt, a kulturális sajátosságokhoz és helyi keresőmotorokhoz kell igazodnunk. Magyar + nemzetközi tapasztalat, közvetlen kínai piaci kapcsolatokkal.",
-    metaTitle: "Nemzetközi marketing és piaci belépés | G2A Marketing",
+    metaTitle: "Nemzetközi Marketing 2026 — DACH, CEE, Kína | G2A",
     metaDesc:
-      "Multilingvális SEO, cross-border kampányok, lokalizáció, piaci belépési stratégia. DACH, CEE, BeNeLux, UK és kínai piacok. Helyi szemlélettel.",
+      "Multilingvális SEO, cross-border kampányok, lokalizáció és piaci belépési stratégia: DACH, CEE, UK és Kína — közvetlen kínai kapcsolatokkal.",
     icon: "globe",
     color: "#06b6d4",
     intro:
@@ -754,9 +754,9 @@ const EN: Record<string, ServiceConfig> = {
     subtitle: "Artificial intelligence at every stage of marketing",
     heroDesc:
       "AI opens new horizons in marketing: more accurate targeting, personalised content, predictive analytics. We reduce manual work and create new revenue opportunities.",
-    metaTitle: "AI Marketing – Artificial intelligence in marketing | G2A Marketing",
+    metaTitle: "AI Marketing Agency 2026 | G2A Marketing",
     metaDesc:
-      "Personalised content, predictive analytics, automated ad optimisation and chatbots. Make your marketing data-driven with artificial intelligence.",
+      "AI marketing that pays off: predictive analytics, personalized content, automated ad optimization. We show where AI speeds you up — and where it doesn't.",
     icon: "bot",
     color: "#7c3aed",
     intro:
@@ -843,9 +843,9 @@ const EN: Record<string, ServiceConfig> = {
     subtitle: "Paid advertising that pays back — across every Google channel",
     heroDesc:
       "Paid ads are essential when you need new customers fast. We build data-driven PPC campaigns across Google Search, Display, Shopping and YouTube — always aligned with your business goals.",
-    metaTitle: "PPC and Google Ads expert services | G2A Marketing",
+    metaTitle: "Google Ads & PPC Agency 2026 — Measurable ROI | G2A",
     metaDesc:
-      "Data-driven PPC campaigns: Search, Display, Shopping, YouTube and Performance Max. Multiple platforms, one strategy — measurable ROI with G2A Marketing.",
+      "Data-driven Google Ads campaigns: Search, Shopping, YouTube, Performance Max. Transparent pricing, weekly optimization. Get your free Google Ads audit.",
     icon: "target",
     color: "#ea4335",
     intro:
@@ -932,9 +932,9 @@ const EN: Record<string, ServiceConfig> = {
     subtitle: "Social media advertising that delivers conversions",
     heroDesc:
       "Social media ads let us reach exactly the audience most likely to convert. We design creative, data-driven campaigns on Meta (Facebook, Instagram) and LinkedIn — campaigns that deliver real conversions, not just reach.",
-    metaTitle: "Meta Ads and social media advertising | G2A Marketing",
+    metaTitle: "Meta Ads Agency 2026 — Ads That Convert | G2A",
     metaDesc:
-      "Results-oriented Facebook, Instagram and LinkedIn ad management. Audience segmentation, creative production, A/B testing and ROI optimisation.",
+      "Results-focused Facebook, Instagram and LinkedIn ad management: Reels-first creative, Conversion API, A/B testing. Get your free Meta Ads audit.",
     icon: "smartphone",
     color: "#1877f2",
     intro:
@@ -1020,9 +1020,9 @@ const EN: Record<string, ServiceConfig> = {
     title: "Content Marketing",
     subtitle: "Valuable content that attracts customers",
     heroDesc: "Build authority and organic traffic with valuable content. Blog, video, podcast, infographic — across every channel.",
-    metaTitle: "Content marketing and copywriting | G2A Marketing",
+    metaTitle: "Content Marketing 2026 — SEO & AI Overviews | G2A",
     metaDesc:
-      "Build brand authority and organic traffic. Blog writing, video and podcast content, newsletters, educational material for SMBs and B2B companies.",
+      "Brand authority and organic traffic: blog, video, podcast, newsletter. Pillar-cluster strategy and AI-search-optimized content. Get a free content audit.",
     icon: "pen",
     color: "#10b981",
     intro:
@@ -1109,9 +1109,9 @@ const EN: Record<string, ServiceConfig> = {
     subtitle: "Efficiency, AI-supported",
     heroDesc:
       "Save time and resources by automating repetitive marketing workflows. We build your email and CRM system so every prospect receives the right message at the right time.",
-    metaTitle: "Marketing automation — Email and CRM | G2A Marketing",
+    metaTitle: "Marketing Automation 2026 — Email, CRM | G2A",
     metaDesc:
-      "Build automated marketing workflows: email automation, CRM integration, lead nurturing, sales funnel and segmentation. AI-assisted segmentation.",
+      "Automated marketing processes: email automation, CRM integration, lead scoring and AI-assisted segmentation. Less manual work, more conversions.",
     icon: "zap",
     color: "#f59e0b",
     intro:
@@ -1198,9 +1198,9 @@ const EN: Record<string, ServiceConfig> = {
     subtitle: "Sustainability told credibly — without greenwashing",
     heroDesc:
       "We communicate your sustainability efforts so customers, investors and supply chains genuinely believe them — backed by data, in line with the EU Green Claims Directive and Hungarian regulation. Official ESG reporting and certification are handled by SZTFH-registered partners.",
-    metaTitle: "ESG Communications and sustainability marketing | G2A Marketing",
+    metaTitle: "ESG Communication 2026 — Without Greenwashing | G2A",
     metaDesc:
-      "Greenwashing-free ESG and CSR communications: stakeholder messaging, green marketing, website ESG section, rating preparation. Official reports filed by registered partners.",
+      "Credible, data-backed ESG and CSR communication: stakeholder messaging, green marketing and rating preparation — without greenwashing.",
     icon: "leaf",
     color: "#22c55e",
     intro:
@@ -1291,9 +1291,9 @@ const EN: Record<string, ServiceConfig> = {
     subtitle: "Employer brand that attracts talent",
     heroDesc:
       "The Hungarian labour market 2025-2026 presented a historic challenge: 2.5% unemployment, high turnover, generational gaps between Gen Z and Y workers. A strong employer brand isn't a luxury — it's a critical business advantage.",
-    metaTitle: "Employer Branding — employer brand building | G2A Marketing",
+    metaTitle: "Employer Branding 2026 — Attract Top Talent | G2A",
     metaDesc:
-      "EVP development, careers page, recruitment marketing, Glassdoor + Profession.hu reputation. Attract and retain top talent.",
+      "EVP development, career site, recruitment marketing and employee storytelling. Attract and keep the best. Get a free employer branding consultation.",
     icon: "users",
     color: "#8b5cf6",
     intro:
@@ -1380,9 +1380,9 @@ const EN: Record<string, ServiceConfig> = {
     subtitle: "Global markets, local perspective",
     heroDesc:
       "Entering foreign markets? Localisation is the key to success: a website translation isn't enough — you need to adapt to cultural particularities and local search engines. Hungarian + international experience with direct Chinese-market connections.",
-    metaTitle: "International marketing and market entry | G2A Marketing",
+    metaTitle: "International Marketing 2026 — DACH, CEE, China | G2A",
     metaDesc:
-      "Multilingual SEO, cross-border campaigns, localisation, market entry strategy. DACH, CEE, BeNeLux, UK and Chinese markets — with local perspective.",
+      "Multilingual SEO, cross-border campaigns, localization and market-entry strategy: DACH, CEE, UK and China — with direct China connections.",
     icon: "globe",
     color: "#06b6d4",
     intro:
