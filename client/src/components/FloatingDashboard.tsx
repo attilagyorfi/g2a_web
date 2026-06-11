@@ -192,6 +192,37 @@ export default function FloatingDashboard() {
           </div>
         </FloatCard>
       </motion.div>
+
+      {/* Audit C3 — illustration / sample-data marker. The five floating
+          cards above (+340% organic traffic, 12 AI recommendations, new
+          healthcare lead 5 min ago, 98% satisfaction) read as live
+          aggregate stats; they're decorative illustrations meant to
+          evoke the dashboard feel of our service, not real customer
+          numbers. A diskreet bottom-right badge makes that explicit
+          for both the visitor and the SEO crawler without breaking the
+          visual rhythm of the hero. */}
+      <span
+        aria-hidden
+        style={{
+          position: "absolute",
+          right: "1rem",
+          bottom: "-0.25rem",
+          padding: "3px 9px",
+          fontSize: "0.55rem",
+          fontFamily: "Geist Mono, monospace",
+          letterSpacing: "0.14em",
+          color: "rgba(255,255,255,0.62)",
+          background: "rgba(0,0,0,0.42)",
+          border: "1px solid rgba(255,255,255,0.14)",
+          borderRadius: 4,
+          textTransform: "uppercase",
+          backdropFilter: "blur(6px)",
+          WebkitBackdropFilter: "blur(6px)",
+          zIndex: 2,
+        }}
+      >
+        ★ {t("home.hero.dashboard.sampleNote")}
+      </span>
     </motion.div>
   );
 }

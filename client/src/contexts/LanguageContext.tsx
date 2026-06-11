@@ -340,6 +340,10 @@ const translations: Record<Language, Record<string, string>> = {
     "home.hero.dashboard.healthcareAudit": "Egészségügyi audit kérés",
     "home.hero.dashboard.timeAgo": "5 perce",
     "home.hero.dashboard.satisfaction": "Elégedettség",
+    // Audit C3: the five hero floating cards above show illustrative
+    // dashboard numbers, not real aggregate stats. This badge labels
+    // them as a sample explicitly.
+    "home.hero.dashboard.sampleNote": "Minta adatok",
     "home.hero.title1": "Stratégiai marketing,",
     "home.hero.title2": "mérhető növekedés",
     "home.hero.subtitle": "Üzleti problémákra adunk megoldást. A G2A Marketing olyan stratégiai és technológiai partner, amely adatvezérelt marketingrendszert épít vállalkozásodnak — a kutatástól a megvalósításig. Tapasztalt szakértőink összekapcsolják a kreativitást, az analitikát és a mesterséges intelligenciát, hogy fenntartható növekedést érj el.",
@@ -948,6 +952,7 @@ const translations: Record<Language, Record<string, string>> = {
     "home.hero.dashboard.healthcareAudit": "Healthcare audit request",
     "home.hero.dashboard.timeAgo": "5 minutes ago",
     "home.hero.dashboard.satisfaction": "Satisfaction",
+    "home.hero.dashboard.sampleNote": "Sample data",
     "home.hero.title1": "Strategic marketing,",
     "home.hero.title2": "measurable growth",
     "home.hero.subtitle": "We solve business problems. G2A Marketing is the strategic and technology partner that builds a data-driven marketing system for your business — from research to execution. Our experienced team combines creativity, analytics and artificial intelligence so your company achieves sustainable growth.",
@@ -1546,6 +1551,7 @@ const translations: Record<Language, Record<string, string>> = {
     "home.hero.dashboard.healthcareAudit": "医疗健康评估申请",
     "home.hero.dashboard.timeAgo": "5 分钟前",
     "home.hero.dashboard.satisfaction": "满意度",
+    "home.hero.dashboard.sampleNote": "示意数据",
     "home.hero.title1": "战略营销、",
     "home.hero.title2": "可衡量的增长",
     "home.hero.subtitle": "我们解决业务问题。G2A Marketing 是战略与技术伙伴,为您的企业从研究到落地打造数据驱动的营销系统。资深团队将创意、分析与人工智能相结合,助您实现可持续增长。",
