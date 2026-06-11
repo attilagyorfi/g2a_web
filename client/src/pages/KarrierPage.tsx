@@ -86,9 +86,10 @@ type OpenPosition = {
 const DOCS: Record<Language, KarrierDoc> = {
   // ────────────────────────────────────────────────────────────────────────
   hu: {
-    seoTitle: "Karrier – G2A Marketing | Csatlakozz a csapathoz",
+    // Audit B1: ≤ 60 / ≤ 155 char + the docx tightening
+    seoTitle: "Karrier — Csatlakozz a G2A csapathoz | G2A Marketing",
     seoDesc:
-      "Dolgozz egy adatvezérelt, AI-ra nyitott marketing-csapatban Pécsen. Spontán pályázat lehetséges. Konkrét pozíciókat ezen az oldalon hirdetünk.",
+      "Kis, AI-eszközöket napi szinten használó marketingcsapat Pécsen (hibrid). Konkrét projektek, prémium AI-stack, fizetett munkapróba. Nézd meg a pozíciókat.",
     badge: "Karrier",
     title: "Csatlakozz a G2A csapathoz",
     lead:
@@ -219,9 +220,9 @@ const DOCS: Record<Language, KarrierDoc> = {
 
   // ────────────────────────────────────────────────────────────────────────
   en: {
-    seoTitle: "Careers – G2A Marketing | Join the team",
+    seoTitle: "Careers — Join the G2A Team | AI-Focused Agency",
     seoDesc:
-      "Work in a data-driven, AI-forward marketing team in Pécs. Spontaneous applications welcome. Specific roles posted here when open.",
+      "A small, focused marketing team using AI tools daily in Pécs (hybrid). Real projects, measurable growth, a premium AI stack, a paid work trial. See open positions.",
     badge: "Careers",
     title: "Join the G2A team",
     lead:
@@ -351,9 +352,9 @@ const DOCS: Record<Language, KarrierDoc> = {
 
   // ────────────────────────────────────────────────────────────────────────
   zh: {
-    seoTitle: "招聘 – G2A Marketing | 加入团队",
+    seoTitle: "招聘 — 加入 G2A 团队 | 以 AI 为核心的营销代理",
     seoDesc:
-      "在佩奇加入数据驱动、AI 优先的营销团队。欢迎自荐申请。具体职位空缺时在此发布。",
+      "一支在佩奇每天使用 AI 工具的小型专注营销团队（混合办公）。真实项目、可衡量的成长、高端 AI 工具栈、带薪试岗。查看空缺职位。",
     badge: "招聘",
     title: "加入 G2A 团队",
     lead:

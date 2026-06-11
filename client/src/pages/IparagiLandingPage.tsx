@@ -71,9 +71,11 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-egeszsegugyi-cegeknek": {
       title: "Egészségügyi marketing, ami pácienseket hoz",
       subtitle: "Klinikák, magánorvosok, fogászatok és wellness intézmények számára",
-      metaTitle: "Egészségügyi marketing klinikáknak és magánorvosoknak | G2A Marketing",
+      // Audit B3: meta title ≤ 60 / description ≤ 155 char. Docx
+      // tightening for the healthcare landing page.
+      metaTitle: "Egészségügyi marketing klinikáknak és orvosoknak | G2A",
       metaDesc:
-        "Adatvédelmi megfelelőség, online foglalási rendszerek, lokális SEO és bizalomépítő reputáció menedzsment. Marketingmegoldások klinikáknak, magánorvosoknak és wellness vállalkozásoknak.",
+        "Páciensszerző marketing klinikáknak, magánorvosoknak és fogászatoknak — szabályozás-tudatosan, hiteles online jelenléttel, mérhető foglalás-növekedéssel.",
       heroDesc:
         "Az egészségügyben egyszerre kell megfelelni a szigorú szabályozásoknak és a páciensek elvárásainak. Marketing szolgáltatásainkkal biztosítjuk, hogy praxisod hiteles, könnyen elérhető és bizalmat keltő legyen — és az online foglalások mérhetően növekedjenek.",
       intro:
@@ -168,9 +170,9 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-szepsegipari-cegeknek": {
       title: "Szépségipari marketing, ami foglalásokat hoz",
       subtitle: "Szépségszalonok, kozmetikák, fodrászatok és wellness vállalkozások számára",
-      metaTitle: "Szépségipari marketing — Instagram, Meta Ads, foglalás | G2A Marketing",
+      metaTitle: "Szépségipari marketing szalonoknak és klinikáknak | G2A",
       metaDesc:
-        "Vizuális márkaépítés, Instagram és TikTok stratégia, Meta Ads kampányok, online foglalási rendszer szépségszalonoknak, fodrászatoknak és kozmetikáknak.",
+        "Vizuális, foglalás-orientált marketing szalonoknak, esztétikai klinikáknak és kozmetikusoknak: Instagram/Reels, etikus before-after, helyi SEO.",
       heroDesc:
         "A szépségiparban a vizuális tartalom és a közösségi média a vásárlói döntés. Olyan stratégiát építünk, ami a vonzó kreativitást komoly konverzió-mérésre fordítja — Instagram followerből foglaló vásárló lesz.",
       intro:
@@ -265,9 +267,9 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-mernoki-irodaknak": {
       title: "Mérnöki marketing, ami megbízásokat hoz",
       subtitle: "Tervezőirodák, statikai irodák, gépészmérnöki vállalkozások és építőipari szolgáltatók",
-      metaTitle: "Mérnöki és építőipari B2B marketing | G2A Marketing",
+      metaTitle: "Marketing mérnöki irodáknak — B2B projektszerzés | G2A",
       metaDesc:
-        "B2B leadgenerálás, technikai SEO, LinkedIn stratégia és referencia-portfólió tervezőirodáknak, mérnöki vállalkozásoknak. Komplex műszaki tartalmak, szakmai hitelesség.",
+        "B2B marketing tervező- és mérnöki irodáknak: modern weboldal, referencia-projekt portfólió, LinkedIn thought leadership, lead generálás nagyberuházók felé.",
       heroDesc:
         "A mérnöki szektorban a megbízás referenciából, ajánlásból és szakmai bizalomból érkezik — de az elsőkörös ügyféljelölt mára a Google-en és LinkedInen kutat. Olyan online jelenlétet építünk, ami a tényleges projektkompetenciát mutatja meg, nem üres marketing-szöveggel.",
       intro:
@@ -362,9 +364,9 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-autoipari-cegeknek": {
       title: "Autóipari marketing, ami próbavezetésekhez vezet",
       subtitle: "Autókereskedők, márkaszervízek, autóparkok és autóipari beszállítók",
-      metaTitle: "Autóipari marketing — kereskedők és szervízek | G2A Marketing",
+      metaTitle: "Autóipari marketing kereskedéseknek, szervizeknek | G2A",
       metaDesc:
-        "Lokalizált PPC, lead-minősítés és márkaszerviz-marketing autókereskedőknek és autóiparnak. Google Ads, Meta Ads remarketing, hosszú értékesítési ciklus konverzió-optimalizálás.",
+        "Helyi, mérhető marketing autókereskedéseknek, szervizeknek és alkatrész-forgalmazóknak: Facebook/Google Ads, akció-kommunikáció. Honda, Nissan referenciák.",
       heroDesc:
         "Az autóiparban a lead minősége számít, nem a mennyisége. Olyan kampányokat építünk, amelyek nem csak kattintást, hanem komoly érdeklődőt és tesztvezetésre érkező vásárlót szállítanak — versenyképes CPA-val és tisztán mérhető ROAS-szal.",
       intro:
@@ -459,9 +461,9 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-ugyvedi-irodaknak": {
       title: "Ügyvédi marketing, ami ügyfeleket hoz",
       subtitle: "Ügyvédi irodák, közjegyzők, könyvelő-jogi tanácsadók és pénzügyi tanácsadók",
-      metaTitle: "Ügyvédi és jogi marketing — szakmai hitelesség | G2A Marketing",
+      metaTitle: "Marketing ügyvédi irodáknak — diszkréten | G2A",
       metaDesc:
-        "Szakterületi SEO, prémium brand design, GDPR-megfelelő kampányok ügyvédi és jogi irodáknak. Bizalomépítés, lokális SEO, tartalommarketing.",
+        "Bizalom-építő marketing ügyvédi irodáknak és pénzügyi szolgáltatóknak: szakértői tartalom, helyi SEO, hiteles weboldal — reklámszabály-tudatosan.",
       heroDesc:
         "A jogi szektorban a vásárlói döntést a presztízs, a bizalom és a szakmai hitelesség vezérli — az ár csak hatodlagos. Olyan online jelenlétet építünk, ami pontosan ezt sugározza, miközben megfelel az MÜK reklámszabályainak és a GDPR-nak.",
       intro:
@@ -556,9 +558,9 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-technologiai-cegeknek": {
       title: "B2B tech marketing, ami demókhoz vezet",
       subtitle: "SaaS vállalatok, IT-tanácsadók, tech startupok és software fejlesztők",
-      metaTitle: "SaaS és tech B2B marketing — nemzetközi növekedés | G2A Marketing",
+      metaTitle: "Marketing technológiai és SaaS cégeknek | G2A",
       metaDesc:
-        "SaaS és tech cégek B2B marketingje: LinkedIn ABM, multilingual SEO, demoflow optimalizálás, AI-támogatott lead generálás. Magyar és nemzetközi piac.",
+        "B2B marketing IT-, szoftver- és SaaS-cégeknek: thought leadership, lead generálás, demo-funnel, technikai SEO és LinkedIn ABM. Tech-fókuszú ügynökség.",
       heroDesc:
         "A tech szektorban a hosszú értékesítési ciklus és a nemzetközi piaci ambíció együttesen jelennek meg. Olyan stratégiát építünk, amely a magyar piac mellett angol és német nyelven is működik — egy LinkedIn-poszttól a multilingual SEO-ig egyetlen integrált rendszerben.",
       intro:
@@ -653,9 +655,9 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-onkormanyzati-projekteknek": {
       title: "Önkormányzati marketing, ami lakossági részvételt hoz",
       subtitle: "Önkormányzatok, közintézmények, közösségi projektek és civil szervezetek számára",
-      metaTitle: "Önkormányzati marketing — közösségi kommunikáció | G2A Marketing",
+      metaTitle: "Önkormányzati és pályázati kommunikáció | G2A",
       metaDesc:
-        "Akadálymentes közintézményi weboldalak, közösségi médiakampányok, transzparens tájékoztatás és lakossági bevonási projektek önkormányzatoknak.",
+        "Közérthető, átlátható kommunikáció önkormányzati és EU-pályázati projektekhez: lakossági tájékoztatás, projektarculat, social és sajtó.",
       heroDesc:
         "Az önkormányzati kommunikációban a transzparencia, a közösségi bevonás és a generációkhoz szabott tartalom a kulcs. Olyan rendszereket építünk, amelyek mindenki számára elérhetőek — akadálymentesen és anyanyelvi minőségben kínai turistától magyar nyugdíjasig.",
       intro:
@@ -750,9 +752,9 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-b2b-cegeknek": {
       title: "B2B marketing, ami minősített leadeket hoz",
       subtitle: "Vállalati ügyfeleket kiszolgáló cégek, ipari beszállítók, professzionális szolgáltatók",
-      metaTitle: "B2B marketing — leadgenerálás, ABM, LinkedIn | G2A Marketing",
+      metaTitle: "B2B marketing gyártóknak és szolgáltatóknak | G2A",
       metaDesc:
-        "B2B leadgenerálás, Account-Based Marketing, LinkedIn stratégia, marketing automatizáció és sales-marketing alignment vállalati ügyfeleket kiszolgáló cégeknek.",
+        "Stratégiai B2B marketing hosszú sales-ciklusra: LinkedIn ABM, lead generálás, marketing automatizáció és thought leadership. Sales-marketing alignment.",
       heroDesc:
         "A B2B marketing nem véletlenszerű kreatív kampányokról szól — hanem mérhető pipeline-építésről. Olyan rendszert alkotunk, amelyben minden marketinges elköltött forint nyomon követhető a végső szerződéskötésig: LinkedIn érintéstől automatizált e-mail nurturing-on át a sales-handoff-ig.",
       intro:
@@ -849,9 +851,9 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-egeszsegugyi-cegeknek": {
       title: "Healthcare marketing that brings in patients",
       subtitle: "For clinics, private practitioners, dental practices and wellness providers",
-      metaTitle: "Healthcare marketing for clinics and private practices | G2A Marketing",
+      metaTitle: "Healthcare Marketing for Clinics and Doctors | G2A",
       metaDesc:
-        "GDPR compliance, online booking systems, local SEO and trust-building reputation management. Marketing solutions for clinics, private practitioners and wellness businesses.",
+        "Patient-generating marketing for clinics, private doctors and dental practices — compliance-aware, with a credible online presence and booking growth.",
       heroDesc:
         "In healthcare you have to satisfy strict regulation and patient expectations at the same time. Our marketing services make your practice credible, easy to find and trust-inspiring — with measurable growth in online bookings.",
       intro:
@@ -946,8 +948,8 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-szepsegipari-cegeknek": {
       title: "Beauty marketing that drives bookings",
       subtitle: "For beauty salons, cosmetologists and wellness businesses",
-      metaTitle: "Beauty Industry Marketing – G2A Marketing | Social Media, Instagram, Meta Ads",
-      metaDesc: "Specialised marketing solutions for beauty salons and cosmetologists. Instagram, Meta Ads, online booking systems and social media strategy.",
+      metaTitle: "Beauty Marketing for Salons and Aesthetic Clinics | G2A",
+      metaDesc: "Visual, booking-oriented marketing for beauty salons, aesthetic clinics and cosmeticians: Instagram/Reels, ethical before-after, online booking, local SEO.",
       heroDesc: "In the beauty industry, visual presence and social media are the key channels. From Instagram strategy to Meta Ads — we understand it all.",
       challenges: [
         "Producing visually compelling content",
@@ -1020,8 +1022,8 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-mernoki-irodaknak": {
       title: "Engineering marketing that wins commissions",
       subtitle: "For design studios, engineering firms and technical companies",
-      metaTitle: "Engineering Firm Marketing – G2A Marketing | B2B Lead Generation, SEO, LinkedIn",
-      metaDesc: "Specialised B2B marketing for engineering firms and design studios. SEO, LinkedIn, web development and lead generation.",
+      metaTitle: "Marketing for Engineering Firms — B2B Credibility | G2A",
+      metaDesc: "B2B marketing for design and engineering firms: a modern website, a reference-project portfolio, LinkedIn thought leadership, lead generation toward investors.",
       heroDesc: "In engineering, professional credibility and B2B relationships are paramount. From LinkedIn strategy to technical SEO — we understand it all.",
       challenges: [
         "Communicating professional credibility online",
@@ -1094,8 +1096,8 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-autoipari-cegeknek": {
       title: "Automotive marketing that converts test drives",
       subtitle: "For car dealerships, service centres and automotive businesses",
-      metaTitle: "Automotive Marketing – G2A Marketing | Google Ads, Meta Ads, SEO",
-      metaDesc: "Specialised marketing for car dealerships and automotive businesses. Google Ads, Meta Ads, SEO and lead generation.",
+      metaTitle: "Automotive Marketing for Dealerships and Services | G2A",
+      metaDesc: "Local, measurable marketing for dealerships, service centers and parts distributors: Facebook/Google Ads, promotion communication. Honda, Nissan references.",
       heroDesc: "In the automotive industry, lead generation and conversion optimisation are the key. From Google Ads to Meta Ads — we understand it all.",
       challenges: [
         "High ad spend, low ROAS",
@@ -1168,8 +1170,8 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-ugyvedi-irodaknak": {
       title: "Legal marketing that attracts clients",
       subtitle: "For law firms and legal practices",
-      metaTitle: "Law Firm Marketing – G2A Marketing | SEO, Google Ads, Brand Design",
-      metaDesc: "Specialised marketing for law firms. SEO, Google Ads, premium brand design and content marketing.",
+      metaTitle: "Marketing for Law Firms — Discreet & Compliant | G2A",
+      metaDesc: "Trust-building marketing for law firms and financial service providers: expert content, local SEO, a credible website — compliant with legal advertising rules.",
       heroDesc: "In the legal sector, prestige, trust and professional credibility matter most. From premium brand design to SEO — we understand it all.",
       challenges: [
         "Communicating prestige and trust online",
@@ -1242,8 +1244,8 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-technologiai-cegeknek": {
       title: "B2B tech marketing that books demos",
       subtitle: "For SaaS companies, tech startups and IT firms",
-      metaTitle: "Tech Marketing – G2A Marketing | B2B SaaS, LinkedIn, SEO",
-      metaDesc: "Specialised B2B marketing for technology companies and SaaS businesses. LinkedIn Ads, SEO, content marketing and international expansion.",
+      metaTitle: "Marketing for Technology & SaaS Companies | G2A",
+      metaDesc: "B2B marketing for IT, software and SaaS companies: thought-leadership content, lead generation, demo funnel, technical SEO and LinkedIn ABM.",
       heroDesc: "In tech, fast growth and international expansion are the goal. From LinkedIn strategy to multilingual SEO — we understand it all.",
       challenges: [
         "Making complex products accessible",
@@ -1316,8 +1318,8 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-onkormanyzati-projekteknek": {
       title: "Public-sector marketing that drives engagement",
       subtitle: "For municipalities, public institutions and community projects",
-      metaTitle: "Municipal Marketing – G2A Marketing | Community Communication",
-      metaDesc: "Specialised marketing for municipalities and public institutions. Community communication, web development, social media and information campaigns.",
+      metaTitle: "Municipal & Grant-Project Communication | G2A",
+      metaDesc: "Clear, transparent communication for municipal and EU-grant projects: citizen information, project identity, mandatory communication elements, social and press.",
       heroDesc: "In municipal communication, transparency, community engagement and accessibility are key. From web development to social media — we understand it all.",
       challenges: [
         "Growing community engagement and participation",
@@ -1390,8 +1392,8 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
     "marketing-b2b-cegeknek": {
       title: "B2B marketing that delivers qualified leads",
       subtitle: "For companies serving enterprise clients and B2B businesses",
-      metaTitle: "B2B Marketing – G2A Marketing | Lead Generation, LinkedIn, SEO",
-      metaDesc: "Specialised B2B marketing solutions for companies serving enterprise clients. Lead generation, LinkedIn Ads, SEO and marketing automation.",
+      metaTitle: "B2B Marketing for Manufacturers & Service Providers | G2A",
+      metaDesc: "Strategic B2B marketing for long sales cycles: LinkedIn ABM, lead generation, marketing automation, case studies and thought leadership. Sales-marketing alignment.",
       heroDesc: "In B2B marketing, long sales cycles, reaching decision makers and measurable ROI are what matter. From LinkedIn to marketing automation — we understand it all.",
       challenges: [
         "Reaching and engaging decision makers",
