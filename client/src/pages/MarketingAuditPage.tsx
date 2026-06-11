@@ -100,7 +100,7 @@ const DOCS: Record<Language, AuditDoc> = {
         {
           icon: <CheckCircle2 size={20} />,
           title: "KPI-lista és roadmap",
-          desc: "Konkrét, prioritizált akcióterv: mit változtass az első 30/60/90 napban — kalkulált hatással és nehézséggel.",
+          desc: "Konkrét, priorizált akcióterv: mit változtass az első 30/60/90 napban — kalkulált hatással és nehézséggel.",
         },
       ],
     },
@@ -125,7 +125,7 @@ const DOCS: Record<Language, AuditDoc> = {
         {
           step: "4",
           title: "Audit jelentés",
-          desc: "Strukturált PDF (kb. 25–30 oldal) — találatok, képernyőképek, prioritizált akciólista. Megkapod e-mailben.",
+          desc: "Strukturált PDF (kb. 25–30 oldal) — találatok, képernyőképek, priorizált akciólista. Megkapod e-mailben.",
         },
         {
           step: "5",

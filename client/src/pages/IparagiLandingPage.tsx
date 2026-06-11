@@ -30,7 +30,7 @@ const INDUSTRY_META: Record<string, IndustryMeta> = {
   "marketing-szepsegipari-cegeknek": { icon: <ShoppingBag size={32} />, color: "#ec4899" },
   "marketing-mernoki-irodaknak": { icon: <Wrench size={32} />, color: "#f59e0b" },
   "marketing-autoipari-cegeknek": { icon: <Car size={32} />, color: "#3b82f6" },
-  "marketing-ugyvedii-irodaknak": { icon: <Scale size={32} />, color: "#6366f1" },
+  "marketing-ugyvedi-irodaknak": { icon: <Scale size={32} />, color: "#6366f1" },
   "marketing-technologiai-cegeknek": { icon: <Code size={32} />, color: "#8b5cf6" },
   "marketing-onkormanyzati-projekteknek": { icon: <Lightbulb size={32} />, color: "#14b8a6" },
   "marketing-b2b-cegeknek": { icon: <Building2 size={32} />, color: "var(--g2a-brand-teal)" },
@@ -456,7 +456,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         },
       ],
     },
-    "marketing-ugyvedii-irodaknak": {
+    "marketing-ugyvedi-irodaknak": {
       title: "Ügyvédi marketing, ami ügyfeleket hoz",
       subtitle: "Ügyvédi irodák, közjegyzők, könyvelő-jogi tanácsadók és pénzügyi tanácsadók",
       metaTitle: "Ügyvédi és jogi marketing — szakmai hitelesség | G2A Marketing",
@@ -702,8 +702,8 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       caseStudy: {
         client: "Zsolnay Örökségkezelő Nonprofit Kft.",
         problem: "Pécsi Zsolnay Negyed kulturális életét üzemeltető nonprofit — sok látogató Google-keresésen keresztül találja a programokat, ezért a SEO-teljesítmény közvetlenül hat a látogatószámra.",
-        solution: "Részletes SEO audit (technikai + kulcsszó + tartalmi gap), prioritizált javítási csomag, eszköz-javaslatok a csapat önálló folytatásához.",
-        result: "Részletes SEO felmérés prioritizált akciókkal, csapat önállóan folytatható optimalizálással.",
+        solution: "Részletes SEO audit (technikai + kulcsszó + tartalmi gap), priorizált javítási csomag, eszköz-javaslatok a csapat önálló folytatásához.",
+        result: "Részletes SEO felmérés priorizált akciókkal, csapat önállóan folytatható optimalizálással.",
       },
       whyG2A:
         "10+ önkormányzati és közintézményi projekt mögöttünk — kistelepülésektől megyei jogú városokig. Ismerjük a Kbt. (közbeszerzés) szabályait, a 2018. évi LXXV. tv. (akadálymentesítés) követelményeit, és az EU-pályázati láthatósági előírásokat. Ügyvezetőnk, Győrfi Attila a Pécsi Tudományegyetem Közgazdaságtudományi Karán is oktat — közvetlen kapcsolatban a régió közigazgatásával.",
@@ -1165,7 +1165,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         },
       ],
     },
-    "marketing-ugyvedii-irodaknak": {
+    "marketing-ugyvedi-irodaknak": {
       title: "Legal marketing that attracts clients",
       subtitle: "For law firms and legal practices",
       metaTitle: "Law Firm Marketing – G2A Marketing | SEO, Google Ads, Brand Design",
@@ -1805,7 +1805,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         },
       ],
     },
-    "marketing-ugyvedii-irodaknak": {
+    "marketing-ugyvedi-irodaknak": {
       title: "为律师事务所与顾问吸引客户的法律营销",
       subtitle: "为律师事务所与法律服务机构提供",
       metaTitle: "律师事务所营销 – G2A Marketing | SEO、Google Ads、品牌设计",

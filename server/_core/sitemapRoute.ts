@@ -74,7 +74,7 @@ const STATIC_PATHS: SitemapPath[] = [
     "marketing-szepsegipari-cegeknek",
     "marketing-mernoki-irodaknak",
     "marketing-autoipari-cegeknek",
-    "marketing-ugyvedii-irodaknak",
+    "marketing-ugyvedi-irodaknak",
     "marketing-technologiai-cegeknek",
     "marketing-onkormanyzati-projekteknek",
     "marketing-b2b-cegeknek",

@@ -20,7 +20,7 @@ const INDUSTRY_DEMO_MAP: Record<string, React.ComponentType> = {
   "marketing-szepsegipari-cegeknek": BeautyDemo,
   "marketing-mernoki-irodaknak": EngineeringDemo,
   "marketing-autoipari-cegeknek": AutomotiveDemo,
-  "marketing-ugyvedii-irodaknak": LegalDemo,
+  "marketing-ugyvedi-irodaknak": LegalDemo,
   "marketing-technologiai-cegeknek": TechDemo,
   "marketing-onkormanyzati-projekteknek": MunicipalDemo,
   "marketing-b2b-cegeknek": B2bDemo,

@@ -77,7 +77,7 @@ const INDUSTRIES: IndustryCard[] = [
     },
   },
   {
-    slug: "marketing-ugyvedii-irodaknak",
+    slug: "marketing-ugyvedi-irodaknak",
     icon: <Scale size={22} />,
     color: "#6366f1",
     label: { hu: "Jogi szolgáltatás", en: "Legal services", zh: "法律服务" },

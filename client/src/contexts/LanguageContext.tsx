@@ -207,6 +207,7 @@ const translations: Record<Language, Record<string, string>> = {
     "expertise.title": "Iparágak, ahol otthon vagyunk",
     "expertise.desc": "Tapasztalatunk számos szektorra kiterjed. Pontosan értjük az adott piac kihívásait és lehetőségeit. Kattints bármelyik iparágra a részletes szolgáltatásokért.",
     "expertise.seoTitle": "Iparágak — G2A Marketing",
+    "expertise.seoDesc": "Bizonyított tapasztalat 8+ iparágban: egészségügy, szépségipar, autóipar, technológia, mérnöki irodák, jog és pénzügy. Iparág-specifikus stratégiák.",
     // Partners page
     "partners.sectionLabel": "Referenciák",
     "partners.title": "Partnereink és referenciáink",
@@ -299,7 +300,7 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.successDesc": "Köszönjük megkeresésed! Hamarosan felvesszük veled a kapcsolatot.",
     "contact.errorMsg": "Hiba történt az üzenet küldésekor. Kérjük próbáld újra.",
     "contact.wechatTitle": "Kínai piaci partnereinknek",
-    "contact.wechatDesc": "Ügyvezetőnk, Győrfi Attila a Varsói Egyetem vendégoktatójaként és nemzetközi marketing szakértőként rendszeresen dolgozik kínai piaci projekteken. Ha kínai piaci belépési vagy lokalizációs tanácsadásra van szükséged, WeChat-en gyors válaszadásra is elérhető — olvasd be a QR kódot.",
+    "contact.wechatDesc": "Ügyvezetőnk, Győrfi Attila az IBS Budapest, a PTE Közgazdaságtudományi Kar és a Varsovia Egyetem vendégoktatójaként és nemzetközi marketing szakértőként rendszeresen dolgozik kínai piaci projekteken. Ha kínai piaci belépési vagy lokalizációs tanácsadásra van szükséged, WeChat-en gyors válaszadásra is elérhető — olvasd be a QR kódot.",
     "contact.wechatScan": "Olvasd be a QR kódot",
     "contact.contactInfo": "Elérhetőségeink",
     "contact.formHint24h": "Töltsd ki az alábbi űrlapot és 24 órán belül visszajelzünk.",
@@ -313,17 +314,21 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.calendlyTitle": "Vagy foglalj rögtön időpontot",
     "contact.calendlyDesc": "30 perces ingyenes konzultáció — kötelezettség nélkül, az időpontot te választod.",
     "contact.calendlyHintAfterAudit": "💡 Vagy foglalj rögtön egy ingyenes 30 perces konzultációt:",
-    "contact.seoTitle": "Kapcsolat – G2A Marketing Pécs",
-    "contact.seoDesc": "Vedd fel velünk a kapcsolatot! Telefon: +36301902575, Email: info@g2amarketing.hu",
+    "contact.seoTitle": "Kapcsolat — G2A Marketing Pécs | Ingyenes konzultáció",
+    "contact.seoDesc": "Lépj kapcsolatba a G2A Marketinggel: info@g2amarketing.hu, +36 30 190 2575. Ingyenes konzultáció KKV-knak és B2B cégeknek.",
     // Services page
     "services.seoTitle": "Szolgáltatások – G2A Marketing Pécs",
     "services.details": "Részletek",
     "services.freeConsultationCta": "Kérj ingyenes konzultációt!",
     // Technology page
-    "technology.seoTitle": "Technológia – G2A Marketing Pécs",
+    "technology.seoTitle": "Technológia — AI, Analitika, Marketing Stack | G2A",
     // Date locale tag
     "common.dateLocale": "hu-HU",
     // Home page
+    // Audit B1: title ≤ 60 char, description ≤ 155 char. The Google
+    // snippet truncates anything longer, often cutting off the CTA.
+    "home.seoTitle": "G2A Marketing — Adatvezérelt B2B Marketing Ügynökség | Pécs",
+    "home.seoDesc": "Adatvezérelt marketing KKV-knak és B2B cégeknek: SEO, Google Ads, Meta, AI marketing, webfejlesztés. Mérhető növekedés. Kérd az ingyenes auditot.",
     "home.hero.badge": "Stratégiai partnerség KKV-knak és B2B cégeknek",
     // FloatingDashboard floating-card labels (audit §3.2a — were hardcoded HU on all locales)
     "home.hero.dashboard.organicTraffic": "Organikus forgalom",
@@ -435,8 +440,8 @@ const translations: Record<Language, Record<string, string>> = {
     "home.finalCta.desc": "Vedd fel velünk a kapcsolatot és indítsuk el a közös munkát egy ingyenes konzultációval.",
     "common.projectsSuffix": "projekt",
     // About page (Rólunk)
-    "about.seoTitle": "Rólunk – G2A Marketing | Adatvezérelt B2B Marketing Ügynökség",
-    "about.seoDesc": "Ismerd meg a G2A Marketing csapatát. 2022 óta segítünk B2B cégeknek mérhető marketing eredményeket elérni. Stratégiai gondolkodás, AI-alapú megoldások, 23+ aktív partner.",
+    "about.seoTitle": "Rólunk — G2A Marketing | B2B Marketing Ügynökség Pécs",
+    "about.seoDesc": "Ismerd meg a G2A Marketing csapatát. 2022 óta segítünk B2B cégeknek mérhető marketing eredményeket elérni. Stratégiai gondolkodás, AI-alapú megoldások.",
     "about.heroTitle1": "Stratégiai partnerek a",
     "about.heroTitle2": "növekedésedben",
     "about.heroDesc": "2022 óta segítünk B2B cégeknek mérhető marketing eredményeket elérni. Nem csak ügynökség vagyunk – stratégiai partnerek vagyunk a hosszú távú növekedésben.",
@@ -468,7 +473,7 @@ const translations: Record<Language, Record<string, string>> = {
     "about.whyUs.point4Title": "Hosszú távú partnerség",
     "about.whyUs.point4Body": "Átlagos ügyfélkapcsolatunk 18+ hónap. Nem akarunk gyors lefutó projekt-cégek lenni. Aki velünk indul, jellemzően 3 hónapos pilot után marad.",
     "about.whyUs.point5Title": "Pécsi gyökerek, nemzetközi szemlélet",
-    "about.whyUs.point5Body": "Pécsi székhely, magyar és nemzetközi ügyfelek. Az ügyvezetőnk a Varsói Egyetem vendégoktatója — közvetlen lengyel, cseh, kínai piaci kapcsolatokkal.",
+    "about.whyUs.point5Body": "Pécsi székhely, magyar és nemzetközi ügyfelek. Az ügyvezetőnk az IBS Budapest, a PTE Közgazdaságtudományi Kar és a Varsovia Egyetem vendégoktatója — közvetlen lengyel, cseh, kínai piaci kapcsolatokkal.",
     "about.whyUs.point6Title": "ESG és felelős marketing",
     "about.whyUs.point6Body": "Nem fogadunk el olyan megbízást, amelyik etikailag kérdéses (greenwashing, megtévesztő ígéretek). Az EU Green Claims Directive 2026-os követelményeit már most beleépítjük az ügyfél-kommunikációba.",
     "about.valuesTitle": "Amiben hiszünk",
@@ -561,7 +566,7 @@ const translations: Record<Language, Record<string, string>> = {
     "partners.seoTitle": "Partnereink – G2A Marketing Pécs",
     "partners.seoDesc": "Büszkék vagyunk arra, hogy számos sikeres vállalkozás bízta ránk digitális marketing feladatait.",
     "partners.nextStoryTitle": "Légy a következő sikertörténetünk!",
-    "technology.seoDesc": "A legmodernebb marketing és AI eszközöket alkalmazzuk, hogy ügyfeleink mindig a legjobb eredményeket kapják.",
+    "technology.seoDesc": "Modern marketing- és AI-eszközök napi szinten: Claude, ChatGPT, Midjourney, GA4, HubSpot, Looker Studio. Nem hirdetjük az AI-t — dolgozunk vele.",
     // SEO Audit Page
     "seoAudit.seoTitle": "Ingyenes SEO Audit – Weboldal Elemzés | G2A Marketing",
     "seoAudit.seoDesc": "Kérd az ingyenes SEO auditot. 10 pontos ellenőrzés: meta tagek, sebesség, mobilbarát megjelenés, strukturált adatok és backlinkek. 24 órán belül kapcsolatba lépünk, 5-7 munkanap a részletes riport.",
@@ -585,7 +590,7 @@ const translations: Record<Language, Record<string, string>> = {
     "seoAudit.privacyNote": "Adataidat bizalmasan kezeljük. Spam-mentes.",
     "seoAudit.checksLabel": "10 Pontos Ellenőrzés",
     "seoAudit.checksTitle": "Mit vizsgál az SEO audit?",
-    "seoAudit.checksDesc": "Szakértőink minden kritikus SEO tényezőt megvizsgálnak, és prioritizált fejlesztési javaslatokat adnak.",
+    "seoAudit.checksDesc": "Szakértőink minden kritikus SEO tényezőt megvizsgálnak, és priorizált fejlesztési javaslatokat adnak.",
     "seoAudit.benefitsLabel": "Miért érdemes?",
     "seoAudit.benefitsTitle": "Az audit előnyei",
     "seoAudit.ctaTitle": "Készen állsz a növekedésre?",
@@ -813,6 +818,7 @@ const translations: Record<Language, Record<string, string>> = {
     "expertise.title": "Industries we know inside out",
     "expertise.desc": "Our experience spans many sectors. We understand the specific challenges and opportunities of each market. Click any industry for the detailed offering.",
     "expertise.seoTitle": "Industries — G2A Marketing",
+    "expertise.seoDesc": "Proven experience across 8+ industries: healthcare, beauty, automotive, technology, engineering, law and finance. Industry-specific strategies.",
     // Partners page
     "partners.sectionLabel": "References",
     "partners.title": "Our Partners & References",
@@ -905,7 +911,7 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.successDesc": "Thank you for reaching out! We'll get back to you shortly.",
     "contact.errorMsg": "An error occurred while sending the message. Please try again.",
     "contact.wechatTitle": "For Chinese-market partners",
-    "contact.wechatDesc": "Our managing director, Attila Győrfi, regularly works on Chinese-market projects as a guest lecturer at the University of Warsaw and an international marketing specialist. For Chinese market-entry or localisation consulting, he's reachable on WeChat for fast responses — scan the QR code.",
+    "contact.wechatDesc": "Our managing director, Attila Győrfi, is a guest lecturer at IBS Budapest, the University of Pécs Faculty of Business and Economics, and the University of Warsaw, and an international marketing specialist who regularly works on Chinese-market projects. For Chinese market-entry or localisation consulting, he's reachable on WeChat for fast responses — scan the QR code.",
     "contact.wechatScan": "Scan the QR code",
     "contact.contactInfo": "Contact Information",
     "contact.formHint24h": "Fill out the form and we'll get back to you within 24 hours.",
@@ -919,17 +925,19 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.calendlyTitle": "Or book a slot directly",
     "contact.calendlyDesc": "30-minute discovery call — free, no obligation, your time slot.",
     "contact.calendlyHintAfterAudit": "💡 Or book a free 30-minute consultation now:",
-    "contact.seoTitle": "Contact – G2A Marketing",
-    "contact.seoDesc": "Contact G2A Marketing. Phone: +36301902575, Email: info@g2amarketing.hu. Working hours: Mon–Fri 08:00–17:00.",
+    "contact.seoTitle": "Contact — G2A Marketing Pécs | Free Consultation",
+    "contact.seoDesc": "Get in touch with G2A Marketing: info@g2amarketing.hu, +36 30 190 2575. Free consultation for SMEs and B2B companies.",
     // Services page
     "services.seoTitle": "Services – G2A Marketing",
     "services.details": "Details",
     "services.freeConsultationCta": "Request a free consultation!",
     // Technology page
-    "technology.seoTitle": "Technology – G2A Marketing",
+    "technology.seoTitle": "Technology — AI, Analytics, Marketing Stack | G2A",
     // Date locale tag
     "common.dateLocale": "en-GB",
     // Home page
+    "home.seoTitle": "G2A Marketing — Data-Driven B2B Marketing Agency | Pécs",
+    "home.seoDesc": "Data-driven marketing for SMEs and B2B companies: SEO, Google Ads, Meta, AI marketing, web development. Measurable growth. Get your free audit.",
     "home.hero.badge": "Strategic partner for SMBs and B2B companies",
     "home.hero.dashboard.organicTraffic": "Organic traffic",
     "home.hero.dashboard.vsLastQuarter": "vs previous quarter",
@@ -1030,8 +1038,8 @@ const translations: Record<Language, Record<string, string>> = {
     "home.finalCta.desc": "Contact us and let's start working together with a free consultation.",
     "common.projectsSuffix": "projects",
     // About page
-    "about.seoTitle": "About – G2A Marketing | Data-driven B2B Marketing Agency",
-    "about.seoDesc": "Meet the G2A Marketing team. Since 2022 we've helped B2B companies achieve measurable marketing results. Strategic thinking, AI-powered solutions, 23+ active partners.",
+    "about.seoTitle": "About — G2A Marketing | B2B Marketing Agency, Pécs",
+    "about.seoDesc": "Meet the G2A Marketing team. Since 2022 we've helped B2B companies achieve measurable marketing results. Strategic thinking, AI-powered solutions.",
     "about.heroTitle1": "Strategic partners in your",
     "about.heroTitle2": "growth",
     "about.heroDesc": "Since 2022, we've been helping B2B companies achieve measurable marketing results. We aren't just an agency — we're strategic partners for long-term growth.",
@@ -1063,7 +1071,7 @@ const translations: Record<Language, Record<string, string>> = {
     "about.whyUs.point4Title": "Long-term partnership",
     "about.whyUs.point4Body": "Average client relationship is 18+ months. We don't want to be a quick-project shop. Those who start with us typically stay after a 3-month pilot.",
     "about.whyUs.point5Title": "Pécs roots, international perspective",
-    "about.whyUs.point5Body": "Based in Pécs, with Hungarian and international clients. Our managing director is a guest lecturer at the University of Warsaw — with direct connections to Polish, Czech and Chinese markets.",
+    "about.whyUs.point5Body": "Based in Pécs, with Hungarian and international clients. Our managing director is a guest lecturer at IBS Budapest, the University of Pécs Faculty of Business and Economics, and the University of Warsaw — with direct connections to Polish, Czech and Chinese markets.",
     "about.whyUs.point6Title": "ESG and responsible marketing",
     "about.whyUs.point6Body": "We don't take ethically questionable engagements (greenwashing, misleading promises). EU Green Claims Directive 2026 requirements are already built into our client communications.",
     "about.valuesTitle": "What we believe in",
@@ -1156,7 +1164,7 @@ const translations: Record<Language, Record<string, string>> = {
     "partners.seoTitle": "Our Partners – G2A Marketing",
     "partners.seoDesc": "We're proud that many successful businesses have entrusted us with their digital marketing.",
     "partners.nextStoryTitle": "Be our next success story!",
-    "technology.seoDesc": "We use the most advanced marketing and AI tools to ensure our clients always get the best results.",
+    "technology.seoDesc": "Modern marketing and AI tools we use daily: Claude, ChatGPT, Midjourney, GA4, HubSpot, Looker Studio. We don't advertise AI — we work with it.",
     // SEO Audit Page
     "seoAudit.seoTitle": "Free SEO Audit – Website Analysis | G2A Marketing",
     "seoAudit.seoDesc": "Request a free SEO audit. 10-point checklist: meta tags, speed, mobile experience, structured data, backlinks. We get back to you within 24 hours; full report in 5-7 business days.",
@@ -1408,6 +1416,7 @@ const translations: Record<Language, Record<string, string>> = {
     "expertise.title": "我们深耕的行业",
     "expertise.desc": "我们的经验覆盖多个行业，深入理解各个市场的挑战与机遇。点击任一行业查看详细服务。",
     "expertise.seoTitle": "行业 — G2A Marketing",
+    "expertise.seoDesc": "8+ 行业的可靠营销经验：医疗健康、美容、汽车、科技、工程事务所、法律与金融、建筑、服务业。行业专属策略。",
     // Partners
     "partners.sectionLabel": "客户",
     "partners.title": "我们的合作伙伴",
@@ -1500,7 +1509,7 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.successDesc": "感谢您的联系!我们会尽快回复您。",
     "contact.errorMsg": "发送留言时发生错误,请重试。",
     "contact.wechatTitle": "面向中国市场的合作伙伴",
-    "contact.wechatDesc": "我们的总经理 Győrfi Attila 作为华沙大学客座讲师与国际营销专家,长期参与中国市场项目。如需中国市场进入或本地化咨询,可通过微信快速联系 — 扫描下方二维码即可添加。",
+    "contact.wechatDesc": "我们的总经理 Győrfi Attila 是 IBS Budapest、佩奇大学经济学院与华沙大学客座讲师，亦为国际营销专家，长期参与中国市场项目。如需中国市场进入或本地化咨询，可通过微信快速联系 — 扫描下方二维码即可添加。",
     "contact.wechatScan": "扫描二维码",
     "contact.contactInfo": "联系方式",
     "contact.formHint24h": "填写表单,我们将在 24 小时内回复您。",
@@ -1514,8 +1523,8 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.calendlyTitle": "或直接预约时间",
     "contact.calendlyDesc": "30 分钟的免费咨询 — 无需承诺,您选择时间。",
     "contact.calendlyHintAfterAudit": "💡 或者立即预约 30 分钟的免费咨询:",
-    "contact.seoTitle": "联系 G2A Marketing",
-    "contact.seoDesc": "联系 G2A Marketing。电话: +36301902575, 邮箱: info@g2amarketing.hu。工作时间:周一至周五 08:00–17:00。",
+    "contact.seoTitle": "联系我们 — G2A Marketing 佩奇 | 免费咨询",
+    "contact.seoDesc": "联系 G2A Marketing：info@g2amarketing.hu、+36 30 190 2575。为中小企业与 B2B 公司提供免费咨询。",
     // Services page
     "services.seoTitle": "服务 – G2A Marketing",
     "services.details": "查看详情",
@@ -1525,6 +1534,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Date locale tag
     "common.dateLocale": "zh-CN",
     // Home page
+    "home.seoTitle": "G2A Marketing — 数据驱动的 B2B 营销代理 | 佩奇",
+    "home.seoDesc": "面向中小企业与 B2B 公司的数据驱动营销：SEO、Google Ads、Meta、AI 营销、网站开发。可衡量的增长。立即申请免费评估。",
     "home.hero.badge": "中小企业与 B2B 企业的战略合作伙伴",
     "home.hero.dashboard.organicTraffic": "自然流量",
     "home.hero.dashboard.vsLastQuarter": "对比上一季度",
@@ -1658,7 +1669,7 @@ const translations: Record<Language, Record<string, string>> = {
     "about.whyUs.point4Title": "长期合作伙伴关系",
     "about.whyUs.point4Body": "平均客户关系超过 18 个月。我们不想成为快速跑完即停的项目公司。与我们开始合作的客户在 3 个月试点后通常会留下。",
     "about.whyUs.point5Title": "佩奇根基,国际视野",
-    "about.whyUs.point5Body": "总部在佩奇,服务匈牙利与国际客户。总经理是华沙大学客座讲师 —— 与波兰、捷克、中国市场有直接联系。",
+    "about.whyUs.point5Body": "总部在佩奇，服务匈牙利与国际客户。总经理是 IBS Budapest、佩奇大学经济学院与华沙大学客座讲师 —— 与波兰、捷克、中国市场有直接联系。",
     "about.whyUs.point6Title": "ESG 与负责任营销",
     "about.whyUs.point6Body": "我们不接受道德上有疑问的项目(漂绿、误导性承诺)。欧盟绿色声明指令 2026 要求已纳入客户沟通中。",
     "about.valuesTitle": "我们信奉的理念",

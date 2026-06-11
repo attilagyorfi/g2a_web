@@ -44,7 +44,7 @@ export default function Navigation() {
     { label: t("industry.beauty"), slug: "marketing-szepsegipari-cegeknek" },
     { label: t("industry.engineering"), slug: "marketing-mernoki-irodaknak" },
     { label: t("industry.automotive"), slug: "marketing-autoipari-cegeknek" },
-    { label: t("industry.legal"), slug: "marketing-ugyvedii-irodaknak" },
+    { label: t("industry.legal"), slug: "marketing-ugyvedi-irodaknak" },
     { label: t("industry.technology"), slug: "marketing-technologiai-cegeknek" },
     { label: t("industry.government"), slug: "marketing-onkormanyzati-projekteknek" },
     { label: t("industry.b2b"), slug: "marketing-b2b-cegeknek" },

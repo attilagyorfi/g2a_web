@@ -116,7 +116,7 @@ const DOCS: Record<Language, KarrierDoc> = {
         {
           icon: <Globe size={20} />,
           title: "Nemzetközi kitekintés",
-          desc: "Lengyel, cseh és kínai partnereinkkel közvetlen munkakapcsolat. Az ügyvezetőnk Varsói Egyetem vendégoktató — útközben, együtt-iskolázás potenciál.",
+          desc: "Lengyel, cseh és kínai partnereinkkel közvetlen munkakapcsolat. Az ügyvezetőnk az IBS Budapest, a PTE Közgazdaságtudományi Kar és a Varsovia Egyetem vendégoktatója — útközben, együtt-iskolázás potenciál.",
         },
         {
           icon: <Coffee size={20} />,
@@ -248,7 +248,7 @@ const DOCS: Record<Language, KarrierDoc> = {
         {
           icon: <Globe size={20} />,
           title: "International exposure",
-          desc: "Direct working relationships with Polish, Czech and Chinese partners. Our managing director is a guest lecturer at the University of Warsaw — co-learning potential along the way.",
+          desc: "Direct working relationships with Polish, Czech and Chinese partners. Our managing director is a guest lecturer at IBS Budapest, the University of Pécs Faculty of Business and Economics, and the University of Warsaw — co-learning potential along the way.",
         },
         {
           icon: <Coffee size={20} />,
@@ -380,7 +380,7 @@ const DOCS: Record<Language, KarrierDoc> = {
         {
           icon: <Globe size={20} />,
           title: "国际视野",
-          desc: "与波兰、捷克、中国合作伙伴的直接工作关系。总经理是华沙大学客座讲师 —— 路上的共同学习潜力。",
+          desc: "与波兰、捷克、中国合作伙伴的直接工作关系。总经理是 IBS Budapest、佩奇大学经济学院与华沙大学客座讲师 —— 路上的共同学习潜力。",
         },
         {
           icon: <Coffee size={20} />,

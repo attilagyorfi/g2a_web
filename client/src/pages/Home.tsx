@@ -162,7 +162,7 @@ const INDUSTRIES: Industry[] = [
   { icon: <ShoppingBag size={22} />, labelKey: "industry.beauty", slug: "marketing-szepsegipari-cegeknek", count: 25 },
   { icon: <Wrench size={22} />, labelKey: "industry.engineering", slug: "marketing-mernoki-irodaknak", count: 30 },
   { icon: <Car size={22} />, labelKey: "industry.automotive", slug: "marketing-autoipari-cegeknek", count: 20 },
-  { icon: <Scale size={22} />, labelKey: "industry.legal", slug: "marketing-ugyvedii-irodaknak", count: 15 },
+  { icon: <Scale size={22} />, labelKey: "industry.legal", slug: "marketing-ugyvedi-irodaknak", count: 15 },
   { icon: <Code size={22} />, labelKey: "industry.technology", slug: "marketing-technologiai-cegeknek", count: 35 },
   { icon: <Lightbulb size={22} />, labelKey: "industry.government", slug: "marketing-onkormanyzati-projekteknek", count: 10 },
   { icon: <Building2 size={22} />, labelKey: "industry.b2b", slug: "marketing-b2b-cegeknek", count: 50 },
@@ -329,8 +329,8 @@ export default function Home() {
   return (
     <>
       <SeoHead
-        title={seoData?.metaTitle || "G2A Marketing — Adatvezérelt B2B Marketing Ügynökség Pécs"}
-        description={seoData?.metaDescription || "Stratégiai marketing, AI-alapú megoldások és mérhető növekedés. SEO, PPC, webfejlesztés és teljes marketing ökoszisztéma B2B cégeknek."}
+        title={seoData?.metaTitle || t("home.seoTitle")}
+        description={seoData?.metaDescription || t("home.seoDesc")}
       />
       <ScrollProgressBar />
       <Navigation />

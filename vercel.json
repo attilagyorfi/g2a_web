@@ -18,6 +18,21 @@
       "source": "/zh/marketing-audit",
       "destination": "/zh/ingyenes-audit",
       "permanent": true
+    },
+    {
+      "source": "/iparagi/marketing-ugyvedii-irodaknak",
+      "destination": "/iparagi/marketing-ugyvedi-irodaknak",
+      "permanent": true
+    },
+    {
+      "source": "/en/iparagi/marketing-ugyvedii-irodaknak",
+      "destination": "/en/iparagi/marketing-ugyvedi-irodaknak",
+      "permanent": true
+    },
+    {
+      "source": "/zh/iparagi/marketing-ugyvedii-irodaknak",
+      "destination": "/zh/iparagi/marketing-ugyvedi-irodaknak",
+      "permanent": true
     }
   ],
   "rewrites": [
