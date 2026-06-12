@@ -131,6 +131,7 @@ function footer(unsubscribeUrl: string): string {
               </td>
               <td align="right" valign="top">
                 <a href="https://www.linkedin.com/company/g2a-marketing/" style="text-decoration:none;color:#cbd5e1;font-size:11px;font-family:${FONT_MONO};margin-right:14px">LinkedIn</a>
+                <a href="https://www.instagram.com/g2amarketingagency/" style="text-decoration:none;color:#cbd5e1;font-size:11px;font-family:${FONT_MONO};margin-right:14px">Instagram</a>
                 <a href="https://www.facebook.com/g2amarketing" style="text-decoration:none;color:#cbd5e1;font-size:11px;font-family:${FONT_MONO}">Facebook</a>
               </td>
             </tr>

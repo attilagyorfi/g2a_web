@@ -45,6 +45,7 @@ const COMPANY = {
     "https://res.cloudinary.com/dzh1unb6d/image/upload/w_512,h_512,c_pad,b_rgb:0a0a0a,q_auto,f_auto/g2a/og/default-logo.png",
   social: [
     "https://www.facebook.com/g2amarketing",
+    "https://www.instagram.com/g2amarketingagency/",
     "https://www.youtube.com/g2amarketing",
     "https://www.linkedin.com/company/g2a-marketing/",
   ],

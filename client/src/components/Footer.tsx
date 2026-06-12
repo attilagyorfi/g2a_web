@@ -1,4 +1,4 @@
-import { Phone, Mail, Facebook, Youtube, Linkedin } from "lucide-react";
+import { Phone, Mail, Facebook, Youtube, Linkedin, Instagram } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CalendlyTextLink } from "@/components/CalendlyEmbed";
 import NewsletterSection from "@/components/NewsletterSection";
@@ -108,6 +108,7 @@ export default function Footer({ hideNewsletter = false }: { hideNewsletter?: bo
             <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
               {[
                 { href: "https://www.facebook.com/g2amarketing", icon: <Facebook size={16} />, label: "Facebook" },
+                { href: "https://www.instagram.com/g2amarketingagency/", icon: <Instagram size={16} />, label: "Instagram" },
                 { href: "https://www.youtube.com/g2amarketing", icon: <Youtube size={16} />, label: "YouTube" },
                 { href: "https://www.linkedin.com/company/g2a-marketing/", icon: <Linkedin size={16} />, label: "LinkedIn" },
               ].map(s => (

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, ChevronDown, Phone, Mail, Clock, ArrowRight, Facebook, Youtube, Linkedin, Search } from "lucide-react";
+import { Menu, X, ChevronDown, Phone, Mail, Clock, ArrowRight, Facebook, Instagram, Youtube, Linkedin, Search } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -121,6 +121,7 @@ export default function Navigation() {
             <div style={{ display: "flex", gap: "0.625rem" }}>
               {[
                 { href: "https://facebook.com/g2amarketing", icon: <Facebook size={13} /> },
+                { href: "https://www.instagram.com/g2amarketingagency/", icon: <Instagram size={13} /> },
                 { href: "https://youtube.com/g2amarketing", icon: <Youtube size={13} /> },
                 { href: "https://www.linkedin.com/company/g2a-marketing/", icon: <Linkedin size={13} /> },
               ].map((s, i) => (
