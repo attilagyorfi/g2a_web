@@ -44,7 +44,7 @@ export default function ThirdPartyScripts() {
 
     const settingsMap: Record<string, string> = {};
     (settings as Array<{ key: string; value: string }>).forEach(s => {
-      settingsMap[s.key] = s.value;
+      settingsMap[s.key] = (s.value ?? "").trim();
     });
 
     const crispId = settingsMap["crisp_website_id"];
@@ -66,6 +66,60 @@ export default function ThirdPartyScripts() {
       script.id = "gtm-script";
       script.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":new Date().getTime(),event:"gtm.js"});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src="https://www.googletagmanager.com/gtm.js?id="+i+dl;f.parentNode.insertBefore(j,f);})(window,document,"script","dataLayer","${gtmId}");`;
       document.head.appendChild(script);
+    }
+
+    // ─── GA4 — standalone gtag.js loader. Skip if GTM is already
+    // injecting the same measurement ID (GTM lifts the GA4 tag for
+    // you), but a lot of clients use GA4 directly without GTM —
+    // that's what this block supports.
+    const ga4Id = settingsMap["ga4_id"];
+    if (ga4Id && !gtmId && !document.getElementById("ga4-loader")) {
+      const loader = document.createElement("script");
+      loader.id = "ga4-loader";
+      loader.async = true;
+      loader.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ga4Id)}`;
+      document.head.appendChild(loader);
+      const init = document.createElement("script");
+      init.id = "ga4-init";
+      init.innerHTML = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","${ga4Id}");`;
+      document.head.appendChild(init);
+    }
+
+    // ─── Meta (Facebook) Pixel. Standard fbq snippet with PageView.
+    // SPA route changes are picked up by the useEffect dependency on
+    // `location` — every navigation that crosses a route fires a new
+    // PageView through fbq("track", "PageView") below.
+    const pixelId = settingsMap["meta_pixel_id"];
+    if (pixelId) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const w = window as any;
+      if (!document.getElementById("meta-pixel")) {
+        const init = document.createElement("script");
+        init.id = "meta-pixel";
+        init.innerHTML = `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");fbq("init","${pixelId}");fbq("track","PageView");`;
+        document.head.appendChild(init);
+      } else if (typeof w.fbq === "function") {
+        // Already loaded — fire a manual PageView on SPA route change.
+        try { w.fbq("track", "PageView"); } catch { /* swallow */ }
+      }
+    }
+
+    // ─── Google Search Console site-verification meta tag. The admin
+    // can paste either the full <meta> snippet or just the content
+    // value — we normalise.
+    const gscRaw = settingsMap["google_search_console"];
+    if (gscRaw) {
+      const contentMatch = gscRaw.match(/content=["']([^"']+)["']/);
+      const content = contentMatch?.[1] ?? gscRaw.replace(/^google-site-verification=/i, "");
+      const existing = document.querySelector('meta[name="google-site-verification"]');
+      if (!existing) {
+        const m = document.createElement("meta");
+        m.setAttribute("name", "google-site-verification");
+        m.setAttribute("content", content);
+        document.head.appendChild(m);
+      } else if (existing.getAttribute("content") !== content) {
+        existing.setAttribute("content", content);
+      }
     }
   }, [settings, location]);
 

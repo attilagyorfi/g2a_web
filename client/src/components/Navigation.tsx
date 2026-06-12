@@ -5,6 +5,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useSiteSettings } from "@/lib/useSiteSettings";
 
 const LOGO_URL = "https://g2amarketing.hu/wp-content/uploads/2022/06/g2a_512x512_transparent_feher.png";
 
@@ -18,6 +19,10 @@ export default function Navigation() {
   const [location] = useLocation();
   const { theme } = useTheme();
   const { lang, setLang, t } = useLanguage();
+  // Admin-configurable social URLs (Beállítások panel). Fallbacks
+  // below are the production values, so the nav still works on a
+  // fresh DB with no settings rows.
+  const settings = useSiteSettings();
   const servicesRef = useRef<HTMLDivElement>(null);
   const industriesRef = useRef<HTMLDivElement>(null);
   const servicesTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -120,11 +125,11 @@ export default function Navigation() {
             </span>
             <div style={{ display: "flex", gap: "0.625rem" }}>
               {[
-                { href: "https://facebook.com/g2amarketing", icon: <Facebook size={13} /> },
-                { href: "https://www.instagram.com/g2amarketingagency/", icon: <Instagram size={13} /> },
-                { href: "https://youtube.com/g2amarketing", icon: <Youtube size={13} /> },
-                { href: "https://www.linkedin.com/company/g2a-marketing/", icon: <Linkedin size={13} /> },
-              ].map((s, i) => (
+                { href: settings.get("facebook_url", "https://facebook.com/g2amarketing"), icon: <Facebook size={13} /> },
+                { href: settings.get("instagram_url", "https://www.instagram.com/g2amarketingagency/"), icon: <Instagram size={13} /> },
+                { href: settings.get("youtube_url", "https://youtube.com/g2amarketing"), icon: <Youtube size={13} /> },
+                { href: settings.get("linkedin_url", "https://www.linkedin.com/company/g2a-marketing/"), icon: <Linkedin size={13} /> },
+              ].filter(s => s.href).map((s, i) => (
                 <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
                   style={{ color: "var(--g2a-text-muted)", transition: "color 0.2s" }}
                   onMouseEnter={e => (e.currentTarget.style.color = "#14B8A6")}

@@ -3,6 +3,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { CalendlyTextLink } from "@/components/CalendlyEmbed";
 import NewsletterSection from "@/components/NewsletterSection";
 import { useLocation } from "wouter";
+import { useSiteSettings } from "@/lib/useSiteSettings";
 
 const LOGO_URL = "https://g2amarketing.hu/wp-content/uploads/2022/06/g2a_512x512_transparent_feher.png";
 
@@ -74,6 +75,11 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
 export default function Footer({ hideNewsletter = false }: { hideNewsletter?: boolean } = {}) {
   const { t } = useLanguage();
   const [location] = useLocation();
+  // Site settings let the admin override every social URL + the
+  // phone/email/legal-text from the Beállítások panel without a
+  // redeploy. Fallbacks below are the production values so a fresh
+  // install with no settings still renders correctly.
+  const settings = useSiteSettings();
   const skipNewsletter =
     hideNewsletter ||
     location === "/" ||
@@ -107,11 +113,11 @@ export default function Footer({ hideNewsletter = false }: { hideNewsletter?: bo
             </p>
             <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
               {[
-                { href: "https://www.facebook.com/g2amarketing", icon: <Facebook size={16} />, label: "Facebook" },
-                { href: "https://www.instagram.com/g2amarketingagency/", icon: <Instagram size={16} />, label: "Instagram" },
-                { href: "https://www.youtube.com/g2amarketing", icon: <Youtube size={16} />, label: "YouTube" },
-                { href: "https://www.linkedin.com/company/g2a-marketing/", icon: <Linkedin size={16} />, label: "LinkedIn" },
-              ].map(s => (
+                { href: settings.get("facebook_url", "https://www.facebook.com/g2amarketing"), icon: <Facebook size={16} />, label: "Facebook" },
+                { href: settings.get("instagram_url", "https://www.instagram.com/g2amarketingagency/"), icon: <Instagram size={16} />, label: "Instagram" },
+                { href: settings.get("youtube_url", "https://www.youtube.com/g2amarketing"), icon: <Youtube size={16} />, label: "YouTube" },
+                { href: settings.get("linkedin_url", "https://www.linkedin.com/company/g2a-marketing/"), icon: <Linkedin size={16} />, label: "LinkedIn" },
+              ].filter(s => s.href).map(s => (
                 <a
                   key={s.label}
                   href={s.href}
@@ -186,24 +192,35 @@ export default function Footer({ hideNewsletter = false }: { hideNewsletter?: bo
               {t("footer.contactHeader")}
             </h4>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
-              <a
-                href="tel:+36301902575"
-                style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "var(--g2a-text-secondary)", fontSize: "0.875rem", textDecoration: "none" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-accent)"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-secondary)"; }}
-              >
-                <Phone size={14} style={{ color: "var(--g2a-text-accent)", flexShrink: 0 }} />
-                +36 30 190 2575
-              </a>
-              <a
-                href="mailto:info@g2amarketing.hu"
-                style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "var(--g2a-text-secondary)", fontSize: "0.875rem", textDecoration: "none" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-accent)"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-secondary)"; }}
-              >
-                <Mail size={14} style={{ color: "var(--g2a-text-accent)", flexShrink: 0 }} />
-                info@g2amarketing.hu
-              </a>
+              {(() => {
+                // Phone + email come from site_settings when present;
+                // the production defaults below are the fallbacks.
+                const phone = settings.get("contact_phone", "+36 30 190 2575");
+                const email = settings.get("contact_email", "info@g2amarketing.hu");
+                const telHref = `tel:${phone.replace(/[^+0-9]/g, "")}`;
+                return (
+                  <>
+                    <a
+                      href={telHref}
+                      style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "var(--g2a-text-secondary)", fontSize: "0.875rem", textDecoration: "none" }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-accent)"; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-secondary)"; }}
+                    >
+                      <Phone size={14} style={{ color: "var(--g2a-text-accent)", flexShrink: 0 }} />
+                      {phone}
+                    </a>
+                    <a
+                      href={`mailto:${email}`}
+                      style={{ display: "flex", alignItems: "center", gap: "0.625rem", color: "var(--g2a-text-secondary)", fontSize: "0.875rem", textDecoration: "none" }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-accent)"; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--g2a-text-secondary)"; }}
+                    >
+                      <Mail size={14} style={{ color: "var(--g2a-text-accent)", flexShrink: 0 }} />
+                      {email}
+                    </a>
+                  </>
+                );
+              })()}
               {/* Working hours + city pin removed — the office isn't
                   visitor-facing, so opening times and a "Pécs" map pin
                   implied something we don't offer. The Impressum row

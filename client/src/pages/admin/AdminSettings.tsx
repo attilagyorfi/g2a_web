@@ -3,6 +3,14 @@ import { trpc } from "@/lib/trpc";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
 
+// Every key in this list is read by the rendering layer:
+//   contact_phone / contact_email → Footer (with production fallback)
+//   facebook_url / instagram_url / youtube_url / linkedin_url →
+//     Footer + Navigation social icons + jsonLd Organization.sameAs
+//   gtm_id / ga4_id / meta_pixel_id / crisp_website_id /
+//     google_search_console → ThirdPartyScripts injects on mount
+// Unset keys fall back to the production defaults so a blank DB
+// still renders correctly.
 const SETTING_FIELDS = [
   { key: "site_name", label: "Weboldal neve", placeholder: "G2A Marketing" },
   { key: "site_tagline", label: "Szlogen / Tagline", placeholder: "Adatvezérelt marketing ügynökség" },
@@ -12,11 +20,13 @@ const SETTING_FIELDS = [
   { key: "opening_hours", label: "Nyitvatartás", placeholder: "H–P: 08:00–17:00" },
   { key: "facebook_url", label: "Facebook URL", placeholder: "https://facebook.com/..." },
   { key: "instagram_url", label: "Instagram URL", placeholder: "https://instagram.com/..." },
+  { key: "youtube_url", label: "YouTube URL", placeholder: "https://youtube.com/..." },
   { key: "linkedin_url", label: "LinkedIn URL", placeholder: "https://linkedin.com/..." },
   { key: "footer_text", label: "Footer szöveg", placeholder: "© 2025 G2A Marketing. Minden jog fenntartva." },
   { key: "gtm_id", label: "Google Tag Manager ID", placeholder: "GTM-XXXXXXX" },
   { key: "ga4_id", label: "Google Analytics 4 Mérési azonosító", placeholder: "G-XXXXXXXXXX" },
   { key: "meta_pixel_id", label: "Meta Pixel ID", placeholder: "1234567890" },
+  { key: "crisp_website_id", label: "Crisp Chat Website ID", placeholder: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" },
   { key: "google_search_console", label: "Google Search Console verifikációs kód", placeholder: "google-site-verification=..." },
 ];
 
