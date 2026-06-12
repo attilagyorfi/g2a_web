@@ -996,8 +996,41 @@ const adminRouter = router({
         audience: z.string().optional(),
         wordCount: z.number().int().min(200).max(3000).optional(),
         tone: z.enum(["professional", "conversational", "technical"]).optional(),
+        // Optional client-generated UUID for progress tracking. The
+        // mutation creates the ai_jobs row, the worker increments
+        // completedSteps after each OpenAI call, and a parallel
+        // polling query (getAiJobStatus below) lets the UI render
+        // real progress instead of a static spinner.
+        jobId: z.string().uuid().optional(),
       }))
-      .mutation(({ input }) => generateMultilangBlogDraft(input)),
+      .mutation(async ({ input }) => {
+        const { jobId, ...gen } = input;
+        if (jobId) {
+          await db.createAiJob({ id: jobId, type: "multilang_blog_draft", totalSteps: 6 });
+        }
+        try {
+          const result = await generateMultilangBlogDraft(gen, jobId);
+          return result;
+        } catch (err) {
+          if (jobId) {
+            await db.updateAiJob(jobId, {
+              status: "failed",
+              errorMessage: err instanceof Error ? err.message : String(err),
+            }).catch(() => {});
+          }
+          throw err;
+        }
+      }),
+    /**
+     * Best-effort progress reader for the multilang blog draft job.
+     * Called once per second from the admin UI while the mutation is
+     * in flight. Returns null if the job hasn't been created yet (the
+     * UUID just bounced across a slow network) so the UI shows a soft
+     * "Inicializálás..." instead of crashing.
+     */
+    getAiJobStatus: adminProcedure
+      .input(z.object({ jobId: z.string().uuid() }))
+      .query(({ input }) => db.getAiJob(input.jobId)),
     generateSeoMeta: adminProcedure
       .input(z.object({
         topic: z.string().min(3),

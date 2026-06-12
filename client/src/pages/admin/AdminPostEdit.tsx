@@ -65,6 +65,22 @@ export default function AdminPostEdit() {
   const [showDraftModal, setShowDraftModal] = useState(false);
   const [draftTopic, setDraftTopic] = useState("");
   const [draftTone, setDraftTone] = useState<"professional" | "conversational" | "technical">("professional");
+  // Job-id polling — the mutation writes step counters to ai_jobs.
+  // We poll once per second while a job is in flight so the modal
+  // shows real "2/6 done" progress instead of just the time-based
+  // soft estimate from DRAFT_STAGES below.
+  const [draftJobId, setDraftJobId] = useState<string | null>(null);
+  const jobStatusQuery = trpc.admin.ai.getAiJobStatus.useQuery(
+    { jobId: draftJobId ?? "" },
+    {
+      enabled: !!draftJobId && blogDraftMutation.isPending,
+      refetchInterval: 1000,
+      // Stale immediately so each refetch hits the server.
+      staleTime: 0,
+    },
+  );
+  const realCompletedSteps = jobStatusQuery.data?.completedSteps ?? 0;
+  const realPhase = jobStatusQuery.data?.phase as "draft" | "editor" | null | undefined;
   // Extra outputs from the two-pass draft generator — surfaced as
   // separate UI panels rather than dumped into the content field.
   // Per-locale so each language tab gets its own alternatives.
@@ -122,12 +138,19 @@ export default function AdminPostEdit() {
     (acc, stage, idx) => (draftElapsedSec >= stage.minSeconds ? idx : acc),
     0,
   );
-  // Soft progress estimate — caps at 95% so we never imply "done"
+  // Progress percentage. Prefer the real ai_jobs counter (server
+  // increments after each OpenAI call); fall back to the time-based
+  // estimate while the job row hasn't been created or the polling
+  // hasn't returned yet. Caps at 95% so we never imply "done"
   // before the mutation actually resolves; success handler will snap
   // to 100% via the cleanup effect.
-  const progressPct = blogDraftMutation.isPending
+  const timeBasedPct = blogDraftMutation.isPending
     ? Math.min(95, Math.round((draftElapsedSec / 40) * 100))
     : 0;
+  const realPct = realCompletedSteps > 0
+    ? Math.min(95, Math.round((realCompletedSteps / 6) * 100))
+    : 0;
+  const progressPct = realPct > 0 ? realPct : timeBasedPct;
 
   const aiConfigured = aiStatus.data?.configured ?? false;
   const aiModel = aiStatus.data?.model ?? "";
@@ -138,8 +161,16 @@ export default function AdminPostEdit() {
       const ok = await confirm({ title: "Felülírás megerősítése", message: "A meglévő tartalom (cím, kivonat, tartalom, SEO) felülíródik mindhárom nyelven. Folytatod?", destructive: false, confirmLabel: "Felülírás" });
       if (!ok) return;
     }
+    // Client-generated UUID — the server creates an ai_jobs row keyed
+    // by this id and ticks completedSteps after each OpenAI call,
+    // while a parallel polling query on this page renders the live
+    // progress bar.
+    const jobId = typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `${Date.now().toString(16)}-${Math.random().toString(16).slice(2)}`;
+    setDraftJobId(jobId);
     try {
-      const draft = await blogDraftMutation.mutateAsync({ topic: draftTopic, tone: draftTone });
+      const draft = await blogDraftMutation.mutateAsync({ topic: draftTopic, tone: draftTone, jobId });
       setForm(prev => ({
         ...prev,
         // HU
@@ -182,6 +213,11 @@ export default function AdminPostEdit() {
       toast.success(`AI blog draft generálva HU + EN + ZH nyelven, szerkesztői pass alkalmazva (${aiModel})`);
     } catch (err) {
       toast.error(parseFormError(err, "AI draft generálás sikertelen"));
+    } finally {
+      // Stop polling: the mutation has either succeeded or failed,
+      // either way the ai_jobs row is final and no further refetches
+      // would change anything.
+      setDraftJobId(null);
     }
   };
 
@@ -321,9 +357,23 @@ export default function AdminPostEdit() {
                     {draftElapsedSec}s
                   </span>
                 </div>
-                <p style={{ color: "#888", fontSize: "0.78rem", lineHeight: 1.5, marginBottom: "1rem" }}>
+                <p style={{ color: "#888", fontSize: "0.78rem", lineHeight: 1.5, marginBottom: "0.75rem" }}>
                   {DRAFT_STAGES[activeStageIndex].detail}
                 </p>
+                {/* Real progress from the ai_jobs row (polled 1/sec).
+                    Renders only once the server has confirmed at least
+                    one OpenAI call landed — until then the time-based
+                    progress above is the only signal. */}
+                {realCompletedSteps > 0 && (
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", padding: "0.45rem 0.75rem", background: "rgba(20,184,166,0.06)", border: "1px solid rgba(20,184,166,0.2)", borderRadius: 5 }}>
+                    <span style={{ color: "#5eead4", fontFamily: "Geist Mono, monospace", fontSize: "0.72rem", fontWeight: 600 }}>
+                      OpenAI · {realCompletedSteps}/6 hívás kész
+                    </span>
+                    <span style={{ color: "#888", fontFamily: "Geist Mono, monospace", fontSize: "0.66rem" }}>
+                      {realPhase === "editor" ? "Szerkesztői pass" : "Strukturált draft"}
+                    </span>
+                  </div>
+                )}
                 {/* Stage timeline — checkmarks for completed phases */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 6, padding: "0.85rem 1rem", background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 6 }}>
                   {DRAFT_STAGES.map((stage, idx) => {

@@ -2,6 +2,7 @@ import { and, asc, desc, eq, inArray, like, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser,
+  aiJobs,
   auditLeads,
   caseStudies,
   categories,
@@ -800,4 +801,47 @@ export async function updateSocialPost(
   const db = await getDb();
   if (!db) return;
   await db.update(socialPosts).set(data).where(eq(socialPosts.id, id));
+}
+
+// ─── AI Jobs (background-job progress tracking) ──────────────────────────────
+//
+// Used by the multilang blog-draft pipeline to expose live progress to
+// the admin while the 6-call OpenAI pipeline (3 drafts + 3 editor
+// passes) runs. The mutation initiator creates a row with the
+// client-generated UUID; the worker updates `completedSteps` after
+// each OpenAI call; a separate polling endpoint reads the row.
+//
+// Best-effort only — every helper is a soft no-op when the DB isn't
+// configured, so unit tests / local dev without a DB still work.
+
+export async function createAiJob(data: {
+  id: string;
+  type: string;
+  totalSteps?: number;
+}) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(aiJobs).values({
+    id: data.id,
+    type: data.type,
+    totalSteps: data.totalSteps ?? 6,
+    status: "running",
+    completedSteps: 0,
+  });
+}
+
+export async function updateAiJob(
+  id: string,
+  patch: Partial<typeof aiJobs.$inferInsert>,
+) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(aiJobs).set(patch).where(eq(aiJobs.id, id));
+}
+
+export async function getAiJob(id: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(aiJobs).where(eq(aiJobs.id, id)).limit(1);
+  return rows[0] ?? null;
 }

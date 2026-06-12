@@ -413,6 +413,32 @@ export const caseStudies = mysqlTable("case_studies", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
+/**
+ * AI background-job progress tracking.
+ *
+ * The multilang blog draft pipeline fires six OpenAI calls (3 drafts
+ * + 3 editor passes) over ~20-40s. The frontend used to stare at a
+ * static spinner; now it polls this row every second to show real
+ * progress ("Strukturált draft · 2/6"). The job is owned by a
+ * client-generated UUID so the polling endpoint and the worker
+ * mutation can both find it without a shared in-process Map (Vercel
+ * serverless instances don't share memory).
+ *
+ * The row is best-effort progress only — losing it doesn't break the
+ * generation, the mutation still returns the final draft synchronously.
+ */
+export const aiJobs = mysqlTable("ai_jobs", {
+  id: varchar("id", { length: 36 }).primaryKey(), // client-side UUID
+  type: varchar("type", { length: 32 }).notNull(), // "multilang_blog_draft"
+  status: mysqlEnum("status", ["pending", "running", "completed", "failed"]).default("pending").notNull(),
+  phase: varchar("phase", { length: 64 }), // "draft" | "editor" | null
+  completedSteps: int("completedSteps").default(0).notNull(),
+  totalSteps: int("totalSteps").default(6).notNull(),
+  errorMessage: text("errorMessage"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
 export const auditLeads = mysqlTable("audit_leads", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),

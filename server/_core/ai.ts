@@ -470,22 +470,60 @@ KIMENETI JSON — ugyanaz a séma, mint az eredeti, plusz egy "editorNotes" töm
  * Wall clock ≈ max(draft) + max(edit) since phase 2 needs phase 1's
  * output. Total OpenAI cost: ~6 calls (3 locales × 2 passes), still
  * well under a few cents on gpt-4o-mini.
+ *
+ * Progress tracking (opt-in via `jobId`): the admin UI generates a
+ * UUID client-side, the mutation passes it here, and we tick the
+ * `ai_jobs.completedSteps` counter from 0 → 6 as each OpenAI call
+ * resolves. A separate polling endpoint reads the row 1×/second so
+ * the modal shows real progress instead of a static spinner.
+ *
+ * The progress writes are fire-and-forget — a DB hiccup never
+ * fails the actual generation. If `jobId` is omitted the pipeline
+ * runs unchanged.
  */
 export async function generateMultilangBlogDraft(
   input: Omit<BlogDraftInput, "lang">,
+  jobId?: string,
 ): Promise<MultilangBlogDraft> {
-  // Phase 1: structural drafts in parallel.
+  // Lazy dynamic import — ai.ts is imported widely and pulling in
+  // the full db module would broaden the bundle for every caller.
+  const dbPromise = jobId ? import("../db").catch(() => null) : null;
+
+  let stepsDone = 0;
+  const tick = async (phase: "draft" | "editor") => {
+    if (!jobId || !dbPromise) return;
+    stepsDone++;
+    try {
+      const db = await dbPromise;
+      if (db) await db.updateAiJob(jobId, { phase, completedSteps: stepsDone });
+    } catch {
+      /* swallow — progress is best-effort */
+    }
+  };
+
+  // Phase 1: structural drafts in parallel; tick after each resolves.
   const [huDraft, enDraft, zhDraft] = await Promise.all([
-    generateBlogDraft({ ...input, lang: "hu" }),
-    generateBlogDraft({ ...input, lang: "en" }),
-    generateBlogDraft({ ...input, lang: "zh" }),
+    generateBlogDraft({ ...input, lang: "hu" }).then(async (d) => { await tick("draft"); return d; }),
+    generateBlogDraft({ ...input, lang: "en" }).then(async (d) => { await tick("draft"); return d; }),
+    generateBlogDraft({ ...input, lang: "zh" }).then(async (d) => { await tick("draft"); return d; }),
   ]);
-  // Phase 2: editorial review in parallel.
+  // Phase 2: editorial review in parallel; tick after each resolves.
   const [hu, en, zh] = await Promise.all([
-    editorialReview(huDraft, "hu"),
-    editorialReview(enDraft, "en"),
-    editorialReview(zhDraft, "zh"),
+    editorialReview(huDraft, "hu").then(async (d) => { await tick("editor"); return d; }),
+    editorialReview(enDraft, "en").then(async (d) => { await tick("editor"); return d; }),
+    editorialReview(zhDraft, "zh").then(async (d) => { await tick("editor"); return d; }),
   ]);
+
+  // Mark the job complete after all six calls land.
+  if (jobId && dbPromise) {
+    try {
+      const db = await dbPromise;
+      if (db) await db.updateAiJob(jobId, { status: "completed", completedSteps: 6, phase: "editor" });
+    } catch {
+      /* swallow */
+    }
+  }
+
   return { hu, en, zh };
 }
 

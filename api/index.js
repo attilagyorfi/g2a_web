@@ -18,7 +18,7 @@ import {
   timestamp,
   varchar
 } from "drizzle-orm/mysql-core";
-var users, siteSettings, pages, categories, posts, services, heroSlides, testimonials, partners, industries, technologies, values, contactSubmissions, emailCampaigns, emailEvents, rateLimitHits, socialAccounts, socialPosts, newsletterSubscribers, caseStudies, auditLeads;
+var users, siteSettings, pages, categories, posts, services, heroSlides, testimonials, partners, industries, technologies, values, contactSubmissions, emailCampaigns, emailEvents, rateLimitHits, socialAccounts, socialPosts, newsletterSubscribers, caseStudies, aiJobs, auditLeads;
 var init_schema = __esm({
   "drizzle/schema.ts"() {
     "use strict";
@@ -367,6 +367,20 @@ var init_schema = __esm({
       createdAt: timestamp("createdAt").defaultNow().notNull(),
       updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
     });
+    aiJobs = mysqlTable("ai_jobs", {
+      id: varchar("id", { length: 36 }).primaryKey(),
+      // client-side UUID
+      type: varchar("type", { length: 32 }).notNull(),
+      // "multilang_blog_draft"
+      status: mysqlEnum("status", ["pending", "running", "completed", "failed"]).default("pending").notNull(),
+      phase: varchar("phase", { length: 64 }),
+      // "draft" | "editor" | null
+      completedSteps: int("completedSteps").default(0).notNull(),
+      totalSteps: int("totalSteps").default(6).notNull(),
+      errorMessage: text("errorMessage"),
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+    });
     auditLeads = mysqlTable("audit_leads", {
       id: int("id").autoincrement().primaryKey(),
       name: varchar("name", { length: 256 }).notNull(),
@@ -427,6 +441,107 @@ var init_env = __esm({
 });
 
 // server/db.ts
+var db_exports = {};
+__export(db_exports, {
+  checkNewsletterSubscriberExists: () => checkNewsletterSubscriberExists,
+  createAiJob: () => createAiJob,
+  createAuditLead: () => createAuditLead,
+  createCategory: () => createCategory,
+  createContactSubmission: () => createContactSubmission,
+  createEmailCampaign: () => createEmailCampaign,
+  createHeroSlide: () => createHeroSlide,
+  createIndustry: () => createIndustry,
+  createNewsletterSubscriber: () => createNewsletterSubscriber,
+  createPartner: () => createPartner,
+  createPost: () => createPost,
+  createService: () => createService,
+  createSocialPost: () => createSocialPost,
+  createTechnology: () => createTechnology,
+  createTestimonial: () => createTestimonial,
+  createValue: () => createValue,
+  deleteAuditLead: () => deleteAuditLead,
+  deleteAuditLeadsBulk: () => deleteAuditLeadsBulk,
+  deleteCaseStudiesBulk: () => deleteCaseStudiesBulk,
+  deleteCaseStudy: () => deleteCaseStudy,
+  deleteCategoriesBulk: () => deleteCategoriesBulk,
+  deleteCategory: () => deleteCategory,
+  deleteContactSubmission: () => deleteContactSubmission,
+  deleteContactSubmissionsBulk: () => deleteContactSubmissionsBulk,
+  deleteHeroSlide: () => deleteHeroSlide,
+  deleteIndustriesBulk: () => deleteIndustriesBulk,
+  deleteIndustry: () => deleteIndustry,
+  deleteNewsletterSubscriber: () => deleteNewsletterSubscriber,
+  deleteNewsletterSubscribersBulk: () => deleteNewsletterSubscribersBulk,
+  deletePartner: () => deletePartner,
+  deletePartnersBulk: () => deletePartnersBulk,
+  deletePost: () => deletePost,
+  deletePostsBulk: () => deletePostsBulk,
+  deleteService: () => deleteService,
+  deleteTechnologiesBulk: () => deleteTechnologiesBulk,
+  deleteTechnology: () => deleteTechnology,
+  deleteTestimonial: () => deleteTestimonial,
+  deleteTestimonialsBulk: () => deleteTestimonialsBulk,
+  deleteValue: () => deleteValue,
+  getActiveCaseStudies: () => getActiveCaseStudies,
+  getActiveSubscribersForCampaign: () => getActiveSubscribersForCampaign,
+  getAiJob: () => getAiJob,
+  getAllAuditLeads: () => getAllAuditLeads,
+  getAllCaseStudies: () => getAllCaseStudies,
+  getAllHeroSlides: () => getAllHeroSlides,
+  getAllIndustries: () => getAllIndustries,
+  getAllNewsletterSubscribers: () => getAllNewsletterSubscribers,
+  getAllPages: () => getAllPages,
+  getAllPartners: () => getAllPartners,
+  getAllPostsAdmin: () => getAllPostsAdmin,
+  getAllSiteSettings: () => getAllSiteSettings,
+  getAllTechnologies: () => getAllTechnologies,
+  getAllTestimonials: () => getAllTestimonials,
+  getAllValues: () => getAllValues,
+  getCampaignEventStats: () => getCampaignEventStats,
+  getCaseStudyBySlug: () => getCaseStudyBySlug,
+  getCategories: () => getCategories,
+  getContactSubmissions: () => getContactSubmissions,
+  getDb: () => getDb,
+  getHeroSlides: () => getHeroSlides,
+  getIndustries: () => getIndustries,
+  getLatestSocialPostsForBlogPost: () => getLatestSocialPostsForBlogPost,
+  getNewsletterSubscribers: () => getNewsletterSubscribers,
+  getPageSeo: () => getPageSeo,
+  getPartners: () => getPartners,
+  getPostBySlug: () => getPostBySlug,
+  getPosts: () => getPosts,
+  getServiceBySlug: () => getServiceBySlug,
+  getServices: () => getServices,
+  getSiteSetting: () => getSiteSetting,
+  getSocialAccountByPlatform: () => getSocialAccountByPlatform,
+  getTechnologies: () => getTechnologies,
+  getTestimonials: () => getTestimonials,
+  getUserByOpenId: () => getUserByOpenId,
+  getValues: () => getValues,
+  listEmailCampaigns: () => listEmailCampaigns,
+  listSocialAccounts: () => listSocialAccounts,
+  markAuditLeadContacted: () => markAuditLeadContacted,
+  markContactRead: () => markContactRead,
+  recordEmailEvent: () => recordEmailEvent,
+  unsubscribeByToken: () => unsubscribeByToken,
+  updateAiJob: () => updateAiJob,
+  updateCategory: () => updateCategory,
+  updateEmailCampaign: () => updateEmailCampaign,
+  updateHeroSlide: () => updateHeroSlide,
+  updateIndustry: () => updateIndustry,
+  updateNewsletterSubscriberSegment: () => updateNewsletterSubscriberSegment,
+  updatePartner: () => updatePartner,
+  updatePost: () => updatePost,
+  updateService: () => updateService,
+  updateSocialPost: () => updateSocialPost,
+  updateTechnology: () => updateTechnology,
+  updateTestimonial: () => updateTestimonial,
+  updateValue: () => updateValue,
+  upsertCaseStudy: () => upsertCaseStudy,
+  upsertPageSeo: () => upsertPageSeo,
+  upsertSiteSetting: () => upsertSiteSetting,
+  upsertUser: () => upsertUser
+});
 import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 async function getDb() {
@@ -784,6 +899,11 @@ async function createNewsletterSubscriber(data) {
   const [result] = await db.insert(newsletterSubscribers).values(data);
   return result;
 }
+async function getNewsletterSubscribers() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(newsletterSubscribers).where(eq(newsletterSubscribers.isActive, true)).orderBy(desc(newsletterSubscribers.createdAt));
+}
 async function getAllNewsletterSubscribers() {
   const db = await getDb();
   if (!db) return [];
@@ -976,6 +1096,12 @@ async function listSocialAccounts() {
   if (!db) return [];
   return db.select().from(socialAccounts).orderBy(socialAccounts.platform);
 }
+async function getSocialAccountByPlatform(platform) {
+  const db = await getDb();
+  if (!db) return void 0;
+  const rows = await db.select().from(socialAccounts).where(eq(socialAccounts.platform, platform)).limit(1);
+  return rows[0];
+}
 async function getLatestSocialPostsForBlogPost(postId) {
   const db = await getDb();
   if (!db) return [];
@@ -998,6 +1124,33 @@ async function createSocialPost(data) {
     status: data.status ?? "draft"
   });
   return result.insertId ?? null;
+}
+async function updateSocialPost(id, data) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(socialPosts).set(data).where(eq(socialPosts.id, id));
+}
+async function createAiJob(data) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(aiJobs).values({
+    id: data.id,
+    type: data.type,
+    totalSteps: data.totalSteps ?? 6,
+    status: "running",
+    completedSteps: 0
+  });
+}
+async function updateAiJob(id, patch) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(aiJobs).set(patch).where(eq(aiJobs.id, id));
+}
+async function getAiJob(id) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(aiJobs).where(eq(aiJobs.id, id)).limit(1);
+  return rows[0] ?? null;
 }
 var _db;
 var init_db = __esm({
@@ -2130,17 +2283,53 @@ ${userPayload}` }
     editorNotes: rawNotes.map((n) => String(n).trim()).filter(Boolean).slice(0, 5)
   };
 }
-async function generateMultilangBlogDraft(input) {
+async function generateMultilangBlogDraft(input, jobId) {
+  const dbPromise = jobId ? Promise.resolve().then(() => (init_db(), db_exports)).catch(() => null) : null;
+  let stepsDone = 0;
+  const tick = async (phase) => {
+    if (!jobId || !dbPromise) return;
+    stepsDone++;
+    try {
+      const db = await dbPromise;
+      if (db) await db.updateAiJob(jobId, { phase, completedSteps: stepsDone });
+    } catch {
+    }
+  };
   const [huDraft, enDraft, zhDraft] = await Promise.all([
-    generateBlogDraft({ ...input, lang: "hu" }),
-    generateBlogDraft({ ...input, lang: "en" }),
-    generateBlogDraft({ ...input, lang: "zh" })
+    generateBlogDraft({ ...input, lang: "hu" }).then(async (d) => {
+      await tick("draft");
+      return d;
+    }),
+    generateBlogDraft({ ...input, lang: "en" }).then(async (d) => {
+      await tick("draft");
+      return d;
+    }),
+    generateBlogDraft({ ...input, lang: "zh" }).then(async (d) => {
+      await tick("draft");
+      return d;
+    })
   ]);
   const [hu, en, zh] = await Promise.all([
-    editorialReview(huDraft, "hu"),
-    editorialReview(enDraft, "en"),
-    editorialReview(zhDraft, "zh")
+    editorialReview(huDraft, "hu").then(async (d) => {
+      await tick("editor");
+      return d;
+    }),
+    editorialReview(enDraft, "en").then(async (d) => {
+      await tick("editor");
+      return d;
+    }),
+    editorialReview(zhDraft, "zh").then(async (d) => {
+      await tick("editor");
+      return d;
+    })
   ]);
+  if (jobId && dbPromise) {
+    try {
+      const db = await dbPromise;
+      if (db) await db.updateAiJob(jobId, { status: "completed", completedSteps: 6, phase: "editor" });
+    } catch {
+    }
+  }
   return { hu, en, zh };
 }
 async function generateSeoMeta(input) {
@@ -3858,8 +4047,40 @@ var adminRouter = router({
       topic: z2.string().min(3),
       audience: z2.string().optional(),
       wordCount: z2.number().int().min(200).max(3e3).optional(),
-      tone: z2.enum(["professional", "conversational", "technical"]).optional()
-    })).mutation(({ input }) => generateMultilangBlogDraft(input)),
+      tone: z2.enum(["professional", "conversational", "technical"]).optional(),
+      // Optional client-generated UUID for progress tracking. The
+      // mutation creates the ai_jobs row, the worker increments
+      // completedSteps after each OpenAI call, and a parallel
+      // polling query (getAiJobStatus below) lets the UI render
+      // real progress instead of a static spinner.
+      jobId: z2.string().uuid().optional()
+    })).mutation(async ({ input }) => {
+      const { jobId, ...gen } = input;
+      if (jobId) {
+        await createAiJob({ id: jobId, type: "multilang_blog_draft", totalSteps: 6 });
+      }
+      try {
+        const result = await generateMultilangBlogDraft(gen, jobId);
+        return result;
+      } catch (err) {
+        if (jobId) {
+          await updateAiJob(jobId, {
+            status: "failed",
+            errorMessage: err instanceof Error ? err.message : String(err)
+          }).catch(() => {
+          });
+        }
+        throw err;
+      }
+    }),
+    /**
+     * Best-effort progress reader for the multilang blog draft job.
+     * Called once per second from the admin UI while the mutation is
+     * in flight. Returns null if the job hasn't been created yet (the
+     * UUID just bounced across a slow network) so the UI shows a soft
+     * "Inicializálás..." instead of crashing.
+     */
+    getAiJobStatus: adminProcedure2.input(z2.object({ jobId: z2.string().uuid() })).query(({ input }) => getAiJob(input.jobId)),
     generateSeoMeta: adminProcedure2.input(z2.object({
       topic: z2.string().min(3),
       slug: z2.string().optional(),
