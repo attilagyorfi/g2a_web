@@ -186,7 +186,18 @@ export default function CaseStudyDetailPage() {
   try { tags = JSON.parse(cs.tags || "[]"); } catch { tags = []; }
   let externalLinks: Record<string, string> = {};
   try { externalLinks = JSON.parse(cs.externalLinks || "{}"); } catch { externalLinks = {}; }
-  const resultLines = results ? results.split(",").map(r => r.trim()).filter(Boolean) : [];
+  // Results render as checkmark chips. The field historically held
+  // comma-separated phrases, but the real content is full sentences
+  // (with internal commas) or semicolon-separated clauses — splitting
+  // on commas broke chips mid-sentence ("Korszerű" / "mobilbarát
+  // weboldal" / …). Split on semicolons when the author used them,
+  // otherwise on sentence boundaries; trailing periods are stripped
+  // per chip. Handles both Latin (". ") and CJK ("。") sentences.
+  const splitResults = (s: string) =>
+    /[;；]/.test(s) ? s.split(/[;；]/) : s.split(/\.\s+|。/);
+  const resultLines = results
+    ? splitResults(results).map(r => r.trim().replace(/[.。]\s*$/, "")).filter(Boolean)
+    : [];
 
   return (
     <>
