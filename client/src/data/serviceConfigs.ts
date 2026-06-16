@@ -824,7 +824,7 @@ const EN: Record<string, ServiceConfig> = {
       },
       {
         q: "Will AI increase ad costs?",
-        a: "Short-term, there's a setup cost (audit, integration, training) — typically a one-off HUF 300-800k. Long-term it delivers 20-40% efficiency gains: more conversions for the same spend, or the same conversions for less spend.",
+        a: "Short-term, there's a setup cost (audit, integration, training) — typically a one-off HUF 300-800k (≈ €750–2,000). Long-term it delivers 20-40% efficiency gains: more conversions for the same spend, or the same conversions for less spend.",
       },
       {
         q: "How does it integrate with existing systems?",
@@ -901,7 +901,7 @@ const EN: Record<string, ServiceConfig> = {
     faq: [
       {
         q: "What budget should we start with?",
-        a: "Industry-dependent. Local services (hairdresser, car repair): HUF 100-200k/month. SMB B2B or webshop: HUF 300-800k. Mid-market e-commerce: HUF 1-3M+. In high-CPC verticals (legal, insurance, finance) it's hard to deliver measurable results below HUF 800k.",
+        a: "Industry-dependent. Local services (hairdresser, car repair): HUF 100-200k (≈ €250–500)/month. SMB B2B or webshop: HUF 300-800k (≈ €750–2,000). Mid-market e-commerce: HUF 1-3M+ (≈ €2,500–7,500+). In high-CPC verticals (legal, insurance, finance) it's hard to deliver measurable results below HUF 800k (≈ €2,000).",
       },
       {
         q: "What's the difference between Search and Performance Max?",
@@ -917,7 +917,7 @@ const EN: Record<string, ServiceConfig> = {
       },
       {
         q: "What's the agency fee?",
-        a: "Two models: (1) flat retainer (HUF 200-600k/month based on campaign size); (2) % of media spend (10-15%, typically for larger campaigns). G2A doesn't hide platform invoices — every advertising cost goes directly from your card to Google.",
+        a: "Two models: (1) flat retainer (HUF 200-600k (≈ €500–1,500)/month based on campaign size); (2) % of media spend (10-15%, typically for larger campaigns). G2A doesn't hide platform invoices — every advertising cost goes directly from your card to Google.",
       },
       {
         q: "Is a long-term contract required?",
@@ -994,7 +994,7 @@ const EN: Record<string, ServiceConfig> = {
       },
       {
         q: "What does ad budget depend on?",
-        a: "Industry (CPM HUF 600-3,500 typically), audience size (smaller = costlier creative needed), and funnel stage. Realistic minimum: HUF 200-400k/month for local business; HUF 600k-1.5M for webshops or B2B lead gen.",
+        a: "Industry (CPM HUF 600-3,500  (≈ €1.5–9)typically), audience size (smaller = costlier creative needed), and funnel stage. Realistic minimum: HUF 200-400k (≈ €500–1,000)/month for local business; HUF 600k-1.5M (≈ €1,500–3,750) for webshops or B2B lead gen.",
       },
       {
         q: "What creatives do we need?",
@@ -1094,7 +1094,7 @@ const EN: Record<string, ServiceConfig> = {
       },
       {
         q: "What investment is needed?",
-        a: "Entry level (2 articles + content calendar / month): HUF 200-300k/month. Serious content engine (1-2 articles + LinkedIn + newsletter / week): HUF 500-900k. Premium (3 articles + video + podcast / week): HUF 1.2-2.5M.",
+        a: "Entry level (2 articles + content calendar / month): HUF 200-300k (≈ €500–750)/month. Serious content engine (1-2 articles + LinkedIn + newsletter / week): HUF 500-900k (≈ €1,250–2,250). Premium (3 articles + video + podcast / week): HUF 1.2-2.5M (≈ €3,000–6,250).",
       },
       {
         q: "What does AI Overviews optimisation mean?",
@@ -1183,7 +1183,7 @@ const EN: Record<string, ServiceConfig> = {
       },
       {
         q: "What does it cost monthly?",
-        a: "Setup: one-off HUF 600k–2.5M depending on complexity. Monthly management: HUF 200-600k (workflow maintenance, new campaigns, reporting). Platform licence separate — HubSpot Pro ~HUF 50k/month, Marketo HUF 200k+.",
+        a: "Setup: one-off HUF 600k–2.5M (≈ €1,500–6,250) depending on complexity. Monthly management: HUF 200-600k (≈ €500–1,500) (workflow maintenance, new campaigns, reporting). Platform licence separate — HubSpot Pro ~HUF 50k (≈ €130)/month, Marketo HUF 200k+ (≈ €500+).",
       },
       {
         q: "How do we measure marketing automation ROI?",
@@ -1276,7 +1276,7 @@ const EN: Record<string, ServiceConfig> = {
       },
       {
         q: "What does ESG communication cost?",
-        a: "Small company (voluntary ESG comms, website ESG section + 1 annual piece): HUF 600k–1.5M. Large SMB (communication package built around the registered auditor's report): HUF 1.5-3M. Enterprise (continuous IR + stakeholder communication): HUF 3-7M / year. The registered ESG advisor / auditor fee (HUF 1-15M depending on size) is on top and independent of us.",
+        a: "Small company (voluntary ESG comms, website ESG section + 1 annual piece): HUF 600k–1.5M (≈ €1,500–3,750). Large SMB (communication package built around the registered auditor's report): HUF 1.5-3M (≈ €3,750–7,500). Enterprise (continuous IR + stakeholder communication): HUF 3-7M (≈ €7,500–17,500) / year. The registered ESG advisor / auditor fee (HUF 1-15M (≈ €2,500–37,500) depending on size) is on top and independent of us.",
       },
       {
         q: "How do we find an SZTFH-registered ESG advisor or auditor?",
@@ -1361,7 +1361,7 @@ const EN: Record<string, ServiceConfig> = {
       },
       {
         q: "What if we're a small company?",
-        a: "Employer branding works at SMB scale too — in fact it's most intimate and credible there. A 5-30 person company doesn't need a million-forint budget: basic careers page + Profession.hu profile + LinkedIn post calendar under owner/HR director name delivers from HUF 150-250k/month.",
+        a: "Employer branding works at SMB scale too — in fact it's most intimate and credible there. A 5-30 person company doesn't need a million-forint budget: basic careers page + Profession.hu profile + LinkedIn post calendar under owner/HR director name delivers from HUF 150-250k (≈ €380–630)/month.",
       },
       {
         q: "Can you set up an influencer / employee advocacy program?",
@@ -1369,7 +1369,7 @@ const EN: Record<string, ServiceConfig> = {
       },
       {
         q: "What does it cost monthly?",
-        a: "SMB basic (careers page + Profession + 4 LinkedIn posts/month): HUF 200-400k. Mid-sized company (full EB stack: career + LinkedIn + Profession + Glassdoor management + storytelling): HUF 500-900k. Enterprise (advocacy + video pipeline): HUF 1.2-2.5M.",
+        a: "SMB basic (careers page + Profession + 4 LinkedIn posts/month): HUF 200-400k (≈ €500–1,000). Mid-sized company (full EB stack: career + LinkedIn + Profession + Glassdoor management + storytelling): HUF 500-900k (≈ €1,250–2,250). Enterprise (advocacy + video pipeline): HUF 1.2-2.5M (≈ €3,000–6,250).",
       },
     ],
     cta: "Request a free employer branding consultation",
@@ -1458,7 +1458,7 @@ const EN: Record<string, ServiceConfig> = {
       },
       {
         q: "What does international expansion marketing cost?",
-        a: "Pilot country launch (DACH/CEE): one-off HUF 1.5-3M (localisation + setup + first campaigns). Monthly management: HUF 400-900k / country. Chinese market pilot: HUF 3-6M (more complex regulatory side). Ad spend separate, typically HUF 300k-1.5M/month per country depending on market size.",
+        a: "Pilot country launch (DACH/CEE): one-off HUF 1.5-3M (≈ €3,750–7,500) (localisation + setup + first campaigns). Monthly management: HUF 400-900k (≈ €1,000–2,250) / country. Chinese market pilot: HUF 3-6M (≈ €7,500–15,000) (more complex regulatory side). Ad spend separate, typically HUF 300k-1.5M (≈ €750–3,750)/month per country depending on market size.",
       },
     ],
     cta: "Request a free international marketing consultation",

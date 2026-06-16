@@ -941,7 +941,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         },
         {
           q: "What budget should I expect?",
-          a: "Solo practitioners HUF 250–600k/month (audit + campaigns + content combined); clinics HUF 600k–1.2M/month. Ad spend is on top — we recommend at least HUF 200k/month on Google Ads to reach economies of scale.",
+          a: "Solo practitioners HUF 250–600k (≈ €630–1,500)/month (audit + campaigns + content combined); clinics HUF 600k–1.2M (≈ €1,500–3,000)/month. Ad spend is on top — we recommend at least HUF 200k (≈ €500)/month on Google Ads to reach economies of scale.",
         },
       ],
     },
@@ -1015,7 +1015,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         },
         {
           q: "What does monthly beauty marketing cost?",
-          a: "Solo cosmetologist HUF 80–150k (social + local SEO); 2–3 staff salon HUF 250–450k (the above + Meta Ads). Ad spend is on top — minimum HUF 100k/month Meta Ads recommended.",
+          a: "Solo cosmetologist HUF 80–150k (≈ €200–380) (social + local SEO); 2–3 staff salon HUF 250–450k (≈ €630–1,150) (the above + Meta Ads). Ad spend is on top — minimum HUF 100k (≈ €250)/month Meta Ads recommended.",
         },
       ],
     },
@@ -1085,7 +1085,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         },
         {
           q: "What's a typical engineering-firm marketing budget?",
-          a: "Small studio (3–8 staff) HUF 200–400k/month (SEO + content + LinkedIn). Medium (15–50 staff) HUF 500–900k (the above + ABM + thought leadership management). LinkedIn ad spend is typically modest at HUF 100–200k/month.",
+          a: "Small studio (3–8 staff) HUF 200–400k (≈ €500–1,000)/month (SEO + content + LinkedIn). Medium (15–50 staff) HUF 500–900k (≈ €1,250–2,250) (the above + ABM + thought leadership management). LinkedIn ad spend is typically modest at HUF 100–200k (≈ €250–500)/month.",
         },
         {
           q: "Can you help with public-procurement tender PR?",
@@ -1147,7 +1147,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       faqs: [
         {
           q: "What Google Ads budget is realistic for a car dealer?",
-          a: "Single-location used car dealer: minimum HUF 300–500k/month. Authorised dealer: HUF 800k–2M/month. Cost depends heavily on territory and inventory: premium-brand keywords (BMW, Mercedes) CPC HUF 1,200–1,800, used-car CPC HUF 400–800.",
+          a: "Single-location used car dealer: minimum HUF 300–500k (≈ €750–1,250)/month. Authorised dealer: HUF 800k–2M (≈ €2,000–5,000)/month. Cost depends heavily on territory and inventory: premium-brand keywords (BMW, Mercedes) CPC HUF 1,200–1,800 (≈ €3–4.5), used-car CPC HUF 400–800 (≈ €1–2).",
         },
         {
           q: "How do you handle automotive Shopping feeds in Google Ads?",
@@ -1237,7 +1237,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         },
         {
           q: "What budget do we start with?",
-          a: "Solo or small firm (under 3 lawyers): HUF 200–400k/month (base services: SEO + content + LinkedIn). Medium (5–15 lawyers): HUF 500–900k/month (the above + Google Ads + brand communication). Ad spend typically HUF 100–300k/month.",
+          a: "Solo or small firm (under 3 lawyers): HUF 200–400k (≈ €500–1,000)/month (base services: SEO + content + LinkedIn). Medium (5–15 lawyers): HUF 500–900k (≈ €1,250–2,250)/month (the above + Google Ads + brand communication). Ad spend typically HUF 100–300k (≈ €250–750)/month.",
         },
       ],
     },
@@ -1311,7 +1311,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         },
         {
           q: "What's a realistic SaaS marketing budget?",
-          a: "Pre-product-market-fit startup (under 10 staff): HUF 400–800k/month (only SEO + content + 1-channel ABM). Growth-stage SaaS (15–50 staff): HUF 1.5–3M/month (full ABM + multilingual + marketing automation). Scale-up or enterprise SaaS (50+): HUF 4–10M/month.",
+          a: "Pre-product-market-fit startup (under 10 staff): HUF 400–800k (≈ €1,000–2,000)/month (only SEO + content + 1-channel ABM). Growth-stage SaaS (15–50 staff): HUF 1.5–3M (≈ €3,750–7,500)/month (full ABM + multilingual + marketing automation). Scale-up or enterprise SaaS (50+): HUF 4–10M (≈ €10,000–25,000)/month.",
         },
       ],
     },
@@ -1385,7 +1385,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         },
         {
           q: "What's a typical municipal marketing budget?",
-          a: "Small village (under 5,000 residents): HUF 100–200k/month (basic services, social media + newsletter). Medium town (5–30k residents): HUF 250–500k/month. County-seat city: HUF 800k–2M/month (crisis team + EU PR + resident relations). EU-funded projects often have marketing as a separate line item.",
+          a: "Small village (under 5,000 residents): HUF 100–200k (≈ €250–500)/month (basic services, social media + newsletter). Medium town (5–30k residents): HUF 250–500k (≈ €630–1,250)/month. County-seat city: HUF 800k–2M (≈ €2,000–5,000)/month (crisis team + EU PR + resident relations). EU-funded projects often have marketing as a separate line item.",
         },
       ],
     },
@@ -1443,7 +1443,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       faqs: [
         {
           q: "How does B2B marketing differ from B2C?",
-          a: "B2B has a longer (3–12 months) sales cycle, more (avg 6–10) participants in the buying decision, higher deal sizes (HUF 5–200M), and a more rational (less emotional) decision mechanism. This calls for different metrics (pipeline value, customer acquisition cost / lifetime value ratio) and different channels (LinkedIn not TikTok, email not Instagram).",
+          a: "B2B has a longer (3–12 months) sales cycle, more (avg 6–10) participants in the buying decision, higher deal sizes (HUF 5–200M (≈ €12,500–500,000)), and a more rational (less emotional) decision mechanism. This calls for different metrics (pipeline value, customer acquisition cost / lifetime value ratio) and different channels (LinkedIn not TikTok, email not Instagram).",
         },
         {
           q: "What does Account-Based Marketing (ABM) look like in practice?",
@@ -1459,7 +1459,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         },
         {
           q: "What budget is realistic for B2B marketing?",
-          a: "Pre-pipeline stage (10–20 staff): HUF 400–800k/month (LinkedIn + content + basic automation). Pipeline-building (30–100 staff): HUF 1.5–3M/month (full ABM + marketing automation + sales enablement). Scale-up or enterprise (100+): HUF 4–10M/month. Best metric: marketing budget / pipeline value — target at minimum 1:8.",
+          a: "Pre-pipeline stage (10–20 staff): HUF 400–800k (≈ €1,000–2,000)/month (LinkedIn + content + basic automation). Pipeline-building (30–100 staff): HUF 1.5–3M (≈ €3,750–7,500)/month (full ABM + marketing automation + sales enablement). Scale-up or enterprise (100+): HUF 4–10M (≈ €10,000–25,000)/month. Best metric: marketing budget / pipeline value — target at minimum 1:8.",
         },
       ],
     },
