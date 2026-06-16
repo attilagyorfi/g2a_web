@@ -117,7 +117,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+340%", label: "Organikus forgalom" },
         { num: "+180%", label: "Online foglalás" },
-        { num: "40+", label: "Egészségügyi projekt" },
+        { num: "23+", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "Dent & Beauty",
@@ -126,7 +126,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         result: "Strukturált kezelés-portfólió, transzparens árak, mobilra optimalizált foglalási folyamat.",
       },
       whyG2A:
-        "Több mint 40 egészségügyi projekten dolgoztunk magyar klinikákkal és magánorvosokkal. Ismerjük a legfontosabb specializációk SEO-térképét (fogászat, bőrgyógyászat, ortopédia, magánnőgyógyászat), a praxis-szoftverek API-jait, és a NAIH gyakorlatát. Stratégiánkat mindig 1 hónapos pilottal kezdjük — ha nem szállítunk mérhető eredményt, kötbér nélkül felmondod.",
+        "Számos egészségügyi projekten dolgoztunk magyar klinikákkal és magánorvosokkal. Ismerjük a legfontosabb specializációk SEO-térképét (fogászat, bőrgyógyászat, ortopédia, magánnőgyógyászat), a praxis-szoftverek API-jait, és a NAIH gyakorlatát. Stratégiánkat mindig 1 hónapos pilottal kezdjük — ha nem szállítunk mérhető eredményt, kötbér nélkül felmondod.",
       relatedServices: [
         {
           title: "Keresőoptimalizálás (SEO)",
@@ -214,7 +214,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+520%", label: "Instagram követő" },
         { num: "+190%", label: "Online foglalás" },
-        { num: "25+", label: "Szépségipari projekt" },
+        { num: "23+", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "GRB Skin Clinic",
@@ -223,7 +223,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         result: "Egységes minőségű digitális jelenlét egy partnerrel, folyamatos Google Ads + SEO együttműködés.",
       },
       whyG2A:
-        "25+ szépségipari projekttel a hátunk mögött ismerjük az iparág sajátos rhythmusát: a foglalások 70%-a kedd-péntek 18-22 között érkezik, a no-show arányt visszaszámolós e-mail és SMS automatizációval 40%-ról 12%-ra csökkentettük egy ügyfelünknél. Tudunk hidegen vágni egy reels-naptárt, kreatívokat gyártani Canva + AI eszközökkel, és a Booksy/Salonkee booking funnelt konverzió-szempontból optimalizálni.",
+        "Számos szépségipari projekttel a hátunk mögött ismerjük az iparág sajátos rhythmusát: a foglalások 70%-a kedd-péntek 18-22 között érkezik, a no-show arányt visszaszámolós e-mail és SMS automatizációval 40%-ról 12%-ra csökkentettük egy ügyfelünknél. Tudunk hidegen vágni egy reels-naptárt, kreatívokat gyártani Canva + AI eszközökkel, és a Booksy/Salonkee booking funnelt konverzió-szempontból optimalizálni.",
       relatedServices: [
         {
           title: "Közösségi média menedzsment",
@@ -311,7 +311,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+300%", label: "Weboldal forgalom" },
         { num: "+15", label: "Új ügyfél/hónap" },
-        { num: "30+", label: "Mérnöki projekt" },
+        { num: "23+", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "M Mérnöki Iroda Kft.",
@@ -320,7 +320,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         result: "Korszerű, mobilbarát weboldal, aktív 3-platformos social jelenlét, egységes vizuális identitás.",
       },
       whyG2A:
-        "30+ mérnöki és építőipari projektben dolgoztunk magyar irodákkal. Tudunk BIM-modellből web-rendert csinálni, statikai pályázatot átvenni szöveggé alakítani, és LinkedIn-en olyan thought leadership tartalmat építeni, ami nem mérnök ügyfeleknek is érthető. Ismerjük a Közbeszerzési Hatóság rendszerét és a leggyakoribb tender-fajtákat.",
+        "Számos mérnöki és építőipari projektben dolgoztunk magyar irodákkal. Tudunk BIM-modellből web-rendert csinálni, statikai pályázatot átvenni szöveggé alakítani, és LinkedIn-en olyan thought leadership tartalmat építeni, ami nem mérnök ügyfeleknek is érthető. Ismerjük a Közbeszerzési Hatóság rendszerét és a leggyakoribb tender-fajtákat.",
       relatedServices: [
         {
           title: "Keresőoptimalizálás",
@@ -408,7 +408,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "-45%", label: "CPA csökkentés" },
         { num: "+220%", label: "Lead generálás" },
-        { num: "20+", label: "Autóipari projekt" },
+        { num: "23+", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "Nissan Ste-Ba",
@@ -417,7 +417,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         result: "Folyamatos Facebook Ads jelenlét célzott kampányokkal, sales-fókuszú copy regionális vásárlók megszólításához.",
       },
       whyG2A:
-        "20+ autóipari projektben dolgoztunk autókereskedőkkel és márkaszervízekkel. Tudjuk hogy működik a Shopping feed beszállítása (TecDoc, Mobile.de szinkron), a Performance Max-ben a tesztvezetés-konverziót hogyan kell elkülöníteni az „árdeklődés”-konverziótól, és a HubSpot/Pipedrive lead-scoring trükkjeit autóipari kontextusban.",
+        "Számos autóipari projektben dolgoztunk autókereskedőkkel és márkaszervízekkel. Tudjuk hogy működik a Shopping feed beszállítása (TecDoc, Mobile.de szinkron), a Performance Max-ben a tesztvezetés-konverziót hogyan kell elkülöníteni az „árdeklődés”-konverziótól, és a HubSpot/Pipedrive lead-scoring trükkjeit autóipari kontextusban.",
       relatedServices: [
         {
           title: "PPC & Google Ads",
@@ -505,7 +505,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+250%", label: "Organikus forgalom" },
         { num: "+120%", label: "Ügyfélfelvétel" },
-        { num: "15+", label: "Jogi projekt" },
+        { num: "23+", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "Proverium Ügyvédi Iroda",
@@ -514,7 +514,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         result: "Tekintélyes weboldal jogi szektorhoz, kulcsszó-optimalizált SEO struktúra, következetes brand-élmény minden érintkezési ponton.",
       },
       whyG2A:
-        "15+ jogi projektben dolgoztunk ügyvédi irodákkal és könyvelő-jogi tanácsadókkal. Ismerjük az MÜK 6/2018. (III. 26.) MÜK Szabályzatát a hirdetésről, tudjuk hogy melyik Google Ads kategória engedélyezett és melyik tilos, és hogyan kell anonimizált esetbemutatásokat készíteni titoktartási kötelezettségünk megsértése nélkül.",
+        "Számos jogi projektben dolgoztunk ügyvédi irodákkal és könyvelő-jogi tanácsadókkal. Ismerjük az MÜK 6/2018. (III. 26.) MÜK Szabályzatát a hirdetésről, tudjuk hogy melyik Google Ads kategória engedélyezett és melyik tilos, és hogyan kell anonimizált esetbemutatásokat készíteni titoktartási kötelezettségünk megsértése nélkül.",
       relatedServices: [
         {
           title: "Arculattervezés",
@@ -602,7 +602,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+5", label: "Új piac" },
         { num: "+280%", label: "Demo foglalás" },
-        { num: "35+", label: "Tech projekt" },
+        { num: "23+", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "AR Works",
@@ -611,7 +611,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         result: "Modern, tech-arculatú weboldal, B2B-tech vásárlókhoz illő hangvétel, strukturált portfólió.",
       },
       whyG2A:
-        "35+ tech projektben dolgoztunk SaaS startupoktól middle-market IT-tanácsadókig. Tudjuk a hreflang implementációt CMS oldalán, a HubSpot multi-touch attribútum modellt, az Apollo-Cognism-Clearbit lead enrichment kombinációt, és azt is, hogy a magyar buyer-persona miben különbözik a német vagy lengyel ekvivalensétől. Belső AI-eszközeink (Claude, ChatGPT) gyorsítják a kontent-gyártást.",
+        "Számos tech projektben dolgoztunk SaaS startupoktól middle-market IT-tanácsadókig. Tudjuk a hreflang implementációt CMS oldalán, a HubSpot multi-touch attribútum modellt, az Apollo-Cognism-Clearbit lead enrichment kombinációt, és azt is, hogy a magyar buyer-persona miben különbözik a német vagy lengyel ekvivalensétől. Belső AI-eszközeink (Claude, ChatGPT) gyorsítják a kontent-gyártást.",
       relatedServices: [
         {
           title: "AI marketing",
@@ -699,7 +699,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+400%", label: "Közösségi elérés" },
         { num: "+250%", label: "Weboldal látogatók" },
-        { num: "10+", label: "Önkormányzati projekt" },
+        { num: "23+", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "Zsolnay Örökségkezelő Nonprofit Kft.",
@@ -708,7 +708,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         result: "Részletes SEO felmérés priorizált akciókkal, csapat önállóan folytatható optimalizálással.",
       },
       whyG2A:
-        "10+ önkormányzati és közintézményi projekt mögöttünk — kistelepülésektől megyei jogú városokig. Ismerjük a Kbt. (közbeszerzés) szabályait, a 2018. évi LXXV. tv. (akadálymentesítés) követelményeit, és az EU-pályázati láthatósági előírásokat. Ügyvezetőnk, Győrfi Attila a Pécsi Tudományegyetem Közgazdaságtudományi Karán is oktat — közvetlen kapcsolatban a régió közigazgatásával.",
+        "Számos önkormányzati és közintézményi projekt mögöttünk — kistelepülésektől megyei jogú városokig. Ismerjük a Kbt. (közbeszerzés) szabályait, a 2018. évi LXXV. tv. (akadálymentesítés) követelményeit, és az EU-pályázati láthatósági előírásokat. Ügyvezetőnk, Győrfi Attila a Pécsi Tudományegyetem Közgazdaságtudományi Karán is oktat — közvetlen kapcsolatban a régió közigazgatásával.",
       relatedServices: [
         {
           title: "Webfejlesztés",
@@ -796,7 +796,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+180%", label: "Qualified lead" },
         { num: "-40%", label: "Sales ciklus" },
-        { num: "50+", label: "B2B projekt" },
+        { num: "23+", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "ÉMI-TÜV SÜD",
@@ -805,7 +805,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         result: "Részletes SEO felmérés és PPC audit, kulcsszó-pozícionálás, mérési-alapú döntéstámogatás Analytics + Search Console-lal.",
       },
       whyG2A:
-        "50+ B2B projekt — a középvállalati SaaS-tól az ipari beszállítókig. Ismerjük a HubSpot és Marketo tényleges funkcióit (nem csak a marketing demo-ját), tudjuk hogyan kell az ABM-et egy 6 fős sales-csapattal működtetni, és tapasztalatunk van magyar/német/lengyel B2B piacon. Az ügyvezetőnk, Győrfi Attila a Pécsi Tudományegyetem Közgazdaságtudományi Karán is oktat — közvetlen kontakt a hazai vállalati szektorral.",
+        "Számos B2B projekt — a középvállalati SaaS-tól az ipari beszállítókig. Ismerjük a HubSpot és Marketo tényleges funkcióit (nem csak a marketing demo-ját), tudjuk hogyan kell az ABM-et egy 6 fős sales-csapattal működtetni, és tapasztalatunk van magyar/német/lengyel B2B piacon. Az ügyvezetőnk, Győrfi Attila a Pécsi Tudományegyetem Közgazdaságtudományi Karán is oktat — közvetlen kontakt a hazai vállalati szektorral.",
       relatedServices: [
         {
           title: "Stratégiai marketing",
@@ -895,7 +895,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+340%", label: "Organic traffic" },
         { num: "+180%", label: "Online bookings" },
-        { num: "40+", label: "Healthcare projects" },
+        { num: "23+", label: "Active partners" },
       ],
       caseStudy: {
         client: "Dent & Beauty",
@@ -904,7 +904,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         result: "Structured treatment portfolio, transparent pricing, mobile-optimised booking flow.",
       },
       whyG2A:
-        "We've worked on 40+ healthcare projects with Hungarian clinics and private practitioners. We know the SEO map of major specialisations (dentistry, dermatology, orthopaedics, private gynaecology), the APIs of practice-management software, and the practice of the Hungarian DPA. Every engagement starts with a 1-month pilot — if we don't deliver measurable results, you can leave without penalty.",
+        "We've worked on numerous healthcare projects with Hungarian clinics and private practitioners. We know the SEO map of major specialisations (dentistry, dermatology, orthopaedics, private gynaecology), the APIs of practice-management software, and the practice of the Hungarian DPA. Every engagement starts with a 1-month pilot — if we don't deliver measurable results, you can leave without penalty.",
       relatedServices: [
         {
           title: "Search engine optimisation (SEO)",
@@ -967,7 +967,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+520%", label: "Instagram followers" },
         { num: "+190%", label: "Online bookings" },
-        { num: "25+", label: "Beauty industry projects" },
+        { num: "23+", label: "Active partners" },
       ],
       caseStudy: {
         client: "GRB Skin Clinic",
@@ -978,7 +978,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "In the beauty industry buyers research primarily on Instagram, TikTok and Google Maps — not on the website. The site only enters the journey when the booking flow starts. This shifts the marketing budget allocation: 60% social, 30% local SEO + Google Business Profile, 10% paid search.",
       whyG2A:
-        "With 25+ beauty industry projects we know the cadence of the sector: 70% of bookings arrive Tue–Fri 6–10pm; we cut a client's no-show rate from 40% to 12% with countdown email + SMS automation. We can spin up a Reels content calendar from cold, generate creatives with Canva + AI tools, and optimise the Booksy/Salonkee booking funnel for conversion.",
+        "Across numerous beauty industry projects we know the cadence of the sector: 70% of bookings arrive Tue–Fri 6–10pm; we cut a client's no-show rate from 40% to 12% with countdown email + SMS automation. We can spin up a Reels content calendar from cold, generate creatives with Canva + AI tools, and optimise the Booksy/Salonkee booking funnel for conversion.",
       relatedServices: [
         {
           title: "Social media management",
@@ -1041,7 +1041,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+300%", label: "Website traffic" },
         { num: "+15", label: "New clients / month" },
-        { num: "30+", label: "Engineering projects" },
+        { num: "23+", label: "Active partners" },
       ],
       caseStudy: {
         client: "M Mérnöki Iroda Kft.",
@@ -1052,7 +1052,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "The Hungarian engineering and design-studio sector is typically under-represented online: portfolio sites are dated, LinkedIn presence is patchy, and technical content is written in jargon rather than from a buyer-benefit angle. That's an opportunity: whoever fixes it stands out quickly even on a small market like Southern Transdanubia.",
       whyG2A:
-        "30+ engineering and construction projects with Hungarian studios. We can turn a BIM model into a web-grade render via partner studios, transform a public-procurement tender into prose, and build LinkedIn thought-leadership content that resonates with non-engineering decision makers (developers, investors, public bodies). We know the Hungarian Public Procurement Authority's system and the most common tender types.",
+        "Numerous engineering and construction projects with Hungarian studios. We can turn a BIM model into a web-grade render via partner studios, transform a public-procurement tender into prose, and build LinkedIn thought-leadership content that resonates with non-engineering decision makers (developers, investors, public bodies). We know the Hungarian Public Procurement Authority's system and the most common tender types.",
       relatedServices: [
         {
           title: "Search engine optimisation",
@@ -1115,7 +1115,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "-45%", label: "CPA reduction" },
         { num: "+220%", label: "Lead generation" },
-        { num: "20+", label: "Automotive projects" },
+        { num: "23+", label: "Active partners" },
       ],
       caseStudy: {
         client: "Nissan Ste-Ba",
@@ -1126,7 +1126,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "The Hungarian automotive market splits into two halves: used-car retail (shorter decision cycle, price-sensitive buyer) and new-car / premium retail (longer cycle, brand- and service-experience-sensitive). The marketing strategy has to cleanly separate the two — what works for one is often counter-productive for the other.",
       whyG2A:
-        "20+ automotive projects with dealerships and authorised service centres. We know how to ship Shopping feeds (TecDoc, Mobile.de sync), how to separate test-drive conversions from price-enquiry conversions in Performance Max, and the lead-scoring tricks for HubSpot/Pipedrive in an automotive context.",
+        "Numerous automotive projects with dealerships and authorised service centres. We know how to ship Shopping feeds (TecDoc, Mobile.de sync), how to separate test-drive conversions from price-enquiry conversions in Performance Max, and the lead-scoring tricks for HubSpot/Pipedrive in an automotive context.",
       relatedServices: [
         {
           title: "PPC & Google Ads",
@@ -1189,7 +1189,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+250%", label: "Organic traffic" },
         { num: "+120%", label: "New client intake" },
-        { num: "15+", label: "Legal projects" },
+        { num: "23+", label: "Active partners" },
       ],
       caseStudy: {
         client: "Proverium Ügyvédi Iroda",
@@ -1200,7 +1200,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "Hungarian legal marketing is governed by the Hungarian Bar Association's (MÜK) ethics code and Act LXXVIII of 2017 — comparative, boastful or misleading advertising is prohibited. This isn't a barrier but a direction: communicate professional depth and trustworthy advisory character well, and you quickly win trust against an over-promising competitor.",
       whyG2A:
-        "15+ legal projects with law firms and accountancy-legal advisory practices. We know the Hungarian Bar's 6/2018 (III. 26.) advertising regulation, which Google Ads categories are allowed and which aren't, and how to produce anonymised case studies without breaching client confidentiality.",
+        "Numerous legal projects with law firms and accountancy-legal advisory practices. We know the Hungarian Bar's 6/2018 (III. 26.) advertising regulation, which Google Ads categories are allowed and which aren't, and how to produce anonymised case studies without breaching client confidentiality.",
       relatedServices: [
         {
           title: "Brand design",
@@ -1263,7 +1263,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+5", label: "New markets" },
         { num: "+280%", label: "Demo bookings" },
-        { num: "35+", label: "Tech projects" },
+        { num: "23+", label: "Active partners" },
       ],
       caseStudy: {
         client: "AR Works",
@@ -1274,7 +1274,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "In B2B SaaS and tech, marketing tools shift from traditional advertising to content + thought leadership + ABM (Account-Based Marketing). A decision maker touches the brand at an average of 14 points before requesting a demo — meaning the marketing funnel is non-linear, a network of multi-channel touchpoints.",
       whyG2A:
-        "35+ tech projects from SaaS startups to mid-market IT consultancies. We know hreflang implementation on the CMS side, the HubSpot multi-touch attribution model, the Apollo–Cognism–Clearbit lead enrichment combo, and how the Hungarian buyer persona differs from German or Polish equivalents. Our internal AI tools (Claude, ChatGPT) accelerate content production.",
+        "Numerous tech projects from SaaS startups to mid-market IT consultancies. We know hreflang implementation on the CMS side, the HubSpot multi-touch attribution model, the Apollo–Cognism–Clearbit lead enrichment combo, and how the Hungarian buyer persona differs from German or Polish equivalents. Our internal AI tools (Claude, ChatGPT) accelerate content production.",
       relatedServices: [
         {
           title: "AI marketing",
@@ -1337,7 +1337,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+400%", label: "Community reach" },
         { num: "+250%", label: "Website visitors" },
-        { num: "10+", label: "Municipal projects" },
+        { num: "23+", label: "Active partners" },
       ],
       caseStudy: {
         client: "Zsolnay Örökségkezelő Nonprofit Kft.",
@@ -1348,7 +1348,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "Hungarian municipal communication typically defaults to a clerk-written press release plus a Facebook post — but residents expect a mobile-friendly website, fast Messenger replies, accessible content and multi-generational reach. From 2025, Hungary's Act LXXV of 2018 mandates WCAG 2.1 AA compliance for every public-sector digital service.",
       whyG2A:
-        "10+ municipal and public-institution projects — from villages to county-seat cities. We know the Hungarian Public Procurement Act (Kbt.), the 2018 LXXV. tv. accessibility requirements, and EU project visibility rules. Our managing director Attila Győrfi also lectures at the University of Pécs Faculty of Economics — direct connection to the regional public administration.",
+        "Numerous municipal and public-institution projects — from villages to county-seat cities. We know the Hungarian Public Procurement Act (Kbt.), the 2018 LXXV. tv. accessibility requirements, and EU project visibility rules. Our managing director Attila Győrfi also lectures at the University of Pécs Faculty of Economics — direct connection to the regional public administration.",
       relatedServices: [
         {
           title: "Web development",
@@ -1411,7 +1411,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+180%", label: "Qualified leads" },
         { num: "-40%", label: "Sales cycle" },
-        { num: "50+", label: "B2B projects" },
+        { num: "23+", label: "Active partners" },
       ],
       caseStudy: {
         client: "ÉMI-TÜV SÜD",
@@ -1422,7 +1422,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "67% of the B2B buying journey happens online before the first sales touch — meaning marketing operates as a parallel pipeline-building unit, not a sales support function. Modern B2B marketing focuses on making the marketing-qualified lead (MQL) → sales-qualified lead (SQL) → opportunity → won-deal funnel measurable and optimisable.",
       whyG2A:
-        "50+ B2B projects, from mid-market SaaS to industrial suppliers. We know the actual capabilities of HubSpot and Marketo (not just their marketing demos), how to operate ABM with a 6-person sales team, and we have experience in the Hungarian/German/Polish B2B markets. Our managing director Attila Győrfi also lectures at the University of Pécs Faculty of Economics — direct contact with the domestic enterprise sector.",
+        "Numerous B2B projects, from mid-market SaaS to industrial suppliers. We know the actual capabilities of HubSpot and Marketo (not just their marketing demos), how to operate ABM with a 6-person sales team, and we have experience in the Hungarian/German/Polish B2B markets. Our managing director Attila Győrfi also lectures at the University of Pécs Faculty of Economics — direct contact with the domestic enterprise sector.",
       relatedServices: [
         {
           title: "Strategic marketing",
@@ -1512,7 +1512,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+340%", label: "自然流量" },
         { num: "+180%", label: "在线预约" },
-        { num: "40+", label: "医疗项目" },
+        { num: "23+", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "Dent & Beauty",
@@ -1521,7 +1521,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         result: "结构化的治疗组合，透明定价，移动端优化的预约流程。",
       },
       whyG2A:
-        "我们与匈牙利诊所与私人医生合作完成 40+ 医疗项目。我们了解主要专科(牙科、皮肤科、骨科、私人妇科)的 SEO 地图、诊所管理软件 API、以及匈牙利数据保护机构的实务。每个项目都从 1 个月试点开始 —— 若未交付可量化成果,您可无违约金离开。",
+        "我们与匈牙利诊所与私人医生合作完成众多医疗项目。我们了解主要专科(牙科、皮肤科、骨科、私人妇科)的 SEO 地图、诊所管理软件 API、以及匈牙利数据保护机构的实务。每个项目都从 1 个月试点开始 —— 若未交付可量化成果,您可无违约金离开。",
       relatedServices: [
         {
           title: "搜索引擎优化 (SEO)",
@@ -1609,7 +1609,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+520%", label: "Instagram 粉丝" },
         { num: "+190%", label: "在线预约" },
-        { num: "25+", label: "美容行业项目" },
+        { num: "23+", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "GRB Skin Clinic",
@@ -1618,7 +1618,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         result: "由单一合作伙伴提供质量一致的数字化布局，持续的 Google Ads + SEO 合作。",
       },
       whyG2A:
-        "凭借 25+ 美容行业项目,我们了解行业的特殊节奏:70% 的预约在周二至周五 18-22 点之间到达;通过倒计时邮件 + 短信自动化,我们将某客户的失约率从 40% 降至 12%。我们能从零搭建 Reels 日历、用 Canva + AI 工具生成创意,并优化 Booksy/Salonkee 预约漏斗的转化。",
+        "凭借众多美容行业项目,我们了解行业的特殊节奏:70% 的预约在周二至周五 18-22 点之间到达;通过倒计时邮件 + 短信自动化,我们将某客户的失约率从 40% 降至 12%。我们能从零搭建 Reels 日历、用 Canva + AI 工具生成创意,并优化 Booksy/Salonkee 预约漏斗的转化。",
       relatedServices: [
         {
           title: "社交媒体管理",
@@ -1681,7 +1681,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+300%", label: "网站流量" },
         { num: "+15", label: "每月新客户" },
-        { num: "30+", label: "工程项目" },
+        { num: "23+", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "M Mérnöki Iroda Kft.",
@@ -1692,7 +1692,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "匈牙利工程与设计事务所行业线上表现普遍不足:作品集网站陈旧、LinkedIn 形象不一致、技术内容多用术语而非以买方收益为视角。这是机会:谁先解决,谁就能在区域性小市场(如南多瑙)中迅速脱颖而出。",
       whyG2A:
-        "我们与匈牙利事务所合作完成 30+ 工程与建筑项目。能将 BIM 模型转换成网页级渲染、把公共招标转译为可读文案、并在 LinkedIn 上为非工程出身的决策者(开发商、投资人、政府)建立可理解的思想领导力内容。我们了解匈牙利公共采购局的体系与最常见的招标类型。",
+        "我们与匈牙利事务所合作完成众多工程与建筑项目。能将 BIM 模型转换成网页级渲染、把公共招标转译为可读文案、并在 LinkedIn 上为非工程出身的决策者(开发商、投资人、政府)建立可理解的思想领导力内容。我们了解匈牙利公共采购局的体系与最常见的招标类型。",
       relatedServices: [
         {
           title: "搜索引擎优化",
@@ -1755,7 +1755,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "-45%", label: "CPA 下降" },
         { num: "+220%", label: "线索生成" },
-        { num: "20+", label: "汽车行业项目" },
+        { num: "23+", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "Nissan Ste-Ba",
@@ -1766,7 +1766,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "匈牙利汽车市场分为两半:二手车零售(决策周期较短、价格敏感)与新车/高端零售(周期较长、对品牌与售后体验敏感)。营销战略必须清晰区分 —— 适用于一方的策略往往对另一方适得其反。",
       whyG2A:
-        "我们完成 20+ 汽车行业项目,合作对象包括经销商与授权服务中心。我们了解 Shopping feed 的对接(TecDoc、Mobile.de 同步)、Performance Max 中如何分离试驾转化与询价转化、以及 HubSpot/Pipedrive 在汽车场景中的线索评分技巧。",
+        "我们完成众多汽车行业项目,合作对象包括经销商与授权服务中心。我们了解 Shopping feed 的对接(TecDoc、Mobile.de 同步)、Performance Max 中如何分离试驾转化与询价转化、以及 HubSpot/Pipedrive 在汽车场景中的线索评分技巧。",
       relatedServices: [
         {
           title: "PPC 与 Google Ads",
@@ -1829,7 +1829,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+250%", label: "自然流量" },
         { num: "+120%", label: "新客户接待" },
-        { num: "15+", label: "法律项目" },
+        { num: "23+", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "Proverium Ügyvédi Iroda",
@@ -1840,7 +1840,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "匈牙利法律营销受匈牙利律师协会(MÜK)伦理准则和 2017 年第 LXXVIII 号法律约束 —— 比较性、夸大性或误导性广告被禁止。这并非障碍而是方向:善于沟通专业深度与可信顾问形象的律所,能在过度宣传的竞争对手面前迅速赢得信任。",
       whyG2A:
-        "完成 15+ 法律项目,合作对象为律师事务所与会计-法律顾问。我们了解匈牙利律师协会 6/2018(III. 26.)广告规章,知道哪些 Google Ads 类别允许、哪些禁止,以及如何在不违反保密义务的前提下制作匿名化案例研究。",
+        "完成众多法律项目,合作对象为律师事务所与会计-法律顾问。我们了解匈牙利律师协会 6/2018(III. 26.)广告规章,知道哪些 Google Ads 类别允许、哪些禁止,以及如何在不违反保密义务的前提下制作匿名化案例研究。",
       relatedServices: [
         {
           title: "品牌视觉设计",
@@ -1903,7 +1903,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+5", label: "新开拓市场" },
         { num: "+280%", label: "演示预约" },
-        { num: "35+", label: "科技项目" },
+        { num: "23+", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "AR Works",
@@ -1914,7 +1914,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "B2B SaaS 与科技领域的营销工具从传统广告转向内容 + 思想领导力 + ABM(基于账户的营销)。决策者在请求演示前平均触达品牌 14 次 —— 这意味着营销漏斗不是线性的,而是多渠道触点的网络。",
       whyG2A:
-        "完成 35+ 科技项目,从 SaaS 创业公司到中型 IT 咨询机构。我们了解 CMS 端的 hreflang 实现、HubSpot 多触点归因模型、Apollo–Cognism–Clearbit 线索丰富组合,以及匈牙利买方画像与德国或波兰的差异。内部 AI 工具(Claude、ChatGPT)加速内容生产。",
+        "完成众多科技项目,从 SaaS 创业公司到中型 IT 咨询机构。我们了解 CMS 端的 hreflang 实现、HubSpot 多触点归因模型、Apollo–Cognism–Clearbit 线索丰富组合,以及匈牙利买方画像与德国或波兰的差异。内部 AI 工具(Claude、ChatGPT)加速内容生产。",
       relatedServices: [
         {
           title: "AI 营销",
@@ -1977,7 +1977,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+400%", label: "社区触达" },
         { num: "+250%", label: "网站访客" },
-        { num: "10+", label: "政府项目" },
+        { num: "23+", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "Zsolnay Örökségkezelő Nonprofit Kft.",
@@ -1988,7 +1988,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "匈牙利地方政府沟通通常局限于公务员撰写的新闻稿 + Facebook 帖子,但居民期望移动友好网站、Messenger 快速回复、无障碍内容与多代际覆盖。匈牙利 2018 年第 LXXV 号法律自 2025 年起对所有公共部门数字服务强制 WCAG 2.1 AA 合规。",
       whyG2A:
-        "完成 10+ 政府与公共机构项目,从乡镇到县级城市。我们了解匈牙利公共采购法(Kbt.)、2018 年第 LXXV 号无障碍要求、欧盟项目可见性规则。总经理 Győrfi Attila 在佩奇大学经济学系任教 —— 与区域公共行政有直接联系。",
+        "完成众多政府与公共机构项目,从乡镇到县级城市。我们了解匈牙利公共采购法(Kbt.)、2018 年第 LXXV 号无障碍要求、欧盟项目可见性规则。总经理 Győrfi Attila 在佩奇大学经济学系任教 —— 与区域公共行政有直接联系。",
       relatedServices: [
         {
           title: "网站开发",
@@ -2051,7 +2051,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+180%", label: "合格线索" },
         { num: "-40%", label: "销售周期" },
-        { num: "50+", label: "B2B 项目" },
+        { num: "23+", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "ÉMI-TÜV SÜD",
@@ -2062,7 +2062,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "B2B 购买旅程的 67% 在销售首次接触前已在线发生 —— 这意味着营销作为与销售并行的管道建设单位运作,而非销售的支持职能。现代 B2B 营销关注 MQL → SQL → Opportunity → Won-Deal 漏斗的可量化与可优化。",
       whyG2A:
-        "完成 50+ B2B 项目,从中型 SaaS 到工业供应商。我们了解 HubSpot 与 Marketo 的实际功能(而非营销 demo)、如何用 6 人销售团队运营 ABM、以及在匈牙利/德国/波兰 B2B 市场的经验。总经理 Győrfi Attila 在佩奇大学经济学系任教 —— 与本国企业部门有直接联系。",
+        "完成众多 B2B 项目,从中型 SaaS 到工业供应商。我们了解 HubSpot 与 Marketo 的实际功能(而非营销 demo)、如何用 6 人销售团队运营 ABM、以及在匈牙利/德国/波兰 B2B 市场的经验。总经理 Győrfi Attila 在佩奇大学经济学系任教 —— 与本国企业部门有直接联系。",
       relatedServices: [
         {
           title: "战略营销",
