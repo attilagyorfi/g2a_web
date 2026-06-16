@@ -90,7 +90,7 @@ const DOCS: Record<Language, AszfDoc> = {
             <br />
             <strong>Adószám:</strong> {COMPANY_TAX_NUMBER}
             <br />
-            <strong>Képviselő:</strong> Győrfi Attila ügyvezető
+            <strong>Képviselő:</strong> Győrfi Attila
             <br />
             <strong>E-mail:</strong>{" "}
             <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
@@ -642,7 +642,7 @@ const DOCS: Record<Language, AszfDoc> = {
             <br />
             <strong>Tax number:</strong> {COMPANY_TAX_NUMBER}
             <br />
-            <strong>Represented by:</strong> Attila Győrfi, managing director
+            <strong>Represented by:</strong> Attila Győrfi
             <br />
             <strong>Email:</strong>{" "}
             <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
@@ -1160,7 +1160,7 @@ const DOCS: Record<Language, AszfDoc> = {
             <br />
             <strong>税号:</strong>{COMPANY_TAX_NUMBER}
             <br />
-            <strong>代表人:</strong>Győrfi Attila 总经理
+            <strong>代表人:</strong>Győrfi Attila
             <br />
             <strong>邮箱:</strong>
             <a href={`mailto:${EMAIL}`}>{EMAIL}</a>

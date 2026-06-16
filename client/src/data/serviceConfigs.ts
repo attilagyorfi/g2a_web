@@ -667,7 +667,7 @@ const HU: Record<string, ServiceConfig> = {
     icon: "globe",
     color: "#06b6d4",
     intro:
-      "A magyar KKV-k 2025-2026-ban egyre inkább a régiós piac (DACH, CEE) felé orientálódnak, mert a hazai piac telített és a forint-volatilitás kockázatot jelent. A G2A ügyvezetője, Győrfi Attila az IBS Budapest, a PTE Közgazdaságtudományi Kar és a Varsovia Egyetem vendégoktatója és nemzetközi marketing-specialista — közvetlen kapcsolatokkal a lengyel, cseh és kínai piaci szereplők felé. Ez nem ügynöki kapcsolat, hanem operatív tudás.",
+      "A magyar KKV-k 2025-2026-ban egyre inkább a régiós piac (DACH, CEE) felé orientálódnak, mert a hazai piac telített és a forint-volatilitás kockázatot jelent. A G2A alapítója, Győrfi Attila az IBS Budapest, a PTE Közgazdaságtudományi Kar és a Varsovia Egyetem vendégoktatója és nemzetközi marketing-specialista — közvetlen kapcsolatokkal a lengyel, cseh és kínai piaci szereplők felé. Ez nem ügynöki kapcsolat, hanem operatív tudás.",
     benefits: [
       {
         title: "Piacra lépési stratégia",
@@ -1204,7 +1204,7 @@ const EN: Record<string, ServiceConfig> = {
     icon: "leaf",
     color: "#22c55e",
     intro:
-      "Important boundary upfront: G2A Marketing Bt. is NOT registered with the Hungarian Authority of Regulated Activities (SZTFH), so under Hungarian Act CVIII of 2023 we do not perform official ESG advisory or ESG certification — mandatory CSRD reporting and certification are entrusted to SZTFH-registered partners or recommended auditors. What we do: the communication side of ESG strategy, stakeholder messaging, brand narrative, marketing-grade content and rating preparation. Our managing director Attila Győrfi as an ESG specialist provides informal expert advice, but this does not replace official registered ESG advisory.",
+      "Important boundary upfront: G2A Marketing Bt. is NOT registered with the Hungarian Authority of Regulated Activities (SZTFH), so under Hungarian Act CVIII of 2023 we do not perform official ESG advisory or ESG certification — mandatory CSRD reporting and certification are entrusted to SZTFH-registered partners or recommended auditors. What we do: the communication side of ESG strategy, stakeholder messaging, brand narrative, marketing-grade content and rating preparation. Our founder Attila Győrfi as an ESG specialist provides informal expert advice, but this does not replace official registered ESG advisory.",
     benefits: [
       {
         title: "ESG communication strategy",
@@ -1386,7 +1386,7 @@ const EN: Record<string, ServiceConfig> = {
     icon: "globe",
     color: "#06b6d4",
     intro:
-      "Hungarian SMBs in 2025-2026 are increasingly looking towards regional markets (DACH, CEE) — the domestic market is saturated and HUF volatility creates risk. Our managing director Attila Győrfi is a guest lecturer at IBS Budapest, the University of Pécs Faculty of Business and Economics, and the University of Warsaw, and an international marketing specialist with direct connections to Polish, Czech and Chinese-market actors. This isn't agent relationships; it's operational knowledge.",
+      "Hungarian SMBs in 2025-2026 are increasingly looking towards regional markets (DACH, CEE) — the domestic market is saturated and HUF volatility creates risk. Our founder Attila Győrfi is a guest lecturer at IBS Budapest, the University of Pécs Faculty of Business and Economics, and the University of Warsaw, and an international marketing specialist with direct connections to Polish, Czech and Chinese-market actors. This isn't agent relationships; it's operational knowledge.",
     benefits: [
       {
         title: "Market entry strategy",
@@ -1454,7 +1454,7 @@ const EN: Record<string, ServiceConfig> = {
       },
       {
         q: "Can you help with Chinese market consulting?",
-        a: "Yes. Our managing director Attila Győrfi is a guest lecturer at IBS Budapest, the University of Pécs Faculty of Business and Economics, and the University of Warsaw, and a Chinese market specialist. He's reachable on WeChat with our Chinese partners directly. WeChat marketing, Baidu SEO, Tmall/JD listings, Xiaohongshu (Little Red Book) influencer campaigns. For Chinese market entry we typically also bring a Hungarian-Chinese legal practitioner due to the regulatory aspect.",
+        a: "Yes. Our founder Attila Győrfi is a guest lecturer at IBS Budapest, the University of Pécs Faculty of Business and Economics, and the University of Warsaw, and a Chinese market specialist. He's reachable on WeChat with our Chinese partners directly. WeChat marketing, Baidu SEO, Tmall/JD listings, Xiaohongshu (Little Red Book) influencer campaigns. For Chinese market entry we typically also bring a Hungarian-Chinese legal practitioner due to the regulatory aspect.",
       },
       {
         q: "What does international expansion marketing cost?",
@@ -1922,7 +1922,7 @@ const ZH: Record<string, ServiceConfig> = {
     icon: "leaf",
     color: "#22c55e",
     intro:
-      "首先明确边界:G2A Marketing Bt. 未取得匈牙利监管活动监督管理局 (SZTFH) 注册,因此根据匈牙利 2023 年第 CVIII 号法律,我们不从事官方 ESG 咨询或 ESG 认证 —— 强制性 CSRD 报告的编制与认证由 SZTFH 注册合作伙伴负责或我们推荐审计师。我们承担:ESG 战略的传播侧、利益相关方信息、品牌叙事、营销级内容与评级准备。我们的总经理 Győrfi Attila 作为 ESG 专家提供非正式专业建议,但不替代官方注册 ESG 咨询。",
+      "首先明确边界:G2A Marketing Bt. 未取得匈牙利监管活动监督管理局 (SZTFH) 注册,因此根据匈牙利 2023 年第 CVIII 号法律,我们不从事官方 ESG 咨询或 ESG 认证 —— 强制性 CSRD 报告的编制与认证由 SZTFH 注册合作伙伴负责或我们推荐审计师。我们承担:ESG 战略的传播侧、利益相关方信息、品牌叙事、营销级内容与评级准备。我们的创始人 Győrfi Attila 作为 ESG 专家提供非正式专业建议,但不替代官方注册 ESG 咨询。",
     benefits: [
       {
         title: "ESG 传播战略",
@@ -2103,7 +2103,7 @@ const ZH: Record<string, ServiceConfig> = {
     icon: "globe",
     color: "#06b6d4",
     intro:
-      "匈牙利中小企业 2025-2026 越来越多地转向区域市场（DACH、CEE）—— 本国市场已饱和、福林波动带来风险。我们的总经理 Győrfi Attila 是 IBS Budapest、佩奇大学经济学院与华沙大学客座讲师、国际营销专家，与波兰、捷克与中国市场参与者有直接联系。这不是代理关系，而是运营知识。",
+      "匈牙利中小企业 2025-2026 越来越多地转向区域市场（DACH、CEE）—— 本国市场已饱和、福林波动带来风险。我们的创始人 Győrfi Attila 是 IBS Budapest、佩奇大学经济学院与华沙大学客座讲师、国际营销专家，与波兰、捷克与中国市场参与者有直接联系。这不是代理关系，而是运营知识。",
     benefits: [
       {
         title: "市场进入战略",
@@ -2171,7 +2171,7 @@ const ZH: Record<string, ServiceConfig> = {
       },
       {
         q: "你们能协助中国市场咨询吗?",
-        a: "可以。总经理 Győrfi Attila 是 IBS Budapest、佩奇大学经济学院与华沙大学客座讲师、中国市场专家。可通过微信直接联系我们的中国合作伙伴。微信营销、百度 SEO、天猫/京东上架、小红书网红活动。中国市场进入，我们通常因监管侧也引入匈牙利-中国法律实务者。",
+        a: "可以。创始人 Győrfi Attila 是 IBS Budapest、佩奇大学经济学院与华沙大学客座讲师、中国市场专家。可通过微信直接联系我们的中国合作伙伴。微信营销、百度 SEO、天猫/京东上架、小红书网红活动。中国市场进入，我们通常因监管侧也引入匈牙利-中国法律实务者。",
       },
       {
         q: "国际扩张营销费用多少?",

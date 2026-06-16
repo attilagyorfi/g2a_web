@@ -335,7 +335,7 @@ const DOCS: Record<Language, PrivacyDoc> = {
               <br />
               Adószám: {COMPANY_TAX_NUMBER}
               <br />
-              Képviselő: Győrfi Attila ügyvezető
+              Képviselő: Győrfi Attila
               <br />
               E-mail: <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
               <br />
@@ -811,7 +811,7 @@ const DOCS: Record<Language, PrivacyDoc> = {
               <br />
               Tax number: {COMPANY_TAX_NUMBER}
               <br />
-              Represented by: Attila Győrfi, managing director
+              Represented by: Attila Győrfi
               <br />
               Email: <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
               <br />
@@ -1274,7 +1274,7 @@ const DOCS: Record<Language, PrivacyDoc> = {
               <br />
               税号:{COMPANY_TAX_NUMBER}
               <br />
-              代表人:Győrfi Attila 总经理
+              代表人:Győrfi Attila
               <br />
               邮箱:<a href={`mailto:${EMAIL}`}>{EMAIL}</a>
               <br />

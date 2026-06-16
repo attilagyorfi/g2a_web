@@ -805,7 +805,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
         result: "Részletes SEO felmérés és PPC audit, kulcsszó-pozícionálás, mérési-alapú döntéstámogatás Analytics + Search Console-lal.",
       },
       whyG2A:
-        "Számos B2B projekt — a középvállalati SaaS-tól az ipari beszállítókig. Ismerjük a HubSpot és Marketo tényleges funkcióit (nem csak a marketing demo-ját), tudjuk hogyan kell az ABM-et egy 6 fős sales-csapattal működtetni, és tapasztalatunk van magyar/német/lengyel B2B piacon. Az ügyvezetőnk, Győrfi Attila a Pécsi Tudományegyetem Közgazdaságtudományi Karán is oktat — közvetlen kontakt a hazai vállalati szektorral.",
+        "Számos B2B projekt — a középvállalati SaaS-tól az ipari beszállítókig. Ismerjük a HubSpot és Marketo tényleges funkcióit (nem csak a marketing demo-ját), tudjuk hogyan kell az ABM-et egy 6 fős sales-csapattal működtetni, és tapasztalatunk van magyar/német/lengyel B2B piacon. Az alapítónk, Győrfi Attila a Pécsi Tudományegyetem Közgazdaságtudományi Karán is oktat — közvetlen kontakt a hazai vállalati szektorral.",
       relatedServices: [
         {
           title: "Stratégiai marketing",
@@ -1348,7 +1348,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "Hungarian municipal communication typically defaults to a clerk-written press release plus a Facebook post — but residents expect a mobile-friendly website, fast Messenger replies, accessible content and multi-generational reach. From 2025, Hungary's Act LXXV of 2018 mandates WCAG 2.1 AA compliance for every public-sector digital service.",
       whyG2A:
-        "Numerous municipal and public-institution projects — from villages to county-seat cities. We know the Hungarian Public Procurement Act (Kbt.), the 2018 LXXV. tv. accessibility requirements, and EU project visibility rules. Our managing director Attila Győrfi also lectures at the University of Pécs Faculty of Economics — direct connection to the regional public administration.",
+        "Numerous municipal and public-institution projects — from villages to county-seat cities. We know the Hungarian Public Procurement Act (Kbt.), the 2018 LXXV. tv. accessibility requirements, and EU project visibility rules. Our founder Attila Győrfi also lectures at the University of Pécs Faculty of Economics — direct connection to the regional public administration.",
       relatedServices: [
         {
           title: "Web development",
@@ -1422,7 +1422,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "67% of the B2B buying journey happens online before the first sales touch — meaning marketing operates as a parallel pipeline-building unit, not a sales support function. Modern B2B marketing focuses on making the marketing-qualified lead (MQL) → sales-qualified lead (SQL) → opportunity → won-deal funnel measurable and optimisable.",
       whyG2A:
-        "Numerous B2B projects, from mid-market SaaS to industrial suppliers. We know the actual capabilities of HubSpot and Marketo (not just their marketing demos), how to operate ABM with a 6-person sales team, and we have experience in the Hungarian/German/Polish B2B markets. Our managing director Attila Győrfi also lectures at the University of Pécs Faculty of Economics — direct contact with the domestic enterprise sector.",
+        "Numerous B2B projects, from mid-market SaaS to industrial suppliers. We know the actual capabilities of HubSpot and Marketo (not just their marketing demos), how to operate ABM with a 6-person sales team, and we have experience in the Hungarian/German/Polish B2B markets. Our founder Attila Győrfi also lectures at the University of Pécs Faculty of Economics — direct contact with the domestic enterprise sector.",
       relatedServices: [
         {
           title: "Strategic marketing",
@@ -1988,7 +1988,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "匈牙利地方政府沟通通常局限于公务员撰写的新闻稿 + Facebook 帖子,但居民期望移动友好网站、Messenger 快速回复、无障碍内容与多代际覆盖。匈牙利 2018 年第 LXXV 号法律自 2025 年起对所有公共部门数字服务强制 WCAG 2.1 AA 合规。",
       whyG2A:
-        "完成众多政府与公共机构项目,从乡镇到县级城市。我们了解匈牙利公共采购法(Kbt.)、2018 年第 LXXV 号无障碍要求、欧盟项目可见性规则。总经理 Győrfi Attila 在佩奇大学经济学系任教 —— 与区域公共行政有直接联系。",
+        "完成众多政府与公共机构项目,从乡镇到县级城市。我们了解匈牙利公共采购法(Kbt.)、2018 年第 LXXV 号无障碍要求、欧盟项目可见性规则。创始人 Győrfi Attila 在佩奇大学经济学系任教 —— 与区域公共行政有直接联系。",
       relatedServices: [
         {
           title: "网站开发",
@@ -2062,7 +2062,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       intro:
         "B2B 购买旅程的 67% 在销售首次接触前已在线发生 —— 这意味着营销作为与销售并行的管道建设单位运作,而非销售的支持职能。现代 B2B 营销关注 MQL → SQL → Opportunity → Won-Deal 漏斗的可量化与可优化。",
       whyG2A:
-        "完成众多 B2B 项目,从中型 SaaS 到工业供应商。我们了解 HubSpot 与 Marketo 的实际功能(而非营销 demo)、如何用 6 人销售团队运营 ABM、以及在匈牙利/德国/波兰 B2B 市场的经验。总经理 Győrfi Attila 在佩奇大学经济学系任教 —— 与本国企业部门有直接联系。",
+        "完成众多 B2B 项目,从中型 SaaS 到工业供应商。我们了解 HubSpot 与 Marketo 的实际功能(而非营销 demo)、如何用 6 人销售团队运营 ABM、以及在匈牙利/德国/波兰 B2B 市场的经验。创始人 Győrfi Attila 在佩奇大学经济学系任教 —— 与本国企业部门有直接联系。",
       relatedServices: [
         {
           title: "战略营销",

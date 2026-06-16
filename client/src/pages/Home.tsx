@@ -50,10 +50,44 @@ function useRevealAll(containerRef: React.RefObject<HTMLElement | null>) {
       { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
     );
     const el = containerRef.current;
-    if (el) {
-      el.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
-    }
-    return () => observer.disconnect();
+    if (!el) return;
+
+    // Observe every .reveal that hasn't been revealed yet. Called once
+    // on mount AND whenever new nodes are inserted (see MutationObserver
+    // below). The :not(.visible) guard avoids re-observing elements the
+    // IO has already fired on and unobserved.
+    const observeNew = () => {
+      el.querySelectorAll<HTMLElement>(".reveal:not(.visible)").forEach((node) => observer.observe(node));
+    };
+    observeNew();
+
+    // CRITICAL: case studies + testimonials are loaded async via tRPC and
+    // inserted into the DOM AFTER this effect's first pass. Without this,
+    // those .reveal cards never get observed, stay stuck at opacity:0, and
+    // render as a large blank gap (the nodes occupy layout height but are
+    // invisible). The MutationObserver re-runs observeNew() for any newly
+    // added subtree so async content reveals correctly.
+    const mo = new MutationObserver(() => observeNew());
+    mo.observe(el, { childList: true, subtree: true });
+
+    // Safety net: if the IntersectionObserver never fires for some nodes
+    // (headless/automation browsers, certain reduced-motion engines, or an
+    // async-timing race), force-reveal anything still hidden that is already
+    // in or above the viewport — so content can never stay stuck invisible.
+    // Elements still below the fold keep their normal scroll-reveal.
+    const safety = window.setTimeout(() => {
+      el.querySelectorAll<HTMLElement>(".reveal:not(.visible)").forEach((node) => {
+        if (node.getBoundingClientRect().top < window.innerHeight + 200) {
+          node.classList.add("visible");
+        }
+      });
+    }, 1500);
+
+    return () => {
+      observer.disconnect();
+      mo.disconnect();
+      window.clearTimeout(safety);
+    };
   }, [containerRef]);
 }
 
@@ -209,7 +243,7 @@ const WHY_US: Record<Language, Reason[]> = {
   hu: buildReasons([
     { title: "Stratégiai gondolkodás", desc: "Nem csak kivitelezünk – üzleti célokat érünk el" },
     { title: "Gyors reakcióidő", desc: "24 órán belül válaszolunk minden megkeresésre" },
-    { title: "Nemzetközi tapasztalat", desc: "Több mint 10 országban szerzett marketing tapasztalat" },
+    { title: "Nemzetközi tapasztalat", desc: "Nemzetközi piacokon szerzett marketing tapasztalat" },
     { title: "AI-alapú működés", desc: "Minden folyamatunkba integrálva van az AI" },
     { title: "Átlátható riportok", desc: "Heti és havi részletes teljesítmény-riportok" },
     { title: "Teljes ökoszisztéma", desc: "Stratégiától a kivitelezésig – egy kézből" },
@@ -219,7 +253,7 @@ const WHY_US: Record<Language, Reason[]> = {
   en: buildReasons([
     { title: "Strategic thinking", desc: "We don't just execute — we deliver on business goals" },
     { title: "Fast response time", desc: "We reply to every inquiry within 24 hours" },
-    { title: "International experience", desc: "Marketing experience gained across 10+ countries" },
+    { title: "International experience", desc: "Marketing experience gained in international markets" },
     { title: "AI-powered operations", desc: "AI is integrated into every process we run" },
     { title: "Transparent reports", desc: "Detailed weekly and monthly performance reports" },
     { title: "Complete ecosystem", desc: "From strategy to execution — all from one place" },
@@ -229,7 +263,7 @@ const WHY_US: Record<Language, Reason[]> = {
   zh: buildReasons([
     { title: "战略思维", desc: "我们不只是执行者 —— 而是业务目标的实现者" },
     { title: "快速响应", desc: "每一条咨询 24 小时内回复" },
-    { title: "国际化经验", desc: "在 10 多个国家积累的营销经验" },
+    { title: "国际化经验", desc: "在国际市场积累的营销经验" },
     { title: "AI 驱动的运营", desc: "AI 融入我们的每一个工作流程" },
     { title: "透明的报告", desc: "每周和每月详细的绩效报告" },
     { title: "完整的生态", desc: "从战略到执行 —— 一站式服务" },
@@ -274,21 +308,21 @@ const FAQS: Record<Language, Faq[]> = {
     { q: "Milyen méretű cégeknek dolgoztok?", a: "KKV-któl nagyvállalatig minden méretű ügyféllel dolgozunk. Tapasztalatunk van egyszemélyes vállalkozásoktól multinacionális cégekig." },
     { q: "Mi az ingyenes marketing audit folyamata?", a: "Kitöltöd az audit kérő űrlapot, 24 órán belül felvesszük veled a kapcsolatot, majd 5–7 munkanapon belül elkészítjük a részletes auditot." },
     { q: "Hogyan méritek a kampányok sikerét?", a: "Minden kampányhoz egyedi KPI-okat határozunk meg (ROAS, CPA, CTR, konverziós ráta stb.) és heti/havi riportokban számolunk be az eredményekről." },
-    { q: "Dolgoztok nemzetközi piacokon is?", a: "Igen, több mint 10 országban van tapasztalatunk. Lokalizáció, multilingual SEO és nemzetközi PPC kampányok terén egyaránt segítünk." },
+    { q: "Dolgoztok nemzetközi piacokon is?", a: "Igen, van nemzetközi tapasztalatunk. Lokalizáció, multilingual SEO és nemzetközi PPC kampányok terén egyaránt segítünk." },
   ],
   en: [
     { q: "How soon can results be seen?", a: "SEO typically shows measurable results in 3–6 months; PPC campaigns in 2–4 weeks. We provide more precise estimates during the free audit." },
     { q: "What size companies do you work with?", a: "We work with clients of all sizes — from SMEs to large enterprises, including sole proprietors and multinationals." },
     { q: "What does the free marketing audit involve?", a: "You fill out the audit request form, we contact you within 24 hours, and deliver a detailed audit within 5–7 business days." },
     { q: "How do you measure campaign success?", a: "We define custom KPIs for each campaign (ROAS, CPA, CTR, conversion rate, etc.) and report results weekly and monthly." },
-    { q: "Do you work in international markets?", a: "Yes, we have experience in 10+ countries. We help with localization, multilingual SEO and international PPC campaigns." },
+    { q: "Do you work in international markets?", a: "Yes, we have international experience. We help with localization, multilingual SEO and international PPC campaigns." },
   ],
   zh: [
     { q: "多久能看到效果?", a: "SEO 一般在 3–6 个月内见效,PPC 广告活动 2–4 周内可见成效。免费评估时可给出更精确的预期。" },
     { q: "你们服务什么规模的公司?", a: "从中小企业到大型集团,我们服务各种规模的客户 —— 个人创业者到跨国公司都有合作经验。" },
     { q: "免费营销评估的流程是什么?", a: "您填写评估申请表,我们 24 小时内联系您,5–7 个工作日内交付详细评估报告。" },
     { q: "你们如何衡量营销活动的成效?", a: "为每个活动设定专属 KPI(ROAS、CPA、CTR、转化率等),并通过每周/每月报告汇报成果。" },
-    { q: "你们服务国际市场吗?", a: "是的,我们在 10 多个国家有经验,提供本地化、多语种 SEO 以及国际化 PPC 营销活动支持。" },
+    { q: "你们服务国际市场吗?", a: "是的,我们具备国际市场经验,提供本地化、多语种 SEO 以及国际化 PPC 营销活动支持。" },
   ],
 };
 
