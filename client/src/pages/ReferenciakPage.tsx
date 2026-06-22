@@ -32,7 +32,7 @@ const INDUSTRY_LABELS: Record<string, string> = {
   // Audit: these were rendered as raw lower-case ascii slugs
   // ("kereskedelem", "vendeglatas", "kozlekedes", "kreativ"). Adding
   // them here restores proper Hungarian orthography.
-  kereskedelem: "Kereskedelem",
+  webshop: "Webshop",
   vendeglatas: "Vendéglátás",
   kozlekedes: "Közlekedés",
   kreativ: "Kreatív",
