@@ -24,6 +24,7 @@ const INDUSTRY_LABELS: Record<string, string> = {
   // Audit fix: missing curated labels for industries the admin had
   // added with bare ascii slugs. Restores proper Hungarian spelling.
   webshop: "Webshop",
+  szolgaltato: "Szolgáltatóipar",
   vendeglatas: "Vendéglátás",
   kozlekedes: "Közlekedés",
   kreativ: "Kreatív",

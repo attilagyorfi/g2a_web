@@ -33,6 +33,7 @@ const INDUSTRY_LABELS: Record<string, string> = {
   // ("kereskedelem", "vendeglatas", "kozlekedes", "kreativ"). Adding
   // them here restores proper Hungarian orthography.
   webshop: "Webshop",
+  szolgaltato: "Szolgáltatóipar",
   vendeglatas: "Vendéglátás",
   kozlekedes: "Közlekedés",
   kreativ: "Kreatív",
