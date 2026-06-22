@@ -7,9 +7,10 @@ import { serviceSchema, faqPageSchema, breadcrumbSchema } from "@/lib/jsonLd";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import IndustryHeroDemo, { hasIndustryHeroDemo } from "@/components/industry-demos/IndustryHeroDemo";
 import { Link } from "wouter";
-import { ArrowRight, CheckCircle, ChevronDown, Stethoscope, ShoppingBag, Wrench, Car, Scale, Code, Lightbulb, Building2 } from "lucide-react";
+import { ArrowRight, CheckCircle, ChevronDown, Stethoscope, ShoppingBag, Wrench, Car, Scale, Code, Lightbulb, Building2, Palette, UtensilsCrossed, ShoppingCart, Settings, Bus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
+import { INDUSTRY_CONTENT_EXTRA } from "@/data/industryContentExtra";
 
 function useReveal(ref: React.RefObject<HTMLDivElement | null>) {
   useEffect(() => {
@@ -34,6 +35,13 @@ const INDUSTRY_META: Record<string, IndustryMeta> = {
   "marketing-technologiai-cegeknek": { icon: <Code size={32} />, color: "#8b5cf6" },
   "marketing-onkormanyzati-projekteknek": { icon: <Lightbulb size={32} />, color: "#14b8a6" },
   "marketing-b2b-cegeknek": { icon: <Building2 size={32} />, color: "var(--g2a-brand-teal)" },
+  // Five additional categories from the partner list (Partnerek.docx).
+  // Content for these lives in @/data/industryContentExtra.
+  "marketing-kreativ-cegeknek": { icon: <Palette size={32} />, color: "#f43f5e" },
+  "marketing-vendeglatas-cegeknek": { icon: <UtensilsCrossed size={32} />, color: "#f97316" },
+  "marketing-webshopoknak": { icon: <ShoppingCart size={32} />, color: "#06b6d4" },
+  "marketing-szolgaltato-cegeknek": { icon: <Settings size={32} />, color: "#eab308" },
+  "marketing-kozlekedesi-cegeknek": { icon: <Bus size={32} />, color: "#0ea5e9" },
 };
 
 // ─── Industry content (localized) ───────────────────────────────────────────
@@ -2113,7 +2121,10 @@ export default function IparagiLandingPage() {
   const slug = params?.slug || "";
   const meta = INDUSTRY_META[slug];
   const { t, lang } = useLanguage();
-  const content = INDUSTRY_CONTENT[lang]?.[slug];
+  // Inline content for the original 8 industries; the 5 newer categories
+  // (creative, hospitality, webshop, services, transport) come from the
+  // extra module. Same shape, merged at lookup.
+  const content = INDUSTRY_CONTENT[lang]?.[slug] ?? INDUSTRY_CONTENT_EXTRA[lang]?.[slug];
   // Open FAQ accordion state — null = all closed, otherwise the index of the open item
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 

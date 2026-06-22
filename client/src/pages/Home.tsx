@@ -32,7 +32,7 @@ import {
   Globe, Code, Megaphone, Search, Palette, Users, Bot, BarChart3,
   Building2, Stethoscope, Car, Wrench, Lightbulb, Scale, ShoppingBag,
   Star, Quote, Phone, Mail, Clock, Award, Shield, Rocket, Brain,
-  ChevronDown, ChevronUp, ExternalLink
+  ChevronDown, ChevronUp, ExternalLink, UtensilsCrossed, ShoppingCart, Settings, Bus
 } from "lucide-react";
 
 // ─── Scroll Reveal Hook ────────────────────────────────────────────────────
@@ -192,14 +192,20 @@ const PROBLEMS: Record<Language, Problem[]> = {
 // Industries — ikonok közösek, label t() kulcsból, count szám + közös suffix.
 type Industry = { icon: React.ReactNode; labelKey: string; slug: string; count: number };
 const INDUSTRIES: Industry[] = [
-  { icon: <Stethoscope size={22} />, labelKey: "industry.healthcare", slug: "marketing-egeszsegugyi-cegeknek", count: 40 },
-  { icon: <ShoppingBag size={22} />, labelKey: "industry.beauty", slug: "marketing-szepsegipari-cegeknek", count: 25 },
-  { icon: <Wrench size={22} />, labelKey: "industry.engineering", slug: "marketing-mernoki-irodaknak", count: 30 },
-  { icon: <Car size={22} />, labelKey: "industry.automotive", slug: "marketing-autoipari-cegeknek", count: 20 },
-  { icon: <Scale size={22} />, labelKey: "industry.legal", slug: "marketing-ugyvedi-irodaknak", count: 15 },
-  { icon: <Code size={22} />, labelKey: "industry.technology", slug: "marketing-technologiai-cegeknek", count: 35 },
-  { icon: <Lightbulb size={22} />, labelKey: "industry.government", slug: "marketing-onkormanyzati-projekteknek", count: 10 },
-  { icon: <Building2 size={22} />, labelKey: "industry.b2b", slug: "marketing-b2b-cegeknek", count: 50 },
+  // Counts are the real number of partners per category (Partnerek.docx).
+  { icon: <Stethoscope size={22} />, labelKey: "industry.healthcare", slug: "marketing-egeszsegugyi-cegeknek", count: 1 },
+  { icon: <ShoppingBag size={22} />, labelKey: "industry.beauty", slug: "marketing-szepsegipari-cegeknek", count: 3 },
+  { icon: <Wrench size={22} />, labelKey: "industry.engineering", slug: "marketing-mernoki-irodaknak", count: 3 },
+  { icon: <Car size={22} />, labelKey: "industry.automotive", slug: "marketing-autoipari-cegeknek", count: 4 },
+  { icon: <Scale size={22} />, labelKey: "industry.legal", slug: "marketing-ugyvedi-irodaknak", count: 1 },
+  { icon: <Code size={22} />, labelKey: "industry.technology", slug: "marketing-technologiai-cegeknek", count: 2 },
+  { icon: <Lightbulb size={22} />, labelKey: "industry.government", slug: "marketing-onkormanyzati-projekteknek", count: 2 },
+  { icon: <Building2 size={22} />, labelKey: "industry.b2b", slug: "marketing-b2b-cegeknek", count: 3 },
+  { icon: <Palette size={22} />, labelKey: "industry.creative", slug: "marketing-kreativ-cegeknek", count: 1 },
+  { icon: <UtensilsCrossed size={22} />, labelKey: "industry.hospitality", slug: "marketing-vendeglatas-cegeknek", count: 3 },
+  { icon: <ShoppingCart size={22} />, labelKey: "industry.webshop", slug: "marketing-webshopoknak", count: 7 },
+  { icon: <Settings size={22} />, labelKey: "industry.services", slug: "marketing-szolgaltato-cegeknek", count: 2 },
+  { icon: <Bus size={22} />, labelKey: "industry.transport", slug: "marketing-kozlekedesi-cegeknek", count: 1 },
 ];
 
 // AI features
@@ -528,7 +534,7 @@ export default function Home() {
                     <div className="g2a-icon-box">{ind.icon}</div>
                     <div>
                       <div style={{ fontFamily: "Geist, sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--g2a-text-primary)", marginBottom: "0.25rem" }}>{t(ind.labelKey)}</div>
-                      <div style={{ fontFamily: "Geist Mono, monospace", fontSize: "0.7rem", color: "var(--g2a-brand-teal)", letterSpacing: "0.05em" }}>{ind.count}+ {t("common.projectsSuffix")}</div>
+                      <div style={{ fontFamily: "Geist Mono, monospace", fontSize: "0.7rem", color: "var(--g2a-brand-teal)", letterSpacing: "0.05em" }}>{ind.count} {t("common.partnersSuffix")}</div>
                     </div>
                     <ChevronRight size={16} style={{ marginLeft: "auto", color: "var(--g2a-text-muted)" }} />
                   </div>

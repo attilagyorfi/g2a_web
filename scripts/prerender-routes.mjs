@@ -135,6 +135,11 @@ export const INDUSTRIES = [
   { slug: "marketing-technologiai-cegeknek", title: "B2B tech marketing SaaS-nak és IT-cégeknek — G2A Marketing", description: "B2B SaaS és tech marketing: pozícionálás, product-led growth, content marketing, ABM, demógyűjtés.", ogTitle: "Marketing technológiai cégeknek" },
   { slug: "marketing-onkormanyzati-projekteknek", title: "Önkormányzati marketing EU-projekteknek — G2A Marketing", description: "EU-támogatott önkormányzati projektek kommunikációja és lakossági kampányok. Közbeszerzés-kompatibilis ajánlatok.", ogTitle: "Marketing önkormányzati projekteknek" },
   { slug: "marketing-b2b-cegeknek", title: "B2B marketing gyártóknak és nagykereskedőknek — G2A Marketing", description: "B2B marketing stratégia gyártóknak, nagykereskedőknek, szolgáltatóknak. LinkedIn, ABM, hosszú deal-ciklus.", ogTitle: "Marketing B2B cégeknek" },
+  { slug: "marketing-kreativ-cegeknek", title: "Kreatív marketing fotósoknak és stúdióknak — G2A Marketing", description: "Vizuális-első marketing kreatív vállalkozásoknak: portfólió-weboldal, képközpontú arculat, közösségi jelenlét.", ogTitle: "Kreatív marketing" },
+  { slug: "marketing-vendeglatas-cegeknek", title: "Vendéglátó marketing éttermeknek és kávézóknak — G2A Marketing", description: "Helyi, vizuális marketing vendéglátóhelyeknek: közösségi média, Google-jelenlét, foglalás és rendelés.", ogTitle: "Vendéglátó marketing" },
+  { slug: "marketing-webshopoknak", title: "Webshop marketing és e-commerce hirdetés — G2A Marketing", description: "Konverzió-fókuszú webshop marketing: Google és Meta hirdetés, termék-feed, SEO, CRO. Mérhető ROAS.", ogTitle: "Webshop marketing" },
+  { slug: "marketing-szolgaltato-cegeknek", title: "Marketing szolgáltató és ipari cégeknek — G2A Marketing", description: "B2B marketing szolgáltató és ipari cégeknek: hiteles weboldal, szakmai tartalom, leadgenerálás.", ogTitle: "Marketing szolgáltató cégeknek" },
+  { slug: "marketing-kozlekedesi-cegeknek", title: "Közlekedési és közszolgáltatói marketing — G2A Marketing", description: "Közérthető, megbízható kommunikáció közlekedési és közszolgáltató vállalatoknak: tájékoztatás, közösségi média, arculat.", ogTitle: "Közlekedési marketing" },
 ];
 
 /** Flatten all 32 routes for the translation pass. */

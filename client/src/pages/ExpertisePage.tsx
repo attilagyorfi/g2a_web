@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { ArrowRight, Stethoscope, ShoppingBag, Wrench, Car, Scale, Code, Lightbulb, Building2 } from "lucide-react";
+import { ArrowRight, Stethoscope, ShoppingBag, Wrench, Car, Scale, Code, Lightbulb, Building2, Palette, UtensilsCrossed, ShoppingCart, Settings, Bus } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
@@ -118,6 +118,61 @@ const INDUSTRIES: IndustryCard[] = [
       hu: "Gyártók, nagykereskedők, B2B szolgáltatók. LinkedIn, ABM, hosszú deal-ciklus.",
       en: "Manufacturers, wholesalers, B2B service providers. LinkedIn, ABM, long deal cycles.",
       zh: "制造商、批发商、B2B 服务提供商。LinkedIn、ABM、长周期成交。",
+    },
+  },
+  {
+    slug: "marketing-kreativ-cegeknek",
+    icon: <Palette size={22} />,
+    color: "#f43f5e",
+    label: { hu: "Kreatív", en: "Creative", zh: "创意" },
+    desc: {
+      hu: "Fotósok, stúdiók, kreatív vállalkozások. Portfólió-weboldal, vizuális arculat.",
+      en: "Photographers, studios, creative businesses. Portfolio website, visual identity.",
+      zh: "摄影师、工作室、创意企业。作品集网站、视觉识别。",
+    },
+  },
+  {
+    slug: "marketing-vendeglatas-cegeknek",
+    icon: <UtensilsCrossed size={22} />,
+    color: "#f97316",
+    label: { hu: "Vendéglátás", en: "Hospitality", zh: "餐饮" },
+    desc: {
+      hu: "Éttermek, kávézók, élményhelyek. Helyi SEO, közösségi média, online foglalás.",
+      en: "Restaurants, cafés, experience venues. Local SEO, social media, online booking.",
+      zh: "餐厅、咖啡馆、体验场所。本地 SEO、社媒、在线预订。",
+    },
+  },
+  {
+    slug: "marketing-webshopoknak",
+    icon: <ShoppingCart size={22} />,
+    color: "#06b6d4",
+    label: { hu: "Webshop", en: "Webshop", zh: "网店" },
+    desc: {
+      hu: "Webáruházak, e-commerce márkák. Google/Meta hirdetés, termék-feed, CRO.",
+      en: "Online stores, e-commerce brands. Google/Meta ads, product feed, CRO.",
+      zh: "在线商店、电商品牌。Google/Meta 广告、商品 feed、CRO。",
+    },
+  },
+  {
+    slug: "marketing-szolgaltato-cegeknek",
+    icon: <Settings size={22} />,
+    color: "#eab308",
+    label: { hu: "Szolgáltatóipar", en: "Services", zh: "服务业" },
+    desc: {
+      hu: "Ipari, műszaki és B2B szolgáltatók. Hiteles weboldal, szakmai tartalom, leadgenerálás.",
+      en: "Industrial, technical and B2B service providers. Credible website, expert content, leads.",
+      zh: "工业、技术与 B2B 服务商。可信网站、专家内容、线索生成。",
+    },
+  },
+  {
+    slug: "marketing-kozlekedesi-cegeknek",
+    icon: <Bus size={22} />,
+    color: "#0ea5e9",
+    label: { hu: "Közlekedés", en: "Transport", zh: "交通" },
+    desc: {
+      hu: "Közlekedési vállalatok, közszolgáltatók. Lakossági tájékoztatás, közösségi média, arculat.",
+      en: "Transport companies, public-service providers. Citizen info, social media, identity.",
+      zh: "交通运输企业、公共服务方。市民告知、社媒、形象。",
     },
   },
 ];

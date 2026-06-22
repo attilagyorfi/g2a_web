@@ -4711,7 +4711,12 @@ var STATIC_PATHS = [
     "marketing-ugyvedi-irodaknak",
     "marketing-technologiai-cegeknek",
     "marketing-onkormanyzati-projekteknek",
-    "marketing-b2b-cegeknek"
+    "marketing-b2b-cegeknek",
+    "marketing-kreativ-cegeknek",
+    "marketing-vendeglatas-cegeknek",
+    "marketing-webshopoknak",
+    "marketing-szolgaltato-cegeknek",
+    "marketing-kozlekedesi-cegeknek"
   ].map((slug) => ({
     path: `/iparagi/${slug}`,
     priority: "0.8",

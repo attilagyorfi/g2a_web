@@ -57,6 +57,11 @@ const translations: Record<Language, Record<string, string>> = {
     "industry.technology": "Technológia",
     "industry.government": "Önkormányzat",
     "industry.b2b": "B2B vállalatok",
+    "industry.creative": "Kreatív",
+    "industry.hospitality": "Vendéglátás",
+    "industry.webshop": "Webshop",
+    "industry.services": "Szolgáltatóipar",
+    "industry.transport": "Közlekedés",
 
     // Hero
     "hero.badge": "Adatvezérelt Marketing Ügynökség",
@@ -443,6 +448,7 @@ const translations: Record<Language, Record<string, string>> = {
     "home.finalCta.title": "Készen állsz a növekedésre?",
     "home.finalCta.desc": "Vedd fel velünk a kapcsolatot és indítsuk el a közös munkát egy ingyenes konzultációval.",
     "common.projectsSuffix": "projekt",
+    "common.partnersSuffix": "partner",
     // About page (Rólunk)
     "about.seoTitle": "Rólunk — G2A Marketing | B2B Marketing Ügynökség Pécs",
     "about.seoDesc": "Ismerd meg a G2A Marketing csapatát. 2022 óta segítünk B2B cégeknek mérhető marketing eredményeket elérni. Stratégiai gondolkodás, AI-alapú megoldások.",
@@ -672,6 +678,11 @@ const translations: Record<Language, Record<string, string>> = {
     "industry.technology": "Technology",
     "industry.government": "Government",
     "industry.b2b": "B2B Companies",
+    "industry.creative": "Creative",
+    "industry.hospitality": "Hospitality",
+    "industry.webshop": "Webshop",
+    "industry.services": "Services",
+    "industry.transport": "Transport",
 
     // Hero
     "hero.badge": "Data-Driven Marketing Agency",
@@ -1042,6 +1053,7 @@ const translations: Record<Language, Record<string, string>> = {
     "home.finalCta.title": "Ready to grow?",
     "home.finalCta.desc": "Contact us and let's start working together with a free consultation.",
     "common.projectsSuffix": "projects",
+    "common.partnersSuffix": "partner",
     // About page
     "about.seoTitle": "About — G2A Marketing | B2B Marketing Agency, Pécs",
     "about.seoDesc": "Meet the G2A Marketing team. Since 2022 we've helped B2B companies achieve measurable marketing results. Strategic thinking, AI-powered solutions.",
@@ -1271,6 +1283,11 @@ const translations: Record<Language, Record<string, string>> = {
     "industry.technology": "科技",
     "industry.government": "政府机构",
     "industry.b2b": "B2B 企业",
+    "industry.creative": "创意",
+    "industry.hospitality": "餐饮",
+    "industry.webshop": "网店",
+    "industry.services": "服务业",
+    "industry.transport": "交通",
 
     // Hero
     "hero.badge": "数据驱动营销公司",
@@ -1641,6 +1658,7 @@ const translations: Record<Language, Record<string, string>> = {
     "home.finalCta.title": "准备好增长了吗?",
     "home.finalCta.desc": "联系我们,用一次免费咨询开启合作。",
     "common.projectsSuffix": "项目",
+    "common.partnersSuffix": "合作伙伴",
     // About page
     "about.seoTitle": "关于我们 – G2A Marketing | 数据驱动的 B2B 营销公司",
     "about.seoDesc": "认识 G2A Marketing 团队。自 2022 年起,我们助力 B2B 企业实现可衡量的营销成果。战略思维、AI 驱动的方案、23+ 活跃合作伙伴。",

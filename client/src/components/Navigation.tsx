@@ -53,6 +53,11 @@ export default function Navigation() {
     { label: t("industry.technology"), slug: "marketing-technologiai-cegeknek" },
     { label: t("industry.government"), slug: "marketing-onkormanyzati-projekteknek" },
     { label: t("industry.b2b"), slug: "marketing-b2b-cegeknek" },
+    { label: t("industry.creative"), slug: "marketing-kreativ-cegeknek" },
+    { label: t("industry.hospitality"), slug: "marketing-vendeglatas-cegeknek" },
+    { label: t("industry.webshop"), slug: "marketing-webshopoknak" },
+    { label: t("industry.services"), slug: "marketing-szolgaltato-cegeknek" },
+    { label: t("industry.transport"), slug: "marketing-kozlekedesi-cegeknek" },
   ];
 
   useEffect(() => {
