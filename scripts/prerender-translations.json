@@ -90,19 +90,6 @@
       "ogTitle": "免费营销审计"
     }
   },
-  "/marketing-audit": {
-    "hash": "7b15f5c3fd56fa71",
-    "en": {
-      "title": "Marketing Audit — G2A Marketing",
-      "description": "Comprehensive marketing audit service. Website, ad management, SEO, social media, analytics—all covered in a single, comprehensive assessment.",
-      "ogTitle": "Marketing audit"
-    },
-    "zh": {
-      "title": "营销审计 — G2A Marketing",
-      "description": "详细的营销审计服务。网站、广告管理、SEO、社交媒体、数据分析——一应俱全的全面评估。",
-      "ogTitle": "市场营销审计"
-    }
-  },
   "/ingyenes-seo-audit": {
     "hash": "ed0dd6e4b887ca71",
     "en": {
@@ -363,19 +350,6 @@
       "ogTitle": "面向汽车行业的市场营销"
     }
   },
-  "/iparagi/marketing-ugyvedii-irodaknak": {
-    "hash": "9da85745f108e3c6",
-    "en": {
-      "title": "Law Firm Marketing — G2A Marketing",
-      "description": "Marketing for law firms. Communications compliant with the Hungarian Bar Association’s advertising restrictions.",
-      "ogTitle": "Marketing for Law Firms"
-    },
-    "zh": {
-      "title": "面向律师事务所的营销服务 — G2A Marketing",
-      "description": "面向律师事务所和法律机构的营销服务。符合匈牙利律师协会广告限制规定的宣传。",
-      "ogTitle": "面向营销律师事务所"
-    }
-  },
   "/iparagi/marketing-technologiai-cegeknek": {
     "hash": "66bc794feb70f842",
     "en": {
@@ -413,6 +387,84 @@
       "title": "面向制造商和批发商的B2B营销 — G2A Marketing",
       "description": "面向制造商、批发商和服务提供商的B2B营销策略。涵盖LinkedIn、ABM及长周期交易。",
       "ogTitle": "面向B2B企业的营销"
+    }
+  },
+  "/iparagi/marketing-ugyvedi-irodaknak": {
+    "hash": "6a4839366b35ffdd",
+    "en": {
+      "title": "Law Firm Marketing — G2A Marketing",
+      "description": "Marketing for law firms. Communications compliant with the Hungarian Bar Association’s advertising restrictions.",
+      "ogTitle": "Marketing for Law Firms"
+    },
+    "zh": {
+      "title": "面向律师事务所的营销服务 — G2A Marketing",
+      "description": "面向律师事务所和法律机构的营销服务。符合匈牙利律师协会广告限制规定的宣传。",
+      "ogTitle": "面向营销律师事务所"
+    }
+  },
+  "/iparagi/marketing-kreativ-cegeknek": {
+    "hash": "cd4204213b1c8bf8",
+    "en": {
+      "title": "Creative Marketing for Photographers and Studios — G2A Marketing",
+      "description": "Visual-first marketing for creative businesses: portfolio websites, image-centric branding, social media presence.",
+      "ogTitle": "Creative Marketing"
+    },
+    "zh": {
+      "title": "面向创意营销摄影师和摄影工作室的解决方案 — G2A Marketing",
+      "description": "面向创意企业的以视觉为先的营销方案：作品集网站、以图片为核心的品牌形象、社交媒体运营。",
+      "ogTitle": "创意营销"
+    }
+  },
+  "/iparagi/marketing-vendeglatas-cegeknek": {
+    "hash": "bf312590ad625a20",
+    "en": {
+      "title": "Hospitality Marketing for Restaurants and Cafés — G2A Marketing",
+      "description": "Local, visual marketing for restaurants: social media, Google presence, reservations, and ordering.",
+      "ogTitle": "Hospitality Marketing"
+    },
+    "zh": {
+      "title": "面向餐厅和咖啡馆的餐饮营销 — G2A Marketing",
+      "description": "面向餐饮场所的本地化视觉营销：社交媒体、Google线上展示、预订与点餐。",
+      "ogTitle": "餐饮营销"
+    }
+  },
+  "/iparagi/marketing-webshopoknak": {
+    "hash": "d43ddd784269ccd0",
+    "en": {
+      "title": "Online Store Marketing and E-commerce Advertising — G2A Marketing",
+      "description": "Conversion-focused e-commerce marketing: Google and Meta ads, product feeds, SEO, CRO. Measurable ROAS.",
+      "ogTitle": "Online Store Marketing"
+    },
+    "zh": {
+      "title": "网店营销与电子商务广告 — G2A Marketing",
+      "description": "以转化率为核心的网店营销：Google和Meta广告、产品数据feed、SEO、CRO。可量化的ROAS。",
+      "ogTitle": "网店营销"
+    }
+  },
+  "/iparagi/marketing-szolgaltato-cegeknek": {
+    "hash": "b4ad9f0432912959",
+    "en": {
+      "title": "Marketing Services for Service Providers and Industrial Companies — G2A Marketing",
+      "description": "B2B marketing services for service providers and industrial companies: professional websites, expert content, and lead generation.",
+      "ogTitle": "For marketing service providers"
+    },
+    "zh": {
+      "title": "面向服务提供商和工业企业的营销服务 — G2A Marketing",
+      "description": "面向服务提供商和工业企业的B2B营销服务：专业网站建设、行业内容创作、潜在客户开发。",
+      "ogTitle": "面向营销服务公司"
+    }
+  },
+  "/iparagi/marketing-kozlekedesi-cegeknek": {
+    "hash": "a1f1248b614deef0",
+    "en": {
+      "title": "Transportation and Public Services Marketing — G2A Marketing",
+      "description": "Clear, reliable communication for transportation and public service companies: information, social media, brand identity.",
+      "ogTitle": "Transportation Marketing"
+    },
+    "zh": {
+      "title": "交通与公共服务营销 — G2A Marketing",
+      "description": "为交通及公共服务企业提供通俗易懂、值得信赖的沟通服务：信息发布、社交媒体、品牌形象。",
+      "ogTitle": "交通营销"
     }
   }
 }
