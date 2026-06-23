@@ -6,7 +6,7 @@ import type { Language } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
-import { pickLocalized } from "@/../../shared/i18n";
+import { pickLocalized, pickLocalizedStrict } from "@/../../shared/i18n";
 
 /**
  * Iparágak hub — links to the 8 detailed /iparagi/* landing pages.
@@ -181,8 +181,8 @@ export default function ExpertisePage() {
   const { t, lang } = useLanguage();
   const { data: pageSeo } = trpc.content.pageSeo.useQuery({ slug: "/szakertelem" });
 
-  const seoTitle = pickLocalized(pageSeo, "metaTitle", lang) || t("expertise.seoTitle");
-  const seoDesc = pickLocalized(pageSeo, "metaDescription", lang) || t("expertise.desc");
+  const seoTitle = pickLocalizedStrict(pageSeo, "metaTitle", lang) || t("expertise.seoTitle");
+  const seoDesc = pickLocalizedStrict(pageSeo, "metaDescription", lang) || t("expertise.desc");
 
   const detailsLabel: Record<Language, string> = { hu: "Részletek", en: "Details", zh: "详情" };
 

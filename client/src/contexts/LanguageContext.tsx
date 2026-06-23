@@ -193,6 +193,10 @@ const translations: Record<Language, Record<string, string>> = {
     // References
     "references.title": "Referenciák & Esettanulmányok",
     "references.subtitle": "Valós eredmények, valós ügyfelektől.",
+    "references.seoTitle": "Referenciák & Esettanulmányok – G2A Marketing",
+    "references.seoDesc": "Valós marketing eredmények valós ügyfelektől. Esettanulmányok egészségügy, autóipar, B2B és más iparágakból.",
+    "blog.seoTitle": "Hírek & Blog – G2A Marketing Pécs",
+    "blog.seoDesc": "Marketing tippek, trendek és iparági hírek a G2A Marketing csapatától. AI, ESG, KKV-marketing, B2B stratégia.",
     "references.challenge": "Kihívás",
     "references.solution": "Megoldás",
     "references.results": "Eredmények",
@@ -814,6 +818,10 @@ const translations: Record<Language, Record<string, string>> = {
     // References
     "references.title": "References & Case Studies",
     "references.subtitle": "Real results from real clients.",
+    "references.seoTitle": "References & Case Studies – G2A Marketing",
+    "references.seoDesc": "Real marketing results from real clients. Case studies from healthcare, automotive, B2B and other industries.",
+    "blog.seoTitle": "News & Blog – G2A Marketing Pécs",
+    "blog.seoDesc": "Marketing tips, trends and industry news from the G2A Marketing team. AI, ESG, SME marketing, B2B strategy.",
     "references.challenge": "Challenge",
     "references.solution": "Solution",
     "references.results": "Results",
@@ -1419,6 +1427,10 @@ const translations: Record<Language, Record<string, string>> = {
     // References
     "references.title": "客户案例与故事",
     "references.subtitle": "真实客户,真实成果。",
+    "references.seoTitle": "客户案例与故事 – G2A Marketing",
+    "references.seoDesc": "来自真实客户的真实营销成果。涵盖医疗、汽车、B2B 等行业的案例研究。",
+    "blog.seoTitle": "新闻与博客 – G2A Marketing 佩奇",
+    "blog.seoDesc": "来自 G2A Marketing 团队的营销技巧、趋势与行业资讯:AI、ESG、中小企业营销、B2B 策略。",
     "references.challenge": "挑战",
     "references.solution": "解决方案",
     "references.results": "成果",

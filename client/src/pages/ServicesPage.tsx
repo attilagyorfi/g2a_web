@@ -5,7 +5,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { pickLocalized } from "@/../../shared/i18n";
+import { pickLocalized, pickLocalizedStrict } from "@/../../shared/i18n";
 import ProcessIllustration from "@/components/illustrations/ProcessIllustration";
 import ServiceIcon from "@/components/illustrations/ServiceIcon";
 import SERVICE_CONFIGS_I18N from "@/data/serviceConfigs";
@@ -54,8 +54,8 @@ export default function ServicesPage() {
   return (
     <>
       <SeoHead
-        title={pageSeo?.metaTitle || t("services.seoTitle")}
-        description={pageSeo?.metaDescription || t("services.desc")}
+        title={pickLocalizedStrict(pageSeo, "metaTitle", lang) || t("services.seoTitle")}
+        description={pickLocalizedStrict(pageSeo, "metaDescription", lang) || t("services.desc")}
       />
       <Navigation />
       <main style={{ paddingTop: "100px" }}>

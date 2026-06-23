@@ -3,7 +3,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
-import { pickLocalized } from "@/../../shared/i18n";
+import { pickLocalized, pickLocalizedStrict } from "@/../../shared/i18n";
 
 const CATEGORY_LABELS: Record<"hu" | "en" | "zh", Record<string, string>> = {
   hu: {
@@ -42,7 +42,7 @@ export default function TechnologyPage() {
 
   return (
     <>
-      <SeoHead title={pickLocalized(pageSeo, "metaTitle", lang) || t("technology.seoTitle")} description={pickLocalized(pageSeo, "metaDescription", lang) || t("technology.seoDesc")} />
+      <SeoHead title={pickLocalizedStrict(pageSeo, "metaTitle", lang) || t("technology.seoTitle")} description={pickLocalizedStrict(pageSeo, "metaDescription", lang) || t("technology.seoDesc")} />
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
         <section style={{ backgroundColor: "var(--g2a-bg)", padding: "5rem 0" }}>

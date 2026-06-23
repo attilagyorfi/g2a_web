@@ -7,6 +7,7 @@ import SeoHead from "@/components/SeoHead";
 import ContactHeroDemo from "@/components/page-demos/ContactHeroDemo";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { pickLocalizedStrict } from "@/../../shared/i18n";
 import { parseFormError } from "@/lib/utils";
 import CalendlyEmbed, { isCalendlyConfigured } from "@/components/CalendlyEmbed";
 import TurnstileWidget, { isTurnstileEnabled } from "@/components/TurnstileWidget";
@@ -84,8 +85,8 @@ export default function ContactPage() {
   return (
     <>
       <SeoHead
-        title={pageSeo?.metaTitle || t("contact.seoTitle")}
-        description={pageSeo?.metaDescription || t("contact.seoDesc")}
+        title={pickLocalizedStrict(pageSeo, "metaTitle", lang) || t("contact.seoTitle")}
+        description={pickLocalizedStrict(pageSeo, "metaDescription", lang) || t("contact.seoDesc")}
         schemaJson={schemaJson}
       />
       <Navigation />

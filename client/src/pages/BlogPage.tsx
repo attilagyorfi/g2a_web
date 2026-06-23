@@ -9,7 +9,7 @@ import SeoHead from "@/components/SeoHead";
 import RevealImage from "@/components/RevealImage";
 import BlogHeroDemo from "@/components/page-demos/BlogHeroDemo";
 import EmptyState from "@/components/illustrations/EmptyState";
-import { pickLocalized } from "@/../../shared/i18n";
+import { pickLocalized, pickLocalizedStrict } from "@/../../shared/i18n";
 
 export default function BlogPage() {
   const { t, lang } = useLanguage();
@@ -25,7 +25,7 @@ export default function BlogPage() {
 
   return (
     <>
-      <SeoHead title={pageSeo?.metaTitle || "Hírek & Blog – G2A Marketing Pécs"} description={pageSeo?.metaDescription || "Marketing tippek, trendek és iparági hírek a G2A Marketing csapatától."} />
+      <SeoHead title={pickLocalizedStrict(pageSeo, "metaTitle", lang) || t("blog.seoTitle")} description={pickLocalizedStrict(pageSeo, "metaDescription", lang) || t("blog.seoDesc")} />
       <Navigation />
       <main style={{ paddingTop: "100px" }}>
         <section style={{

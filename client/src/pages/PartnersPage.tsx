@@ -5,15 +5,15 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
-import { pickLocalized } from "@/../../shared/i18n";
+import { pickLocalized, pickLocalizedStrict } from "@/../../shared/i18n";
 
 export default function PartnersPage() {
   const { t, lang } = useLanguage();
   const { data: partners } = trpc.content.partners.useQuery();
   const { data: pageSeo } = trpc.content.pageSeo.useQuery({ slug: "/partnereink" });
 
-  const seoTitle = pickLocalized(pageSeo, "metaTitle", lang) || t("partners.seoTitle");
-  const seoDesc = pickLocalized(pageSeo, "metaDescription", lang) || t("partners.seoDesc");
+  const seoTitle = pickLocalizedStrict(pageSeo, "metaTitle", lang) || t("partners.seoTitle");
+  const seoDesc = pickLocalizedStrict(pageSeo, "metaDescription", lang) || t("partners.seoDesc");
 
   return (
     <>

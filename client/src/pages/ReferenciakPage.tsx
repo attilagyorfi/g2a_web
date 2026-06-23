@@ -10,7 +10,7 @@ import { Link } from "wouter";
 import { ArrowRight, TrendingUp, Target, Globe, CheckCircle, ExternalLink, Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { pickLocalized } from "@/../../shared/i18n";
+import { pickLocalized, pickLocalizedStrict } from "@/../../shared/i18n";
 import { translateCaseStudyTag } from "@/lib/caseStudyTags";
 
 /**
@@ -144,11 +144,21 @@ export default function ReferenciakPage() {
     ? (caseStudies || [])
     : (caseStudies || []).filter(cs => cs.industry === activeIndustry);
 
+  // Localized label for an industry slug, used by the filter chips. HU uses the
+  // curated INDUSTRY_LABELS (the DB `industry` field is an ascii slug); EN/ZH
+  // pull the localized name (industryEn / industryZh) from a representative
+  // case study so the chips render in the page language, not Hungarian.
+  const industryLabel = (slug: string): string => {
+    if (lang === "hu") return INDUSTRY_LABELS[slug] || prettifySlug(slug);
+    const rep = (caseStudies || []).find((cs) => cs.industry === slug);
+    return (rep && pickLocalized(rep, "industry", lang)) || INDUSTRY_LABELS[slug] || prettifySlug(slug);
+  };
+
   return (
     <>
       <SeoHead
-        title={pageSeo?.metaTitle || "Referenciák & Esettanulmányok – G2A Marketing | Valós Eredmények"}
-        description={pageSeo?.metaDescription || "Valós marketing eredmények valós ügyfelektől. Esettanulmányok egészségügy, autóipar, B2B és más iparágakból."}
+        title={pickLocalizedStrict(pageSeo, "metaTitle", lang) || t("references.seoTitle")}
+        description={pickLocalizedStrict(pageSeo, "metaDescription", lang) || t("references.seoDesc")}
       />
       <ScrollProgressBar />
       <Navigation />
@@ -232,7 +242,7 @@ export default function ReferenciakPage() {
                     border: `1px solid ${activeIndustry === ind ? "var(--g2a-amber)" : "var(--g2a-border)"}`,
                   }}
                 >
-                  {ind === "osszes" ? t("references.filterAll") : (INDUSTRY_LABELS[ind] || prettifySlug(ind))}
+                  {ind === "osszes" ? t("references.filterAll") : industryLabel(ind)}
                 </button>
               ))}
             </div>
