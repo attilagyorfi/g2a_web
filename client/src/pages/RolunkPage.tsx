@@ -177,7 +177,7 @@ const MILESTONES: Record<Language, Milestone[]> = {
     { year: "2023", event: "Közösségi média és Google Ads divízió elindítása" },
     { year: "2024", event: "AI-alapú marketing eszközök integrálása a folyamatokba" },
     { year: "2024", event: "20+ aktív partner, 8 iparág, mérhető ROI eredmények" },
-    { year: "2025", event: "SEO és tartalommarketing divízió, 23+ partner" },
+    { year: "2025", event: "SEO és tartalommarketing divízió, 32 partner" },
     { year: "2025", event: "Ingyenes SEO Audit eszköz és B2B lead generálási program" },
   ],
   en: [
@@ -187,7 +187,7 @@ const MILESTONES: Record<Language, Milestone[]> = {
     { year: "2023", event: "Launch of social media and Google Ads division" },
     { year: "2024", event: "Integration of AI-powered marketing tools into workflows" },
     { year: "2024", event: "20+ active partners, 8 industries, measurable ROI results" },
-    { year: "2025", event: "SEO and content marketing division, 23+ partners" },
+    { year: "2025", event: "SEO and content marketing division, 32 partners" },
     { year: "2025", event: "Free SEO Audit tool and B2B lead generation programme" },
   ],
   zh: [
@@ -197,7 +197,7 @@ const MILESTONES: Record<Language, Milestone[]> = {
     { year: "2023", event: "社交媒体与 Google Ads 部门上线" },
     { year: "2024", event: "将 AI 驱动的营销工具整合到工作流中" },
     { year: "2024", event: "20+ 活跃合作伙伴、8 个行业、可衡量的 ROI 成果" },
-    { year: "2025", event: "SEO 与内容营销部门成立,23+ 合作伙伴" },
+    { year: "2025", event: "SEO 与内容营销部门成立,32 合作伙伴" },
     { year: "2025", event: "免费 SEO 评估工具与 B2B 线索生成计划" },
   ],
 };
@@ -215,8 +215,8 @@ export default function RolunkPage() {
   // Removed: "Aktív év" (would outdate), "Elkötelezettség 100%" (subjective).
   const stats = [
     { num: "2022", label: t("about.stats.founded") },
-    { num: "23", label: t("about.stats.partners") },
-    { num: "8+", label: t("about.stats.industries") },
+    { num: "32", label: t("about.stats.partners") },
+    { num: "13", label: t("about.stats.industries") },
   ];
 
   return (

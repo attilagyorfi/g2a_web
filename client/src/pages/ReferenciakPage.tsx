@@ -551,8 +551,8 @@ export default function ReferenciakPage() {
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "2rem" }}>
               {[
-                { value: "23+", label: t("references.stats.partners") },
-                { value: "8+", label: t("references.stats.industries") },
+                { value: "32", label: t("references.stats.partners") },
+                { value: "13", label: t("references.stats.industries") },
                 { value: "340%", label: t("references.stats.traffic") },
                 { value: "4,2x", label: t("references.stats.roas") },
               ].map((stat, i) => (

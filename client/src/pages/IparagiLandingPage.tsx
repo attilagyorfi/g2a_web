@@ -125,7 +125,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+340%", label: "Organikus forgalom" },
         { num: "+180%", label: "Online foglalás" },
-        { num: "23+", label: "Aktív partner" },
+        { num: "32", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "Dent & Beauty",
@@ -222,7 +222,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+520%", label: "Instagram követő" },
         { num: "+190%", label: "Online foglalás" },
-        { num: "23+", label: "Aktív partner" },
+        { num: "32", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "GRB Skin Clinic",
@@ -319,7 +319,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+300%", label: "Weboldal forgalom" },
         { num: "+15", label: "Új ügyfél/hónap" },
-        { num: "23+", label: "Aktív partner" },
+        { num: "32", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "M Mérnöki Iroda Kft.",
@@ -416,7 +416,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "-45%", label: "CPA csökkentés" },
         { num: "+220%", label: "Lead generálás" },
-        { num: "23+", label: "Aktív partner" },
+        { num: "32", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "Nissan Ste-Ba",
@@ -513,7 +513,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+250%", label: "Organikus forgalom" },
         { num: "+120%", label: "Ügyfélfelvétel" },
-        { num: "23+", label: "Aktív partner" },
+        { num: "32", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "Proverium Ügyvédi Iroda",
@@ -610,7 +610,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+5", label: "Új piac" },
         { num: "+280%", label: "Demo foglalás" },
-        { num: "23+", label: "Aktív partner" },
+        { num: "32", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "AR Works",
@@ -707,7 +707,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+400%", label: "Közösségi elérés" },
         { num: "+250%", label: "Weboldal látogatók" },
-        { num: "23+", label: "Aktív partner" },
+        { num: "32", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "Zsolnay Örökségkezelő Nonprofit Kft.",
@@ -804,7 +804,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+180%", label: "Qualified lead" },
         { num: "-40%", label: "Sales ciklus" },
-        { num: "23+", label: "Aktív partner" },
+        { num: "32", label: "Aktív partner" },
       ],
       caseStudy: {
         client: "ÉMI-TÜV SÜD",
@@ -903,7 +903,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+340%", label: "Organic traffic" },
         { num: "+180%", label: "Online bookings" },
-        { num: "23+", label: "Active partners" },
+        { num: "32", label: "Active partners" },
       ],
       caseStudy: {
         client: "Dent & Beauty",
@@ -975,7 +975,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+520%", label: "Instagram followers" },
         { num: "+190%", label: "Online bookings" },
-        { num: "23+", label: "Active partners" },
+        { num: "32", label: "Active partners" },
       ],
       caseStudy: {
         client: "GRB Skin Clinic",
@@ -1049,7 +1049,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+300%", label: "Website traffic" },
         { num: "+15", label: "New clients / month" },
-        { num: "23+", label: "Active partners" },
+        { num: "32", label: "Active partners" },
       ],
       caseStudy: {
         client: "M Mérnöki Iroda Kft.",
@@ -1123,7 +1123,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "-45%", label: "CPA reduction" },
         { num: "+220%", label: "Lead generation" },
-        { num: "23+", label: "Active partners" },
+        { num: "32", label: "Active partners" },
       ],
       caseStudy: {
         client: "Nissan Ste-Ba",
@@ -1197,7 +1197,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+250%", label: "Organic traffic" },
         { num: "+120%", label: "New client intake" },
-        { num: "23+", label: "Active partners" },
+        { num: "32", label: "Active partners" },
       ],
       caseStudy: {
         client: "Proverium Ügyvédi Iroda",
@@ -1271,7 +1271,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+5", label: "New markets" },
         { num: "+280%", label: "Demo bookings" },
-        { num: "23+", label: "Active partners" },
+        { num: "32", label: "Active partners" },
       ],
       caseStudy: {
         client: "AR Works",
@@ -1345,7 +1345,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+400%", label: "Community reach" },
         { num: "+250%", label: "Website visitors" },
-        { num: "23+", label: "Active partners" },
+        { num: "32", label: "Active partners" },
       ],
       caseStudy: {
         client: "Zsolnay Örökségkezelő Nonprofit Kft.",
@@ -1419,7 +1419,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+180%", label: "Qualified leads" },
         { num: "-40%", label: "Sales cycle" },
-        { num: "23+", label: "Active partners" },
+        { num: "32", label: "Active partners" },
       ],
       caseStudy: {
         client: "ÉMI-TÜV SÜD",
@@ -1520,7 +1520,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+340%", label: "自然流量" },
         { num: "+180%", label: "在线预约" },
-        { num: "23+", label: "活跃合作伙伴" },
+        { num: "32", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "Dent & Beauty",
@@ -1617,7 +1617,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+520%", label: "Instagram 粉丝" },
         { num: "+190%", label: "在线预约" },
-        { num: "23+", label: "活跃合作伙伴" },
+        { num: "32", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "GRB Skin Clinic",
@@ -1689,7 +1689,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+300%", label: "网站流量" },
         { num: "+15", label: "每月新客户" },
-        { num: "23+", label: "活跃合作伙伴" },
+        { num: "32", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "M Mérnöki Iroda Kft.",
@@ -1763,7 +1763,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "-45%", label: "CPA 下降" },
         { num: "+220%", label: "线索生成" },
-        { num: "23+", label: "活跃合作伙伴" },
+        { num: "32", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "Nissan Ste-Ba",
@@ -1837,7 +1837,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+250%", label: "自然流量" },
         { num: "+120%", label: "新客户接待" },
-        { num: "23+", label: "活跃合作伙伴" },
+        { num: "32", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "Proverium Ügyvédi Iroda",
@@ -1911,7 +1911,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+5", label: "新开拓市场" },
         { num: "+280%", label: "演示预约" },
-        { num: "23+", label: "活跃合作伙伴" },
+        { num: "32", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "AR Works",
@@ -1985,7 +1985,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+400%", label: "社区触达" },
         { num: "+250%", label: "网站访客" },
-        { num: "23+", label: "活跃合作伙伴" },
+        { num: "32", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "Zsolnay Örökségkezelő Nonprofit Kft.",
@@ -2059,7 +2059,7 @@ const INDUSTRY_CONTENT: Record<Language, Record<string, IndustryContent>> = {
       results: [
         { num: "+180%", label: "合格线索" },
         { num: "-40%", label: "销售周期" },
-        { num: "23+", label: "活跃合作伙伴" },
+        { num: "32", label: "活跃合作伙伴" },
       ],
       caseStudy: {
         client: "ÉMI-TÜV SÜD",

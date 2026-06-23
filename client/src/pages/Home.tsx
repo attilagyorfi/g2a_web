@@ -253,7 +253,7 @@ const WHY_US: Record<Language, Reason[]> = {
     { title: "AI-alapú működés", desc: "Minden folyamatunkba integrálva van az AI" },
     { title: "Átlátható riportok", desc: "Heti és havi részletes teljesítmény-riportok" },
     { title: "Teljes ökoszisztéma", desc: "Stratégiától a kivitelezésig – egy kézből" },
-    { title: "Több iparági tapasztalat", desc: "8+ iparágban bizonyított eredmények" },
+    { title: "Több iparági tapasztalat", desc: "13 iparágban bizonyított eredmények" },
     { title: "Mérhető eredmények", desc: "Minden kampánynál KPI-alapú célkitűzések" },
   ]),
   en: buildReasons([
@@ -263,7 +263,7 @@ const WHY_US: Record<Language, Reason[]> = {
     { title: "AI-powered operations", desc: "AI is integrated into every process we run" },
     { title: "Transparent reports", desc: "Detailed weekly and monthly performance reports" },
     { title: "Complete ecosystem", desc: "From strategy to execution — all from one place" },
-    { title: "Multi-industry expertise", desc: "Proven results across 8+ industries" },
+    { title: "Multi-industry expertise", desc: "Proven results across 13 industries" },
     { title: "Measurable results", desc: "Every campaign driven by KPI-based goals" },
   ]),
   zh: buildReasons([
@@ -273,7 +273,7 @@ const WHY_US: Record<Language, Reason[]> = {
     { title: "AI 驱动的运营", desc: "AI 融入我们的每一个工作流程" },
     { title: "透明的报告", desc: "每周和每月详细的绩效报告" },
     { title: "完整的生态", desc: "从战略到执行 —— 一站式服务" },
-    { title: "跨行业经验", desc: "在 8+ 行业中取得的可靠成果" },
+    { title: "跨行业经验", desc: "在 13 个行业中取得的可靠成果" },
     { title: "可衡量的成果", desc: "每个营销活动都设定 KPI 目标" },
   ]),
 };
