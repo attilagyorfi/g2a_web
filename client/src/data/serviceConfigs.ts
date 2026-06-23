@@ -485,7 +485,7 @@ const HU: Record<string, ServiceConfig> = {
     icon: "leaf",
     color: "#22c55e",
     intro:
-      "Tisztázzuk a hatáskört rögtön az elején: a G2A Marketing Bt. NEM rendelkezik a Szabályozott Tevékenységek Felügyeleti Hatósága (SZTFH) általi regisztrációval, ezért a 2023. évi CVIII. törvény szerinti hivatalos ESG-tanácsadói és ESG-tanúsítási tevékenységet nem végezzük — a kötelező CSRD-jelentés készítését és tanúsítását SZTFH-regisztrált partnerekre bízzuk vagy ajánljuk hozzá szakértőt. Amit mi vállalunk: az ESG-stratégia kommunikációs oldala, a stakeholder-üzenetek megfogalmazása, a brand-narratíva, a marketing-szintű content és a rating-előkészítés. Ügyvezetőnk, Győrfi Attila ESG specialistaként hozzáadott háttérrel ad informális szakmai tanácsot — de ez nem helyettesíti a hivatalos, regisztrált ESG-tanácsadást.",
+      "Tisztázzuk a hatáskört rögtön az elején: a G2A Marketing Bt. NEM rendelkezik a Szabályozott Tevékenységek Felügyeleti Hatósága (SZTFH) általi regisztrációval, ezért a 2023. évi CVIII. törvény szerinti hivatalos ESG-tanácsadói és ESG-tanúsítási tevékenységet nem végezzük — a kötelező CSRD-jelentés készítését és tanúsítását SZTFH-regisztrált partnerekre bízzuk vagy ajánljuk hozzá szakértőt. Amit mi vállalunk: az ESG-stratégia kommunikációs oldala, a stakeholder-üzenetek megfogalmazása, a brand-narratíva, a marketing-szintű content és a rating-előkészítés. Alapítónk, Győrfi Attila ESG specialistaként hozzáadott háttérrel ad informális szakmai tanácsot — de ez nem helyettesíti a hivatalos, regisztrált ESG-tanácsadást.",
     benefits: [
       {
         title: "ESG kommunikációs stratégia",
@@ -735,7 +735,7 @@ const HU: Record<string, ServiceConfig> = {
       },
       {
         q: "Tudtok kínai piaci tanácsadásban segíteni?",
-        a: "Igen. Ügyvezetőnk Győrfi Attila az IBS Budapest, a PTE Közgazdaságtudományi Kar és a Varsovia Egyetem vendégoktatója és kínai piaci szakértő. WeChat-en közvetlenül elérhető a kínai partnereinkkel. WeChat marketing, Baidu SEO, Tmall/JD listing, Xiaohongshu (Little Red Book) influencer kampányok. Kínai piacra-lépéshez tipikusan magyar+kínai joggyakorlót is bevonunk a regulációs része miatt.",
+        a: "Igen. Alapítónk Győrfi Attila az IBS Budapest, a PTE Közgazdaságtudományi Kar és a Varsovia Egyetem vendégoktatója és kínai piaci szakértő. WeChat-en közvetlenül elérhető a kínai partnereinkkel. WeChat marketing, Baidu SEO, Tmall/JD listing, Xiaohongshu (Little Red Book) influencer kampányok. Kínai piacra-lépéshez tipikusan magyar+kínai joggyakorlót is bevonunk a regulációs része miatt.",
       },
       {
         q: "Mibe kerül a nemzetközi terjeszkedés marketingje?",
