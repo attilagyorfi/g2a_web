@@ -297,7 +297,7 @@ export default function ReferenciakPage() {
                       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", backgroundColor: color, zIndex: 2 }} />
 
                       {/* Hero strip — featured screenshot with logo overlay */}
-                      {cs.featuredImage && (
+                      {cs.featuredImage ? (
                         <div style={{
                           position: "relative",
                           width: "100%",
@@ -359,7 +359,55 @@ export default function ReferenciakPage() {
                             }}>{cs.projectYear}</span>
                           )}
                         </div>
-                      )}
+                      ) : cs.logoImage ? (
+                        /* No screenshot yet — branded logo tile on the industry-colour gradient */
+                        <div style={{
+                          position: "relative",
+                          width: "100%",
+                          aspectRatio: "16 / 9",
+                          overflow: "hidden",
+                          background: `linear-gradient(135deg, ${color}22 0%, var(--g2a-tile) 70%)`,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}>
+                          <div style={{
+                            width: "62%",
+                            maxWidth: 230,
+                            padding: "1rem 1.25rem",
+                            borderRadius: 12,
+                            background: "rgba(255,255,255,0.96)",
+                            boxShadow: "0 14px 32px -12px rgba(0,0,0,0.45)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}>
+                            <CloudinaryImage
+                              src={cs.logoImage}
+                              alt={cs.logoImageAlt || `${client || title} logó`}
+                              widths={[230, 460]}
+                              sizes="230px"
+                              style={{ width: "100%", height: "auto", maxHeight: 90, objectFit: "contain", display: "block" }}
+                            />
+                          </div>
+                          {cs.projectYear && (
+                            <span style={{
+                              position: "absolute",
+                              top: 12,
+                              right: 12,
+                              padding: "3px 8px",
+                              borderRadius: 999,
+                              background: "rgba(0,0,0,0.55)",
+                              backdropFilter: "blur(6px)",
+                              color: "#fff",
+                              fontFamily: "Geist Mono, monospace",
+                              fontSize: "0.6rem",
+                              fontWeight: 700,
+                              letterSpacing: "0.06em",
+                            }}>{cs.projectYear}</span>
+                          )}
+                        </div>
+                      ) : null}
 
                       {/* Body */}
                       <div style={{ padding: "1.25rem", display: "flex", flexDirection: "column", gap: "0.875rem", flexGrow: 1 }}>
