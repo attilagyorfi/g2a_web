@@ -10,8 +10,8 @@
  *  - necessary  — always on (admin session, theme, consent record itself)
  *  - functional — language memory, layout fine-tuning
  *  - thirdParty — Calendly badge widget initialization
- *  - marketing  — none active yet; consent stored for future Plausible /
- *                 Meta pixel / Google Ads decisions
+ *  - marketing  — Google Analytics 4 + Google Tag Manager + Meta (Facebook)
+ *                 Pixel; these load only after this category is granted
  *
  * While the banner is on screen, body.g2a-has-cookie-banner hides the
  * Calendly pill + StickyCTA pill so they don't obscure the privacy link

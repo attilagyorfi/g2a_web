@@ -8,8 +8,8 @@
  *   - necessary  — always true (admin session, theme, consent record itself)
  *   - functional — locale memory, layout fine-tuning
  *   - thirdParty — Calendly badge / embedded booking widget
- *   - marketing  — ad pixels, retargeting (none active right now, kept for
- *                  forward-compat so consent can be stored ahead of time)
+ *   - marketing  — Google Analytics 4 + Google Tag Manager + Meta (Facebook)
+ *                  Pixel; these tags inject only after this category is granted
  *
  * Components subscribe to changes via the "g2a:consent-change" CustomEvent
  * (detail = full ConsentState). The footer's "Cookie settings" link
@@ -25,7 +25,10 @@ export type ConsentState = {
   marketing: boolean;
 };
 
-export const CONSENT_VERSION = 1;
+// Bumped 1 → 2 (2026-06): Google Analytics 4 / GTM / Meta Pixel newly
+// disclosed and consent-gated under the marketing category — re-prompt
+// everyone so prior decisions (made before these tags existed) are refreshed.
+export const CONSENT_VERSION = 2;
 const STORAGE_KEY = "g2a_consent_v2";
 const LEGACY_KEY = "g2a_cookie_consent"; // pre-granular "accepted"|"declined"
 export const CONSENT_CHANGE_EVENT = "g2a:consent-change";

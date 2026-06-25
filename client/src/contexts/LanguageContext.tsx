@@ -115,7 +115,7 @@ const translations: Record<Language, Record<string, string>> = {
     "cookie.cat.thirdParty": "Beágyazott szolgáltatások",
     "cookie.cat.thirdParty.desc": "Az időpontfoglaló (Calendly) widget. Hozzájárulás nélkül nem töltődik be — alternatívaként közvetlenül e-mailben elérhetsz minket.",
     "cookie.cat.marketing": "Marketing",
-    "cookie.cat.marketing.desc": "Hirdetési, célzási és statisztikai sütik. Jelenleg nem használunk ilyet, de a beállítást előre tudod jelezni.",
+    "cookie.cat.marketing.desc": "Hirdetési, célzási és statisztikai sütik: Google Analytics 4, Google Tag Manager és Meta (Facebook) Pixel. Csak a hozzájárulásod után töltődnek be.",
     "common.required": "Kötelező mező",
 
     // Newsletter (shared across <NewsletterForm/>, footer band, popup, /hirlevel)
@@ -740,7 +740,7 @@ const translations: Record<Language, Record<string, string>> = {
     "cookie.cat.thirdParty": "Embedded services",
     "cookie.cat.thirdParty.desc": "The Calendly booking widget. Won't load without consent — you can also reach us directly by email.",
     "cookie.cat.marketing": "Marketing",
-    "cookie.cat.marketing.desc": "Advertising, targeting and statistics cookies. We don't use any currently, but you can pre-set your preference.",
+    "cookie.cat.marketing.desc": "Advertising, targeting and statistics cookies: Google Analytics 4, Google Tag Manager and the Meta (Facebook) Pixel. They load only after you consent.",
     "common.required": "Required field",
 
     // Newsletter
@@ -1349,7 +1349,7 @@ const translations: Record<Language, Record<string, string>> = {
     "cookie.cat.thirdParty": "嵌入服务",
     "cookie.cat.thirdParty.desc": "Calendly 预约小工具。未同意将不加载 — 您也可直接通过电子邮件联系我们。",
     "cookie.cat.marketing": "营销",
-    "cookie.cat.marketing.desc": "广告、定向与统计 Cookie。我们目前不使用,但您可以预先设置偏好。",
+    "cookie.cat.marketing.desc": "广告、定向与统计 Cookie:Google Analytics 4、Google Tag Manager 和 Meta(Facebook)Pixel。仅在您同意后加载。",
     "common.required": "必填项",
 
     // Newsletter

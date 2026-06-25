@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
+import { readConsent, CONSENT_CHANGE_EVENT, type ConsentState } from "@/lib/consent";
 
 const ANALYTICS_ENDPOINT = import.meta.env.VITE_ANALYTICS_ENDPOINT ?? "";
 const ANALYTICS_WEBSITE_ID = import.meta.env.VITE_ANALYTICS_WEBSITE_ID ?? "";
@@ -66,6 +67,15 @@ export default function ThirdPartyScripts() {
   // no analytics script is injected.
   const [armed, setArmed] = useState(false);
   const gateSet = useRef(false);
+  const [consent, setConsent] = useState<ConsentState | null>(() => readConsent());
+
+  // Keep consent fresh: re-read when the visitor updates it via the cookie
+  // banner so newly-granted categories take effect without a page reload.
+  useEffect(() => {
+    const onChange = () => setConsent(readConsent());
+    window.addEventListener(CONSENT_CHANGE_EVENT, onChange);
+    return () => window.removeEventListener(CONSENT_CHANGE_EVENT, onChange);
+  }, []);
 
   useEffect(() => {
     if (location.startsWith("/admin")) return;
@@ -135,8 +145,14 @@ export default function ThirdPartyScripts() {
       map[s.key] = (s.value ?? "").trim();
     });
 
+    // Inject each tag only after the matching cookie-consent category is
+    // granted (GDPR/ePrivacy): chat widget = third-party; analytics, tag
+    // manager and ad pixels = marketing.
+    const marketingOk = consent?.marketing === true;
+    const thirdPartyOk = consent?.thirdParty === true;
+
     const crispId = map["crisp_website_id"];
-    if (crispId && !document.getElementById("crisp-script")) {
+    if (crispId && thirdPartyOk && !document.getElementById("crisp-script")) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).$crisp = [];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -149,7 +165,7 @@ export default function ThirdPartyScripts() {
     }
 
     const gtmId = map["gtm_id"];
-    if (gtmId && !document.getElementById("gtm-script")) {
+    if (gtmId && marketingOk && !document.getElementById("gtm-script")) {
       const script = document.createElement("script");
       script.id = "gtm-script";
       script.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":new Date().getTime(),event:"gtm.js"});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src="https://www.googletagmanager.com/gtm.js?id="+i+dl;f.parentNode.insertBefore(j,f);})(window,document,"script","dataLayer","${gtmId}");`;
@@ -158,7 +174,7 @@ export default function ThirdPartyScripts() {
 
     // GA4 standalone (skip if GTM injects the same measurement ID).
     const ga4Id = map["ga4_id"];
-    if (ga4Id && !gtmId && !document.getElementById("ga4-loader")) {
+    if (ga4Id && marketingOk && !gtmId && !document.getElementById("ga4-loader")) {
       const loader = document.createElement("script");
       loader.id = "ga4-loader";
       loader.async = true;
@@ -172,7 +188,7 @@ export default function ThirdPartyScripts() {
 
     // Meta Pixel: inject once, then fire PageView on SPA route change.
     const pixelId = map["meta_pixel_id"];
-    if (pixelId) {
+    if (pixelId && marketingOk) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const w = window as any;
       if (!document.getElementById("meta-pixel")) {
@@ -184,7 +200,7 @@ export default function ThirdPartyScripts() {
         try { w.fbq("track", "PageView"); } catch { /* swallow */ }
       }
     }
-  }, [armed, settings, location]);
+  }, [armed, settings, location, consent]);
 
   return null;
 }

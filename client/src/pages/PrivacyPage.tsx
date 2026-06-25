@@ -27,9 +27,9 @@ const EMAIL = "info@g2amarketing.hu";
 const PHONE = "+36 30 190 2575";
 
 // ─── Last updated ─────────────────────────────────────────────────────────
-const LAST_UPDATED_HU = "2026. május 5.";
-const LAST_UPDATED_EN = "5 May 2026";
-const LAST_UPDATED_ZH = "2026 年 5 月 5 日";
+const LAST_UPDATED_HU = "2026. június 23.";
+const LAST_UPDATED_EN = "23 June 2026";
+const LAST_UPDATED_ZH = "2026 年 6 月 23 日";
 
 // ─── Data processors actually in use (matches DEPLOY.md) ──────────────────
 type Processor = {
@@ -45,44 +45,19 @@ type Processor = {
 
 const PROCESSORS: Processor[] = [
   {
-    name: "Vercel Inc.",
+    name: "Tárhely.eu Kft.",
     purpose: {
-      hu: "Webszerver hosting (statikus oldal + serverless API)",
-      en: "Web hosting (static site + serverless API)",
-      zh: "网站托管(静态站点 + 无服务器 API)",
+      hu: "Webszerver- és adatbázis-hosting (statikus oldal, API, kapcsolatfelvételi üzenetek, hírlevél feliratkozók, blog tartalom)",
+      en: "Web and database hosting (static site, API, contact messages, newsletter subscribers, blog content)",
+      zh: "网站与数据库托管(静态站点、API、联系信息、简报订阅、博客内容)",
     },
-    country: "USA",
+    country: "Magyarország (EU)",
     location: {
-      hu: "Frankfurt (EU régió: fra1) elsődleges; USA fallback",
-      en: "Frankfurt (EU region: fra1) primary; US fallback",
-      zh: "法兰克福(欧盟区域:fra1)主用;美国备用",
+      hu: "Budapest, Magyarország (EU)",
+      en: "Budapest, Hungary (EU)",
+      zh: "匈牙利布达佩斯(欧盟)",
     },
-    privacy: "https://vercel.com/legal/privacy-policy",
-    transferBasis: {
-      hu: "EU–USA Data Privacy Framework + Általános Szerződési Feltételek (SCC)",
-      en: "EU–US Data Privacy Framework + Standard Contractual Clauses (SCC)",
-      zh: "欧美数据隐私框架 + 标准合同条款 (SCC)",
-    },
-  },
-  {
-    name: "PingCAP, Inc. (TiDB Cloud)",
-    purpose: {
-      hu: "Adatbázis hosting (kapcsolatfelvételi üzenetek, hírlevél feliratkozók, blog tartalom)",
-      en: "Database hosting (contact messages, newsletter subscribers, blog content)",
-      zh: "数据库托管(联系信息、简报订阅、博客内容)",
-    },
-    country: "USA / Németország",
-    location: {
-      hu: "Frankfurt (EU) — szerződéses választással",
-      en: "Frankfurt (EU) — by contractual choice",
-      zh: "法兰克福(欧盟)— 合同选择",
-    },
-    privacy: "https://www.pingcap.com/privacy-policy/",
-    transferBasis: {
-      hu: "Általános Szerződési Feltételek (SCC) + EU régiós tárolás",
-      en: "Standard Contractual Clauses (SCC) + EU region storage",
-      zh: "标准合同条款 (SCC) + 欧盟区域存储",
-    },
+    privacy: "https://tarhely.eu/adatvedelem",
   },
   {
     name: "Cloudinary Ltd.",
@@ -157,6 +132,66 @@ const PROCESSORS: Processor[] = [
       hu: "EU–USA Data Privacy Framework (USA visszaesés esetén)",
       en: "EU–US Data Privacy Framework (US fallback)",
       zh: "欧美数据隐私框架(美国备用时)",
+    },
+  },
+  {
+    name: "Google Ireland Ltd. (Google Analytics 4, Google Tag Manager)",
+    purpose: {
+      hu: "Webanalitika és címkekezelés (látogatottság-mérés) — csak a látogató süti-hozzájárulása esetén töltődik be",
+      en: "Web analytics and tag management (traffic measurement) — loaded only with the visitor's cookie consent",
+      zh: "网站分析与标签管理(访问量统计)—— 仅在访客同意 Cookie 后加载",
+    },
+    country: "Írország (EU) / USA",
+    location: {
+      hu: "EU (Google Ireland Ltd.) elsődleges; USA-feldolgozás",
+      en: "EU (Google Ireland Ltd.) primary; US processing",
+      zh: "欧盟(Google Ireland Ltd.)主用;美国处理",
+    },
+    privacy: "https://policies.google.com/privacy",
+    transferBasis: {
+      hu: "EU–USA Data Privacy Framework + SCC",
+      en: "EU–US Data Privacy Framework + SCC",
+      zh: "欧美数据隐私框架 + SCC",
+    },
+  },
+  {
+    name: "Meta Platforms Ireland Ltd. (Meta/Facebook Pixel)",
+    purpose: {
+      hu: "Konverziómérés és remarketing (Meta Pixel) — csak a látogató süti-hozzájárulása esetén töltődik be",
+      en: "Conversion tracking and remarketing (Meta Pixel) — loaded only with the visitor's cookie consent",
+      zh: "转化跟踪与再营销(Meta Pixel)—— 仅在访客同意 Cookie 后加载",
+    },
+    country: "Írország (EU) / USA",
+    location: {
+      hu: "EU (Meta Platforms Ireland Ltd.); USA-feldolgozás",
+      en: "EU (Meta Platforms Ireland Ltd.); US processing",
+      zh: "欧盟(Meta Platforms Ireland Ltd.);美国处理",
+    },
+    privacy: "https://www.facebook.com/privacy/policy",
+    transferBasis: {
+      hu: "EU–USA Data Privacy Framework + SCC",
+      en: "EU–US Data Privacy Framework + SCC",
+      zh: "欧美数据隐私框架 + SCC",
+    },
+  },
+  {
+    name: "Cloudflare, Inc. (Turnstile)",
+    purpose: {
+      hu: "Spamszűrés és botvédelem az űrlapokon (kapcsolat, karrier, hírlevél, audit)",
+      en: "Spam filtering and bot protection on forms (contact, career, newsletter, audit)",
+      zh: "表单的垃圾信息过滤与机器人防护(联系、招聘、简报、审计)",
+    },
+    country: "USA",
+    location: {
+      hu: "Globális edge-hálózat, EU-feldolgozással",
+      en: "Global edge network, with EU processing",
+      zh: "全球边缘网络,含欧盟处理",
+    },
+    privacy: "https://www.cloudflare.com/privacypolicy/",
+    transferBasis: {
+      hu: "EU–USA Data Privacy Framework + SCC",
+      en: "EU–US Data Privacy Framework + SCC",
+      zh: "欧美数据隐私框架 + SCC",
     },
   },
   {
@@ -264,6 +299,48 @@ const COOKIES: CookieRow[] = [
       hu: "1 nap (Calendly szabályzata szerint)",
       en: "1 day (per Calendly's policy)",
       zh: "1 天(根据 Calendly 政策)",
+    },
+  },
+  {
+    name: "_ga, _ga_*, _gid",
+    type: "third-party",
+    purpose: {
+      hu: "Google Analytics 4 — egyedi látogató- és munkamenet-azonosítás (csak süti-hozzájárulással töltődik be)",
+      en: "Google Analytics 4 — unique visitor and session identification (loaded only with cookie consent)",
+      zh: "Google Analytics 4 —— 唯一访客与会话标识(仅在同意 Cookie 后加载)",
+    },
+    duration: {
+      hu: "_ga, _ga_*: 2 év; _gid: 24 óra",
+      en: "_ga, _ga_*: 2 years; _gid: 24 hours",
+      zh: "_ga、_ga_*:2 年;_gid:24 小时",
+    },
+  },
+  {
+    name: "_fbp",
+    type: "third-party",
+    purpose: {
+      hu: "Meta (Facebook) Pixel — konverziómérés és remarketing (csak süti-hozzájárulással töltődik be)",
+      en: "Meta (Facebook) Pixel — conversion tracking and remarketing (loaded only with cookie consent)",
+      zh: "Meta(Facebook)Pixel —— 转化跟踪与再营销(仅在同意 Cookie 后加载)",
+    },
+    duration: {
+      hu: "3 hónap",
+      en: "3 months",
+      zh: "3 个月",
+    },
+  },
+  {
+    name: "__cf_bm, cf_clearance",
+    type: "necessary",
+    purpose: {
+      hu: "Cloudflare Turnstile botvédelem — az űrlapok spam elleni védelméhez",
+      en: "Cloudflare Turnstile bot protection — protects forms against spam",
+      zh: "Cloudflare Turnstile 机器人防护 —— 保护表单免受垃圾信息",
+    },
+    duration: {
+      hu: "__cf_bm: 30 perc; cf_clearance: legfeljebb 30 nap",
+      en: "__cf_bm: 30 minutes; cf_clearance: up to 30 days",
+      zh: "__cf_bm:30 分钟;cf_clearance:最多 30 天",
     },
   },
 ];
@@ -681,8 +758,9 @@ const DOCS: Record<Language, PrivacyDoc> = {
             <ul>
               <li>HTTPS (TLS 1.3) titkosítás minden kommunikációhoz</li>
               <li>
-                Az adatbázisban a kapcsolatfelvételi üzenetek és hírlevél
-                lista tárolt formában (TiDB Cloud encryption-at-rest)
+                A kapcsolatfelvételi üzenetek és a hírlevél-lista az
+                adatbázisban, a tárhelyszolgáltató (Tárhely.eu Kft.) EU-s
+                szerverein, hozzáférés-korlátozással tárolva
               </li>
               <li>
                 Admin bejelentkezés OAuth 2.0 alapon, JWT session,
@@ -1147,8 +1225,9 @@ const DOCS: Record<Language, PrivacyDoc> = {
             <ul>
               <li>HTTPS (TLS 1.3) for all communication</li>
               <li>
-                Encryption at rest in the database (TiDB Cloud) for contact
-                messages and the newsletter list
+                Contact messages and the newsletter list are stored in the
+                database on the hosting provider's (Tárhely.eu Kft.) EU
+                servers, with restricted access
               </li>
               <li>
                 OAuth 2.0 admin authentication with JWT session in
@@ -1551,7 +1630,7 @@ const DOCS: Record<Language, PrivacyDoc> = {
             <p>为保护您的个人数据,我们采取以下措施:</p>
             <ul>
               <li>所有通信均采用 HTTPS(TLS 1.3)加密</li>
-              <li>数据库 (TiDB Cloud) 中的联系留言与简报列表采用静态加密</li>
+              <li>联系留言与简报列表存储于托管服务商(Tárhely.eu Kft.)的欧盟服务器数据库中,并限制访问</li>
               <li>
                 管理员认证基于 OAuth 2.0,使用 HttpOnly + Secure Cookie 保存 JWT 会话
               </li>
