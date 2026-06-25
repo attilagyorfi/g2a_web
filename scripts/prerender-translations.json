@@ -466,5 +466,83 @@
       "description": "为交通及公共服务企业提供通俗易懂、值得信赖的沟通服务：信息发布、社交媒体、品牌形象。",
       "ogTitle": "交通营销"
     }
+  },
+  "/szolgaltatasok/arculattervezes": {
+    "hash": "e80e8b3173b69290",
+    "en": {
+      "title": "Corporate Identity and Branding 2026 – Visual Identity | G2A Marketing",
+      "description": "Logo design, brand guidelines, and design of print and digital materials for SMEs and B2B companies. Build a consistent visual identity that inspires trust. Request a quote!",
+      "ogTitle": "Brand Design"
+    },
+    "zh": {
+      "title": "2026年形象设计与品牌建设——视觉识别 | G2A Marketing",
+      "description": "为中小企业和B2B企业提供标志、品牌形象手册以及印刷和数字材料的设计服务。打造一致且能建立信任的视觉形象。欢迎索取报价！",
+      "ogTitle": "品牌形象设计"
+    }
+  },
+  "/szolgaltatasok/hirdeteskezeles": {
+    "hash": "696428b5636c7d75",
+    "en": {
+      "title": "PPC & Ad Management 2026 — Multi-Platform Campaign Management | G2A Marketing",
+      "description": "Multi-platform PPC management: Google Ads, Meta, LinkedIn, and TikTok—all in one strategy. Data-driven structure, A/B testing, and conversion tracking. Request your free audit!",
+      "ogTitle": "Ad Management"
+    },
+    "zh": {
+      "title": "PPC 与广告管理 2026 — 多平台广告活动管理 | G2A Marketing",
+      "description": "多平台PPC管理：Google Ads、Meta、LinkedIn、TikTok整合于同一策略之中。数据驱动的架构、A/B测试、转化跟踪。立即申请免费审计！",
+      "ogTitle": "广告管理"
+    }
+  },
+  "/szolgaltatasok/kozossegi-media": {
+    "hash": "310f23a85315f360",
+    "en": {
+      "title": "Social Media Management 2026 — Brand Building | G2A Marketing",
+      "description": "Social media strategy, content creation, community management, and influencer marketing on Facebook, Instagram, LinkedIn, and TikTok. Request a free social media audit!",
+      "ogTitle": "Social Media"
+    },
+    "zh": {
+      "title": "2026年社交媒体管理——品牌建设 | G2A Marketing",
+      "description": "社交媒体策略、内容制作、社区运营及网红营销，涵盖Facebook、Instagram、LinkedIn和TikTok。立即申请免费社交媒体审计！",
+      "ogTitle": "社交媒体"
+    }
+  },
+  "/szolgaltatasok/strategiai-marketing": {
+    "hash": "fef2ad3530f4a5d8",
+    "en": {
+      "title": "Strategic Marketing Consulting 2026 – Audit, KPIs, Action Plan | G2A Marketing",
+      "description": "Marketing audits, market and competitor analysis, personas, marketing mix, and KPI-driven action plans for SMEs and B2B companies. Request a free consultation.",
+      "ogTitle": "Strategic Marketing"
+    },
+    "zh": {
+      "title": "2026年战略营销咨询——审计、KPI、行动计划 | G2A Marketing",
+      "description": "面向中小企业和B2B企业的市场审计、市场与竞争对手分析、用户画像、营销组合及基于KPI的行动计划。欢迎申请免费咨询。",
+      "ogTitle": "战略营销"
+    }
+  },
+  "/szolgaltatasok/keresooptimalizalas": {
+    "hash": "0d1d5744b1c308e9",
+    "en": {
+      "title": "Search Engine Optimization (SEO) Experts in 2026 – G2A Marketing",
+      "description": "Technical SEO audit, on-page SEO, content SEO, link building, and local SEO for measurable organic growth. Transparent monthly reports, AI-powered search. Request an audit!",
+      "ogTitle": "Search Engine Optimization (SEO)"
+    },
+    "zh": {
+      "title": "2026年搜索引擎优化（SEO）专家——G2A Marketing",
+      "description": "技术SEO审计、页面优化、内容SEO、外链建设及本地SEO，助您实现可量化的自然流量增长。提供清晰的月度报告和AI搜索分析。立即申请审计！",
+      "ogTitle": "搜索引擎优化（SEO）"
+    }
+  },
+  "/szolgaltatasok/webfejlesztes": {
+    "hash": "0c77e3a27924d037",
+    "en": {
+      "title": "Web Development and CRO 2026 — Conversion-Optimized Websites | G2A Marketing",
+      "description": "Custom websites, WordPress, Shopify, and WooCommerce online stores, landing pages, and CRO. Fast, responsive, SEO-friendly development with measurable conversions. Request an audit!",
+      "ogTitle": "Web Development"
+    },
+    "zh": {
+      "title": "2026年网站开发与CRO——针对转化率进行优化的网站 | G2A Marketing",
+      "description": "定制网站、WordPress、Shopify和WooCommerce网店、落地页及转化率优化（CRO）。快速、响应式、符合SEO标准的开发，带来可量化的转化效果。立即申请网站审计！",
+      "ogTitle": "网页开发"
+    }
   }
 }

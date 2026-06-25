@@ -27,7 +27,523 @@ export type ServiceConfig = {
 };
 
 // ─── HU ─────────────────────────────────────────────────────────────────────
-const HU: Record<string, ServiceConfig> = {
+const HU: Record<string, ServiceConfig> = {  "arculattervezes": {
+    "slug": "arculattervezes",
+    "title": "Arculattervezés és branding KKV-knak és B2B cégeknek",
+    "subtitle": "Egyedi vizuális identitás logótól az arculati kézikönyvig — következetes minden felületeden.",
+    "heroDesc": "A márkád vizuális identitása többet mond ezer szónál — és sokszor ez az első benyomás, amit egy potenciális ügyfél kap rólad. Logót, színpalettát, tipográfiát és grafikai rendszert tervezünk, ami minden felületeden ugyanazt az üzenetet közvetíti. Nem dekoráció: stratégiára épülő, felismerhető és bizalmat építő arculat.",
+    "metaTitle": "Arculattervezés és branding 2026 – Vizuális identitás | G2A Marketing",
+    "metaDesc": "Logó, arculati kézikönyv, nyomtatott és digitális anyagok tervezése KKV-knak és B2B cégeknek. Építs következetes, bizalmat építő vizuális identitást. Kérd az ajánlatot!",
+    "icon": "brand",
+    "color": "#ec4899",
+    "intro": "Az arculat 2026-ban nem luxus, hanem üzleti alap: a vásárlók másodpercek alatt döntenek arról, megbíznak-e benned, és ennek nagy részét a vizuális megjelenés határozza meg. Egy következetlen logó, kapkodó színhasználat vagy hat különböző betűtípus a felületeiden azonnal érzékelhető — még ha a néző nem is tudja megnevezni, mi a baj. A G2A Marketingnél az arculatot mindig stratégiából vezetjük le: előbb megértjük, kik a vásárlóid, mitől különbözöl a versenytársaktól és milyen pozíciót akarsz elfoglalni — utána tervezünk. Az eredmény nem csak egy szép logó, hanem egy működő rendszer: arculati kézikönyv, ami minden jövőbeli anyagodat keretezi, a névjegykártyától a weboldalig. Ha nincs stratégia, nincs arculat.",
+    "benefits": [
+      {
+        "title": "Egyedi, védhető logó",
+        "desc": "Nem sablon, nem klipart. Több koncepció-irányból dolgozunk, majd a kiválasztottat letisztult, skálázható vektoros formátumban szállítjuk — minden méretben és minden háttéren működik, kicsiben (favicon) és nagyban (homlokzati tábla) egyaránt."
+      },
+      {
+        "title": "Átfogó arculati kézikönyv",
+        "desc": "Leírjuk a logóhasználatot, védőzónát, tiltott alkalmazásokat, a teljes színpalettát (HEX, RGB, CMYK, Pantone), a tipográfiát és a grafikai elemeket. Ez az a dokumentum, amivel bárki — belső csapat vagy külső partner — következetesen tud dolgozni."
+      },
+      {
+        "title": "Következetesség minden felületen",
+        "desc": "A weboldaltól a közösségi médián át a nyomtatott névjegyig ugyanaz a vizuális nyelv. A következetes megjelenés a felismerhetőség alapja: a többszöri találkozás építi a bizalmat és a márka-emlékezést."
+      },
+      {
+        "title": "Kész nyomtatott anyagok",
+        "desc": "Névjegykártya, brosúra, roll-up, mappa, prezentáció-sablon — nyomdakész fájlokban, a kivitelezéshez szükséges műszaki paraméterekkel (kifutó, vágójelek, színprofil). Ha kéred, megbízható nyomdai partnert is ajánlunk."
+      },
+      {
+        "title": "Digitális arculati eszköztár",
+        "desc": "Közösségi média sablonok, e-mail aláírás, prezentáció-master, social poszt-keretek és borítók. Olyan szerkeszthető sablonokat adunk át (pl. Canva vagy Figma), amelyekkel a napi tartalmaidat magad is gyorsan, márkahűen készíted."
+      },
+      {
+        "title": "Stratégiai pozícionálás, nem dekoráció",
+        "desc": "Az arculat nálunk a márkastratégiából következik — célközönség, versenytárs-kontextus, üzenet. Ezért nem ízlés-vita lesz a folyamatból, hanem indokolható döntések sora, amelyek a te üzleti céljaidat szolgálják."
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "Felmérés és márka-brief",
+        "desc": "Megértjük a vállalkozásod: kik a vásárlóid, mitől különbözöl, milyen érzést akarsz kelteni, és hová pozícionálod magad a piacon. Áttekintjük a meglévő anyagaidat és a versenytársak vizuális világát. Ez a brief a teljes folyamat iránytűje."
+      },
+      {
+        "step": "02",
+        "title": "Koncepció és logótervezés",
+        "desc": "Több, egymástól markánsan eltérő vizuális irányt mutatunk be — moodboarddal és indoklással, miért működik az adott koncepció a célközönségednél. Te választasz irányt, mi pedig azt csiszoljuk tovább a végleges logóig."
+      },
+      {
+        "step": "03",
+        "title": "Arculati rendszer kiépítése",
+        "desc": "A logó köré felépítjük a teljes rendszert: színpaletta, tipográfiai hierarchia, grafikai elemek, képi világ. Mindezt arculati kézikönyvbe foglaljuk, hogy a megjelenés a jövőben is következetes maradjon."
+      },
+      {
+        "step": "04",
+        "title": "Alkalmazás és átadás",
+        "desc": "Legyártjuk a konkrét anyagokat — nyomdakész névjegyet, brosúrát, roll-upot és a digitális sablonokat. Átadjuk a teljes forrásfájl-csomagot és egy átadási konzultáción végigvesszük, hogyan használd magabiztosan."
+      }
+    ],
+    "faq": [
+      {
+        "q": "Mennyi ideig tart egy teljes arculat elkészítése?",
+        "a": "A logó és az alapvető arculati rendszer jellemzően 3-5 hét. A teljes csomag (kézikönyv, nyomtatott és digitális anyagok együtt) általában 5-8 hét, a terjedelemtől és a visszajelzési körök gyorsaságától függően. A felmérés után konkrét ütemtervet adunk."
+      },
+      {
+        "q": "Csak logót szeretnék, nem a teljes csomagot. Lehetséges?",
+        "a": "Igen. Sokan logóval indulnak, és később bővítik a rendszert. Reálisan elmondjuk: önmagában a logó kevés a következetes megjelenéshez, ezért legalább egy alap színpaletta és tipográfia definiálását javasoljuk mellé. Mer nemet mondunk arra, ami szerintünk nem szolgálja a céljaidat."
+      },
+      {
+        "q": "Mit kapok pontosan a végén, milyen fájlformátumban?",
+        "a": "A logót vektorosan (SVG, AI, EPS) és kész képformátumokban (PNG, JPG) különböző változatokban és háttereken, az arculati kézikönyvet PDF-ben, a nyomtatott anyagokat nyomdakész PDF-ben, a digitális sablonokat pedig szerkeszthető formában (pl. Canva/Figma). Minden forrásfájl a tiéd."
+      },
+      {
+        "q": "Van már logóm, csak frissíteni szeretném. Ezzel is foglalkoztok?",
+        "a": "Igen, rebranding és arculat-frissítés is a profilunk. Megnézzük, mi működik a meglévő identitásból és mi nem, majd evolúciós vagy teljes újratervezést javasolunk — attól függően, mennyi márkaérték van a jelenlegi megjelenésben. Nem dobunk ki feleslegesen felépített felismerhetőséget."
+      },
+      {
+        "q": "Hogyan biztosítjátok, hogy az arculat tényleg illik a vállalkozásomhoz?",
+        "a": "Azzal, hogy nem ízlésből, hanem stratégiából indulunk. A márka-briefben rögzítjük a célközönséget, a pozíciót és az üzenetet, és minden vizuális döntést ehhez kötünk. A koncepciókat indoklással mutatjuk be, így a választás nem érzés, hanem informált döntés lesz."
+      },
+      {
+        "q": "Az arculat elkészülte után tudtok segíteni az alkalmazásban is?",
+        "a": "Igen. Mivel a G2A Marketing teljes körű ügynökség, az arculatot zökkenőmentesen visszük tovább weboldalra, közösségi médiára, hirdetésekre és tartalomra. Az átadáskor minden szükséges sablont megkapsz, de a folyamatos alkalmazásban is mellédállunk, ha kéred."
+      }
+    ],
+    "cta": "Kérj egyedi arculat-ajánlatot"
+  },
+  "hirdeteskezeles": {
+    "slug": "hirdeteskezeles",
+    "title": "PPC & Hirdetéskezelés — egy stratégia, minden platformon",
+    "subtitle": "Adatvezérelt fizetett kampányok Google Ads, Meta, LinkedIn és TikTok felületeken, egységes ROI-fókusszal.",
+    "heroDesc": "A fizetett hirdetés akkor működik, ha nem platformonként foltozod, hanem egy közös stratégia mentén kezeled. Csapatunk teljes körű, több-platformos PPC menedzsmentet épít: oda tesszük a büdzsét, ahol a célközönséged tényleg dönt, és minden forint mögé mérhető cél kerül. Ha nincs stratégia, nincs G2A.",
+    "metaTitle": "PPC & Hirdetéskezelés 2026 — több-platformos kampánymenedzsment | G2A Marketing",
+    "metaDesc": "Több-platformos PPC menedzsment: Google Ads, Meta, LinkedIn, TikTok egy stratégiában. Adatvezérelt struktúra, A/B tesztek, konverziókövetés. Kérd az ingyenes audit!",
+    "icon": "ads",
+    "color": "#f43f5e",
+    "intro": "A fizetett hirdetés 2026-ban már nem egyetlen platform kérdése: az ügyfeleid a Google keresőjében, a Meta hírfolyamában, a LinkedIn B2B teréből és a TikTok videóiból egyaránt érkeznek. A PPC és hirdetéskezelés akkor hoz valódi megtérülést, ha ezeket a csatornákat nem külön-külön optimalizálod, hanem egyetlen, adatvezérelt struktúrában. A G2A Marketing platform-átfogó kampánymenedzsmentet épít: a büdzsét folyamatosan oda csoportosítjuk, ahol a legjobb a konverziós költség, az üzeneteket A/B tesztekkel élesítjük, az eredményt pedig pontos konverziókövetéssel mérjük. Nem ígéreteket adunk, hanem átlátható, havi riportban követhető folyamatot — rejtett platform-számla nélkül.",
+    "benefits": [
+      {
+        "title": "Egy stratégia, több platform",
+        "desc": "Google Ads, Meta, LinkedIn és TikTok nem külön szigetek: közös célrendszerben, egységes attribúcióval kezeljük őket, hogy lásd, melyik csatorna mire jó a vásárlói úton."
+      },
+      {
+        "title": "Adatvezérelt fiókstruktúra",
+        "desc": "Kampány- és hirdetéscsoport-felépítés a tényleges keresési és vásárlási szándék köré — tiszta szegmensek, hogy a büdzsé a profitábilis irányba menjen, ne szétfolyjon."
+      },
+      {
+        "title": "Platformok közti büdzsé-allokáció",
+        "desc": "A keretet ott növeljük, ahol a konverziós költség a legjobb, és ott húzzuk vissza, ahol gyengül a megtérülés — heti felülvizsgálat alapján, nem megérzésből."
+      },
+      {
+        "title": "A/B tesztek és kreatívok",
+        "desc": "Hirdetésszövegeket, kreatívokat és landing-irányokat strukturáltan tesztelünk. Csak az nyer, amit a számok igazolnak — a vesztes variánst lecseréljük."
+      },
+      {
+        "title": "Pontos konverziókövetés",
+        "desc": "GA4, platform-pixelek és szerver-oldali mérés beállítása, hogy a riportban valós leadek és vásárlások szerepeljenek, ne félrevezető kattintásszámok."
+      },
+      {
+        "title": "Átlátható havi riport",
+        "desc": "Egyszerű, érthető riport: mire ment a büdzsé, mi a konverziós költség, mi a következő lépés. Tudod, miért fizetsz — rejtett tételek nélkül."
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "Audit és célkijelölés",
+        "desc": "Átnézzük a meglévő fiókokat, a mérési rendszert és a versenykörnyezetet. Tisztázzuk az üzleti célt és a reális KPI-okat (CPA, ROAS), majd kijelöljük, mely platformok relevánsak — ha valamelyik nem éri meg, megmondjuk."
+      },
+      {
+        "step": "02",
+        "title": "Stratégia és struktúra",
+        "desc": "Felépítjük a platform-átfogó kampánytervet: kit, hol, milyen üzenettel érünk el, és hogyan oszlik meg a büdzsé. Beállítjuk a tiszta fiókstruktúrát és a konverziókövetést a méréshez."
+      },
+      {
+        "step": "03",
+        "title": "Indítás és tesztelés",
+        "desc": "Élesítjük a kampányokat, és az első hetekben strukturált A/B teszteket futtatunk a kreatívokra, üzenetekre és célzásokra. A korai adatból kiszűrjük, mi működik valójában."
+      },
+      {
+        "step": "04",
+        "title": "Optimalizálás és skálázás",
+        "desc": "Folyamatosan finomítjuk a célzást, ajánlatokat és büdzsé-elosztást, a jól teljesítő irányokat felskálázzuk. Havi riportban mutatjuk az eredményt és a következő lépéseket."
+      }
+    ],
+    "faq": [
+      {
+        "q": "Miben más ez, mint a Google Ads vagy a Meta hirdetés külön?",
+        "a": "Ez a platform-átfogó menedzsment: nem egyetlen felületet kezelünk, hanem a Google, Meta, LinkedIn és TikTok kampányokat egy közös stratégiában, egységes büdzsé-elosztással és attribúcióval. Ha kifejezetten csak Google Ads vagy csak Meta kell, arra külön szolgáltatásunk van — itt a teljes mixet hangoljuk össze."
+      },
+      {
+        "q": "Mennyi büdzsé kell, hogy érdemes legyen elindulni?",
+        "a": "Nincs egyetlen kötelező összeg, mert iparágonként és platformonként más a verseny. Az auditon megmondjuk, mekkora keret szükséges ahhoz, hogy a teszteléshez elég adat gyűljön — és ha a célodhoz a büdzsé kevés, inkább szólunk, minthogy elköltsük eredmény nélkül."
+      },
+      {
+        "q": "Mikor láthatók az első eredmények?",
+        "a": "A tanulási és tesztelési fázis jellemzően 4-6 hét, mire stabil adat alapján optimalizálhatunk. A keresési kampányok általában gyorsabban hoznak konverziót, a Display és a közösségi márkaépítő irányok tovább érnek be. Reális időtávot az auditkor adunk."
+      },
+      {
+        "q": "Melyik platformokon érdemes hirdetnem?",
+        "a": "Az nem rólunk, hanem rólad szól: hol vannak a vevőid és mi a céljuk. B2B-nél gyakran a Google kereső és a LinkedIn a fő irány, B2C-nél a Meta és a TikTok erősebb. Az auditon platformonként indokoljuk a javaslatot — nem mindenhol kell egyszerre jelen lenni."
+      },
+      {
+        "q": "Ki birtokolja a hirdetési fiókokat és az adatokat?",
+        "a": "Mindig te. A fiókokat a te tulajdonodban hozzuk létre vagy a meglévőkön dolgozunk, a hozzáférést te adod nekünk. Így az adatod és a felépített struktúra nálad marad akkor is, ha később máshogy döntesz — nincs bezárás."
+      },
+      {
+        "q": "Hogyan méritek és riportoltok?",
+        "a": "Konverziókövetést állítunk be GA4-gyel, platform-pixelekkel és ahol kell, szerver-oldali méréssel, hogy valós leadek és vásárlások legyenek a számokban. Havi, érthető riportot kapsz: hova ment a büdzsé, mi a konverziós költség platformonként, és mi a következő lépés."
+      }
+    ],
+    "cta": "Kérd az ingyenes PPC auditot"
+  },
+  "kozossegi-media": {
+    "slug": "kozossegi-media",
+    "title": "Közösségi média menedzsment — követőkből lojális közösség",
+    "subtitle": "Stratégia, tartalom, közösségkezelés és influencer együttműködések egy kézben, KKV-knak és B2B cégeknek.",
+    "heroDesc": "A közösségi média nem posztok véletlenszerű publikálása, hanem rendszer: stratégia, tartalom-naptár, konzisztens márkahang és napi szintű közösségkezelés. A G2A Marketing a célok kijelölésétől a moderálásig viszi a folyamatot — Facebookon, Instagramon, LinkedInen és TikTokon. Ha nincs stratégia, nincs G2A: előbb a célközönséget és a mérőszámokat tisztázzuk, csak utána posztolunk.",
+    "metaTitle": "Közösségi média menedzsment 2026 — márkaépítés | G2A Marketing",
+    "metaDesc": "Social media stratégia, tartalomgyártás, közösségkezelés és influencer marketing Facebookon, Instagramon, LinkedInen és TikTokon. Kérd a díjmentes social auditot!",
+    "icon": "social",
+    "color": "#3b82f6",
+    "intro": "A közösségi média 2026-ra a márkaépítés egyik legfontosabb organikus csatornája lett — ugyanakkor a platformok algoritmusai szigorúbbak, a felhasználók pedig azonnal kiszúrják az üres marketinget. Ma nem a posztgyár nyer, hanem a következetes, hiteles jelenlét, ami valódi közösséget épít. A G2A Marketing nem külön-külön kezeli a csatornákat, hanem egy stratégiára fűzi fel: tartalom-naptárral, márkahanggal, közösségkezeléssel és — ahol indokolt — influencer együttműködésekkel. Facebook, Instagram, LinkedIn és TikTok: mindegyiket a saját logikája szerint, de egységes márkaüzenettel. AI-eszközöket józanul használunk a tartalomötletelésben és az ütemezésben, de a hang és a moderálás emberi marad. Átlátható havi riportot adunk: mit posztoltunk, mi működött, mi nem, és mi a következő hónap terve.",
+    "benefits": [
+      {
+        "title": "Stratégia, nem véletlenszerű posztolás",
+        "desc": "Először a célközönséget, a pozícionálást és a mérőszámokat tisztázzuk, csak utána készül tartalom. Minden poszt egy üzleti célt szolgál — ismertség, közösségépítés vagy lead —, nem önmagáért van."
+      },
+      {
+        "title": "Tartalom-naptár és konzisztens márkahang",
+        "desc": "Heti-havi tartalom-naptárt építünk, hogy a megjelenés kiszámítható és tervezhető legyen. Egységes vizuális stílus és márkahang minden platformon, így a márkád felismerhető marad a görgetés zajában is."
+      },
+      {
+        "title": "Platform-specifikus tartalom",
+        "desc": "Nem ugyanazt a posztot toljuk ki mindenhová. A LinkedIn szakmai, a TikTok rövid és lendületes, az Instagram vizuális, a Facebook közösségi — minden csatornára a saját formátumában gyártunk tartalmat."
+      },
+      {
+        "title": "Aktív közösségkezelés és moderálás",
+        "desc": "Kommentekre, üzenetekre és értékelésekre időben reagálunk a márkahangod szerint. A moderálás a negatív hangokat is kezeli — higgadtan, professzionálisan —, mert egy jól kezelt panasz bizalmat épít."
+      },
+      {
+        "title": "Influencer marketing valódi illeszkedéssel",
+        "desc": "Nem követőszám alapján választunk influencert, hanem releváns, a célközönségeddel valóban átfedő partnereket keresünk. A kreatív briefet, az együttműködés kereteit és a mérést mi koordináljuk."
+      },
+      {
+        "title": "Átlátható mérés és havi riport",
+        "desc": "Elérés, interakció, közönségnövekedés és — ahol értelmezhető — a weboldalra terelt forgalom: minden hónapban érthető riportot kapsz. Nincs rejtett platform-számla, az árazás előre tiszta."
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "Audit és stratégia",
+        "desc": "Feltérképezzük a jelenlegi jelenléted, a versenytársakat és a célközönséged. Kiválasztjuk a releváns platformokat (nem mindegyik kell mindenkinek), és lefektetjük a célokat, a hangnemet és a KPI-okat."
+      },
+      {
+        "step": "02",
+        "title": "Tartalom-naptár és kreatív",
+        "desc": "Összeállítjuk a havi tartalom-naptárt: témák, formátumok, ütemezés. Legyártjuk a posztokat, vizuálokat és szövegeket platformra szabva, a jóváhagyásod beépített pontjaival."
+      },
+      {
+        "step": "03",
+        "title": "Publikálás és közösségkezelés",
+        "desc": "Ütemezetten publikálunk, és napi szinten kezeljük a közösséget: kommentek, üzenetek, moderálás. Ahol indokolt, influencer együttműködéseket koordinálunk."
+      },
+      {
+        "step": "04",
+        "title": "Mérés, riport és optimalizálás",
+        "desc": "Havonta kiértékeljük az eredményeket, megnézzük mi működött, és ennek mentén finomhangoljuk a következő hónap tartalmát. Folyamatos, adatvezérelt iteráció."
+      }
+    ],
+    "faq": [
+      {
+        "q": "Mennyi idő alatt látható eredmény a közösségi médiában?",
+        "a": "Az organikus márkaépítés türelemjáték: a konzisztens jelenlét és a közösségnövekedés jellemzően 3-6 hónap alatt válik igazán láthatóvá. Az első hetekben a tartalom-rendszer és a hang beállítása zajlik, az érdemi lendület utána épül."
+      },
+      {
+        "q": "Melyik platformokat érdemes használni?",
+        "a": "Azt, ahol a célközönséged ténylegesen jelen van. B2B-ben gyakran a LinkedIn a fő csatorna, fogyasztói márkáknál az Instagram és a TikTok, lokális vállalkozásnál a Facebook. Az auditban közösen döntjük el — nem kell mindenhol jelen lenni."
+      },
+      {
+        "q": "Ti gyártjátok a tartalmat, vagy nekünk kell?",
+        "a": "Mi gyártjuk: szöveget, vizuált, tartalom-naptárt. Ha van saját anyagod (fotó, videó, termékkép), azt beépítjük. A márkád belső tudására építünk, de a kivitelezés a mi dolgunk — neked csak jóváhagynod kell."
+      },
+      {
+        "q": "Hogyan kezelitek a negatív kommenteket és a kríziseket?",
+        "a": "Előre egyeztetett moderálási elvek mentén, a márkahangod szerint. A jogos panaszt higgadtan, érdemben kezeljük, a trollkodást szabály szerint. Komolyabb krízis esetén azonnal egyeztetünk veled, mielőtt bármit közölnénk."
+      },
+      {
+        "q": "Az influencer marketing benne van a szolgáltatásban?",
+        "a": "Igen, ahol indokolt. Releváns partnereket keresünk (nem puszta követőszám alapján), kezeljük a briefet, az együttműködés kereteit és a mérést. Az influencer-díjak külön költségek, ezeket előre, átláthatóan tervezzük."
+      },
+      {
+        "q": "Használtok AI-t a tartalomgyártáshoz?",
+        "a": "Igen, józanul: ötleteléshez, vázlatokhoz és ütemezéshez. A végső márkahang, a szerkesztés és a közösségi interakció emberi marad — az AI gyorsít, de nem helyettesíti a hiteles jelenlétet."
+      }
+    ],
+    "cta": "Kérd a díjmentes social media auditot"
+  },
+  "strategiai-marketing": {
+    "slug": "strategiai-marketing",
+    "title": "Stratégiai marketing KKV-knak és B2B cégeknek",
+    "subtitle": "Audittól az akciótervig: adatvezérelt marketingstratégia, amire mérhetően lehet építeni.",
+    "heroDesc": "A stratégia az egyetlen pont, ahol minden marketingforint sorsa eldől. Feltérképezzük a piacodat, a versenytársaidat és a célközönségedet, majd ebből építünk pozicionálást, marketing mixet és KPI-vezérelt akciótervet. Nem kampányt adunk el, hanem irányt — mert nálunk ha nincs stratégia, nincs G2A.",
+    "metaTitle": "Stratégiai marketing tanácsadás 2026 – Audit, KPI, akcióterv | G2A Marketing",
+    "metaDesc": "Marketing audit, piac- és versenytárselemzés, persona, marketing mix és KPI-vezérelt akcióterv KKV-knak és B2B cégeknek. Kérd az ingyenes konzultációt.",
+    "icon": "strategy",
+    "color": "#6366f1",
+    "intro": "A stratégiai marketing 2026-ban nem PowerPoint-os vízió, hanem működő rendszer: tiszta pozicionálás, mért célcsoport és számon kérhető KPI-ok. A legtöbb KKV és B2B cég nem azért költ rosszul, mert kevés a büdzsé, hanem mert nincs döntési keret — kampányról kampányra reagál, mérés és irány nélkül. A G2A Marketing filozófiája ezért stratégia-első: minden szolgáltatásunk — SEO, PPC, social, web — egy auditált stratégiára épül, nem fordítva. Pécsi gyökerekkel, országos és nemzetközi kiszolgálással dolgozunk; átlátható árazással, havi riporttal és reális időtávokkal. Ez az oldal a zászlóshajónk: itt dől el, hogy a marketinged kiszolgálja az üzleti céljaidat, vagy csak pénzt éget.",
+    "benefits": [
+      {
+        "title": "Marketing audit",
+        "desc": "Átvilágítjuk a jelenlegi marketinged: csatornák, üzenetek, weboldal, analitika, költés és eredmények. Megmutatjuk, mi működik, mi szivárogtatja a büdzsét, és hol van a legnagyobb kiaknázatlan lehetőség."
+      },
+      {
+        "title": "Piac- és versenytárselemzés",
+        "desc": "Feltérképezzük a piaci pozíciódat és a fő versenytársaid stratégiáját — üzenet, árazás, csatornák, gyenge pontok. Konkrét rést keresünk, ahol meg tudsz különböztetni magad, nem üres SWOT-táblát töltünk ki."
+      },
+      {
+        "title": "Célcsoport és persona",
+        "desc": "Adatból és interjúkból építünk 2-3 valós vásárlói personát: ki ő, mi a fájdalompontja, hol érhető el és mi mozgatja a döntését. Minden üzenet és csatorna ezekre épül, nem feltételezésekre."
+      },
+      {
+        "title": "Pozicionálás és üzenetrendszer",
+        "desc": "Megfogalmazzuk, miért téged válasszanak a versenytársak helyett. Tiszta értékajánlat és üzeneti pillérek, amelyek minden felületeden — weboldal, hirdetés, ajánlat — következetesen szólalnak meg."
+      },
+      {
+        "title": "Marketing mix és csatornaterv",
+        "desc": "Eldöntjük, mely csatornák hozzák a célközönségedet a legjobb megtérüléssel (SEO, PPC, social, e-mail, tartalom), és priorizált terv készül arról, mibe és milyen sorrendben érdemes befektetned."
+      },
+      {
+        "title": "KPI-rendszer és akcióterv",
+        "desc": "Mérhető célokat tűzünk ki (lead, CAC, ROAS, konverzió) és priorizált 6-12 hónapos roadmapet építünk. Tudni fogod, mi a következő lépés, mit mérünk és mikor értékelünk újra — havi riporttal."
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "Felmérés és audit",
+        "desc": "Megismerjük az üzleti céljaidat, átvizsgáljuk a jelenlegi marketinged, az analitikádat és az értékesítési folyamatodat. Tényalapú képet kapsz arról, hol állsz ma — szépítés nélkül."
+      },
+      {
+        "step": "02",
+        "title": "Piac, versenytárs és célcsoport",
+        "desc": "Elemezzük a piacodat és a versenytársaidat, és megépítjük a valós personákat. Itt derül ki, hol van a megkülönböztetési rés, és kihez pontosan érdemes szólnod."
+      },
+      {
+        "step": "03",
+        "title": "Stratégia, pozicionálás, marketing mix",
+        "desc": "Megfogalmazzuk a pozicionálást és az üzenetrendszert, kiválasztjuk a megfelelő csatornákat, és priorizált marketing mixet tervezünk a büdzséd mellé igazítva."
+      },
+      {
+        "step": "04",
+        "title": "KPI, akcióterv és mérés",
+        "desc": "Mérhető célokat és KPI-okat rögzítünk, priorizált akciótervet és roadmapet adunk, majd havi riportban követjük az eredményt és finomhangolunk. A stratégia élő dokumentum marad."
+      }
+    ],
+    "faq": [
+      {
+        "q": "Mennyi idő egy marketingstratégia elkészítése?",
+        "a": "Egy fókuszált stratégia audittal, piac- és versenytárselemzéssel, personákkal és akciótervvel jellemzően 3-5 hét. Komplexebb, több üzletágat érintő esetben 6-8 hét — a tempót az határozza meg, milyen gyorsan kapunk hozzáférést az adataidhoz és a csapatodhoz."
+      },
+      {
+        "q": "Mikorra látszik az eredmény?",
+        "a": "Maga a stratégia azonnal használható döntési keret. A megvalósítás eredménye csatornafüggő: a fizetett kampányok pár hét alatt mérhetők, egy SEO- vagy tartalmi irány jellemzően 3-6 hónap alatt hoz mérhető organikus növekedést. Reális időtávokat ígérünk, nem csodát."
+      },
+      {
+        "q": "Mennyibe kerül a stratégiai marketing?",
+        "a": "Az ár a cég méretétől, a piac komplexitásától és a kívánt mélységtől függ. Az első konzultáció ingyenes, utána fix árú stratégiai csomagot ajánlunk — átlátható, előre rögzített díjjal, rejtett platform-számla nélkül. Pontos ajánlatot a felmérés után adunk."
+      },
+      {
+        "q": "Mire jó nekem konkrétan a stratégia?",
+        "a": "Arra, hogy ne kampányról kampányra égesd a pénzt. Tudni fogod, kinek, milyen üzenettel, melyik csatornán és milyen sorrendben érdemes költened — és lesz KPI-d, amin lemérheted, működik-e. Ez a kapacitásod legjobb hozamú befektetése."
+      },
+      {
+        "q": "Csak a stratégiát kapom, vagy a megvalósítást is?",
+        "a": "Ahogy neked jobb. Sok ügyfél a stratégiát viszi és saját csapatával valósítja meg — ez teljesen rendben van, a roadmap erre is alkalmas. Ha kéred, a megvalósítást is mi visszük: SEO, PPC, social, web — mind ugyanarra a stratégiára épül."
+      },
+      {
+        "q": "Használtok AI-t a stratégiakészítéshez?",
+        "a": "Igen, eszközként. AI-t használunk piac- és versenytárs-adatok gyorsabb feldolgozására és forgatókönyvek modellezésére, de a pozicionálás és a döntések emberi szakértelemen alapulnak. Az AI gyorsít, nem helyettesít — józanul integráljuk, nem varázslatként áruljuk."
+      }
+    ],
+    "cta": "Kérd az ingyenes stratégiai konzultációt"
+  },
+  "keresooptimalizalas": {
+    "slug": "keresooptimalizalas",
+    "title": "Keresőoptimalizálás (SEO), ami mérhető organikus növekedést hoz",
+    "subtitle": "Technikai SEO, tartalom és linképítés egy stratégiában — hogy a megfelelő emberek megtaláljanak a Google-ben és az AI-keresőkben is.",
+    "heroDesc": "Az organikus keresés a leghosszabb távon megtérülő marketing-csatorna: nem a hirdetési kattintást fizeted, hanem a láthatóságot építed. Technikai SEO audittal, on-page optimalizálással, tartalom-SEO-val és linképítéssel hozzuk fel a weboldaladat a Google találati listáján — és 2026-ban már az AI-válaszokban is. Stratégia nélkül nem kezdünk bele, és minden hónapban átlátható riportban látod, mi mozdult.",
+    "metaTitle": "Keresőoptimalizálás (SEO) szakértőkkel 2026 – G2A Marketing",
+    "metaDesc": "Technikai SEO audit, on-page, tartalom-SEO, linképítés és lokális SEO mérhető organikus növekedésért. Átlátható havi riport, AI-keresés. Kérd az auditot!",
+    "icon": "seo",
+    "color": "#0891b2",
+    "intro": "A keresőoptimalizálás 2026-ban már nem csak a Google tíz kék linkjéről szól: a Google AI Overviews, a ChatGPT és a Perplexity is válaszforrásokat idéz, és neked ott is láthatónak kell lenned (AEO/GEO). Ettől függetlenül az alap változatlan: gyors, technikailag tiszta weboldal, hasznos tartalom és hiteles hivatkozások. A G2A Marketingnél stratégiával kezdünk — kulcsszó-kutatással, versenytárs-elemzéssel és technikai audittal feltérképezzük, hol állsz —, majd a technikai SEO, az on-page optimalizálás, a tartalommarketing és a linképítés egy rendszerbe áll össze. Nincs rejtett platform-számla, nincs üres ígéret: egy SEO-stratégia jellemzően 3-6 hónap alatt hoz mérhető organikus növekedést, és minden hónapban átlátható riportban követed, mi történik a kulcsszavaiddal, a forgalmaddal és a Core Web Vitals-mutatóiddal.",
+    "benefits": [
+      {
+        "title": "Technikai SEO audit",
+        "desc": "Feltérképezzük, mi tartja vissza a weboldaladat: indexelési és crawl-problémák, sebesség, struktúra, hibás átirányítások, duplikált tartalom, strukturált adatok. Priorizált hibalistát kapsz, fontossági sorrendben."
+      },
+      {
+        "title": "On-page optimalizálás",
+        "desc": "Címsorok, meta-elemek, belső linkstruktúra, URL-ek és kulcsszó-térkép a keresési szándékhoz igazítva — hogy a Google pontosan értse, miről szól minden oldalad, és kinek szól."
+      },
+      {
+        "title": "Tartalom-SEO és tartalommarketing",
+        "desc": "Kulcsszó-kutatásból induló tartalomstratégia: olyan cikkek és oldalak, amelyek a vásárlói kérdésekre válaszolnak. Ez az alapja annak is, hogy az AI-keresők (AI Overviews, ChatGPT, Perplexity) idézzenek."
+      },
+      {
+        "title": "Linképítés (link building)",
+        "desc": "Hiteles, releváns hivatkozások építése fokozatosan, kockázat nélkül. Minőség mennyiség helyett — nincs spamlink, nincs büntetést kockáztató rövidítés, mert a Google azt előbb-utóbb leszámolja."
+      },
+      {
+        "title": "Lokális SEO",
+        "desc": "Google Business Profile, lokális kulcsszavak, vélemények és helyi említések — hogy a környékeden és a célvárosaidban is megtaláljanak, amikor épp keresnek. Pécsi gyökerekkel, országos kiszolgálással."
+      },
+      {
+        "title": "Core Web Vitals és AI-láthatóság",
+        "desc": "A betöltési sebesség, stabilitás és reszponzivitás ma rangsoroló tényező és felhasználói élmény egyben. Emellett felkészítjük a tartalmadat az AI-válaszokban való megjelenésre (AEO/GEO)."
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "Audit és kulcsszó-kutatás",
+        "desc": "Technikai SEO audittal, versenytárs-elemzéssel és kulcsszó-kutatással kezdünk: hol állsz most, mire keresnek a vásárlóid, és hol a legnagyobb a kihasználatlan lehetőség. Innen születik a stratégia."
+      },
+      {
+        "step": "02",
+        "title": "Stratégia és priorizálás",
+        "desc": "Összeállítjuk a SEO-roadmapet: mit javítunk először (jellemzően a technikai akadályok), milyen tartalom kell, és hogyan épül a linkprofil. Reális ütemezéssel és mérhető KPI-okkal — nincs stratégia, nincs G2A."
+      },
+      {
+        "step": "03",
+        "title": "Megvalósítás",
+        "desc": "Technikai hibák javítása, on-page optimalizálás, tartalomgyártás és linképítés lépésről lépésre. Folyamatosan dolgozunk a Core Web Vitals-on és az AI-keresőkre való felkészítésen is."
+      },
+      {
+        "step": "04",
+        "title": "Mérés és havi riport",
+        "desc": "Minden hónapban átlátható riportot kapsz: kulcsszó-pozíciók, organikus forgalom, konverziók és a következő lépések. A stratégiát az adatok alapján finomítjuk — nem érzésre."
+      }
+    ],
+    "faq": [
+      {
+        "q": "Mennyi idő alatt láthatók az első eredmények?",
+        "a": "A SEO közép- és hosszú távú befektetés. A technikai javítások hatása már 4-8 hét alatt jelentkezhet, de egy SEO-stratégia jellemzően 3-6 hónap alatt hoz mérhető organikus növekedést. Verseny, kiindulási állapot és tartalom-tempó függvénye."
+      },
+      {
+        "q": "Garantáltok első helyet a Google-ben?",
+        "a": "Nem — és aki garantál, attól óvakodj. A rangsorolás a Google algoritmusától függ, amit senki nem irányít. Amit garantálunk: priorizált, szakszerű munka, mérhető folyamat és átlátható riport. Reálisan beszélünk a vártható eredményekről."
+      },
+      {
+        "q": "Mi az a Core Web Vitals, és miért fontos?",
+        "a": "A Core Web Vitals a Google felhasználói-élmény mutatói: betöltési sebesség, interaktivitás és vizuális stabilitás. Rangsoroló tényezők, és közvetlenül befolyásolják a konverziót — egy lassú oldalt a látogató elhagy, mielőtt a tartalmat látná."
+      },
+      {
+        "q": "Az AI-keresők korában van még értelme a SEO-nak?",
+        "a": "Igen, sőt felértékelődött. A Google AI Overviews, a ChatGPT és a Perplexity is a jól strukturált, hiteles tartalmakat idézi forrásként. Aki a klasszikus SEO-alapokat jól csinálja, az az AI-válaszokban (AEO/GEO) is láthatóbb lesz."
+      },
+      {
+        "q": "Mit kapok a havi riportban?",
+        "a": "Kulcsszó-pozíciókat, organikus forgalmi és konverziós adatokat, az elvégzett munkát és a következő hónap terveit — érthető nyelven, nem csak grafikonokkal. Bármikor látod, mi történt és miért, rejtett platform-számla nélkül."
+      },
+      {
+        "q": "A linképítés nem kockázatos? Nem büntet érte a Google?",
+        "a": "A spam-jellegű, vásárolt tömeglink kockázatos és a Google leszámolja. Mi hiteles, releváns hivatkozásokat építünk fokozatosan — minőséget mennyiség helyett. Ez tartós eredményt ad, nem rövid életű ugrást, amit egy frissítés visszavesz."
+      }
+    ],
+    "cta": "Kérd az ingyenes SEO auditot"
+  },
+  "webfejlesztes": {
+    "slug": "webfejlesztes",
+    "title": "Webfejlesztés és CRO — weboldal, ami nem csak szép, hanem konvertál",
+    "subtitle": "Egyedi weboldalak, webáruházak és landing oldalak, amelyeket a látogatóból vásárlóvá tett konverzió köré építünk.",
+    "heroDesc": "A weboldalad nem dekoráció, hanem értékesítési eszköz. Gyors, mobilbarát és kereshető felületeket fejlesztünk — egyedi kódtól WordPressig és webáruházig —, majd folyamatos konverzió-optimalizálással (CRO) javítjuk az eredményt. A cél nem a tetszetős design, hanem a mérhető több érdeklődő és vásárló.",
+    "metaTitle": "Webfejlesztés és CRO 2026 — konverzióra optimalizált weboldalak | G2A Marketing",
+    "metaDesc": "Egyedi weboldal, WordPress, Shopify és WooCommerce webáruház, landing page és CRO. Gyors, reszponzív, SEO-barát fejlesztés mérhető konverzióval. Kérj auditot!",
+    "icon": "web",
+    "color": "#f97316",
+    "intro": "2026-ban a weboldal a legtöbb KKV legfontosabb értékesítési csatornája — mégis a legtöbb honlap látogatókat veszít: lassú, mobilon töredezik, és a felhasználó nem találja meg, mit kell tennie. A Google a Core Web Vitals mérőszámokat rangsorolási tényezőként használja, így a lassú oldal kétszeresen büntet: rosszabb helyezés és kevesebb konverzió. A G2A Marketing nem „weboldalt csinál”, hanem konverziós rendszert épít: egyedi fejlesztés, WordPress vagy webáruház (Shopify, WooCommerce) a feladathoz illesztve, technikai SEO-val a kódban és folyamatos CRO-val a launch után. Ha nincs stratégia és mérés, nincs G2A — a design eszköz, nem a végeredmény.",
+    "benefits": [
+      {
+        "title": "Konverzióra tervezve, nem csak szépségre",
+        "desc": "A design a cél felé tereli a látogatót: tiszta információs hierarchia, erős CTA-k, súrlódásmentes űrlapok. A szép felület alap, a konverzió a mérce — minden elemnek üzleti funkciója van."
+      },
+      {
+        "title": "A feladathoz illő technológia",
+        "desc": "Nem mindenre WordPress, és nem mindenre egyedi kód. Tartalmas oldalra WordPress, webáruházra Shopify vagy WooCommerce, komplex igényre custom fejlesztés — azt választjuk, ami a te eseteddel a legjobb ár-érték arányt adja."
+      },
+      {
+        "title": "Sebesség és Core Web Vitals",
+        "desc": "Optimalizált kód, képek és betöltés, hogy az oldal gyorsan jelenjen meg mobilon is. A jó Core Web Vitals értékek egyszerre javítják a Google-helyezést és csökkentik a lemorzsolódást a betöltés alatt."
+      },
+      {
+        "title": "Reszponzív, mobil-első felület",
+        "desc": "A forgalom java mobilról érkezik, ezért mobil-első szemlélettel fejlesztünk. Minden képernyőméreten olvasható, kattintható és vásárolható marad a felület — telefonon, tableten, asztali gépen."
+      },
+      {
+        "title": "SEO-barát alap a kódban",
+        "desc": "Tiszta, szemantikus kód, helyes címkézés, gyors betöltés és strukturált adatok — hogy a keresőoptimalizálás ne utólagos toldozás legyen, hanem már az alapokban benne legyen."
+      },
+      {
+        "title": "Átlátható árazás és karbantartás",
+        "desc": "Előre tisztázott hatókör és ár, nincs rejtett platform-számla. Indulás után frissítések, biztonsági mentések, hibajavítás és teljesítmény-felügyelet — a weboldal hosszú távon is karbantartott eszköz marad."
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "Felmérés és konverziós cél",
+        "desc": "Megnézzük a jelenlegi oldalt (vagy a nulláról induló igényt), a célközönséget és az üzleti célt. Tisztázzuk, mit jelent a „siker”: ajánlatkérés, vásárlás, foglalás — és milyen KPI-okkal mérjük."
+      },
+      {
+        "step": "02",
+        "title": "Architektúra, UX és technológiaválasztás",
+        "desc": "Felépítjük az oldalstruktúrát és a felhasználói utat a konverzió köré, majd kiválasztjuk a platformot (egyedi, WordPress, Shopify, WooCommerce). A wireframe és a tartalmi terv jóváhagyásával indul a fejlesztés."
+      },
+      {
+        "step": "03",
+        "title": "Fejlesztés, tartalom és tesztelés",
+        "desc": "Reszponzív, gyors és SEO-barát kódot írunk, feltöltjük a tartalmat, és minden eszközön teszteljük. A Core Web Vitals értékeket és az űrlapok, fizetés, kosár működését élesítés előtt ellenőrizzük."
+      },
+      {
+        "step": "04",
+        "title": "Élesítés, mérés és folyamatos CRO",
+        "desc": "Indítás után beállítjuk a mérést (analitika, konverziókövetés), és elkezdődik a konverzió-optimalizálás: A/B tesztek, viselkedés-elemzés, finomítás. Havi riportban átlátható, mi javult."
+      }
+    ],
+    "faq": [
+      {
+        "q": "Mennyi idő egy weboldal elkészítése?",
+        "a": "Egy egyszerű landing page vagy bemutatkozó oldal jellemzően 2-4 hét, egy összetettebb céges weboldal 4-8 hét, egy webáruház pedig a termékkört és integrációkat tekintve általában 6-12 hét. A pontos ütemtervet a felmérés után adjuk, mert a tartalom és a döntési körök gyakran többet nyomnak, mint maga a fejlesztés."
+      },
+      {
+        "q": "WordPress, Shopify, WooCommerce vagy egyedi fejlesztés legyen?",
+        "a": "Attól függ, mire használod. Tartalmas, gyakran frissülő oldalra a WordPress praktikus; webáruházhoz a Shopify gyors indulást, a WooCommerce nagyobb szabadságot ad; egyedi, sok logikát igénylő igényre custom fejlesztést javaslunk. A felmérés után azt ajánljuk, ami a te eseteddel a legjobb ár-érték arányt hozza — és ha valamire nincs szükséged, megmondjuk."
+      },
+      {
+        "q": "Mit jelent pontosan a CRO, és miért fontos?",
+        "a": "A CRO (konverzió-optimalizálás) az a folyamat, amelyben a meglévő forgalomból több látogatót teszünk vásárlóvá vagy érdeklődővé — anélkül, hogy több hirdetést kellene venned. Méréssel, A/B tesztekkel és viselkedés-elemzéssel finomítjuk az oldalt. Ezért nem áll meg a munkánk a launch-nál: a szép oldal csak a kiindulás, az eredményt a folyamatos optimalizálás hozza."
+      },
+      {
+        "q": "Miért számít a sebesség és a Core Web Vitals?",
+        "a": "A lassú oldalról a látogatók egy része még betöltés előtt elnavigál, a Google pedig a Core Web Vitals mérőszámokat rangsorolási tényezőként veszi figyelembe. Egy lassú oldal tehát kétszeresen büntet: rosszabb keresőhelyezés és alacsonyabb konverzió. Optimalizált kóddal, képekkel és betöltéssel ezt javítjuk."
+      },
+      {
+        "q": "A meglévő weboldalamat is tudjátok javítani, vagy csak újat építetek?",
+        "a": "Mindkettő működik. Sok esetben egy technikai és CRO-audit után a meglévő oldalon is jelentős javulás érhető el (sebesség, mobilélmény, konverziós pontok). Ha viszont az alaprendszer elavult vagy nehezen karbantartható, gyakran az újraépítés a gazdaságosabb. A felmérésen őszintén megmondjuk, melyik az értelmes út."
+      },
+      {
+        "q": "Mi van a weboldallal az átadás után?",
+        "a": "Kérhetsz folyamatos karbantartást: frissítések, biztonsági mentések, hibajavítás, teljesítmény- és biztonsági felügyelet, valamint a CRO-folyamat továbbvitele. Az árazás előre tisztázott, nincs rejtett platform-számla — és ha a saját csapatod viszi tovább, az átadást rendezetten, dokumentációval készítjük elő."
+      }
+    ],
+    "cta": "Kérd az ingyenes weboldal- és CRO-auditot"
+  },
+
   "ai-marketing": {
     slug: "ai-marketing",
     title: "AI Marketing",
@@ -747,7 +1263,523 @@ const HU: Record<string, ServiceConfig> = {
 };
 
 // ─── EN ─────────────────────────────────────────────────────────────────────
-const EN: Record<string, ServiceConfig> = {
+const EN: Record<string, ServiceConfig> = {  "arculattervezes": {
+    "slug": "arculattervezes",
+    "title": "Brand Design & Identity for SMBs and B2B Companies",
+    "subtitle": "A unique visual identity — from logo to brand guidelines — consistent across every surface.",
+    "heroDesc": "Your brand's visual identity speaks louder than words — and it's often the first impression a prospect ever gets of you. We design the logo, colour palette, typography and graphic system that carry the same message across every touchpoint. Not decoration: a strategy-led identity that's recognisable and builds trust.",
+    "metaTitle": "Brand Design & Identity 2026 – Visual Identity | G2A Marketing",
+    "metaDesc": "Logo, brand guidelines, print and digital materials for SMBs and B2B companies. Build a consistent visual identity that differentiates and earns trust. Get a quote!",
+    "icon": "brand",
+    "color": "#ec4899",
+    "intro": "In 2026 brand identity isn't a luxury — it's a business fundamental. Buyers decide within seconds whether they trust you, and visual appearance drives much of that judgement. An inconsistent logo, scattershot colours or six different fonts across your materials register instantly — even if the viewer can't name what's wrong. At G2A Marketing we always derive identity from strategy: first we understand who your buyers are, what sets you apart from competitors and the position you want to own — then we design. The outcome isn't just a good-looking logo, but a working system: a brand guideline that frames every future asset, from business card to website. No strategy, no brand.",
+    "benefits": [
+      {
+        "title": "A unique, defensible logo",
+        "desc": "No template, no clipart. We work from several concept directions, then deliver the chosen one as clean, scalable vector files that work at every size and on any background — small (favicon) and large (signage) alike."
+      },
+      {
+        "title": "A complete brand guideline",
+        "desc": "We document logo usage, clear space, prohibited applications, the full colour palette (HEX, RGB, CMYK, Pantone), typography and graphic elements. This is the document that lets anyone — your internal team or an outside partner — work consistently."
+      },
+      {
+        "title": "Consistency across every surface",
+        "desc": "From website to social media to printed business card, one visual language throughout. Consistency is the foundation of recognition: repeated exposure is what builds trust and brand recall over time."
+      },
+      {
+        "title": "Ready-to-print materials",
+        "desc": "Business card, brochure, roll-up, folder, presentation template — supplied as print-ready files with the technical specs production needs (bleed, crop marks, colour profile). On request we can also recommend a reliable print partner."
+      },
+      {
+        "title": "A digital brand toolkit",
+        "desc": "Social media templates, email signature, presentation master, post frames and cover images. We hand over editable templates (e.g. Canva or Figma) so you can produce your day-to-day content yourself — fast and on-brand."
+      },
+      {
+        "title": "Strategic positioning, not decoration",
+        "desc": "For us, identity follows brand strategy — audience, competitive context, message. So the process isn't a matter of taste but a chain of defensible decisions that serve your actual business goals."
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "Discovery and brand brief",
+        "desc": "We get to know your business: who your buyers are, what sets you apart, the feeling you want to evoke and where you position yourself in the market. We review your existing materials and the competitive visual landscape. This brief is the compass for the whole project."
+      },
+      {
+        "step": "02",
+        "title": "Concept and logo design",
+        "desc": "We present several markedly different visual directions — with moodboards and a rationale for why each concept works for your audience. You pick a direction, and we refine it through to the final logo."
+      },
+      {
+        "step": "03",
+        "title": "Building the identity system",
+        "desc": "Around the logo we build the full system: colour palette, typographic hierarchy, graphic elements, imagery. We compile it all into a brand guideline so your appearance stays consistent into the future."
+      },
+      {
+        "step": "04",
+        "title": "Application and handover",
+        "desc": "We produce the concrete assets — print-ready business card, brochure, roll-up and the digital templates. We hand over the complete source-file package and, in a handover session, walk you through how to use it with confidence."
+      }
+    ],
+    "faq": [
+      {
+        "q": "How long does a full brand identity take?",
+        "a": "The logo and core identity system typically take 3-5 weeks. The full package (guideline, print and digital materials together) usually runs 5-8 weeks, depending on scope and how quickly feedback rounds move. After the discovery phase we give you a concrete timeline."
+      },
+      {
+        "q": "I only want a logo, not the full package. Is that possible?",
+        "a": "Yes. Many clients start with a logo and expand the system later. We'll tell you honestly: a logo alone isn't enough for a consistent appearance, so we recommend at least defining a base colour palette and typography alongside it. We're willing to say no to what we don't think serves your goals."
+      },
+      {
+        "q": "What exactly do I receive, and in what file formats?",
+        "a": "The logo in vector (SVG, AI, EPS) and finished image formats (PNG, JPG) in several variants and on different backgrounds, the brand guideline as a PDF, the print materials as print-ready PDFs, and the digital templates in editable form (e.g. Canva/Figma). All source files are yours."
+      },
+      {
+        "q": "I already have a logo and just want to refresh it. Do you do that?",
+        "a": "Yes, rebranding and identity refreshes are part of what we do. We assess what works in your existing identity and what doesn't, then recommend either an evolution or a full redesign — depending on how much brand equity lives in the current look. We don't throw away recognition you've already built."
+      },
+      {
+        "q": "How do you make sure the identity actually fits my business?",
+        "a": "By starting from strategy, not taste. In the brand brief we lock down the audience, position and message, and we tie every visual decision to that. We present concepts with reasoning, so the choice becomes an informed decision rather than a gut feeling."
+      },
+      {
+        "q": "After the identity is done, can you help apply it too?",
+        "a": "Yes. Because G2A Marketing is a full-service agency, we carry the identity seamlessly onto your website, social media, ads and content. At handover you receive every template you need, but we'll stay alongside you for ongoing application if you'd like."
+      }
+    ],
+    "cta": "Request a custom brand quote"
+  },
+  "hirdeteskezeles": {
+    "slug": "hirdeteskezeles",
+    "title": "PPC & Ad Management — one strategy, every platform",
+    "subtitle": "Data-driven paid campaigns across Google Ads, Meta, LinkedIn and TikTok, unified around ROI.",
+    "heroDesc": "Paid advertising works when you run it from one shared strategy, not by patching each platform in isolation. Our team builds full multi-platform PPC management: budget goes where your audience actually decides, and every euro sits behind a measurable goal. No strategy, no G2A.",
+    "metaTitle": "PPC & Ad Management 2026 — multi-platform campaign management | G2A Marketing",
+    "metaDesc": "Multi-platform PPC management: Google Ads, Meta, LinkedIn and TikTok in one strategy. Data-driven structure, A/B tests, conversion tracking. Book your free audit!",
+    "icon": "ads",
+    "color": "#f43f5e",
+    "intro": "In 2026, paid advertising is no longer a single-platform question: your customers arrive from Google Search, the Meta feed, the B2B space of LinkedIn and TikTok videos alike. PPC and ad management deliver real return only when these channels are optimised inside one data-driven structure, not separately. G2A Marketing builds platform-spanning campaign management: we continuously shift budget toward the best cost per conversion, sharpen messaging with A/B tests, and measure results with precise conversion tracking. We don't sell promises — we deliver a transparent process you can follow in a monthly report, with no hidden platform invoice.",
+    "benefits": [
+      {
+        "title": "One strategy, many platforms",
+        "desc": "Google Ads, Meta, LinkedIn and TikTok aren't separate islands: we run them under shared goals and unified attribution, so you can see what each channel does along the buyer journey."
+      },
+      {
+        "title": "Data-driven account structure",
+        "desc": "Campaigns and ad groups built around real search and purchase intent — clean segments so budget flows toward what's profitable instead of leaking everywhere."
+      },
+      {
+        "title": "Cross-platform budget allocation",
+        "desc": "We scale spend where cost per conversion is best and pull back where return weakens — based on weekly review, not gut feeling."
+      },
+      {
+        "title": "A/B tests and creatives",
+        "desc": "We test ad copy, creatives and landing directions in a structured way. Only what the numbers prove wins — losing variants get replaced."
+      },
+      {
+        "title": "Accurate conversion tracking",
+        "desc": "We set up GA4, platform pixels and server-side measurement so reports show real leads and purchases, not misleading click counts."
+      },
+      {
+        "title": "Transparent monthly reporting",
+        "desc": "A simple, readable report: where the budget went, what the cost per conversion is, and the next step. You know what you pay for — no hidden line items."
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "Audit and goal setting",
+        "desc": "We review existing accounts, the measurement setup and the competitive landscape. We clarify the business goal and realistic KPIs (CPA, ROAS), then decide which platforms are relevant — if one isn't worth it, we'll say so."
+      },
+      {
+        "step": "02",
+        "title": "Strategy and structure",
+        "desc": "We build the platform-spanning campaign plan: who we reach, where, with what message, and how the budget is split. We set up a clean account structure and conversion tracking for measurement."
+      },
+      {
+        "step": "03",
+        "title": "Launch and testing",
+        "desc": "We go live and run structured A/B tests on creatives, messaging and targeting in the first weeks. From early data we filter out what actually works."
+      },
+      {
+        "step": "04",
+        "title": "Optimisation and scaling",
+        "desc": "We continuously refine targeting, bids and budget allocation, scaling up the winning directions. We show results and next steps in a monthly report."
+      }
+    ],
+    "faq": [
+      {
+        "q": "How is this different from Google Ads or Meta ads on their own?",
+        "a": "This is platform-spanning management: instead of running a single surface, we coordinate Google, Meta, LinkedIn and TikTok campaigns within one shared strategy, with unified budget allocation and attribution. If you need only Google Ads or only Meta, we have dedicated services for those — here we tune the full mix together."
+      },
+      {
+        "q": "How much budget do I need to make it worthwhile?",
+        "a": "There's no single mandatory amount, because competition differs by industry and platform. In the audit we tell you how much spend is needed to gather enough data for testing — and if your budget is too low for the goal, we'll say so rather than spend it without results."
+      },
+      {
+        "q": "When will I see the first results?",
+        "a": "The learning and testing phase typically runs 4-6 weeks before we can optimise on stable data. Search campaigns usually convert faster; Display and social brand-building directions take longer to mature. We give a realistic timeline at the audit."
+      },
+      {
+        "q": "Which platforms should I advertise on?",
+        "a": "That's about you, not us: where your buyers are and what their intent is. For B2B, Google Search and LinkedIn are often the core; for B2C, Meta and TikTok tend to be stronger. In the audit we justify the recommendation platform by platform — you don't need to be everywhere at once."
+      },
+      {
+        "q": "Who owns the ad accounts and the data?",
+        "a": "Always you. We create accounts under your ownership or work on your existing ones, and you grant us access. So your data and the structure we build stay with you even if you later decide differently — no lock-in."
+      },
+      {
+        "q": "How do you measure and report?",
+        "a": "We set up conversion tracking with GA4, platform pixels and, where needed, server-side measurement, so real leads and purchases appear in the numbers. You get a clear monthly report: where the budget went, the cost per conversion per platform, and the next step."
+      }
+    ],
+    "cta": "Book your free PPC audit"
+  },
+  "kozossegi-media": {
+    "slug": "kozossegi-media",
+    "title": "Social media management — turning followers into a loyal community",
+    "subtitle": "Strategy, content, community management and influencer collaborations in one place, for SMBs and B2B companies.",
+    "heroDesc": "Social media isn't random posting — it's a system: strategy, content calendar, a consistent brand voice and daily community management. G2A Marketing runs the whole process, from setting goals to moderation, across Facebook, Instagram, LinkedIn and TikTok. No strategy, no G2A: first we define your audience and your metrics, then we post.",
+    "metaTitle": "Social Media Management 2026 — Brand Building | G2A Marketing",
+    "metaDesc": "Social media strategy, content production, community management and influencer marketing on Facebook, Instagram, LinkedIn and TikTok. Get your free social audit!",
+    "icon": "social",
+    "color": "#3b82f6",
+    "intro": "By 2026, social media has become one of the most important organic channels for brand building — but the algorithms are stricter and audiences instantly spot empty marketing. Today it isn't the content factory that wins; it's a consistent, credible presence that builds a real community. G2A Marketing doesn't treat your channels in isolation — we tie them to a single strategy with a content calendar, a defined brand voice, active community management and, where it genuinely fits, influencer collaborations. Facebook, Instagram, LinkedIn and TikTok: each on its own terms, but with one unified brand message. We use AI sensibly for content ideation and scheduling, but the voice and the moderation stay human. And you get a transparent monthly report: what we posted, what worked, what didn't, and the plan for the next month.",
+    "benefits": [
+      {
+        "title": "Strategy, not random posting",
+        "desc": "We define your audience, positioning and metrics first, then create content. Every post serves a business goal — awareness, community or leads — instead of existing for its own sake."
+      },
+      {
+        "title": "Content calendar and a consistent brand voice",
+        "desc": "We build a weekly and monthly content calendar so publishing is predictable and planned. A unified visual style and brand voice across every platform keeps your brand recognisable in a noisy feed."
+      },
+      {
+        "title": "Platform-specific content",
+        "desc": "We don't push the same post everywhere. LinkedIn is professional, TikTok is short and dynamic, Instagram is visual, Facebook is community-driven — we produce content in each channel's native format."
+      },
+      {
+        "title": "Active community management and moderation",
+        "desc": "We respond to comments, messages and reviews on time, in your brand voice. Moderation handles the negative voices too — calmly and professionally — because a well-managed complaint builds trust."
+      },
+      {
+        "title": "Influencer marketing with real fit",
+        "desc": "We don't pick influencers by follower count; we look for relevant partners whose audience genuinely overlaps with yours. We coordinate the creative brief, the terms of the collaboration and the measurement."
+      },
+      {
+        "title": "Transparent measurement and monthly reporting",
+        "desc": "Reach, engagement, audience growth and — where it's meaningful — traffic driven to your website: every month you get a clear report. No hidden platform invoices; pricing is clear upfront."
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "Audit and strategy",
+        "desc": "We map your current presence, your competitors and your audience. We pick the relevant platforms (not everyone needs all of them) and set the goals, tone and KPIs."
+      },
+      {
+        "step": "02",
+        "title": "Content calendar and creative",
+        "desc": "We assemble the monthly content calendar: topics, formats, scheduling. We produce the posts, visuals and copy tailored to each platform, with built-in approval points for you."
+      },
+      {
+        "step": "03",
+        "title": "Publishing and community management",
+        "desc": "We publish on schedule and manage the community daily: comments, messages, moderation. Where it makes sense, we coordinate influencer collaborations."
+      },
+      {
+        "step": "04",
+        "title": "Measurement, reporting and optimisation",
+        "desc": "Each month we evaluate the results, see what worked, and fine-tune the next month's content accordingly. Continuous, data-driven iteration."
+      }
+    ],
+    "faq": [
+      {
+        "q": "How long before social media shows results?",
+        "a": "Organic brand building takes patience: consistent presence and community growth typically become genuinely visible over 3-6 months. The first weeks are about setting up the content system and the voice; real momentum builds after that."
+      },
+      {
+        "q": "Which platforms should we be on?",
+        "a": "The ones where your audience actually is. In B2B, LinkedIn is often the main channel; for consumer brands, Instagram and TikTok; for local businesses, Facebook. We decide together in the audit — you don't need to be everywhere."
+      },
+      {
+        "q": "Do you produce the content, or do we?",
+        "a": "We produce it: copy, visuals, content calendar. If you have your own material (photos, video, product shots), we build it in. We draw on your brand's internal knowledge, but the execution is on us — you just approve."
+      },
+      {
+        "q": "How do you handle negative comments and crises?",
+        "a": "By moderation principles agreed in advance, in your brand voice. We address legitimate complaints calmly and substantively, and handle trolling by the rules. For a serious crisis we consult you immediately before publishing anything."
+      },
+      {
+        "q": "Is influencer marketing included?",
+        "a": "Yes, where it fits. We find relevant partners (not by follower count alone), and manage the brief, the terms of the collaboration and the measurement. Influencer fees are a separate cost, planned transparently upfront."
+      },
+      {
+        "q": "Do you use AI for content production?",
+        "a": "Yes, sensibly: for ideation, drafts and scheduling. The final brand voice, the editing and the community interaction stay human — AI speeds things up, but it doesn't replace a credible presence."
+      }
+    ],
+    "cta": "Get your free social media audit"
+  },
+  "strategiai-marketing": {
+    "slug": "strategiai-marketing",
+    "title": "Strategic Marketing for SMBs and B2B Companies",
+    "subtitle": "From audit to action plan: a data-driven marketing strategy you can measurably build on.",
+    "heroDesc": "Strategy is the single point where the fate of every marketing forint is decided. We map your market, competitors and target audience, then build positioning, a marketing mix and a KPI-driven action plan on top. We don't sell you a campaign — we give you direction. Because here, no strategy means no G2A.",
+    "metaTitle": "Strategic Marketing Consulting 2026 – Audit, KPIs, Action Plan | G2A Marketing",
+    "metaDesc": "Marketing audit, market and competitor analysis, personas, marketing mix and a KPI-driven action plan for SMBs and B2B. Book your free strategy consultation.",
+    "icon": "strategy",
+    "color": "#6366f1",
+    "intro": "In 2026, strategic marketing isn't a PowerPoint vision — it's a working system: clear positioning, a measured target audience and accountable KPIs. Most SMBs and B2B companies don't spend badly because budgets are small, but because there's no decision framework — they react campaign to campaign, with no measurement and no direction. That's why G2A Marketing is strategy-first: every service we offer — SEO, PPC, social, web — is built on an audited strategy, not the other way around. With roots in Pécs, we serve clients nationally and internationally, with transparent pricing, monthly reporting and realistic timelines. This is our flagship page: here is where it's decided whether your marketing serves your business goals or simply burns money.",
+    "benefits": [
+      {
+        "title": "Marketing audit",
+        "desc": "We review your current marketing end to end: channels, messaging, website, analytics, spend and results. You'll see what's working, where budget is leaking, and where the biggest untapped opportunity sits."
+      },
+      {
+        "title": "Market and competitor analysis",
+        "desc": "We map your market position and your main competitors' strategies — messaging, pricing, channels, weak spots. We look for a concrete gap where you can differentiate, not fill in an empty SWOT grid."
+      },
+      {
+        "title": "Target audience and personas",
+        "desc": "From data and interviews we build 2-3 real buyer personas: who they are, their pain point, where to reach them and what drives their decision. Every message and channel is built on these, not on assumptions."
+      },
+      {
+        "title": "Positioning and messaging",
+        "desc": "We define why customers should choose you over competitors. A clear value proposition and messaging pillars that speak consistently across every surface — website, ads, proposals."
+      },
+      {
+        "title": "Marketing mix and channel plan",
+        "desc": "We decide which channels reach your audience with the best return (SEO, PPC, social, email, content) and produce a prioritised plan of what to invest in and in what order."
+      },
+      {
+        "title": "KPI framework and action plan",
+        "desc": "We set measurable goals (leads, CAC, ROAS, conversion) and build a prioritised 6-12 month roadmap. You'll know the next step, what we measure and when we reassess — backed by monthly reporting."
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "Discovery and audit",
+        "desc": "We learn your business goals and review your current marketing, analytics and sales process. You get a fact-based picture of where you stand today — no sugar-coating."
+      },
+      {
+        "step": "02",
+        "title": "Market, competitors and audience",
+        "desc": "We analyse your market and competitors and build real personas. This is where the differentiation gap emerges and exactly who you should be speaking to becomes clear."
+      },
+      {
+        "step": "03",
+        "title": "Strategy, positioning, marketing mix",
+        "desc": "We define positioning and messaging, select the right channels, and design a prioritised marketing mix aligned with your budget."
+      },
+      {
+        "step": "04",
+        "title": "KPIs, action plan and measurement",
+        "desc": "We lock in measurable goals and KPIs, deliver a prioritised action plan and roadmap, then track results in monthly reports and fine-tune. The strategy stays a living document."
+      }
+    ],
+    "faq": [
+      {
+        "q": "How long does it take to build a marketing strategy?",
+        "a": "A focused strategy with audit, market and competitor analysis, personas and an action plan typically takes 3-5 weeks. For more complex cases spanning several business lines, 6-8 weeks — the pace depends on how quickly we get access to your data and team."
+      },
+      {
+        "q": "When will I see results?",
+        "a": "The strategy itself is an immediately usable decision framework. Implementation results are channel-dependent: paid campaigns are measurable within weeks, while an SEO or content direction typically delivers measurable organic growth in 3-6 months. We promise realistic timelines, not miracles."
+      },
+      {
+        "q": "How much does strategic marketing cost?",
+        "a": "Pricing depends on company size, market complexity and the depth you need. The first consultation is free; after that we propose a fixed-price strategy package — transparent, agreed up front, with no hidden platform invoices. We give an exact quote after the discovery phase."
+      },
+      {
+        "q": "What does a strategy actually do for me?",
+        "a": "It stops you burning money campaign to campaign. You'll know who to target, with what message, on which channel and in what order — and you'll have KPIs to check whether it works. It's the highest-return investment of your capacity."
+      },
+      {
+        "q": "Do I get only the strategy, or implementation too?",
+        "a": "Whichever suits you. Many clients take the strategy and execute it with their own team — that's completely fine, the roadmap is built for it. If you prefer, we handle execution too: SEO, PPC, social, web — all built on the same strategy."
+      },
+      {
+        "q": "Do you use AI to build the strategy?",
+        "a": "Yes, as a tool. We use AI to process market and competitor data faster and to model scenarios, but positioning and decisions rest on human expertise. AI accelerates, it doesn't replace — we integrate it soberly, not sell it as magic."
+      }
+    ],
+    "cta": "Book your free strategy consultation"
+  },
+  "keresooptimalizalas": {
+    "slug": "keresooptimalizalas",
+    "title": "SEO that delivers measurable organic growth",
+    "subtitle": "Technical SEO, content and link building in one strategy — so the right people find you on Google and in AI search.",
+    "heroDesc": "Organic search is the channel with the longest-lasting return: you're not paying per click, you're building visibility you own. With a technical SEO audit, on-page optimisation, content SEO and link building, we move your site up Google's results — and in 2026, into AI answers too. We don't start without a strategy, and every month you see exactly what moved in a transparent report.",
+    "metaTitle": "Search Engine Optimisation (SEO) Experts 2026 – G2A Marketing",
+    "metaDesc": "Technical SEO audit, on-page, content SEO, link building and local SEO for measurable organic growth. Transparent monthly reports, AI-search ready. Get an audit!",
+    "icon": "seo",
+    "color": "#0891b2",
+    "intro": "In 2026, SEO is no longer just about Google's ten blue links: Google AI Overviews, ChatGPT and Perplexity all cite sources in their answers, and you need to be visible there too (AEO/GEO). Yet the fundamentals haven't changed: a fast, technically clean site, genuinely useful content and credible links. At G2A Marketing we start with strategy — keyword research, competitor analysis and a technical audit to map where you stand — then bring technical SEO, on-page optimisation, content marketing and link building together into one system. No hidden platform invoices, no empty promises: an SEO strategy typically delivers measurable organic growth within 3-6 months, and every month you track what's happening with your keywords, traffic and Core Web Vitals in a clear report.",
+    "benefits": [
+      {
+        "title": "Technical SEO audit",
+        "desc": "We map what's holding your site back: indexing and crawl issues, speed, structure, broken redirects, duplicate content, structured data. You get a prioritised issue list, ordered by impact."
+      },
+      {
+        "title": "On-page optimisation",
+        "desc": "Headings, meta elements, internal link structure, URLs and a keyword map aligned to search intent — so Google understands exactly what each page is about and who it's for."
+      },
+      {
+        "title": "Content SEO and content marketing",
+        "desc": "A content strategy that starts from keyword research: articles and pages that answer your customers' real questions. This is also the foundation for AI search engines (AI Overviews, ChatGPT, Perplexity) citing you."
+      },
+      {
+        "title": "Link building",
+        "desc": "Building credible, relevant links gradually and without risk. Quality over quantity — no spam links, no shortcuts that risk a penalty, because Google catches up with those sooner or later."
+      },
+      {
+        "title": "Local SEO",
+        "desc": "Google Business Profile, local keywords, reviews and local citations — so people find you in your area and target cities the moment they search. Rooted in Pécs, serving the whole country."
+      },
+      {
+        "title": "Core Web Vitals and AI visibility",
+        "desc": "Loading speed, stability and responsiveness are both a ranking factor and a user-experience factor today. We also prepare your content to appear in AI-generated answers (AEO/GEO)."
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "Audit and keyword research",
+        "desc": "We start with a technical SEO audit, competitor analysis and keyword research: where you stand now, what your customers search for, and where the biggest untapped opportunity is. The strategy is born here."
+      },
+      {
+        "step": "02",
+        "title": "Strategy and prioritisation",
+        "desc": "We build the SEO roadmap: what we fix first (usually the technical blockers), what content is needed and how the link profile grows. With a realistic timeline and measurable KPIs — no strategy, no G2A."
+      },
+      {
+        "step": "03",
+        "title": "Execution",
+        "desc": "Fixing technical issues, on-page optimisation, content production and link building, step by step. We work continuously on Core Web Vitals and on preparing your content for AI search engines."
+      },
+      {
+        "step": "04",
+        "title": "Measurement and monthly report",
+        "desc": "Every month you get a transparent report: keyword positions, organic traffic, conversions and the next steps. We refine the strategy based on data — not on gut feeling."
+      }
+    ],
+    "faq": [
+      {
+        "q": "How soon will I see the first results?",
+        "a": "SEO is a mid- to long-term investment. Technical fixes can show effects within 4-8 weeks, but an SEO strategy typically delivers measurable organic growth within 3-6 months. It depends on competition, your starting point and content pace."
+      },
+      {
+        "q": "Do you guarantee the number-one spot on Google?",
+        "a": "No — and be wary of anyone who does. Rankings depend on Google's algorithm, which nobody controls. What we do guarantee: prioritised, expert work, a measurable process and transparent reporting. We talk about expected results realistically."
+      },
+      {
+        "q": "What are Core Web Vitals, and why do they matter?",
+        "a": "Core Web Vitals are Google's user-experience metrics: loading speed, interactivity and visual stability. They are ranking factors and they directly affect conversion — a slow page loses the visitor before they ever see the content."
+      },
+      {
+        "q": "Does SEO still make sense in the age of AI search?",
+        "a": "Yes — in fact it matters more. Google AI Overviews, ChatGPT and Perplexity all cite well-structured, credible content as sources. Doing the classic SEO fundamentals well makes you more visible in AI answers too (AEO/GEO)."
+      },
+      {
+        "q": "What do I get in the monthly report?",
+        "a": "Keyword positions, organic traffic and conversion data, the work completed and the plan for next month — in plain language, not just charts. You always see what happened and why, with no hidden platform invoice."
+      },
+      {
+        "q": "Isn't link building risky? Won't Google penalise it?",
+        "a": "Spammy, bought bulk links are risky and Google catches up with them. We build credible, relevant links gradually — quality over quantity. That delivers lasting results, not a short-lived spike that the next update takes back."
+      }
+    ],
+    "cta": "Get your free SEO audit"
+  },
+  "webfejlesztes": {
+    "slug": "webfejlesztes",
+    "title": "Web Development & CRO — a website that doesn't just look good, it converts",
+    "subtitle": "Custom websites, online stores and landing pages built around the conversion that turns a visitor into a customer.",
+    "heroDesc": "Your website isn't decoration — it's a sales tool. We build fast, mobile-friendly, searchable sites — from custom code to WordPress and online stores — then improve the results with continuous conversion optimisation (CRO). The goal isn't a pretty design, it's measurably more leads and customers.",
+    "metaTitle": "Web Development & CRO 2026 — conversion-optimised websites | G2A Marketing",
+    "metaDesc": "Custom sites, WordPress, Shopify and WooCommerce stores, landing pages and CRO. Fast, responsive, SEO-friendly builds with measurable conversion. Get an audit.",
+    "icon": "web",
+    "color": "#f97316",
+    "intro": "In 2026 the website is the most important sales channel for most SMBs — yet most sites lose visitors: they're slow, break on mobile, and users can't find what to do next. Google uses Core Web Vitals as a ranking factor, so a slow page is penalised twice: worse rankings and fewer conversions. G2A Marketing doesn't just 'make a website' — we build a conversion system: custom development, WordPress or an online store (Shopify, WooCommerce) matched to the task, technical SEO baked into the code, and ongoing CRO after launch. No strategy and no measurement means no G2A — design is a tool, not the outcome.",
+    "benefits": [
+      {
+        "title": "Designed to convert, not just to impress",
+        "desc": "The design guides visitors toward the goal: clear information hierarchy, strong CTAs, frictionless forms. A polished interface is the baseline; conversion is the measure — every element has a business purpose."
+      },
+      {
+        "title": "The right technology for the job",
+        "desc": "Not everything needs WordPress, and not everything needs custom code. WordPress for content-heavy sites, Shopify or WooCommerce for stores, custom development for complex requirements — we pick what gives your case the best value for money."
+      },
+      {
+        "title": "Speed and Core Web Vitals",
+        "desc": "Optimised code, images and loading so the site appears fast on mobile too. Good Core Web Vitals scores improve your Google ranking and reduce drop-off during loading at the same time."
+      },
+      {
+        "title": "Responsive, mobile-first interface",
+        "desc": "Most traffic comes from mobile, so we develop mobile-first. The interface stays readable, tappable and purchasable on every screen size — phone, tablet, desktop."
+      },
+      {
+        "title": "SEO-friendly foundation in the code",
+        "desc": "Clean, semantic code, correct markup, fast loading and structured data — so search optimisation isn't a bolt-on afterthought but is built into the foundations."
+      },
+      {
+        "title": "Transparent pricing and maintenance",
+        "desc": "Scope and price agreed up front, no hidden platform invoices. After launch: updates, backups, bug fixes and performance monitoring — the website stays a maintained asset over the long term."
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "Assessment and conversion goal",
+        "desc": "We review the current site (or the from-scratch brief), the target audience and the business goal. We define what success means — quote request, purchase, booking — and which KPIs we'll measure it by."
+      },
+      {
+        "step": "02",
+        "title": "Architecture, UX and technology choice",
+        "desc": "We build the site structure and user journey around conversion, then select the platform (custom, WordPress, Shopify, WooCommerce). Development starts once the wireframe and content plan are approved."
+      },
+      {
+        "step": "03",
+        "title": "Development, content and testing",
+        "desc": "We write responsive, fast, SEO-friendly code, load the content and test on every device. Core Web Vitals scores and the forms, checkout and cart are all verified before go-live."
+      },
+      {
+        "step": "04",
+        "title": "Launch, measurement and continuous CRO",
+        "desc": "After launch we set up measurement (analytics, conversion tracking) and start conversion optimisation: A/B tests, behaviour analysis, refinement. A monthly report shows transparently what improved."
+      }
+    ],
+    "faq": [
+      {
+        "q": "How long does it take to build a website?",
+        "a": "A simple landing page or brochure site typically takes 2-4 weeks, a more complex company website 4-8 weeks, and an online store generally 6-12 weeks depending on the product range and integrations. We give the exact timeline after the assessment, because content and decision rounds often weigh more than the development itself."
+      },
+      {
+        "q": "Should I use WordPress, Shopify, WooCommerce or custom development?",
+        "a": "It depends on what you use it for. WordPress is practical for content-heavy, frequently updated sites; for a store, Shopify offers a fast launch while WooCommerce gives more freedom; for custom, logic-heavy needs we recommend custom development. After the assessment we recommend what gives your case the best value for money — and if you don't need something, we'll tell you."
+      },
+      {
+        "q": "What exactly is CRO, and why does it matter?",
+        "a": "CRO (conversion rate optimisation) is the process of turning more of your existing traffic into customers or leads — without having to buy more ads. We refine the site through measurement, A/B tests and behaviour analysis. That's why our work doesn't stop at launch: a pretty site is just the starting point, and the results come from continuous optimisation."
+      },
+      {
+        "q": "Why do speed and Core Web Vitals matter?",
+        "a": "On a slow site, some visitors navigate away before it even loads, and Google treats Core Web Vitals as a ranking factor. So a slow page penalises you twice: worse search ranking and lower conversion. We fix this with optimised code, images and loading."
+      },
+      {
+        "q": "Can you improve my existing website, or do you only build new ones?",
+        "a": "Both work. In many cases a technical and CRO audit yields significant improvement on the existing site (speed, mobile experience, conversion points). But if the underlying system is outdated or hard to maintain, rebuilding is often more economical. At the assessment we'll honestly tell you which path makes sense."
+      },
+      {
+        "q": "What happens to the website after handover?",
+        "a": "You can request ongoing maintenance: updates, backups, bug fixes, performance and security monitoring, plus carrying the CRO process forward. Pricing is agreed up front with no hidden platform invoices — and if your own team takes it over, we prepare a clean, documented handover."
+      }
+    ],
+    "cta": "Request your free website & CRO audit"
+  },
+
   "ai-marketing": {
     slug: "ai-marketing",
     title: "AI Marketing",
@@ -1466,7 +2498,523 @@ const EN: Record<string, ServiceConfig> = {
 };
 
 // ─── ZH ─────────────────────────────────────────────────────────────────────
-const ZH: Record<string, ServiceConfig> = {
+const ZH: Record<string, ServiceConfig> = {  "arculattervezes": {
+    "slug": "arculattervezes",
+    "title": "面向中小企业与 B2B 公司的品牌视觉设计",
+    "subtitle": "从标志到品牌手册的独特视觉身份 —— 在每一处保持一致。",
+    "heroDesc": "品牌的视觉身份胜过千言万语 —— 它往往是潜在客户对您的第一印象。我们设计标志、色彩体系、字体与图形系统,让同一个信息贯穿每一个接触点。这不是装饰:而是从战略出发、易于识别、能够建立信任的视觉身份。",
+    "metaTitle": "品牌视觉设计 2026 – 视觉身份 | G2A Marketing",
+    "metaDesc": "为中小企业与 B2B 公司提供标志、品牌手册、印刷与数字物料设计。打造与众不同、赢得信任的一致视觉身份。立即获取报价!",
+    "icon": "brand",
+    "color": "#ec4899",
+    "intro": "在 2026 年,品牌视觉不是奢侈品,而是经营的基础:客户会在几秒内判断是否信任您,而这种判断很大程度上由视觉呈现决定。标志不统一、用色随意、各处出现六种不同字体 —— 即使观看者说不出问题所在,也能立刻察觉到不协调。在 G2A Marketing,我们始终从战略推导视觉:先理解您的客户是谁、您与竞争对手的差异、您希望占据什么定位,然后才开始设计。最终交付的不只是一个好看的标志,而是一套可运作的系统:一份品牌手册,为您未来的每一份物料定调,从名片到网站。没有战略,就没有品牌。",
+    "benefits": [
+      {
+        "title": "独特且可保护的标志",
+        "desc": "不用模板,不用素材库。我们从多个概念方向出发,再将选定方案以简洁、可缩放的矢量格式交付 —— 在任何尺寸、任何背景下都适用,小至网站图标,大至门头招牌。"
+      },
+      {
+        "title": "完整的品牌手册",
+        "desc": "我们规范标志用法、安全留白、禁止用法、完整色彩体系(HEX、RGB、CMYK、Pantone)、字体与图形元素。有了这份文件,无论是内部团队还是外部合作方,都能保持一致地使用您的品牌。"
+      },
+      {
+        "title": "在每一处保持一致",
+        "desc": "从网站到社交媒体,再到印刷名片,统一的视觉语言贯穿始终。一致性是识别度的基础:反复的接触才能逐步建立信任与品牌记忆。"
+      },
+      {
+        "title": "可直接付印的物料",
+        "desc": "名片、宣传册、易拉宝、文件夹、演示模板 —— 以可付印文件交付,并附上生产所需的技术参数(出血、裁切线、色彩配置)。如有需要,我们也可推荐可靠的印刷合作伙伴。"
+      },
+      {
+        "title": "数字品牌工具包",
+        "desc": "社交媒体模板、电子邮件签名、演示母版、帖子框与封面图。我们交付可编辑的模板(如 Canva 或 Figma),让您能够自行快速制作日常内容,并保持品牌一致。"
+      },
+      {
+        "title": "战略定位,而非装饰",
+        "desc": "对我们而言,视觉身份源自品牌战略 —— 目标受众、竞争背景、核心信息。因此整个过程不是口味之争,而是一连串有理有据、服务于您实际业务目标的决策。"
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "调研与品牌简报",
+        "desc": "我们深入了解您的业务:客户是谁、您的差异点、您想唤起的感受,以及您在市场中的定位。我们梳理您现有的物料以及竞争对手的视觉风格。这份简报是整个项目的指南针。"
+      },
+      {
+        "step": "02",
+        "title": "概念与标志设计",
+        "desc": "我们呈现多个差异鲜明的视觉方向 —— 配以情绪板,并说明每个概念为何适合您的受众。您选定方向后,我们再细化打磨,直至最终标志。"
+      },
+      {
+        "step": "03",
+        "title": "搭建视觉识别系统",
+        "desc": "围绕标志,我们构建完整体系:色彩、字体层级、图形元素与图像风格。我们将这一切整理成品牌手册,确保您的视觉呈现在未来也保持一致。"
+      },
+      {
+        "step": "04",
+        "title": "应用与交付",
+        "desc": "我们制作具体物料 —— 可付印的名片、宣传册、易拉宝以及数字模板。我们交付完整的源文件包,并在交付沟通中带您逐一了解,助您自信地使用。"
+      }
+    ],
+    "faq": [
+      {
+        "q": "完成一整套品牌视觉需要多长时间?",
+        "a": "标志与核心识别系统通常需要 3-5 周。完整套餐(手册、印刷与数字物料一并)一般为 5-8 周,具体取决于范围与反馈轮次的推进速度。调研阶段结束后,我们会给出明确的时间表。"
+      },
+      {
+        "q": "我只想要一个标志,不要整套,可以吗?",
+        "a": "可以。许多客户先从标志开始,之后再扩展系统。我们会如实告知:仅有标志不足以实现一致的视觉呈现,因此建议至少同时定义基础色彩与字体。对于我们认为无助于您目标的事,我们也会直说不。"
+      },
+      {
+        "q": "最终我会拿到什么,文件是什么格式?",
+        "a": "标志包含矢量(SVG、AI、EPS)与成品图像格式(PNG、JPG),涵盖多种变体与背景;品牌手册为 PDF;印刷物料为可付印 PDF;数字模板为可编辑形式(如 Canva/Figma)。所有源文件都归您所有。"
+      },
+      {
+        "q": "我已经有标志了,只想更新一下,你们做吗?",
+        "a": "做,品牌重塑与视觉焕新也是我们的专长。我们会评估现有识别中哪些有效、哪些无效,再根据当前形象中沉淀的品牌资产多少,建议渐进式调整或彻底重新设计。我们不会随意丢弃您已经建立起来的识别度。"
+      },
+      {
+        "q": "你们如何确保视觉身份真正契合我的业务?",
+        "a": "靠的是从战略而非口味出发。在品牌简报中我们锁定受众、定位与核心信息,并将每一个视觉决策与之关联。我们在呈现概念时附上理由,让选择成为有依据的决策,而非凭感觉。"
+      },
+      {
+        "q": "视觉身份完成后,你们也能帮助落地应用吗?",
+        "a": "可以。由于 G2A Marketing 是全案代理,我们能将视觉身份无缝延伸到您的网站、社交媒体、广告与内容上。交付时您会获得所需的全部模板;如有需要,我们也会在持续应用中与您并肩同行。"
+      }
+    ],
+    "cta": "获取定制品牌报价"
+  },
+  "hirdeteskezeles": {
+    "slug": "hirdeteskezeles",
+    "title": "PPC 与广告管理 —— 一套战略,贯通所有平台",
+    "subtitle": "在 Google Ads、Meta、LinkedIn 与 TikTok 上运行数据驱动的付费广告,以 ROI 为统一核心。",
+    "heroDesc": "付费广告的成效,来自一套统一战略的统筹,而非各平台各自为政的修补。我们的团队提供全面的多平台 PPC 管理:让预算投向客户真正做决定的地方,让每一分投入都对应可衡量的目标。没有战略,就没有 G2A。",
+    "metaTitle": "PPC 与广告管理 2026 —— 多平台投放管理 | G2A Marketing",
+    "metaDesc": "多平台 PPC 管理:Google Ads、Meta、LinkedIn 与 TikTok 统一于一套战略。数据驱动结构、A/B 测试、转化追踪。立即预约免费审计!",
+    "icon": "ads",
+    "color": "#f43f5e",
+    "intro": "在 2026 年,付费广告早已不是单一平台的命题:您的客户同样来自 Google 搜索、Meta 信息流、LinkedIn 的 B2B 场景与 TikTok 视频。只有把这些渠道放进同一套数据驱动的结构中统筹,而非各自分散优化,PPC 与广告管理才能带来真正的回报。G2A Marketing 提供贯通各平台的投放管理:持续把预算调向单次转化成本最优的方向,用 A/B 测试打磨信息,用精准的转化追踪衡量结果。我们不兜售承诺,而是交付一套可在月度报告中跟踪的透明流程 —— 没有隐藏的平台账单。",
+    "benefits": [
+      {
+        "title": "一套战略,多个平台",
+        "desc": "Google Ads、Meta、LinkedIn 与 TikTok 并非彼此孤立的孤岛:我们在共同目标与统一归因下运行它们,让您看清每个渠道在购买旅程中的作用。"
+      },
+      {
+        "title": "数据驱动的账户结构",
+        "desc": "围绕真实的搜索与购买意图搭建广告系列与广告组 —— 清晰的细分,让预算流向有利可图的方向,而非四处流失。"
+      },
+      {
+        "title": "跨平台预算分配",
+        "desc": "在单次转化成本最优处加大投入,在回报转弱处收回 —— 基于每周复盘,而非凭感觉。"
+      },
+      {
+        "title": "A/B 测试与创意",
+        "desc": "我们对广告文案、创意与落地方向进行结构化测试。只有数据验证的版本才胜出 —— 落败的变体随即替换。"
+      },
+      {
+        "title": "精准的转化追踪",
+        "desc": "配置 GA4、平台像素以及必要时的服务器端衡量,让报告呈现真实的销售线索与成交,而非误导性的点击数。"
+      },
+      {
+        "title": "透明的月度报告",
+        "desc": "一份简明易懂的报告:预算去向、单次转化成本、下一步动作。您清楚为什么付费 —— 没有隐藏项目。"
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "审计与目标设定",
+        "desc": "我们梳理现有账户、衡量体系与竞争环境,厘清业务目标与切合实际的 KPI(CPA、ROAS),再确定哪些平台真正相关 —— 若某个平台不值得投,我们会直说。"
+      },
+      {
+        "step": "02",
+        "title": "战略与结构",
+        "desc": "搭建贯通各平台的投放方案:在何处、用何种信息触达何人,以及预算如何分配。建立清晰的账户结构与转化追踪以供衡量。"
+      },
+      {
+        "step": "03",
+        "title": "上线与测试",
+        "desc": "投放上线,并在最初几周对创意、信息与定向进行结构化 A/B 测试。从早期数据中筛出真正有效的方向。"
+      },
+      {
+        "step": "04",
+        "title": "优化与扩量",
+        "desc": "持续优化定向、出价与预算分配,把表现优异的方向放大投放。在月度报告中呈现成效与下一步动作。"
+      }
+    ],
+    "faq": [
+      {
+        "q": "这与单独投放 Google Ads 或 Meta 广告有何不同?",
+        "a": "这是贯通各平台的管理:我们不是只运行单一渠道,而是在同一套战略下统筹 Google、Meta、LinkedIn 与 TikTok 广告,采用统一的预算分配与归因。如果您只需要 Google Ads 或只需要 Meta,我们另有专门服务 —— 这里则是把整体组合协调到一起。"
+      },
+      {
+        "q": "需要多少预算才值得开始?",
+        "a": "没有唯一的固定金额,因为不同行业与平台的竞争各不相同。审计时我们会告诉您,需要多少投入才能积累足够的测试数据 —— 若预算不足以支撑目标,我们会直说,而不是无果地花掉。"
+      },
+      {
+        "q": "多久能看到初步成效?",
+        "a": "学习与测试阶段通常为 4-6 周,才能基于稳定数据进行优化。搜索广告一般转化更快;展示广告与社交品牌建设方向则需要更长时间成熟。具体时间表会在审计时给出。"
+      },
+      {
+        "q": "我该在哪些平台投放?",
+        "a": "这取决于您,而非我们:您的买家在哪里、意图是什么。B2B 通常以 Google 搜索与 LinkedIn 为主;B2C 则 Meta 与 TikTok 更强。审计时我们会逐个平台说明建议理由 —— 您不必同时出现在所有平台。"
+      },
+      {
+        "q": "广告账户与数据归谁所有?",
+        "a": "始终归您。我们在您名下创建账户,或在您现有账户上工作,由您授予我们访问权限。因此即使日后您另有打算,您的数据与我们搭建的结构仍归您所有 —— 没有锁定。"
+      },
+      {
+        "q": "你们如何衡量与报告?",
+        "a": "我们用 GA4、平台像素以及必要时的服务器端衡量来配置转化追踪,让真实的销售线索与成交体现在数据中。您会收到清晰的月度报告:预算去向、各平台的单次转化成本,以及下一步动作。"
+      }
+    ],
+    "cta": "预约免费 PPC 审计"
+  },
+  "kozossegi-media": {
+    "slug": "kozossegi-media",
+    "title": "社交媒体管理 —— 把粉丝转化为忠实社区",
+    "subtitle": "战略、内容、社区管理与红人合作一站式服务,面向中小企业与 B2B 公司。",
+    "heroDesc": "社交媒体不是随意发帖,而是一套体系:战略、内容日历、一致的品牌语调以及每日的社区管理。G2A Marketing 在 Facebook、Instagram、LinkedIn 与 TikTok 上,从设定目标到内容审核,负责完整流程。没有战略,就没有 G2A:我们先明确受众与衡量指标,然后才发布内容。",
+    "metaTitle": "社交媒体管理 2026 —— 品牌建设 | G2A Marketing",
+    "metaDesc": "在 Facebook、Instagram、LinkedIn 与 TikTok 上提供社媒战略、内容生产、社区管理与红人营销。立即领取免费社媒诊断!",
+    "icon": "social",
+    "color": "#3b82f6",
+    "intro": "到 2026 年,社交媒体已成为品牌建设最重要的自然渠道之一 —— 但平台算法更严格,用户也能立刻识破空洞的营销。如今取胜的不是内容工厂,而是能建立真实社区的、持续且可信的存在。G2A Marketing 不会孤立地运营各个渠道,而是把它们统一到一套战略之中:内容日历、明确的品牌语调、积极的社区管理,以及在真正契合时的红人合作。Facebook、Instagram、LinkedIn 与 TikTok,各按其逻辑运营,但传递统一的品牌信息。我们理性地运用 AI 进行内容构思与排期,但语调与审核始终由人来把控。我们还会提供透明的月度报告:发布了什么、什么有效、什么无效,以及下个月的计划。",
+    "benefits": [
+      {
+        "title": "战略先行,而非随意发帖",
+        "desc": "我们先明确受众、定位与衡量指标,然后才创作内容。每条帖子都服务于一个业务目标 —— 知名度、社区建设或获客 —— 而不是为发而发。"
+      },
+      {
+        "title": "内容日历与一致的品牌语调",
+        "desc": "我们搭建周度与月度内容日历,让发布可预期、可规划。跨平台统一的视觉风格与品牌语调,让您的品牌在喧嚣的信息流中依然清晰可辨。"
+      },
+      {
+        "title": "针对平台量身定制的内容",
+        "desc": "我们不会把同一条帖子推向所有渠道。LinkedIn 专业、TikTok 短而有冲击力、Instagram 重视觉、Facebook 偏社区 —— 我们为每个渠道生产其原生格式的内容。"
+      },
+      {
+        "title": "积极的社区管理与审核",
+        "desc": "我们按您的品牌语调,及时回应评论、私信与评价。审核也会处理负面声音 —— 冷静而专业 —— 因为妥善处理的投诉能赢得信任。"
+      },
+      {
+        "title": "真正契合的红人营销",
+        "desc": "我们不以粉丝数量挑选红人,而是寻找受众与您真正重叠的相关合作伙伴。创意 brief、合作框架与效果衡量均由我们协调。"
+      },
+      {
+        "title": "透明的衡量与月度报告",
+        "desc": "触达、互动、受众增长,以及在有意义时引导至网站的流量:每月您都会收到清晰的报告。没有隐藏的平台账单,价格事先透明。"
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "诊断与战略",
+        "desc": "我们梳理您当前的存在、竞争对手与目标受众,选定相关平台(并非每个平台都适合每个品牌),并确定目标、语调与 KPI。"
+      },
+      {
+        "step": "02",
+        "title": "内容日历与创意",
+        "desc": "我们编制月度内容日历:主题、格式、排期。按平台定制地生产帖子、视觉与文案,并设有供您审批的内置节点。"
+      },
+      {
+        "step": "03",
+        "title": "发布与社区管理",
+        "desc": "我们按排期发布,并每日管理社区:评论、私信、审核。在适合的情况下,协调红人合作。"
+      },
+      {
+        "step": "04",
+        "title": "衡量、报告与优化",
+        "desc": "我们每月评估结果,分析哪些有效,并据此微调下个月的内容。持续、数据驱动的迭代。"
+      }
+    ],
+    "faq": [
+      {
+        "q": "社交媒体多久能见到效果?",
+        "a": "自然品牌建设需要耐心:持续的存在与社区增长通常在 3-6 个月内才真正显现。最初几周主要在搭建内容体系与语调,实质性的势头会在此之后形成。"
+      },
+      {
+        "q": "我们应该用哪些平台?",
+        "a": "用您受众真正所在的平台。B2B 中 LinkedIn 往往是主渠道;消费品牌适合 Instagram 与 TikTok;本地企业适合 Facebook。我们会在诊断中共同决定 —— 您无需出现在每个平台上。"
+      },
+      {
+        "q": "内容是你们生产,还是我们来?",
+        "a": "由我们生产:文案、视觉、内容日历。如果您有自己的素材(照片、视频、产品图),我们会整合进来。我们依托您品牌的内部知识,但执行由我们负责 —— 您只需审批。"
+      },
+      {
+        "q": "你们如何处理负面评论与危机?",
+        "a": "依照事先约定的审核原则,并按您的品牌语调处理。对合理投诉冷静而务实地回应,对恶意攻击按规则处理。遇到严重危机时,我们会在发布任何内容前立即与您沟通。"
+      },
+      {
+        "q": "红人营销包含在服务里吗?",
+        "a": "包含,在契合的前提下。我们寻找相关的合作伙伴(不只看粉丝数量),并管理 brief、合作框架与效果衡量。红人费用为单独成本,事先透明地规划。"
+      },
+      {
+        "q": "你们会用 AI 来生产内容吗?",
+        "a": "会,但是理性地用:用于构思、草稿与排期。最终的品牌语调、编辑与社区互动仍由人来完成 —— AI 提升效率,但不会取代可信的存在。"
+      }
+    ],
+    "cta": "领取免费社交媒体诊断"
+  },
+  "strategiai-marketing": {
+    "slug": "strategiai-marketing",
+    "title": "面向中小企业与 B2B 公司的战略营销",
+    "subtitle": "从审计到行动计划:可衡量、可落地的数据驱动营销战略。",
+    "heroDesc": "战略是决定每一分营销预算去向的唯一关键点。我们梳理您的市场、竞争对手与目标受众,在此基础上构建定位、营销组合与以 KPI 为核心的行动计划。我们不是向您推销一场活动,而是给您方向 —— 因为在我们这里,没有战略,就没有 G2A。",
+    "metaTitle": "战略营销咨询 2026 – 审计、KPI、行动计划 | G2A Marketing",
+    "metaDesc": "面向中小企业与 B2B 的营销审计、市场与竞品分析、用户画像、营销组合与 KPI 行动计划。预约免费战略咨询。",
+    "icon": "strategy",
+    "color": "#6366f1",
+    "intro": "在 2026 年,战略营销不是一份 PPT 愿景,而是一套可运转的系统:清晰的定位、可衡量的目标受众与可追责的 KPI。多数中小企业与 B2B 公司花钱不当,并非因为预算少,而是因为缺乏决策框架 —— 一场活动接一场活动地被动应对,没有衡量,也没有方向。正因如此,G2A Marketing 坚持战略优先:我们的每一项服务 —— SEO、PPC、社媒、网站 —— 都建立在经过审计的战略之上,而非相反。我们扎根于佩奇,服务覆盖全国与国际,定价透明、按月报告、周期务实。这是我们的旗舰页面:您的营销究竟是服务于业务目标,还是只在烧钱,正是在这里见分晓。",
+    "benefits": [
+      {
+        "title": "营销审计",
+        "desc": "我们对您现有营销进行全面体检:渠道、信息、网站、数据分析、投入与成效。让您看清什么有效、预算在哪里流失,以及最大的未开发机会在何处。"
+      },
+      {
+        "title": "市场与竞品分析",
+        "desc": "我们梳理您的市场定位与主要竞争对手的战略 —— 信息、定价、渠道、薄弱点。我们寻找您能差异化突围的具体缺口,而不是填一张空洞的 SWOT 表。"
+      },
+      {
+        "title": "目标受众与用户画像",
+        "desc": "我们基于数据与访谈,构建 2-3 个真实买家画像:他是谁、痛点是什么、在哪里能触达、决策由什么驱动。每条信息与渠道都基于此,而非凭空假设。"
+      },
+      {
+        "title": "定位与信息体系",
+        "desc": "我们明确客户为何应选择您而非竞争对手。清晰的价值主张与信息支柱,在每一处触点 —— 网站、广告、方案 —— 都保持一致表达。"
+      },
+      {
+        "title": "营销组合与渠道规划",
+        "desc": "我们判断哪些渠道能以最佳回报触达您的受众(SEO、PPC、社媒、邮件、内容),并制定优先级清晰的计划:先投什么、按何顺序投入。"
+      },
+      {
+        "title": "KPI 体系与行动计划",
+        "desc": "我们设定可衡量的目标(线索、CAC、ROAS、转化),并构建 6-12 个月的优先级路线图。您将清楚下一步是什么、衡量什么、何时复盘 —— 并有月度报告支撑。"
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "调研与审计",
+        "desc": "我们了解您的业务目标,审视现有营销、数据分析与销售流程。您将得到一幅基于事实的现状图景 —— 不加粉饰。"
+      },
+      {
+        "step": "02",
+        "title": "市场、竞品与受众",
+        "desc": "我们分析您的市场与竞争对手,并构建真实用户画像。差异化缺口在此浮现,该向谁精准发声也由此变得清晰。"
+      },
+      {
+        "step": "03",
+        "title": "战略、定位、营销组合",
+        "desc": "我们确立定位与信息体系,选择合适的渠道,并设计与您预算相匹配、优先级清晰的营销组合。"
+      },
+      {
+        "step": "04",
+        "title": "KPI、行动计划与衡量",
+        "desc": "我们锁定可衡量的目标与 KPI,提供优先级清晰的行动计划与路线图,随后在月度报告中追踪成效并持续微调。战略始终是一份活的文档。"
+      }
+    ],
+    "faq": [
+      {
+        "q": "制定一份营销战略需要多长时间?",
+        "a": "一份聚焦的战略,包含审计、市场与竞品分析、用户画像与行动计划,通常需要 3-5 周。涉及多条业务线的复杂情形需 6-8 周 —— 进度取决于我们获取您数据与团队配合的速度。"
+      },
+      {
+        "q": "多久能看到成效?",
+        "a": "战略本身就是一套可立即使用的决策框架。落地成效因渠道而异:付费活动数周内即可衡量,而 SEO 或内容方向通常在 3-6 个月内带来可衡量的自然增长。我们承诺务实的周期,而非奇迹。"
+      },
+      {
+        "q": "战略营销的费用是多少?",
+        "a": "价格取决于公司规模、市场复杂度与所需深度。首次咨询免费,之后我们提供固定价格的战略套餐 —— 透明、预先约定,没有隐藏的平台账单。确切报价在调研阶段后给出。"
+      },
+      {
+        "q": "战略对我具体有什么用?",
+        "a": "它让您不再一场接一场地烧钱。您将清楚该面向谁、用什么信息、在哪个渠道、按何顺序投入 —— 并有 KPI 来检验它是否奏效。这是对您资源回报最高的投资。"
+      },
+      {
+        "q": "我只拿到战略,还是也包含落地执行?",
+        "a": "由您决定。许多客户拿走战略,由自己团队执行 —— 这完全可以,路线图正为此而设计。如您愿意,落地也可由我们承接:SEO、PPC、社媒、网站 —— 全部建立在同一份战略之上。"
+      },
+      {
+        "q": "你们会用 AI 来制定战略吗?",
+        "a": "会,作为工具。我们用 AI 更快处理市场与竞品数据并模拟情景,但定位与决策依靠人的专业判断。AI 是加速,而非替代 —— 我们理性地整合它,而不是当作魔法来兜售。"
+      }
+    ],
+    "cta": "预约免费战略咨询"
+  },
+  "keresooptimalizalas": {
+    "slug": "keresooptimalizalas",
+    "title": "带来可衡量自然增长的 SEO",
+    "subtitle": "技术 SEO、内容与链接建设统一为一套战略 —— 让对的人在 Google 和 AI 搜索中都能找到您。",
+    "heroDesc": "自然搜索是回报最持久的渠道:您投入的不是每次点击的广告费,而是属于自己的长期曝光。通过技术 SEO 审计、On-page 优化、内容 SEO 与链接建设,我们提升您的网站在 Google 上的排名 —— 在 2026 年,还包括 AI 答案中的曝光。没有战略,我们不会开始;每月您都能在透明报告中清楚看到哪些指标在变化。",
+    "metaTitle": "搜索引擎优化 (SEO) 专家服务 2026 – G2A Marketing",
+    "metaDesc": "技术 SEO 审计、On-page、内容 SEO、链接建设与本地 SEO,带来可衡量的自然增长。透明月度报告,适配 AI 搜索。立即获取审计!",
+    "icon": "seo",
+    "color": "#0891b2",
+    "intro": "进入 2026 年,SEO 已不只关乎 Google 的十个蓝色链接:Google AI Overviews、ChatGPT 与 Perplexity 都会在回答中引用来源,您也必须在这些场景中获得曝光(AEO/GEO)。但根本逻辑并未改变:一个快速、技术干净的网站,真正有用的内容,以及可信的外链。在 G2A Marketing,我们从战略入手 —— 通过关键词研究、竞品分析与技术审计梳理您的现状 —— 然后把技术 SEO、On-page 优化、内容营销与链接建设整合为一套系统。没有隐藏的平台账单,也没有空洞承诺:一套 SEO 战略通常在 3 至 6 个月内带来可衡量的自然增长,每月您都能在清晰报告中追踪关键词、流量与 Core Web Vitals 的变化。",
+    "benefits": [
+      {
+        "title": "技术 SEO 审计",
+        "desc": "我们梳理拖累网站的问题:索引与抓取障碍、速度、结构、错误重定向、重复内容、结构化数据。您将获得一份按影响排序的优先级问题清单。"
+      },
+      {
+        "title": "On-page 优化",
+        "desc": "标题、Meta 元素、内链结构、URL 与关键词地图,全部对齐搜索意图 —— 让 Google 准确理解每个页面讲什么、面向谁。"
+      },
+      {
+        "title": "内容 SEO 与内容营销",
+        "desc": "从关键词研究出发的内容战略:撰写真正回答客户问题的文章与页面。这也是让 AI 搜索引擎(AI Overviews、ChatGPT、Perplexity)引用您的基础。"
+      },
+      {
+        "title": "链接建设",
+        "desc": "循序渐进、无风险地建立可信且相关的外链。重质不重量 —— 不做垃圾链接,不走可能招致惩罚的捷径,因为 Google 迟早会识破它们。"
+      },
+      {
+        "title": "本地 SEO",
+        "desc": "Google 商家资料、本地关键词、评价与本地引用 —— 让客户在您所在区域和目标城市搜索时就能找到您。植根佩奇,服务全国。"
+      },
+      {
+        "title": "Core Web Vitals 与 AI 曝光",
+        "desc": "如今加载速度、稳定性与响应性既是排名因素,也是用户体验因素。同时,我们让您的内容为出现在 AI 生成的答案中做好准备(AEO/GEO)。"
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "审计与关键词研究",
+        "desc": "我们从技术 SEO 审计、竞品分析与关键词研究入手:您当前处于什么位置、客户在搜什么、最大的未开发机会在哪里。战略由此诞生。"
+      },
+      {
+        "step": "02",
+        "title": "战略与优先级",
+        "desc": "我们制定 SEO 路线图:先修什么(通常是技术障碍)、需要什么内容、外链档案如何成长。配以现实的时间表与可衡量的 KPI —— 没有战略,就没有 G2A。"
+      },
+      {
+        "step": "03",
+        "title": "落地执行",
+        "desc": "修复技术问题、On-page 优化、内容生产与链接建设,逐步推进。我们持续优化 Core Web Vitals,并为 AI 搜索引擎做内容准备。"
+      },
+      {
+        "step": "04",
+        "title": "测量与月度报告",
+        "desc": "每月您都会收到透明报告:关键词排名、自然流量、转化与下一步计划。我们依据数据而非凭感觉来优化战略。"
+      }
+    ],
+    "faq": [
+      {
+        "q": "多久能看到首批结果?",
+        "a": "SEO 是中长期投资。技术修复的效果可能在 4 至 8 周内显现,但一套 SEO 战略通常在 3 至 6 个月内带来可衡量的自然增长。具体取决于竞争状况、起点与内容节奏。"
+      },
+      {
+        "q": "你们保证 Google 第一名吗?",
+        "a": "不保证 —— 对承诺保证的人请保持警惕。排名取决于 Google 的算法,没有人能操控它。我们保证的是:有优先级的专业工作、可衡量的流程与透明的报告。我们会现实地谈论预期结果。"
+      },
+      {
+        "q": "什么是 Core Web Vitals,为什么重要?",
+        "a": "Core Web Vitals 是 Google 的用户体验指标:加载速度、交互性与视觉稳定性。它们是排名因素,并直接影响转化 —— 访客在看到内容之前就会离开一个缓慢的页面。"
+      },
+      {
+        "q": "在 AI 搜索时代,SEO 还有意义吗?",
+        "a": "有,而且更重要。Google AI Overviews、ChatGPT 与 Perplexity 都会引用结构清晰、可信的内容作为来源。把经典 SEO 基础做扎实,也会让您在 AI 答案中更有曝光(AEO/GEO)。"
+      },
+      {
+        "q": "月度报告里有什么?",
+        "a": "关键词排名、自然流量与转化数据、已完成的工作以及下月计划 —— 用通俗语言呈现,而不只是图表。您随时能看到发生了什么、为什么,没有隐藏的平台账单。"
+      },
+      {
+        "q": "链接建设有风险吗?Google 会惩罚吗?",
+        "a": "垃圾式、购买的批量外链有风险,Google 终会识破。我们循序渐进地建立可信且相关的外链 —— 重质不重量。这带来持久的结果,而非被下一次算法更新收回的短暂跃升。"
+      }
+    ],
+    "cta": "获取免费 SEO 审计"
+  },
+  "webfejlesztes": {
+    "slug": "webfejlesztes",
+    "title": "网站开发与 CRO —— 不只是好看，更要带来转化",
+    "subtitle": "围绕“把访客变成客户”的转化目标，构建定制网站、电商与落地页。",
+    "heroDesc": "您的网站不是装饰品，而是销售工具。我们构建快速、移动友好、易被搜索的网站 —— 从定制开发到 WordPress 与电商 —— 再通过持续的转化优化（CRO）提升成效。目标不是漂亮的设计，而是可衡量的更多询盘与客户。",
+    "metaTitle": "网站开发与 CRO 2026 —— 转化优化网站 | G2A Marketing",
+    "metaDesc": "定制网站、WordPress、Shopify 与 WooCommerce 电商、落地页与 CRO。快速、响应式、SEO 友好，带来可衡量的转化。立即申请审计。",
+    "icon": "web",
+    "color": "#f97316",
+    "intro": "2026 年，网站是多数中小企业最重要的销售渠道 —— 但大多数网站却在流失访客：加载慢、移动端错位、用户找不到下一步该做什么。Google 将 Core Web Vitals 作为排名因素，因此慢速页面受到双重惩罚：排名更差，转化更少。G2A Marketing 不只是“做一个网站”，而是构建转化系统：根据任务选择定制开发、WordPress 或电商（Shopify、WooCommerce），将技术 SEO 写入代码，并在上线后持续进行 CRO。没有战略、没有衡量，就没有 G2A —— 设计是工具，而非最终结果。",
+    "benefits": [
+      {
+        "title": "为转化而设计，而非只为好看",
+        "desc": "设计引导访客走向目标：清晰的信息层级、有力的行动号召、无摩擦的表单。精致的界面是基线，转化才是标准 —— 每个元素都有其业务用途。"
+      },
+      {
+        "title": "为任务选对技术",
+        "desc": "并非所有项目都需要 WordPress，也并非都需要定制代码。内容繁多的网站用 WordPress，电商用 Shopify 或 WooCommerce，复杂需求用定制开发 —— 我们选择对您而言性价比最高的方案。"
+      },
+      {
+        "title": "速度与 Core Web Vitals",
+        "desc": "优化代码、图片与加载，让网站在移动端也能快速呈现。良好的 Core Web Vitals 分数能同时提升 Google 排名并减少加载过程中的流失。"
+      },
+      {
+        "title": "响应式、移动优先的界面",
+        "desc": "大部分流量来自移动端，因此我们以移动优先的理念开发。界面在任何屏幕尺寸上都保持可读、可点击、可购买 —— 手机、平板、桌面皆然。"
+      },
+      {
+        "title": "代码层面的 SEO 友好基础",
+        "desc": "干净的语义化代码、正确的标记、快速加载与结构化数据 —— 让搜索优化不是事后补丁，而是融入根基之中。"
+      },
+      {
+        "title": "透明的定价与维护",
+        "desc": "范围与价格预先约定，没有隐藏的平台账单。上线后提供更新、备份、修复与性能监控 —— 让网站长期保持为得到维护的资产。"
+      }
+    ],
+    "process": [
+      {
+        "step": "01",
+        "title": "评估与转化目标",
+        "desc": "我们审视现有网站（或从零开始的需求）、目标受众与业务目标。明确“成功”意味着什么 —— 询价、购买、预约 —— 以及用哪些 KPI 来衡量。"
+      },
+      {
+        "step": "02",
+        "title": "架构、UX 与技术选型",
+        "desc": "围绕转化构建网站结构与用户路径，然后选择平台（定制、WordPress、Shopify、WooCommerce）。在线框图与内容方案获批后即开始开发。"
+      },
+      {
+        "step": "03",
+        "title": "开发、内容与测试",
+        "desc": "我们编写响应式、快速、SEO 友好的代码，导入内容，并在每种设备上测试。上线前会验证 Core Web Vitals 分数以及表单、结账与购物车的运行。"
+      },
+      {
+        "step": "04",
+        "title": "上线、衡量与持续 CRO",
+        "desc": "上线后我们配置衡量体系（分析、转化跟踪），并启动转化优化：A/B 测试、行为分析、持续打磨。每月报告透明地呈现改善之处。"
+      }
+    ],
+    "faq": [
+      {
+        "q": "做一个网站需要多长时间？",
+        "a": "一个简单的落地页或展示型网站通常需要 2-4 周，较复杂的企业网站需 4-8 周，电商则视产品范围与集成一般需 6-12 周。准确的时间表在评估后给出，因为内容与决策环节往往比开发本身更耗时。"
+      },
+      {
+        "q": "我该用 WordPress、Shopify、WooCommerce 还是定制开发？",
+        "a": "取决于您的用途。内容繁多、频繁更新的网站适合 WordPress；电商方面，Shopify 上线快，WooCommerce 自由度更高；逻辑复杂的定制需求我们建议定制开发。评估之后，我们会推荐对您而言性价比最高的方案 —— 若某项您并不需要，我们会直说。"
+      },
+      {
+        "q": "CRO 究竟是什么，为何重要？",
+        "a": "CRO（转化率优化）是在不增加广告投放的前提下，把更多现有流量变为客户或询盘的过程。我们通过衡量、A/B 测试与行为分析来打磨网站。这正是我们的工作不止于上线的原因：漂亮的网站只是起点，成效来自持续优化。"
+      },
+      {
+        "q": "速度与 Core Web Vitals 为何重要？",
+        "a": "在慢速网站上，部分访客还没加载完就已离开，而 Google 又将 Core Web Vitals 视为排名因素。因此慢速页面受到双重惩罚：搜索排名更差、转化更低。我们通过优化代码、图片与加载来改善这一点。"
+      },
+      {
+        "q": "你们能优化我现有的网站，还是只做新的？",
+        "a": "两者皆可。许多情况下，一次技术与 CRO 审计就能让现有网站显著改善（速度、移动体验、转化点）。但如果底层系统已过时或难以维护，重建往往更经济。评估时我们会坦诚地告诉您哪条路更合理。"
+      },
+      {
+        "q": "网站交付之后呢？",
+        "a": "您可以申请持续维护：更新、备份、修复、性能与安全监控，以及继续推进 CRO 流程。定价预先约定，没有隐藏的平台账单 —— 若由您自己的团队接手，我们会准备规整且有文档的交接。"
+      }
+    ],
+    "cta": "申请免费的网站与 CRO 审计"
+  },
+
   "ai-marketing": {
     slug: "ai-marketing",
     title: "AI 营销",

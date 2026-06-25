@@ -102,6 +102,14 @@ function PublicRouter() {
       <Route path="/szolgaltatasok/esg-kommunikacio" component={() => <NewServicePage params={{ slug: "esg-kommunikacio" }} />} />
       <Route path="/szolgaltatasok/employer-branding" component={() => <NewServicePage params={{ slug: "employer-branding" }} />} />
       <Route path="/szolgaltatasok/nemzetkozi-marketing" component={() => <NewServicePage params={{ slug: "nemzetkozi-marketing" }} />} />
+      {/* Migrated to the NewServicePage layout (serviceConfigs-driven) — these
+          6 previously rendered via the legacy DB-backed ServicePage. */}
+      <Route path="/szolgaltatasok/arculattervezes" component={() => <NewServicePage params={{ slug: "arculattervezes" }} />} />
+      <Route path="/szolgaltatasok/hirdeteskezeles" component={() => <NewServicePage params={{ slug: "hirdeteskezeles" }} />} />
+      <Route path="/szolgaltatasok/kozossegi-media" component={() => <NewServicePage params={{ slug: "kozossegi-media" }} />} />
+      <Route path="/szolgaltatasok/strategiai-marketing" component={() => <NewServicePage params={{ slug: "strategiai-marketing" }} />} />
+      <Route path="/szolgaltatasok/keresooptimalizalas" component={() => <NewServicePage params={{ slug: "keresooptimalizalas" }} />} />
+      <Route path="/szolgaltatasok/webfejlesztes" component={() => <NewServicePage params={{ slug: "webfejlesztes" }} />} />
       <Route path="/ingyenes-audit" component={AuditPage} />
       <Route path="/referenciak" component={ReferenciakPage} />
       <Route path="/referenciak/:slug" component={CaseStudyDetailPage} />
