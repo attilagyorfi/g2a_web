@@ -6,11 +6,15 @@ import { parseFormError } from "@/lib/utils";
 import { useConfirm } from "@/components/ConfirmDialog";
 import LocalizedField from "@/components/LocalizedField";
 import AiImageButton from "@/components/admin/AiImageButton";
+import ServiceSectionEditor, { type LocStr } from "@/components/admin/ServiceSectionEditor";
 
 type ServiceForm = {
   title: string;
   titleEn: string;
   titleZh: string;
+  subtitle: string;
+  subtitleEn: string;
+  subtitleZh: string;
   shortDescription: string;
   shortDescriptionEn: string;
   shortDescriptionZh: string;
@@ -22,10 +26,17 @@ type ServiceForm = {
   heroSubtitleZh: string;
   heroImage: string;
   heroImageAlt: string;
+  intro: string;
+  introEn: string;
+  introZh: string;
   content: string;
   contentEn: string;
   contentZh: string;
+  cta: string;
+  ctaEn: string;
+  ctaZh: string;
   icon: string;
+  color: string;
   metaTitle: string;
   metaTitleEn: string;
   metaTitleZh: string;
@@ -34,14 +45,26 @@ type ServiceForm = {
   metaDescriptionZh: string;
 };
 
+// Structured (repeatable) section item shapes — stored as JSON columns.
+type BenefitItem = { title: LocStr; desc: LocStr };
+type ProcessItem = { step: string; title: LocStr; desc: LocStr };
+type FaqItem = { q: LocStr; a: LocStr };
+
+function parseItems<T>(raw: unknown): T[] {
+  try { const a = JSON.parse(String(raw || "[]")); return Array.isArray(a) ? (a as T[]) : []; } catch { return []; }
+}
+
 const EMPTY_FORM: ServiceForm = {
   title: "", titleEn: "", titleZh: "",
+  subtitle: "", subtitleEn: "", subtitleZh: "",
   shortDescription: "", shortDescriptionEn: "", shortDescriptionZh: "",
   heroTitle: "", heroTitleEn: "", heroTitleZh: "",
   heroSubtitle: "", heroSubtitleEn: "", heroSubtitleZh: "",
   heroImage: "", heroImageAlt: "",
+  intro: "", introEn: "", introZh: "",
   content: "", contentEn: "", contentZh: "",
-  icon: "",
+  cta: "", ctaEn: "", ctaZh: "",
+  icon: "", color: "",
   metaTitle: "", metaTitleEn: "", metaTitleZh: "",
   metaDescription: "", metaDescriptionEn: "", metaDescriptionZh: "",
 };
@@ -59,16 +82,33 @@ export default function AdminServices() {
   });
   const [editing, setEditing] = useState<number | null>(null);
   const [form, setForm] = useState<ServiceForm>(EMPTY_FORM);
+  const [benefits, setBenefits] = useState<BenefitItem[]>([]);
+  const [processSteps, setProcessSteps] = useState<ProcessItem[]>([]);
+  const [faq, setFaq] = useState<FaqItem[]>([]);
 
   const inputStyle = { width: "100%", backgroundColor: "#222", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "5px", padding: "0.75rem 1rem", color: "#fff", fontFamily: "Geist Mono, monospace", fontSize: "0.875rem", outline: "none", boxSizing: "border-box" as const };
   const labelStyle = { display: "block", color: "#888", fontSize: "0.75rem", textTransform: "uppercase" as const, letterSpacing: "0.05em", marginBottom: "0.375rem", fontFamily: "Geist Mono, monospace" };
 
   const startEdit = (s: NonNullable<typeof services>[0]) => {
     setEditing(s.id);
+    const sx = s as Record<string, unknown>;
+    setBenefits(parseItems<BenefitItem>(sx.benefits));
+    setProcessSteps(parseItems<ProcessItem>(sx.process));
+    setFaq(parseItems<FaqItem>(sx.faq));
     setForm({
       title: s.title || "",
       titleEn: s.titleEn || "",
       titleZh: s.titleZh || "",
+      subtitle: (sx.subtitle as string) || "",
+      subtitleEn: (sx.subtitleEn as string) || "",
+      subtitleZh: (sx.subtitleZh as string) || "",
+      intro: (sx.intro as string) || "",
+      introEn: (sx.introEn as string) || "",
+      introZh: (sx.introZh as string) || "",
+      cta: (sx.cta as string) || "",
+      ctaEn: (sx.ctaEn as string) || "",
+      ctaZh: (sx.ctaZh as string) || "",
+      color: (sx.color as string) || "",
       shortDescription: s.shortDescription || "",
       shortDescriptionEn: s.shortDescriptionEn || "",
       shortDescriptionZh: s.shortDescriptionZh || "",
@@ -117,13 +157,23 @@ export default function AdminServices() {
             </h1>
           </div>
         </div>
-        <form onSubmit={e => { e.preventDefault(); updateMutation.mutate({ id: editing, data: form }); }} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+        <form onSubmit={e => { e.preventDefault(); updateMutation.mutate({ id: editing, data: { ...form, benefits: JSON.stringify(benefits), process: JSON.stringify(processSteps), faq: JSON.stringify(faq) } }); }} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
           <div style={{ gridColumn: "1/-1" }}>
-            <LocalizedField label="Cím" field="title" form={form} setForm={setForm} required />
+            <LocalizedField label="Cím (H1)" field="title" form={form} setForm={setForm} required />
+          </div>
+          <div style={{ gridColumn: "1/-1" }}>
+            <LocalizedField label="Alcím (színes hero-sor)" field="subtitle" form={form} setForm={setForm} />
           </div>
           <div>
-            <label style={labelStyle}>Ikon (emoji)</label>
-            <input value={form.icon} onChange={e => setForm(p => ({ ...p, icon: e.target.value }))} style={inputStyle} />
+            <label style={labelStyle}>Ikon (rövid kód, pl. seo — a badge az első 3 betű)</label>
+            <input value={form.icon} onChange={e => setForm(p => ({ ...p, icon: e.target.value }))} style={inputStyle} placeholder="pl. seo, brand, web" />
+          </div>
+          <div>
+            <label style={labelStyle}>Akcentszín (hex)</label>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <input type="color" value={/^#[0-9a-fA-F]{6}$/.test(form.color) ? form.color : "#14b8a6"} onChange={e => setForm(p => ({ ...p, color: e.target.value }))} style={{ width: 44, height: 40, padding: 2, background: "#222", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 5, cursor: "pointer" }} />
+              <input value={form.color} onChange={e => setForm(p => ({ ...p, color: e.target.value }))} style={inputStyle} placeholder="#14b8a6" />
+            </div>
           </div>
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.375rem" }}>
@@ -150,14 +200,45 @@ export default function AdminServices() {
             <LocalizedField label="Hero cím" field="heroTitle" form={form} setForm={setForm} />
           </div>
           <div style={{ gridColumn: "1/-1" }}>
-            <LocalizedField label="Hero alcím" field="heroSubtitle" form={form} setForm={setForm} type="textarea" rows={2} />
+            <LocalizedField label="Hero leírás (heroDesc — 2-3 mondat a hero alatt)" field="heroSubtitle" form={form} setForm={setForm} type="textarea" rows={2} />
           </div>
           <div>
             <label style={labelStyle}>Hero kép alt</label>
             <input value={form.heroImageAlt} onChange={e => setForm(p => ({ ...p, heroImageAlt: e.target.value }))} style={inputStyle} />
           </div>
           <div style={{ gridColumn: "1/-1" }}>
-            <LocalizedField label="Tartalom (HTML/Markdown)" field="content" form={form} setForm={setForm} type="rich" rows={10} />
+            <LocalizedField label="Bevezető szöveg (intro — az új elrendezés bevezető bekezdése)" field="intro" form={form} setForm={setForm} type="textarea" rows={4} />
+          </div>
+          <div style={{ gridColumn: "1/-1" }}>
+            <LocalizedField label="CTA gomb szövege" field="cta" form={form} setForm={setForm} />
+          </div>
+          {/* Structured, DB-driven sections rendered by NewServicePage. */}
+          <ServiceSectionEditor
+            label="Előnyök (benefits)"
+            hint="kártya cím + leírás"
+            items={benefits as unknown as Record<string, unknown>[]}
+            fields={[{ key: "title", label: "Cím" }, { key: "desc", label: "Leírás", textarea: true }]}
+            onChange={(items) => setBenefits(items as unknown as BenefitItem[])}
+            emptyItem={() => ({ title: {}, desc: {} })}
+          />
+          <ServiceSectionEditor
+            label="Folyamat (process)"
+            hint="lépésszám (pl. 01) + cím + leírás"
+            items={processSteps as unknown as Record<string, unknown>[]}
+            fields={[{ key: "step", label: "Lépés", plain: true }, { key: "title", label: "Cím" }, { key: "desc", label: "Leírás", textarea: true }]}
+            onChange={(items) => setProcessSteps(items as unknown as ProcessItem[])}
+            emptyItem={() => ({ step: "", title: {}, desc: {} })}
+          />
+          <ServiceSectionEditor
+            label="GYIK (faq)"
+            hint="kérdés + válasz"
+            items={faq as unknown as Record<string, unknown>[]}
+            fields={[{ key: "q", label: "Kérdés" }, { key: "a", label: "Válasz", textarea: true }]}
+            onChange={(items) => setFaq(items as unknown as FaqItem[])}
+            emptyItem={() => ({ q: {}, a: {} })}
+          />
+          <div style={{ gridColumn: "1/-1" }}>
+            <LocalizedField label="Tartalom (HTML/Markdown — régi elrendezés, opcionális)" field="content" form={form} setForm={setForm} type="rich" rows={10} />
           </div>
           <div style={{ gridColumn: "1/-1" }}>
             <LocalizedField

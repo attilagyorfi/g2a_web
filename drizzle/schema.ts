@@ -124,6 +124,24 @@ export const services = mysqlTable("services", {
   metaDescription: text("metaDescription"),
   metaDescriptionEn: text("metaDescriptionEn"),
   metaDescriptionZh: text("metaDescriptionZh"),
+  // ─── NewServicePage structured layout (2026-06) ──────────────────────────
+  // The new service-detail layout (benefits / process / faq) is now
+  // DB-driven & admin-editable. Scalars follow the field/En/Zh pattern;
+  // the repeatable sections are single JSON columns whose items carry the
+  // localized subfields inline ({ hu, en, zh }) so rows can't drift apart.
+  subtitle: text("subtitle"),
+  subtitleEn: text("subtitleEn"),
+  subtitleZh: text("subtitleZh"),
+  intro: text("intro"),
+  introEn: text("introEn"),
+  introZh: text("introZh"),
+  cta: varchar("cta", { length: 512 }),
+  ctaEn: varchar("ctaEn", { length: 512 }),
+  ctaZh: varchar("ctaZh", { length: 512 }),
+  color: varchar("color", { length: 32 }),
+  benefits: text("benefits"), // JSON: [{ title:{hu,en,zh}, desc:{hu,en,zh} }]
+  process: text("process"),   // JSON: [{ step, title:{hu,en,zh}, desc:{hu,en,zh} }]
+  faq: text("faq"),           // JSON: [{ q:{hu,en,zh}, a:{hu,en,zh} }]
   sortOrder: int("sortOrder").default(0),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

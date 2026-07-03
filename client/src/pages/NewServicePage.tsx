@@ -10,17 +10,68 @@ import { Link } from "wouter";
 import { ArrowRight, CheckCircle, Phone, Mail, ChevronDown, ChevronUp } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import ServiceHeroDemo, { hasServiceHeroDemo } from "@/components/service-demos/ServiceHeroDemo";
-import { getServiceConfig } from "@/data/serviceConfigs";
+import { getServiceConfig, type ServiceConfig } from "@/data/serviceConfigs";
 import RelatedServices from "@/components/RelatedServices";
+import type { Language } from "@/contexts/LanguageContext";
 
 
 type Props = {
   params: { slug: string };
 };
 
+/** Pick a localized scalar column (field / fieldEn / fieldZh) off a DB row. */
+function pickCol(row: Record<string, unknown>, base: string, lang: Language): string {
+  const v = lang === "en" ? row[base + "En"] : lang === "zh" ? row[base + "Zh"] : row[base];
+  return String((v ?? row[base] ?? "") as string);
+}
+/** Pick a localized value from an inline { hu, en, zh } object (list items). */
+function locItem(o: { hu?: string; en?: string; zh?: string } | undefined, lang: Language): string {
+  if (!o) return "";
+  return String(o[lang] || o.hu || "");
+}
+
+/**
+ * Map a DB `services` row to the ServiceConfig shape NewServicePage renders.
+ * The repeatable sections are stored as JSON with inline-localized subfields.
+ * Returns null when the row has no structured content yet, so the caller can
+ * fall back to the static serviceConfigs seed (defensive during rollout / if
+ * the DB is unavailable).
+ */
+function dbServiceToConfig(row: Record<string, unknown> | null | undefined, lang: Language): ServiceConfig | null {
+  if (!row) return null;
+  const parse = <T,>(raw: unknown): T[] => {
+    try { const a = JSON.parse(String(raw || "[]")); return Array.isArray(a) ? a : []; } catch { return []; }
+  };
+  const benefits = parse<{ title: { hu?: string; en?: string; zh?: string }; desc: { hu?: string; en?: string; zh?: string } }>(row.benefits)
+    .map((b) => ({ title: locItem(b.title, lang), desc: locItem(b.desc, lang) }));
+  if (benefits.length === 0) return null;
+  const process = parse<{ step: string; title: { hu?: string; en?: string; zh?: string }; desc: { hu?: string; en?: string; zh?: string } }>(row.process)
+    .map((p) => ({ step: p.step, title: locItem(p.title, lang), desc: locItem(p.desc, lang) }));
+  const faq = parse<{ q: { hu?: string; en?: string; zh?: string }; a: { hu?: string; en?: string; zh?: string } }>(row.faq)
+    .map((f) => ({ q: locItem(f.q, lang), a: locItem(f.a, lang) }));
+  return {
+    slug: String(row.slug),
+    title: pickCol(row, "title", lang),
+    subtitle: pickCol(row, "subtitle", lang),
+    heroDesc: pickCol(row, "heroSubtitle", lang),
+    metaTitle: pickCol(row, "metaTitle", lang) || pickCol(row, "title", lang),
+    metaDesc: pickCol(row, "metaDescription", lang),
+    icon: String(row.icon || "srv"),
+    color: String(row.color || "var(--g2a-brand-teal)"),
+    intro: pickCol(row, "intro", lang),
+    benefits,
+    process,
+    faq,
+    cta: pickCol(row, "cta", lang),
+  };
+}
+
 export default function NewServicePage({ params }: Props) {
   const { t, lang } = useLanguage();
-  const config = getServiceConfig(params.slug, lang);
+  // DB-driven (admin-editable); falls back to the static serviceConfigs seed
+  // during load or if the row lacks structured content.
+  const { data: dbService, isLoading } = trpc.content.serviceBySlug.useQuery({ slug: params.slug });
+  const config = dbServiceToConfig(dbService as Record<string, unknown> | null | undefined, lang) ?? getServiceConfig(params.slug, lang);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   // `website` is a honeypot — invisible field that must stay empty
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", website: "" });
@@ -32,6 +83,16 @@ export default function NewServicePage({ params }: Props) {
   });
 
   if (!config) {
+    // No static fallback and the DB is still loading → hold, don't flash 404.
+    if (isLoading) {
+      return (
+        <>
+          <Navigation />
+          <main style={{ minHeight: "70vh" }} aria-busy="true" />
+          <Footer />
+        </>
+      );
+    }
     return (
       <>
         <Navigation />

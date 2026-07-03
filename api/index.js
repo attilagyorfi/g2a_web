@@ -132,6 +132,27 @@ var init_schema = __esm({
       metaDescription: text("metaDescription"),
       metaDescriptionEn: text("metaDescriptionEn"),
       metaDescriptionZh: text("metaDescriptionZh"),
+      // ─── NewServicePage structured layout (2026-06) ──────────────────────────
+      // The new service-detail layout (benefits / process / faq) is now
+      // DB-driven & admin-editable. Scalars follow the field/En/Zh pattern;
+      // the repeatable sections are single JSON columns whose items carry the
+      // localized subfields inline ({ hu, en, zh }) so rows can't drift apart.
+      subtitle: text("subtitle"),
+      subtitleEn: text("subtitleEn"),
+      subtitleZh: text("subtitleZh"),
+      intro: text("intro"),
+      introEn: text("introEn"),
+      introZh: text("introZh"),
+      cta: varchar("cta", { length: 512 }),
+      ctaEn: varchar("ctaEn", { length: 512 }),
+      ctaZh: varchar("ctaZh", { length: 512 }),
+      color: varchar("color", { length: 32 }),
+      benefits: text("benefits"),
+      // JSON: [{ title:{hu,en,zh}, desc:{hu,en,zh} }]
+      process: text("process"),
+      // JSON: [{ step, title:{hu,en,zh}, desc:{hu,en,zh} }]
+      faq: text("faq"),
+      // JSON: [{ q:{hu,en,zh}, a:{hu,en,zh} }]
       sortOrder: int("sortOrder").default(0),
       createdAt: timestamp("createdAt").defaultNow().notNull(),
       updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
@@ -3552,6 +3573,19 @@ var adminRouter = router({
       metaDescription: z2.string().optional(),
       metaDescriptionEn: z2.string().optional(),
       metaDescriptionZh: z2.string().optional(),
+      subtitle: z2.string().optional(),
+      subtitleEn: z2.string().optional(),
+      subtitleZh: z2.string().optional(),
+      intro: z2.string().optional(),
+      introEn: z2.string().optional(),
+      introZh: z2.string().optional(),
+      cta: z2.string().optional(),
+      ctaEn: z2.string().optional(),
+      ctaZh: z2.string().optional(),
+      color: z2.string().optional(),
+      benefits: z2.string().optional(),
+      process: z2.string().optional(),
+      faq: z2.string().optional(),
       sortOrder: z2.number().default(0)
     })).mutation(({ input }) => createService(input)),
     update: adminProcedure2.input(z2.object({ id: z2.number(), data: z2.object({
@@ -3581,6 +3615,19 @@ var adminRouter = router({
       metaDescription: z2.string().optional(),
       metaDescriptionEn: z2.string().optional(),
       metaDescriptionZh: z2.string().optional(),
+      subtitle: z2.string().optional(),
+      subtitleEn: z2.string().optional(),
+      subtitleZh: z2.string().optional(),
+      intro: z2.string().optional(),
+      introEn: z2.string().optional(),
+      introZh: z2.string().optional(),
+      cta: z2.string().optional(),
+      ctaEn: z2.string().optional(),
+      ctaZh: z2.string().optional(),
+      color: z2.string().optional(),
+      benefits: z2.string().optional(),
+      process: z2.string().optional(),
+      faq: z2.string().optional(),
       sortOrder: z2.number().optional()
     }) })).mutation(({ input }) => updateService(input.id, input.data)),
     delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteService(input.id))
