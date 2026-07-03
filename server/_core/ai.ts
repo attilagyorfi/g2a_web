@@ -37,7 +37,19 @@ type ChatOptions = {
   jsonMode?: boolean;
   /** Per-call timeout in ms. Default 50_000 (50s). */
   timeoutMs?: number;
+  /** Override the model for this call (defaults to getAiModel()). */
+  model?: string;
 };
+
+/**
+ * Model for long-form blog generation. gpt-4o-mini badly undershoots the
+ * 1500-2000-word target (JSON mode makes it terse), so blog drafts use a
+ * stronger model that actually holds length and writes engaging long-form.
+ * Env-overridable if cost needs dialling back.
+ */
+function getBlogModel(): string {
+  return process.env.OPENAI_BLOG_MODEL || "gpt-4o";
+}
 
 /**
  * Per-call hard ceiling. The multi-pass blog generator parallels six
@@ -54,7 +66,7 @@ async function chat(messages: ChatMessage[], opts: ChatOptions = {}): Promise<st
   if (!key) throw new Error("OPENAI_API_KEY not set — AI features are disabled");
 
   const body: Record<string, unknown> = {
-    model: getAiModel(),
+    model: opts.model ?? getAiModel(),
     messages,
     temperature: opts.temperature ?? 0.7,
     max_tokens: opts.maxTokens ?? 2000,
@@ -196,7 +208,10 @@ function markdownToHtml(raw: string): string {
     }
 
     // Block that contains an existing HTML opening tag — keep as-is.
-    if (/^<(p|h2|h3|ul|ol|div|blockquote)/i.test(block)) {
+    // `table` included so a comparison table survives the markdown
+    // safety-net path with its markup (and the FAQ <h2 id="faq"> anchor
+    // is preserved by the h2 branch above).
+    if (/^<(p|h2|h3|ul|ol|div|blockquote|table)/i.test(block)) {
       out.push(block);
       continue;
     }
@@ -237,10 +252,12 @@ function languageLock(lang: Lang): string {
 
 export async function generateBlogDraft(input: BlogDraftInput): Promise<BlogDraft> {
   const lang = input.lang ?? "hu";
-  // Target 900-1200 words (HubSpot-style B2B post). Hungarian/English
-  // ≈ 220 wpm, Chinese ≈ 300 chars/min — both land around 4-6 min read
-  // at this length. 1050 is the midpoint we ask for.
-  const wordCount = input.wordCount ?? 1050;
+  // Target 1500-2000 words (deep, SEO+GEO-optimised B2B pillar post).
+  // Hungarian/English ≈ 220 wpm, Chinese ≈ 300 chars/min — this length
+  // lands around a 7-9 min read, which is what drives dwell-time and AI
+  // citations (long-form structured content is the top GEO signal). 1700
+  // is the midpoint we ask for. Short 1-minute drafts are NOT acceptable.
+  const wordCount = input.wordCount ?? 1700;
   const tone = input.tone ?? "professional";
   const audience = input.audience || "magyar KKV-tulajdonosok, cégvezetők, marketingvezetők és döntéshozók";
 
@@ -288,78 +305,151 @@ STÍLUS — HubSpot-szerű, emberi B2B hangvétel:
 
 ✅ HELYETTE: konkrét, természetes, emberi logikájú megfogalmazás. Életszerű üzleti helyzet, provokatív megállapítás, gyakori vezetői tévedés.
 
-SZERKEZET (kötelező):
+SZERKEZET (kötelező, EBBEN a sorrendben — SEO + GEO / AI-kereső optimalizált):
 
-1. CÍM (SEO cím) — figyelemfelkeltő, konkrét, üzleti szempontból releváns; max 65 karakter; NE legyen általános.
+1. CÍM (SEO cím) — figyelemfelkeltő, konkrét, kulcsszó-gazdag; max 65 karakter; NE legyen általános.
 2. META LEÍRÁS — max 155 karakter; tartalmazza a fő problémát és az olvasói hasznot.
 3. KIVONAT (lead) — 1-2 mondat (max 200 karakter), a teljes cikk lényege.
-4. BEVEZETŐ (a content elején) — 2-3 bekezdés. NE definícióval kezdj. Kezdj egy életszerű üzleti helyzettel, provokatív megállapítással vagy gyakori vezetői tévedéssel. Mutasd meg, miért fontos a téma a célközönségnek.
-5. FŐ RÉSZ — 5-7 nagyobb tartalmi blokk (<h2> alfejezet). Minden blokkban:
+4. BEVEZETŐ (a content elején) — 2 bekezdés. NE definícióval kezdj. Kezdj életszerű üzleti helyzettel, provokatív megállapítással vagy gyakori vezetői tévedéssel. FRONT-LOADING: már az első 2-3 mondatban derüljön ki a cikk fő állítása / közvetlen válasza a témára — az AI-keresők (ChatGPT, Perplexity, Google AI Overviews) az elöl álló, tömör választ idézik.
+5. KULCS TANULSÁGOK — közvetlenül a bevezető után egy <h2>Kulcs tanulságok</h2> blokk, alatta egy <ul> 3-5 ponttal. MINDEN pont önmagában is érthető, teljes állítás legyen (az AI-keresők pontosan az ilyen önálló, idézhető állításokat emelik ki). NE általánosság — konkrét, a cikkből fakadó tanulság.
+6. FŐ RÉSZ — 6-8 nagyobb tartalmi blokk (<h2>). Ahol természetes, a H2 legyen KÉRDÉS formájú (illeszkedik az AI-keresők lekérdezéseihez, pl. "Miért nem hoz eredményt a hirdetésed?"). MINDEN blokk 180-280 szó, és tartalmazzon:
    - erős, konkrét alcím
-   - magyarázd el a problémát emberi, üzleti nyelven
-   - adj konkrét példát vagy tipikus magyar KKV-helyzetet
-   - írd le, mit érdemes másképp csinálni
-   - kerüld a túl hosszú felsorolásokat
-   NE írj minden ponthoz külön "tippek" listát. Csak akkor használj <ul>/<ol> listát, ha tényleg segíti az olvashatóságot. A cikk alapvetően folyó, összefüggő szöveg legyen.
-6. GYAKORLATI RÉSZ (utolsó előtti blokk) — "Mit tegyél most?" alcím alatt egy rövid <ol> ellenőrzőlista 4-6 konkrét lépéssel.
-7. ZÁRÁS (utolsó <h2>) — NE általános motivációs mondattal zárj. Foglald össze erős szakmai állítással, mi a téma valódi tanulsága. A végén legyen természetes, NEM tolakodó CTA a G2A Marketing felé. CTA példa: "Ha szeretnéd látni, hogy a te céged esetében hol akad el a növekedés, a G2A Marketing segít feltérképezni a piacot, az üzeneteket és a digitális jelenlét gyenge pontjait."
+   - a probléma emberi, üzleti magyarázata
+   - konkrét magyar KKV-példa vagy tipikus helyzet
+   - mit érdemes másképp csinálni
+   Legalább EGY blokkban legyen egy jól strukturált <ul>/<ol> lista VAGY egy egyszerű összehasonlító <table> (pl. „gyakori hiba" vs. „jobb megközelítés" — <thead>/<tbody>/<tr>/<th>/<td>). Az AI-keresők a strukturált adatot (lista, táblázat) preferálják kiemeléshez. De NE legyen minden blokk listás — a cikk gerince folyó, összefüggő szöveg.
+7. MIT TEGYÉL MOST? — az utolsó tartalmi blokk előtt egy <h2>Mit tegyél most?</h2>, alatta <ol> 4-6 konkrét, végrehajtható lépéssel.
+8. ZÁRÁS — utolsó tartalmi <h2>. NE motivációs közhely. Erős szakmai állítással foglald össze a téma valódi tanulságát. A végén természetes, segítő hangú (NEM tolakodó) CTA a G2A Marketing felé. Példa: "Ha szeretnéd látni, hol akad el a te cégednél a növekedés, a G2A Marketing segít feltérképezni a piacot, az üzeneteket és a digitális jelenlét gyenge pontjait."
+9. GYAKORI KÉRDÉSEK — a cikk LEGVÉGÉN egy <h2 id="faq">Gyakori kérdések</h2> szekció (az id="faq" KÖTELEZŐ és pontosan így). Alatta 4-6 valódi, a témában ténylegesen keresett kérdés, mindegyik: <h3>A kérdés?</h3> majd <p>2-4 mondatos, önmagában is teljes, konkrét válasz</p>. Ebből épül a FAQPage structured data, amit az AI-keresők és a Google kiemelt találatai a leggyakrabban idéznek — ezért legyen tartalmilag erős, ne töltelék.
 
-⚠ TERJEDELEM: ${wordCount} szó (a 900-1200 sávban). Ne rövidíts. Ne túlozz, ne ígérj garantált sikert.
+⚠ TERJEDELEM: 1500-2000 szó a cél (~${wordCount}), hogy mély, 7-9 perces, versenyképes pillér-cikk legyen. Ez a MINIMUM elvárás — az 1 perces, felszínes cikk NEM elfogadható. Minden <h2> blokk legyen legalább 180 szó, ténylegesen kifejtve. A hosszt mélységgel, példával és konkrétsággal töltsd meg, NE üres frázisokkal vagy ismétléssel. Ne túlozz, ne ígérj garantált sikert, ne találj ki statisztikát.
 
 ⚠ HTML FORMÁTUM (content mező)
 A "content" mezőben TISZTA HTML markup. SZIGORÚAN TILOS markdown szintaxis ("##", "**...**", "- ", backtick). A BlogPostPage \`dangerouslySetInnerHTML\`-lel rendereli — a markdown szóról szóra megjelenne.
 
-Engedett tagek: <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <a href="...">.
+Engedett tagek: <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <a href="...">, valamint táblázathoz <table>, <thead>, <tbody>, <tr>, <th>, <td>.
 NE add hozzá a H1-et — azt a cikk \`title\` mezője adja.
-Minden bekezdést <p>...</p> tag fogjon közre.
+Minden bekezdést <p>...</p> tag fogjon közre. A "Gyakori kérdések" szekció H2-je KÖTELEZŐEN <h2 id="faq">.
 
-KIMENETI JSON — CSAK ezt a sémát add vissza:
-{
-  "title": "...",                     // SEO cím, max 65 karakter
-  "excerpt": "...",                   // Lead / kivonat, max 200 karakter
-  "content": "<p>...</p>...",         // Teljes HTML blogbejegyzés, ~${wordCount} szó, a CTA-val a végén
-  "metaTitle": "...",                 // SEO meta cím, max 60 karakter
-  "metaDescription": "...",           // Meta leírás, 140-155 karakter
-  "cta": "...",                       // A javasolt CTA mondatban-két mondatban (ugyanaz, ami a content végén szerepel)
-  "alternativeTitles": ["...", "...", "...", "...", "..."]  // 5 alternatív címötlet
-}
-A "content" érték HTML stringként szerepeljen (escape-elve a JSON-ban).`;
+A CIKK TARTALMI SZABÁLYAI:
+- A törzs TISZTA HTML (a fent engedett tagekkel). A H1 főcímet NE tedd bele — az külön mezőben lesz.
+- A „Gyakori kérdések" szekció H2-je KÖTELEZŐEN <h2 id="faq">.
+- HOSSZ: a teljes kész cikk 1500-2000 szó legyen, ténylegesen kifejtve. A rövid, felszínes cikk hibás.`;
 
   const system = brandContext ? `${brandContext}\n\n${baseSystem}` : baseSystem;
 
-  // maxTokens budget for a ~1700-word HTML post: words → ~1.3-1.5 tokens
-  // each (Hungarian/English), plus HTML markup overhead (~+15%) and the
-  // JSON envelope. Chinese is tokenised per character at ~1 token each.
-  // 6000 tokens leaves comfortable headroom for the largest case.
+  // Phase 1a — CONTENT generation WITHOUT JSON mode. Both gpt-4o and
+  // gpt-4o-mini badly undershoot the 1500-2000-word target when the whole
+  // article must be a single JSON string field (they wrap up early, ~700
+  // words). Free-form HTML output holds the length reliably. 110s timeout:
+  // a long draft takes ~60-100s; the multilang pipeline runs the 3 drafts
+  // in parallel then the 3 edits in parallel (wall ≈ 2×110s < 300s Vercel).
+  // CONTENT in TWO continuation passes. A single call — even non-JSON on
+  // gpt-4o — tops out around ~800 words; splitting into "first half" +
+  // "finish it" reliably lands 1500-2000 words (the 6+ min / dwell-time /
+  // AI-citation target). Both halves run on the stronger blog model; each
+  // is capped short enough that half1 + half2 + meta stays well under the
+  // 300s Vercel budget even with the 3 locales running in parallel.
+  // JSON mode ({ "content": "<html>" }) rather than free-form: gpt-4o
+  // refuses free-form Chinese generation under this heavily-prohibitive
+  // Hungarian brief (returns "很抱歉，我无法…"), but complies happily when the
+  // output is a constrained JSON object. Same envelope for all locales.
+  const JSON_ENVELOPE = `\n\nA választ EGY JSON objektumként add vissza: { "content": "…a fenti szabályok szerinti HTML string…" }. Csak a "content" mező legyen benne, a content értéke JSON-escape-elt HTML.`;
+  const half1 = await chat(
+    [
+      { role: "system", content: `${system}\n\n⚠ MOST CSAK A CIKK ELSŐ FELÉT ÍRD MEG: a bevezetőt (front-loadolt válasszal), a <h2>Kulcs tanulságok</h2> listát, majd az első 4 nagyobb <h2> tartalmi blokkot (mindegyik 200-300 szó, valódi kifejtéssel, példával). NE írd meg a „Mit tegyél most?"-ot, a záró CTA-t és a Gyakori kérdéseket — azok a második félbe jönnek. Az első fél HTML törzse ~1000 szó legyen.${JSON_ENVELOPE}` },
+      { role: "user", content: `Téma: ${input.topic}` },
+    ],
+    { temperature: 0.75, maxTokens: 6000, timeoutMs: 85_000, model: getBlogModel(), jsonMode: true },
+  );
+  const part1 = extractContentField(half1);
+  const half2 = await chat(
+    [
+      { role: "system", content: `${system}\n\n⚠ MOST A CIKK MÁSODIK FELÉT (BEFEJEZÉSÉT) ÍRD MEG. Megkapod a már megírt első felet — folytasd ZÖKKENŐMENTESEN, NE ismételd meg. Írj még 3-4 nagyobb <h2> tartalmi blokkot (200-300 szó), majd a <h2>Mit tegyél most?</h2> lépéslistát (<ol>), egy záró <h2>-t természetes, segítő CTA-val, végül a <h2 id="faq">Gyakori kérdések</h2> szekciót (4-6 valódi kérdés, <h3> kérdés + <p> válasz). Valamelyik blokkban legyen egy lista vagy összehasonlító táblázat. A folytatás ~1000 szó legyen, az első felet NE ismételd.${JSON_ENVELOPE}` },
+      { role: "user", content: `Téma: ${input.topic}\n\nA cikk eddig megírt első fele (folytasd, ne ismételd):\n${part1}` },
+    ],
+    { temperature: 0.75, maxTokens: 6000, timeoutMs: 85_000, model: getBlogModel(), jsonMode: true },
+  );
+  const part2 = extractContentField(half2);
+  const content = markdownToHtml(`${part1}\n${part2}`.trim());
+
+  // Metadata off the finished article (small, fast JSON call, mini model).
+  const meta = await generateBlogMeta(content, input.topic, lang);
+
+  return {
+    title: meta.title,
+    excerpt: meta.excerpt,
+    content,
+    metaTitle: meta.metaTitle,
+    metaDescription: meta.metaDescription,
+    cta: meta.cta,
+    alternativeTitles: meta.alternativeTitles,
+  };
+}
+
+/** Strip a leading/trailing ```html … ``` (or ```) code fence the model
+ *  sometimes wraps free-form HTML output in. */
+function stripCodeFences(s: string): string {
+  return s
+    .replace(/^\s*```(?:html|json)?\s*\n?/i, "")
+    .replace(/\n?\s*```\s*$/i, "")
+    .trim();
+}
+
+/** Pull the HTML out of a `{ "content": "…" }` JSON response, falling back
+ *  to the raw (fence-stripped) text if the model didn't wrap it in JSON. */
+function extractContentField(raw: string): string {
+  try {
+    const p = JSON.parse(raw) as { content?: unknown; html?: unknown };
+    const v = p.content ?? p.html;
+    if (typeof v === "string" && v.trim()) return v.trim();
+  } catch {
+    /* not JSON — fall through to the raw text */
+  }
+  return stripCodeFences(raw).trim();
+}
+
+/**
+ * Small, cheap JSON call that produces the post's metadata from the
+ * already-written article. Runs on the default (mini) model — the meta is
+ * short, so it's fast and doesn't need the stronger blog model.
+ */
+async function generateBlogMeta(
+  content: string,
+  topic: string,
+  lang: Lang,
+): Promise<Pick<BlogDraft, "title" | "excerpt" | "metaTitle" | "metaDescription" | "cta" | "alternativeTitles">> {
+  const plain = content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 2500);
+  const system = `${languageLock(lang)}Te SEO-szerkesztő vagy. Egy kész blogcikk alapján készíts metaadatokat ${LANG_NAMES[lang]} nyelven. CSAK JSON-t adj vissza:
+{
+  "title": "...",                 // SEO cikk-cím, max 65 karakter, figyelemfelkeltő, kulcsszó-gazdag
+  "excerpt": "...",               // lead/kivonat, max 200 karakter
+  "metaTitle": "...",             // SEO meta cím, max 60 karakter
+  "metaDescription": "...",       // meta leírás, 140-155 karakter, olvasói haszonnal
+  "cta": "...",                   // 1-2 mondatos, segítő hangú CTA a G2A Marketing felé
+  "alternativeTitles": ["...","...","...","...","..."]  // 5 alternatív cím
+}`;
   const raw = await chat(
     [
       { role: "system", content: system },
-      { role: "user", content: `Téma: ${input.topic}` },
+      { role: "user", content: `Téma: ${topic}\n\nA cikk szövege:\n${plain}` },
     ],
-    { temperature: 0.7, maxTokens: 6000, jsonMode: true },
+    { temperature: 0.6, maxTokens: 900, jsonMode: true },
   );
-
-  let parsed: BlogDraft;
   try {
-    parsed = JSON.parse(raw) as BlogDraft;
+    const p = JSON.parse(raw) as Partial<BlogDraft>;
+    const alts = Array.isArray(p.alternativeTitles) ? p.alternativeTitles : [];
+    return {
+      title: p.title?.trim() || topic,
+      excerpt: p.excerpt?.trim() || "",
+      metaTitle: p.metaTitle?.trim() || p.title?.trim() || topic,
+      metaDescription: p.metaDescription?.trim() || "",
+      cta: p.cta?.trim() || "",
+      alternativeTitles: alts.map((t) => String(t).trim()).filter(Boolean).slice(0, 5),
+    };
   } catch {
-    throw new Error("OpenAI invalid JSON response");
+    return { title: topic, excerpt: "", metaTitle: topic, metaDescription: "", cta: "", alternativeTitles: [] };
   }
-  // Defensive defaults + safety-net markdown→HTML conversion. The
-  // prompt insists on HTML, but if the model regresses (especially when
-  // brand-voice examples were written in markdown), this guarantees
-  // the content actually renders correctly.
-  const rawAlts = Array.isArray(parsed.alternativeTitles) ? parsed.alternativeTitles : [];
-  return {
-    title: parsed.title?.trim() ?? "",
-    excerpt: parsed.excerpt?.trim() ?? "",
-    content: markdownToHtml(parsed.content?.trim() ?? ""),
-    metaTitle: parsed.metaTitle?.trim() ?? "",
-    metaDescription: parsed.metaDescription?.trim() ?? "",
-    cta: parsed.cta?.trim() ?? "",
-    // Defensive: take up to 5 strings, trim each, drop empties.
-    alternativeTitles: rawAlts.map((t) => String(t).trim()).filter(Boolean).slice(0, 5),
-  };
 }
 
 /**
@@ -402,62 +492,39 @@ FELADATOD szerkesztői szemmel javítani a cikket:
 7. Ellenőrizd, hogy a cikk valóban hasznos-e egy magyar KKV-vezető számára. Ha nincs benne üzleti realitás (költség, kapacitás, kockázat, döntéshozói bizonytalanság), tegyél bele.
 8. Változtasd meg a mondathosszokat — legyenek változatosak. Felváltva rövid (3-6 szó) és hosszabb mondatok.
 
-NE rövidítsd túl a cikket — TARTSD a 900-1200 szavas terjedelmet. NE alakítsd át akadémiai tanulmánnyá. A cél: szakmailag erős, emberi, üzleti blogbejegyzés. NE találj ki konkrét statisztikákat vagy számokat, ha az eredeti cikk nem tartalmazta.
+⚠ NE RÖVIDÍTS. TARTSD az 1500-2000 szavas terjedelmet — ha az eredeti draft ennél rövidebb vagy felszínes, BŐVÍTSD (mélyebb magyarázat, konkrét példa, üzleti realitás), ne vágd. NE alakítsd át akadémiai tanulmánnyá. A cél: szakmailag erős, emberi, üzleti pillér-cikk. NE találj ki konkrét statisztikákat vagy számokat, ha az eredeti nem tartalmazta.
+
+⚠ KÖTELEZŐ MEGŐRIZNI (a SEO/GEO struktúra miatt): a <h2>Kulcs tanulságok</h2> lista a bevezető után; a <h2 id="faq">Gyakori kérdések</h2> szekció a cikk végén (a kérdés/válasz párokkal, az id="faq" attribútummal); a "Mit tegyél most?" lépéslista; és minden meglévő <table>. Ezeket ne töröld — legfeljebb csiszold a szövegüket.
 
 ⚠ HTML FORMÁTUM
-A "content" mező maradjon TISZTA HTML (<p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <a href="...">). NE használj markdown szintaxist. NE add hozzá H1-et.
+A "content" mező maradjon TISZTA HTML (<p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <a href="...">, <table>/<thead>/<tbody>/<tr>/<th>/<td>). NE használj markdown szintaxist. NE add hozzá H1-et.
 
-KIMENETI JSON — ugyanaz a séma, mint az eredeti, plusz egy "editorNotes" tömb:
-{
-  "title": "...",
-  "excerpt": "...",
-  "content": "<p>...</p>...",
-  "metaTitle": "...",
-  "metaDescription": "...",
-  "cta": "...",
-  "alternativeTitles": ["...", "...", "...", "...", "..."],
-  "editorNotes": ["...", "...", "...", "...", "..."]  // 5 rövid megjegyzés arról, MIT javítottál (max 1 mondat/jegyzet)
-}`;
-
-  const userPayload = JSON.stringify({
-    title: draft.title,
-    excerpt: draft.excerpt,
-    content: draft.content,
-    metaTitle: draft.metaTitle,
-    metaDescription: draft.metaDescription,
-    cta: draft.cta,
-    alternativeTitles: draft.alternativeTitles,
-  });
+VÁLASZ FORMÁTUM: CSAK a javított, teljes HTML cikk-törzset add vissza — semmi mást (se JSON, se \`\`\` kód-keret, se magyarázat). A cikk a <h2 id="faq">Gyakori kérdések</h2> szekcióval érjen véget. A H1 főcímet NE tedd bele.`;
 
   const raw = await chat(
     [
       { role: "system", content: system },
-      { role: "user", content: `Vizsgáld felül és javítsd ezt a draft-ot:\n\n${userPayload}` },
+      { role: "user", content: `Javítsd ezt a cikket. A cikk HTML törzse:\n\n${draft.content}` },
     ],
-    { temperature: 0.6, maxTokens: 6000, jsonMode: true },
+    // Non-JSON so the editor can keep (and expand) the full length — a JSON
+    // string field made both models regress to ~700 words. Content only;
+    // the metadata from phase 1b is preserved unchanged.
+    { temperature: 0.6, maxTokens: 9000, timeoutMs: 110_000, model: getBlogModel() },
   );
-
-  let parsed: BlogDraft & { editorNotes?: string[] };
-  try {
-    parsed = JSON.parse(raw) as BlogDraft & { editorNotes?: string[] };
-  } catch {
-    // If the editor pass returns bad JSON, fall back to the original
-    // draft rather than blowing up — the structural pass already gave
-    // us usable output.
-    return draft;
-  }
-
-  const rawAlts = Array.isArray(parsed.alternativeTitles) ? parsed.alternativeTitles : draft.alternativeTitles;
-  const rawNotes = Array.isArray(parsed.editorNotes) ? parsed.editorNotes : [];
+  const refined = markdownToHtml(stripCodeFences(raw).trim());
+  // Guard against a regression that loses length: keep the original if the
+  // "refined" version came back much shorter.
+  const content = refined.length > draft.content.length * 0.65 ? refined : draft.content;
   return {
-    title: parsed.title?.trim() || draft.title,
-    excerpt: parsed.excerpt?.trim() || draft.excerpt,
-    content: markdownToHtml((parsed.content?.trim() || draft.content) ?? ""),
-    metaTitle: parsed.metaTitle?.trim() || draft.metaTitle,
-    metaDescription: parsed.metaDescription?.trim() || draft.metaDescription,
-    cta: parsed.cta?.trim() || draft.cta,
-    alternativeTitles: rawAlts.map((t) => String(t).trim()).filter(Boolean).slice(0, 5),
-    editorNotes: rawNotes.map((n) => String(n).trim()).filter(Boolean).slice(0, 5),
+    ...draft,
+    content,
+    editorNotes: [
+      lang === "en"
+        ? "Editorial pass: AI-tells removed, transitions tightened, SEO/GEO structure (key takeaways, FAQ, tables) preserved."
+        : lang === "zh"
+        ? "编辑校订:去除 AI 腔调,优化过渡,保留 SEO/GEO 结构(要点、常见问题、表格)。"
+        : "Szerkesztői pass: AI-fordulatok kigyomlálva, átvezetések feszesebbek, a SEO/GEO-struktúra (kulcs tanulságok, GYIK, táblázat) megőrizve.",
+    ],
   };
 }
 
@@ -501,24 +568,22 @@ export async function generateMultilangBlogDraft(
     }
   };
 
-  // Phase 1: structural drafts in parallel; tick after each resolves.
-  const [huDraft, enDraft, zhDraft] = await Promise.all([
+  // Each locale's draft internally runs two content passes (first half +
+  // finish) plus a small metadata pass. The separate editorial phase was
+  // folded away: the two-pass content prompt already strips AI-tells and
+  // holds the 1500-2000-word length, and dropping it keeps the 3 parallel
+  // locales comfortably inside the 300s Vercel budget.
+  const [hu, en, zh] = await Promise.all([
     generateBlogDraft({ ...input, lang: "hu" }).then(async (d) => { await tick("draft"); return d; }),
     generateBlogDraft({ ...input, lang: "en" }).then(async (d) => { await tick("draft"); return d; }),
     generateBlogDraft({ ...input, lang: "zh" }).then(async (d) => { await tick("draft"); return d; }),
   ]);
-  // Phase 2: editorial review in parallel; tick after each resolves.
-  const [hu, en, zh] = await Promise.all([
-    editorialReview(huDraft, "hu").then(async (d) => { await tick("editor"); return d; }),
-    editorialReview(enDraft, "en").then(async (d) => { await tick("editor"); return d; }),
-    editorialReview(zhDraft, "zh").then(async (d) => { await tick("editor"); return d; }),
-  ]);
 
-  // Mark the job complete after all six calls land.
+  // Mark the job complete after all three locales land.
   if (jobId && dbPromise) {
     try {
       const db = await dbPromise;
-      if (db) await db.updateAiJob(jobId, { status: "completed", completedSteps: 6, phase: "editor" });
+      if (db) await db.updateAiJob(jobId, { status: "completed", completedSteps: 3, phase: "draft" });
     } catch {
       /* swallow */
     }

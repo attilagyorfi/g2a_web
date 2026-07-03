@@ -2024,12 +2024,15 @@ function isAiConfigured() {
 function getAiModel() {
   return process.env.OPENAI_MODEL || "gpt-4o-mini";
 }
+function getBlogModel() {
+  return process.env.OPENAI_BLOG_MODEL || "gpt-4o";
+}
 var DEFAULT_CHAT_TIMEOUT_MS = 5e4;
 async function chat(messages, opts = {}) {
   const key = process.env.OPENAI_API_KEY;
   if (!key) throw new Error("OPENAI_API_KEY not set \u2014 AI features are disabled");
   const body = {
-    model: getAiModel(),
+    model: opts.model ?? getAiModel(),
     messages,
     temperature: opts.temperature ?? 0.7,
     max_tokens: opts.maxTokens ?? 2e3
@@ -2103,7 +2106,7 @@ function markdownToHtml(raw) {
       out.push(`<ol>${items}</ol>`);
       continue;
     }
-    if (/^<(p|h2|h3|ul|ol|div|blockquote)/i.test(block)) {
+    if (/^<(p|h2|h3|ul|ol|div|blockquote|table)/i.test(block)) {
       out.push(block);
       continue;
     }
@@ -2127,7 +2130,7 @@ function languageLock(lang) {
 }
 async function generateBlogDraft(input) {
   const lang = input.lang ?? "hu";
-  const wordCount = input.wordCount ?? 1050;
+  const wordCount = input.wordCount ?? 1700;
   const tone = input.tone ?? "professional";
   const audience = input.audience || "magyar KKV-tulajdonosok, c\xE9gvezet\u0151k, marketingvezet\u0151k \xE9s d\xF6nt\xE9shoz\xF3k";
   const { loadBrandVoice: loadBrandVoice2, renderBrandContext: renderBrandContext2 } = await Promise.resolve().then(() => (init_brandVoice(), brandVoice_exports));
@@ -2164,145 +2167,125 @@ ST\xCDLUS \u2014 HubSpot-szer\u0171, emberi B2B hangv\xE9tel:
 
 \u2705 HELYETTE: konkr\xE9t, term\xE9szetes, emberi logik\xE1j\xFA megfogalmaz\xE1s. \xC9letszer\u0171 \xFCzleti helyzet, provokat\xEDv meg\xE1llap\xEDt\xE1s, gyakori vezet\u0151i t\xE9ved\xE9s.
 
-SZERKEZET (k\xF6telez\u0151):
+SZERKEZET (k\xF6telez\u0151, EBBEN a sorrendben \u2014 SEO + GEO / AI-keres\u0151 optimaliz\xE1lt):
 
-1. C\xCDM (SEO c\xEDm) \u2014 figyelemfelkelt\u0151, konkr\xE9t, \xFCzleti szempontb\xF3l relev\xE1ns; max 65 karakter; NE legyen \xE1ltal\xE1nos.
+1. C\xCDM (SEO c\xEDm) \u2014 figyelemfelkelt\u0151, konkr\xE9t, kulcssz\xF3-gazdag; max 65 karakter; NE legyen \xE1ltal\xE1nos.
 2. META LE\xCDR\xC1S \u2014 max 155 karakter; tartalmazza a f\u0151 probl\xE9m\xE1t \xE9s az olvas\xF3i hasznot.
 3. KIVONAT (lead) \u2014 1-2 mondat (max 200 karakter), a teljes cikk l\xE9nyege.
-4. BEVEZET\u0150 (a content elej\xE9n) \u2014 2-3 bekezd\xE9s. NE defin\xEDci\xF3val kezdj. Kezdj egy \xE9letszer\u0171 \xFCzleti helyzettel, provokat\xEDv meg\xE1llap\xEDt\xE1ssal vagy gyakori vezet\u0151i t\xE9ved\xE9ssel. Mutasd meg, mi\xE9rt fontos a t\xE9ma a c\xE9lk\xF6z\xF6ns\xE9gnek.
-5. F\u0150 R\xC9SZ \u2014 5-7 nagyobb tartalmi blokk (<h2> alfejezet). Minden blokkban:
+4. BEVEZET\u0150 (a content elej\xE9n) \u2014 2 bekezd\xE9s. NE defin\xEDci\xF3val kezdj. Kezdj \xE9letszer\u0171 \xFCzleti helyzettel, provokat\xEDv meg\xE1llap\xEDt\xE1ssal vagy gyakori vezet\u0151i t\xE9ved\xE9ssel. FRONT-LOADING: m\xE1r az els\u0151 2-3 mondatban der\xFClj\xF6n ki a cikk f\u0151 \xE1ll\xEDt\xE1sa / k\xF6zvetlen v\xE1lasza a t\xE9m\xE1ra \u2014 az AI-keres\u0151k (ChatGPT, Perplexity, Google AI Overviews) az el\xF6l \xE1ll\xF3, t\xF6m\xF6r v\xE1laszt id\xE9zik.
+5. KULCS TANULS\xC1GOK \u2014 k\xF6zvetlen\xFCl a bevezet\u0151 ut\xE1n egy <h2>Kulcs tanuls\xE1gok</h2> blokk, alatta egy <ul> 3-5 ponttal. MINDEN pont \xF6nmag\xE1ban is \xE9rthet\u0151, teljes \xE1ll\xEDt\xE1s legyen (az AI-keres\u0151k pontosan az ilyen \xF6n\xE1ll\xF3, id\xE9zhet\u0151 \xE1ll\xEDt\xE1sokat emelik ki). NE \xE1ltal\xE1noss\xE1g \u2014 konkr\xE9t, a cikkb\u0151l fakad\xF3 tanuls\xE1g.
+6. F\u0150 R\xC9SZ \u2014 6-8 nagyobb tartalmi blokk (<h2>). Ahol term\xE9szetes, a H2 legyen K\xC9RD\xC9S form\xE1j\xFA (illeszkedik az AI-keres\u0151k lek\xE9rdez\xE9seihez, pl. "Mi\xE9rt nem hoz eredm\xE9nyt a hirdet\xE9sed?"). MINDEN blokk 180-280 sz\xF3, \xE9s tartalmazzon:
    - er\u0151s, konkr\xE9t alc\xEDm
-   - magyar\xE1zd el a probl\xE9m\xE1t emberi, \xFCzleti nyelven
-   - adj konkr\xE9t p\xE9ld\xE1t vagy tipikus magyar KKV-helyzetet
-   - \xEDrd le, mit \xE9rdemes m\xE1sk\xE9pp csin\xE1lni
-   - ker\xFCld a t\xFAl hossz\xFA felsorol\xE1sokat
-   NE \xEDrj minden ponthoz k\xFCl\xF6n "tippek" list\xE1t. Csak akkor haszn\xE1lj <ul>/<ol> list\xE1t, ha t\xE9nyleg seg\xEDti az olvashat\xF3s\xE1got. A cikk alapvet\u0151en foly\xF3, \xF6sszef\xFCgg\u0151 sz\xF6veg legyen.
-6. GYAKORLATI R\xC9SZ (utols\xF3 el\u0151tti blokk) \u2014 "Mit tegy\xE9l most?" alc\xEDm alatt egy r\xF6vid <ol> ellen\u0151rz\u0151lista 4-6 konkr\xE9t l\xE9p\xE9ssel.
-7. Z\xC1R\xC1S (utols\xF3 <h2>) \u2014 NE \xE1ltal\xE1nos motiv\xE1ci\xF3s mondattal z\xE1rj. Foglald \xF6ssze er\u0151s szakmai \xE1ll\xEDt\xE1ssal, mi a t\xE9ma val\xF3di tanuls\xE1ga. A v\xE9g\xE9n legyen term\xE9szetes, NEM tolakod\xF3 CTA a G2A Marketing fel\xE9. CTA p\xE9lda: "Ha szeretn\xE9d l\xE1tni, hogy a te c\xE9ged eset\xE9ben hol akad el a n\xF6veked\xE9s, a G2A Marketing seg\xEDt felt\xE9rk\xE9pezni a piacot, az \xFCzeneteket \xE9s a digit\xE1lis jelenl\xE9t gyenge pontjait."
+   - a probl\xE9ma emberi, \xFCzleti magyar\xE1zata
+   - konkr\xE9t magyar KKV-p\xE9lda vagy tipikus helyzet
+   - mit \xE9rdemes m\xE1sk\xE9pp csin\xE1lni
+   Legal\xE1bb EGY blokkban legyen egy j\xF3l struktur\xE1lt <ul>/<ol> lista VAGY egy egyszer\u0171 \xF6sszehasonl\xEDt\xF3 <table> (pl. \u201Egyakori hiba" vs. \u201Ejobb megk\xF6zel\xEDt\xE9s" \u2014 <thead>/<tbody>/<tr>/<th>/<td>). Az AI-keres\u0151k a struktur\xE1lt adatot (lista, t\xE1bl\xE1zat) prefer\xE1lj\xE1k kiemel\xE9shez. De NE legyen minden blokk list\xE1s \u2014 a cikk gerince foly\xF3, \xF6sszef\xFCgg\u0151 sz\xF6veg.
+7. MIT TEGY\xC9L MOST? \u2014 az utols\xF3 tartalmi blokk el\u0151tt egy <h2>Mit tegy\xE9l most?</h2>, alatta <ol> 4-6 konkr\xE9t, v\xE9grehajthat\xF3 l\xE9p\xE9ssel.
+8. Z\xC1R\xC1S \u2014 utols\xF3 tartalmi <h2>. NE motiv\xE1ci\xF3s k\xF6zhely. Er\u0151s szakmai \xE1ll\xEDt\xE1ssal foglald \xF6ssze a t\xE9ma val\xF3di tanuls\xE1g\xE1t. A v\xE9g\xE9n term\xE9szetes, seg\xEDt\u0151 hang\xFA (NEM tolakod\xF3) CTA a G2A Marketing fel\xE9. P\xE9lda: "Ha szeretn\xE9d l\xE1tni, hol akad el a te c\xE9gedn\xE9l a n\xF6veked\xE9s, a G2A Marketing seg\xEDt felt\xE9rk\xE9pezni a piacot, az \xFCzeneteket \xE9s a digit\xE1lis jelenl\xE9t gyenge pontjait."
+9. GYAKORI K\xC9RD\xC9SEK \u2014 a cikk LEGV\xC9G\xC9N egy <h2 id="faq">Gyakori k\xE9rd\xE9sek</h2> szekci\xF3 (az id="faq" K\xD6TELEZ\u0150 \xE9s pontosan \xEDgy). Alatta 4-6 val\xF3di, a t\xE9m\xE1ban t\xE9nylegesen keresett k\xE9rd\xE9s, mindegyik: <h3>A k\xE9rd\xE9s?</h3> majd <p>2-4 mondatos, \xF6nmag\xE1ban is teljes, konkr\xE9t v\xE1lasz</p>. Ebb\u0151l \xE9p\xFCl a FAQPage structured data, amit az AI-keres\u0151k \xE9s a Google kiemelt tal\xE1latai a leggyakrabban id\xE9znek \u2014 ez\xE9rt legyen tartalmilag er\u0151s, ne t\xF6ltel\xE9k.
 
-\u26A0 TERJEDELEM: ${wordCount} sz\xF3 (a 900-1200 s\xE1vban). Ne r\xF6vid\xEDts. Ne t\xFAlozz, ne \xEDg\xE9rj garant\xE1lt sikert.
+\u26A0 TERJEDELEM: 1500-2000 sz\xF3 a c\xE9l (~${wordCount}), hogy m\xE9ly, 7-9 perces, versenyk\xE9pes pill\xE9r-cikk legyen. Ez a MINIMUM elv\xE1r\xE1s \u2014 az 1 perces, felsz\xEDnes cikk NEM elfogadhat\xF3. Minden <h2> blokk legyen legal\xE1bb 180 sz\xF3, t\xE9nylegesen kifejtve. A hosszt m\xE9lys\xE9ggel, p\xE9ld\xE1val \xE9s konkr\xE9ts\xE1ggal t\xF6ltsd meg, NE \xFCres fr\xE1zisokkal vagy ism\xE9tl\xE9ssel. Ne t\xFAlozz, ne \xEDg\xE9rj garant\xE1lt sikert, ne tal\xE1lj ki statisztik\xE1t.
 
 \u26A0 HTML FORM\xC1TUM (content mez\u0151)
 A "content" mez\u0151ben TISZTA HTML markup. SZIGOR\xDAAN TILOS markdown szintaxis ("##", "**...**", "- ", backtick). A BlogPostPage \`dangerouslySetInnerHTML\`-lel rendereli \u2014 a markdown sz\xF3r\xF3l sz\xF3ra megjelenne.
 
-Engedett tagek: <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <a href="...">.
+Engedett tagek: <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <a href="...">, valamint t\xE1bl\xE1zathoz <table>, <thead>, <tbody>, <tr>, <th>, <td>.
 NE add hozz\xE1 a H1-et \u2014 azt a cikk \`title\` mez\u0151je adja.
-Minden bekezd\xE9st <p>...</p> tag fogjon k\xF6zre.
+Minden bekezd\xE9st <p>...</p> tag fogjon k\xF6zre. A "Gyakori k\xE9rd\xE9sek" szekci\xF3 H2-je K\xD6TELEZ\u0150EN <h2 id="faq">.
 
-KIMENETI JSON \u2014 CSAK ezt a s\xE9m\xE1t add vissza:
-{
-  "title": "...",                     // SEO c\xEDm, max 65 karakter
-  "excerpt": "...",                   // Lead / kivonat, max 200 karakter
-  "content": "<p>...</p>...",         // Teljes HTML blogbejegyz\xE9s, ~${wordCount} sz\xF3, a CTA-val a v\xE9g\xE9n
-  "metaTitle": "...",                 // SEO meta c\xEDm, max 60 karakter
-  "metaDescription": "...",           // Meta le\xEDr\xE1s, 140-155 karakter
-  "cta": "...",                       // A javasolt CTA mondatban-k\xE9t mondatban (ugyanaz, ami a content v\xE9g\xE9n szerepel)
-  "alternativeTitles": ["...", "...", "...", "...", "..."]  // 5 alternat\xEDv c\xEDm\xF6tlet
-}
-A "content" \xE9rt\xE9k HTML stringk\xE9nt szerepeljen (escape-elve a JSON-ban).`;
+A CIKK TARTALMI SZAB\xC1LYAI:
+- A t\xF6rzs TISZTA HTML (a fent engedett tagekkel). A H1 f\u0151c\xEDmet NE tedd bele \u2014 az k\xFCl\xF6n mez\u0151ben lesz.
+- A \u201EGyakori k\xE9rd\xE9sek" szekci\xF3 H2-je K\xD6TELEZ\u0150EN <h2 id="faq">.
+- HOSSZ: a teljes k\xE9sz cikk 1500-2000 sz\xF3 legyen, t\xE9nylegesen kifejtve. A r\xF6vid, felsz\xEDnes cikk hib\xE1s.`;
   const system = brandContext ? `${brandContext}
 
 ${baseSystem}` : baseSystem;
-  const raw = await chat(
+  const JSON_ENVELOPE = `
+
+A v\xE1laszt EGY JSON objektumk\xE9nt add vissza: { "content": "\u2026a fenti szab\xE1lyok szerinti HTML string\u2026" }. Csak a "content" mez\u0151 legyen benne, a content \xE9rt\xE9ke JSON-escape-elt HTML.`;
+  const half1 = await chat(
     [
-      { role: "system", content: system },
+      { role: "system", content: `${system}
+
+\u26A0 MOST CSAK A CIKK ELS\u0150 FEL\xC9T \xCDRD MEG: a bevezet\u0151t (front-loadolt v\xE1lasszal), a <h2>Kulcs tanuls\xE1gok</h2> list\xE1t, majd az els\u0151 4 nagyobb <h2> tartalmi blokkot (mindegyik 200-300 sz\xF3, val\xF3di kifejt\xE9ssel, p\xE9ld\xE1val). NE \xEDrd meg a \u201EMit tegy\xE9l most?"-ot, a z\xE1r\xF3 CTA-t \xE9s a Gyakori k\xE9rd\xE9seket \u2014 azok a m\xE1sodik f\xE9lbe j\xF6nnek. Az els\u0151 f\xE9l HTML t\xF6rzse ~1000 sz\xF3 legyen.${JSON_ENVELOPE}` },
       { role: "user", content: `T\xE9ma: ${input.topic}` }
     ],
-    { temperature: 0.7, maxTokens: 6e3, jsonMode: true }
+    { temperature: 0.75, maxTokens: 6e3, timeoutMs: 85e3, model: getBlogModel(), jsonMode: true }
   );
-  let parsed;
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    throw new Error("OpenAI invalid JSON response");
-  }
-  const rawAlts = Array.isArray(parsed.alternativeTitles) ? parsed.alternativeTitles : [];
+  const part1 = extractContentField(half1);
+  const half2 = await chat(
+    [
+      { role: "system", content: `${system}
+
+\u26A0 MOST A CIKK M\xC1SODIK FEL\xC9T (BEFEJEZ\xC9S\xC9T) \xCDRD MEG. Megkapod a m\xE1r meg\xEDrt els\u0151 felet \u2014 folytasd Z\xD6KKEN\u0150MENTESEN, NE ism\xE9teld meg. \xCDrj m\xE9g 3-4 nagyobb <h2> tartalmi blokkot (200-300 sz\xF3), majd a <h2>Mit tegy\xE9l most?</h2> l\xE9p\xE9slist\xE1t (<ol>), egy z\xE1r\xF3 <h2>-t term\xE9szetes, seg\xEDt\u0151 CTA-val, v\xE9g\xFCl a <h2 id="faq">Gyakori k\xE9rd\xE9sek</h2> szekci\xF3t (4-6 val\xF3di k\xE9rd\xE9s, <h3> k\xE9rd\xE9s + <p> v\xE1lasz). Valamelyik blokkban legyen egy lista vagy \xF6sszehasonl\xEDt\xF3 t\xE1bl\xE1zat. A folytat\xE1s ~1000 sz\xF3 legyen, az els\u0151 felet NE ism\xE9teld.${JSON_ENVELOPE}` },
+      { role: "user", content: `T\xE9ma: ${input.topic}
+
+A cikk eddig meg\xEDrt els\u0151 fele (folytasd, ne ism\xE9teld):
+${part1}` }
+    ],
+    { temperature: 0.75, maxTokens: 6e3, timeoutMs: 85e3, model: getBlogModel(), jsonMode: true }
+  );
+  const part2 = extractContentField(half2);
+  const content = markdownToHtml(`${part1}
+${part2}`.trim());
+  const meta = await generateBlogMeta(content, input.topic, lang);
   return {
-    title: parsed.title?.trim() ?? "",
-    excerpt: parsed.excerpt?.trim() ?? "",
-    content: markdownToHtml(parsed.content?.trim() ?? ""),
-    metaTitle: parsed.metaTitle?.trim() ?? "",
-    metaDescription: parsed.metaDescription?.trim() ?? "",
-    cta: parsed.cta?.trim() ?? "",
-    // Defensive: take up to 5 strings, trim each, drop empties.
-    alternativeTitles: rawAlts.map((t2) => String(t2).trim()).filter(Boolean).slice(0, 5)
+    title: meta.title,
+    excerpt: meta.excerpt,
+    content,
+    metaTitle: meta.metaTitle,
+    metaDescription: meta.metaDescription,
+    cta: meta.cta,
+    alternativeTitles: meta.alternativeTitles
   };
 }
-async function editorialReview(draft, lang) {
-  const system = `${languageLock(lang)}Te szenior szerkeszt\u0151 vagy a G2A Marketing p\xE9csi B2B marketing \xFCgyn\xF6ks\xE9gn\xE9l. Most egy AI \xE1ltal gener\xE1lt blogbejegyz\xE9st kapsz fel\xFClvizsg\xE1latra.
-
-\u26A0 KIMENETI NYELV
-A teljes v\xE1lasz ${LANG_NAMES[lang]} nyelven. ${lang === "zh" ? "(\u5FC5\u987B\u662F\u7B80\u4F53\u4E2D\u6587 \u2014 Simplified Chinese.)" : lang === "en" ? "(English only.)" : ""}
-
-FELADATOD szerkeszt\u0151i szemmel jav\xEDtani a cikket:
-
-1. T\xF6r\xF6lj vagy \xEDrj \xE1t minden AI-szag\xFA, \xE1ltal\xE1nos mondatot. Tipikusan:
-   - "napjainkban egyre fontosabb"
-   - "kulcsfontoss\xE1g\xFA szerepet j\xE1tszik"
-   - "sz\xE1mos kih\xEDv\xE1s \xE1ll el\u0151tt\xFCk"
-   - "a megfelel\u0151 strat\xE9gia elengedhetetlen"
-   - "\xF6sszefoglalva", "konkl\xFAzi\xF3k\xE9nt"
-   - "felfedezz\xFCk", "elm\xE9lyed\xFCnk", "felt\xE1rjuk"
-2. Er\u0151s\xEDtsd meg a nyit\xE1st \u2014 ha defin\xEDci\xF3val kezd\u0151dik, \xEDrd \xE1t \xE9letszer\u0171 \xFCzleti helyzetre, provokat\xEDv \xE1ll\xEDt\xE1sra vagy gyakori vezet\u0151i t\xE9ved\xE9sre.
-3. Jav\xEDtsd az \xE1tvezet\xE9seket a bekezd\xE9sek k\xF6z\xF6tt \u2014 egyik gondolat vezessen \xE1t a m\xE1sikba, ne legyenek f\xFCggetlen list\xE1k egym\xE1s ut\xE1n.
-4. Ahol t\xFAl list\xE1s a sz\xF6veg, alak\xEDtsd foly\xF3, olvasm\xE1nyos bekezd\xE9ss\xE9. Csak ott hagyj list\xE1t, ahol t\xE9nyleg seg\xEDti az olvashat\xF3s\xE1got (pl. a "Mit tegy\xE9l most?" ellen\u0151rz\u0151lista).
-5. Ahol t\xFAl \xE1ltal\xE1nos az \xE1ll\xEDt\xE1s, adj hozz\xE1 konkr\xE9t magyar KKV-kontextus\xFA p\xE9ld\xE1t vagy mini-esetet.
-6. Ahol t\xFAl rekl\xE1mos a CTA, tedd term\xE9szetesebb\xE9. A CTA legyen seg\xEDt\u0151 hang\xFA, ne nyomul\xF3s.
-7. Ellen\u0151rizd, hogy a cikk val\xF3ban hasznos-e egy magyar KKV-vezet\u0151 sz\xE1m\xE1ra. Ha nincs benne \xFCzleti realit\xE1s (k\xF6lts\xE9g, kapacit\xE1s, kock\xE1zat, d\xF6nt\xE9shoz\xF3i bizonytalans\xE1g), tegy\xE9l bele.
-8. V\xE1ltoztasd meg a mondathosszokat \u2014 legyenek v\xE1ltozatosak. Felv\xE1ltva r\xF6vid (3-6 sz\xF3) \xE9s hosszabb mondatok.
-
-NE r\xF6vid\xEDtsd t\xFAl a cikket \u2014 TARTSD a 900-1200 szavas terjedelmet. NE alak\xEDtsd \xE1t akad\xE9miai tanulm\xE1nny\xE1. A c\xE9l: szakmailag er\u0151s, emberi, \xFCzleti blogbejegyz\xE9s. NE tal\xE1lj ki konkr\xE9t statisztik\xE1kat vagy sz\xE1mokat, ha az eredeti cikk nem tartalmazta.
-
-\u26A0 HTML FORM\xC1TUM
-A "content" mez\u0151 maradjon TISZTA HTML (<p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <a href="...">). NE haszn\xE1lj markdown szintaxist. NE add hozz\xE1 H1-et.
-
-KIMENETI JSON \u2014 ugyanaz a s\xE9ma, mint az eredeti, plusz egy "editorNotes" t\xF6mb:
+function stripCodeFences(s) {
+  return s.replace(/^\s*```(?:html|json)?\s*\n?/i, "").replace(/\n?\s*```\s*$/i, "").trim();
+}
+function extractContentField(raw) {
+  try {
+    const p = JSON.parse(raw);
+    const v = p.content ?? p.html;
+    if (typeof v === "string" && v.trim()) return v.trim();
+  } catch {
+  }
+  return stripCodeFences(raw).trim();
+}
+async function generateBlogMeta(content, topic, lang) {
+  const plain = content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 2500);
+  const system = `${languageLock(lang)}Te SEO-szerkeszt\u0151 vagy. Egy k\xE9sz blogcikk alapj\xE1n k\xE9sz\xEDts metaadatokat ${LANG_NAMES[lang]} nyelven. CSAK JSON-t adj vissza:
 {
-  "title": "...",
-  "excerpt": "...",
-  "content": "<p>...</p>...",
-  "metaTitle": "...",
-  "metaDescription": "...",
-  "cta": "...",
-  "alternativeTitles": ["...", "...", "...", "...", "..."],
-  "editorNotes": ["...", "...", "...", "...", "..."]  // 5 r\xF6vid megjegyz\xE9s arr\xF3l, MIT jav\xEDtott\xE1l (max 1 mondat/jegyzet)
+  "title": "...",                 // SEO cikk-c\xEDm, max 65 karakter, figyelemfelkelt\u0151, kulcssz\xF3-gazdag
+  "excerpt": "...",               // lead/kivonat, max 200 karakter
+  "metaTitle": "...",             // SEO meta c\xEDm, max 60 karakter
+  "metaDescription": "...",       // meta le\xEDr\xE1s, 140-155 karakter, olvas\xF3i haszonnal
+  "cta": "...",                   // 1-2 mondatos, seg\xEDt\u0151 hang\xFA CTA a G2A Marketing fel\xE9
+  "alternativeTitles": ["...","...","...","...","..."]  // 5 alternat\xEDv c\xEDm
 }`;
-  const userPayload = JSON.stringify({
-    title: draft.title,
-    excerpt: draft.excerpt,
-    content: draft.content,
-    metaTitle: draft.metaTitle,
-    metaDescription: draft.metaDescription,
-    cta: draft.cta,
-    alternativeTitles: draft.alternativeTitles
-  });
   const raw = await chat(
     [
       { role: "system", content: system },
-      { role: "user", content: `Vizsg\xE1ld fel\xFCl \xE9s jav\xEDtsd ezt a draft-ot:
+      { role: "user", content: `T\xE9ma: ${topic}
 
-${userPayload}` }
+A cikk sz\xF6vege:
+${plain}` }
     ],
-    { temperature: 0.6, maxTokens: 6e3, jsonMode: true }
+    { temperature: 0.6, maxTokens: 900, jsonMode: true }
   );
-  let parsed;
   try {
-    parsed = JSON.parse(raw);
+    const p = JSON.parse(raw);
+    const alts = Array.isArray(p.alternativeTitles) ? p.alternativeTitles : [];
+    return {
+      title: p.title?.trim() || topic,
+      excerpt: p.excerpt?.trim() || "",
+      metaTitle: p.metaTitle?.trim() || p.title?.trim() || topic,
+      metaDescription: p.metaDescription?.trim() || "",
+      cta: p.cta?.trim() || "",
+      alternativeTitles: alts.map((t2) => String(t2).trim()).filter(Boolean).slice(0, 5)
+    };
   } catch {
-    return draft;
+    return { title: topic, excerpt: "", metaTitle: topic, metaDescription: "", cta: "", alternativeTitles: [] };
   }
-  const rawAlts = Array.isArray(parsed.alternativeTitles) ? parsed.alternativeTitles : draft.alternativeTitles;
-  const rawNotes = Array.isArray(parsed.editorNotes) ? parsed.editorNotes : [];
-  return {
-    title: parsed.title?.trim() || draft.title,
-    excerpt: parsed.excerpt?.trim() || draft.excerpt,
-    content: markdownToHtml((parsed.content?.trim() || draft.content) ?? ""),
-    metaTitle: parsed.metaTitle?.trim() || draft.metaTitle,
-    metaDescription: parsed.metaDescription?.trim() || draft.metaDescription,
-    cta: parsed.cta?.trim() || draft.cta,
-    alternativeTitles: rawAlts.map((t2) => String(t2).trim()).filter(Boolean).slice(0, 5),
-    editorNotes: rawNotes.map((n) => String(n).trim()).filter(Boolean).slice(0, 5)
-  };
 }
 async function generateMultilangBlogDraft(input, jobId) {
   const dbPromise = jobId ? Promise.resolve().then(() => (init_db(), db_exports)).catch(() => null) : null;
@@ -2316,7 +2299,7 @@ async function generateMultilangBlogDraft(input, jobId) {
     } catch {
     }
   };
-  const [huDraft, enDraft, zhDraft] = await Promise.all([
+  const [hu, en, zh] = await Promise.all([
     generateBlogDraft({ ...input, lang: "hu" }).then(async (d) => {
       await tick("draft");
       return d;
@@ -2330,24 +2313,10 @@ async function generateMultilangBlogDraft(input, jobId) {
       return d;
     })
   ]);
-  const [hu, en, zh] = await Promise.all([
-    editorialReview(huDraft, "hu").then(async (d) => {
-      await tick("editor");
-      return d;
-    }),
-    editorialReview(enDraft, "en").then(async (d) => {
-      await tick("editor");
-      return d;
-    }),
-    editorialReview(zhDraft, "zh").then(async (d) => {
-      await tick("editor");
-      return d;
-    })
-  ]);
   if (jobId && dbPromise) {
     try {
       const db = await dbPromise;
-      if (db) await db.updateAiJob(jobId, { status: "completed", completedSteps: 6, phase: "editor" });
+      if (db) await db.updateAiJob(jobId, { status: "completed", completedSteps: 3, phase: "draft" });
     } catch {
     }
   }
@@ -4104,7 +4073,7 @@ var adminRouter = router({
     })).mutation(async ({ input }) => {
       const { jobId, ...gen } = input;
       if (jobId) {
-        await createAiJob({ id: jobId, type: "multilang_blog_draft", totalSteps: 6 });
+        await createAiJob({ id: jobId, type: "multilang_blog_draft", totalSteps: 3 });
       }
       try {
         const result = await generateMultilangBlogDraft(gen, jobId);

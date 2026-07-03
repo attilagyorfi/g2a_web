@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
-import { articleSchema, breadcrumbSchema } from "@/lib/jsonLd";
+import { articleSchema, breadcrumbSchema, faqPageSchema } from "@/lib/jsonLd";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import EmptyState from "@/components/illustrations/EmptyState";
 import { SkeletonHeroPage } from "@/components/Skeleton";
@@ -22,6 +22,40 @@ function stripHtml(html: string): string {
 }
 
 /**
+ * Extract the article's FAQ (question/answer pairs) from the rendered
+ * content HTML so we can emit FAQPage JSON-LD — the single highest-impact
+ * structured-data type for GEO (AI Overviews / ChatGPT / Perplexity pull
+ * FAQ markup heavily). The blog generator writes the FAQ as a section
+ * anchored by `<h2 id="faq">`, then `<h3>` question / following-content
+ * answer pairs. Returns [] when there's no FAQ or DOMParser is unavailable.
+ */
+function extractFaq(html: string): Array<{ q: string; a: string }> {
+  if (!html || typeof DOMParser === "undefined") return [];
+  try {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const anchor = doc.querySelector("#faq");
+    if (!anchor) return [];
+    const out: Array<{ q: string; a: string }> = [];
+    let cur: { q: string; a: string } | null = null;
+    let node = anchor.nextElementSibling;
+    while (node && node.tagName !== "H2") {
+      if (node.tagName === "H3") {
+        if (cur) out.push(cur);
+        cur = { q: (node.textContent || "").trim(), a: "" };
+      } else if (cur) {
+        const t = (node.textContent || "").trim();
+        if (t) cur.a += (cur.a ? " " : "") + t;
+      }
+      node = node.nextElementSibling;
+    }
+    if (cur) out.push(cur);
+    return out.filter((f) => f.q && f.a);
+  } catch {
+    return [];
+  }
+}
+
+/**
  * Word count by locale. Hungarian/English split on whitespace,
  * Chinese counts CJK characters since there's no word delimiter
  * (estimated ratio ≈ 1 character = 1 "word" unit for SERP purposes).
@@ -35,10 +69,12 @@ function countWords(text: string, lang: "hu" | "en" | "zh"): number {
   return text.split(/\s+/).filter(Boolean).length;
 }
 
-/** Estimate reading time in minutes — 220 wpm for HU/EN, 300 cpm for ZH. */
+/** Estimate reading time in minutes. 200 wpm for HU/EN (the standard adult
+ *  average for informative prose; dense B2B content reads slower still),
+ *  260 cpm for ZH. */
 function estimateReadingTime(html: string, lang: "hu" | "en" | "zh" = "hu"): number {
   const words = countWords(stripHtml(html), lang);
-  const rate = lang === "zh" ? 300 : 220;
+  const rate = lang === "zh" ? 260 : 200;
   return Math.max(1, Math.round(words / rate));
 }
 
@@ -97,6 +133,8 @@ export default function BlogPostPage() {
   const plainText = stripHtml(content || "");
   const wordCount = countWords(plainText, lang);
   const readMin = estimateReadingTime(content || "", lang);
+  // FAQ pairs lifted from the content for FAQPage structured data (GEO).
+  const faq = extractFaq(content || "");
 
   return (
     <>
@@ -132,6 +170,8 @@ export default function BlogPostPage() {
             wordCount: wordCount > 0 ? wordCount : undefined,
             articleBody: plainText || undefined,
           }),
+          // FAQPage — only emitted when the article actually has a FAQ block.
+          faqPageSchema(faq),
         ]}
       />
       <ScrollProgressBar />

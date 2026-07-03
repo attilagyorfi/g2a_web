@@ -80,6 +80,7 @@ export default function AdminPostEdit() {
     },
   );
   const realCompletedSteps = jobStatusQuery.data?.completedSteps ?? 0;
+  const realTotalSteps = jobStatusQuery.data?.totalSteps ?? 3;
   const realPhase = jobStatusQuery.data?.phase as "draft" | "editor" | null | undefined;
   // Extra outputs from the two-pass draft generator — surfaced as
   // separate UI panels rather than dumped into the content field.
@@ -148,7 +149,7 @@ export default function AdminPostEdit() {
     ? Math.min(95, Math.round((draftElapsedSec / 40) * 100))
     : 0;
   const realPct = realCompletedSteps > 0
-    ? Math.min(95, Math.round((realCompletedSteps / 6) * 100))
+    ? Math.min(95, Math.round((realCompletedSteps / realTotalSteps) * 100))
     : 0;
   const progressPct = realPct > 0 ? realPct : timeBasedPct;
 
@@ -367,7 +368,7 @@ export default function AdminPostEdit() {
                 {realCompletedSteps > 0 && (
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", padding: "0.45rem 0.75rem", background: "rgba(20,184,166,0.06)", border: "1px solid rgba(20,184,166,0.2)", borderRadius: 5 }}>
                     <span style={{ color: "#5eead4", fontFamily: "Geist Mono, monospace", fontSize: "0.72rem", fontWeight: 600 }}>
-                      OpenAI · {realCompletedSteps}/6 hívás kész
+                      OpenAI · {realCompletedSteps}/{realTotalSteps} nyelv kész
                     </span>
                     <span style={{ color: "#888", fontFamily: "Geist Mono, monospace", fontSize: "0.66rem" }}>
                       {realPhase === "editor" ? "Szerkesztői pass" : "Strukturált draft"}

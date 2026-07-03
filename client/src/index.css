@@ -470,6 +470,19 @@ html.light ::-webkit-scrollbar-track { background: var(--g2a-bg-3); }
   border-left: 3px solid #14B8A6; padding-left: 1.5rem; margin: 2rem 0;
   color: var(--g2a-text-secondary); font-style: italic; font-size: 1.05rem;
 }
+/* Comparison tables in blog/service prose (GEO-friendly structured data).
+   Wrap scrolls horizontally on narrow screens so the page never overflows. */
+.g2a-prose table {
+  width: 100%; border-collapse: collapse; margin: 2rem 0;
+  font-size: 0.92rem; display: block; overflow-x: auto;
+}
+.g2a-prose thead { background: var(--g2a-tile); }
+.g2a-prose th, .g2a-prose td {
+  border: 1px solid var(--g2a-border); padding: 0.7rem 0.9rem;
+  text-align: left; vertical-align: top;
+}
+.g2a-prose th { color: var(--g2a-text-primary); font-weight: 600; font-family: "Geist Mono", monospace; font-size: 0.82rem; }
+.g2a-prose tbody tr:nth-child(even) { background: rgba(255,255,255,0.02); }
 
 /* Dividers */
 .g2a-divider {

@@ -1032,7 +1032,7 @@ const adminRouter = router({
       .mutation(async ({ input }) => {
         const { jobId, ...gen } = input;
         if (jobId) {
-          await db.createAiJob({ id: jobId, type: "multilang_blog_draft", totalSteps: 6 });
+          await db.createAiJob({ id: jobId, type: "multilang_blog_draft", totalSteps: 3 });
         }
         try {
           const result = await generateMultilangBlogDraft(gen, jobId);
