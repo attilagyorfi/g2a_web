@@ -76,15 +76,15 @@ function resolveFromAddress(): string {
 
 export async function sendEmailWithId(
   payload: EmailPayload,
-): Promise<{ ok: boolean; messageId?: string }> {
+): Promise<{ ok: boolean; messageId?: string; error?: string }> {
   if (!ENV.resendApiKey) {
     console.warn("[Email] RESEND_API_KEY not set — skipping email send");
-    return { ok: false };
+    return { ok: false, error: "RESEND_API_KEY nincs beállítva." };
   }
   const to = payload.to ?? ENV.resendNotifyEmail;
   if (!to || (Array.isArray(to) && to.length === 0)) {
     console.warn("[Email] No recipient (set RESEND_NOTIFY_EMAIL or pass `to`) — skipping");
-    return { ok: false };
+    return { ok: false, error: "Nincs címzett (RESEND_NOTIFY_EMAIL vagy `to`)." };
   }
 
   try {
@@ -108,14 +108,17 @@ export async function sendEmailWithId(
     if (!res.ok) {
       const detail = await res.text().catch(() => "");
       console.warn(`[Email] Resend ${res.status} ${res.statusText}${detail ? `: ${detail.slice(0, 300)}` : ""}`);
-      return { ok: false };
+      // Surface a readable reason to the caller — Resend nests it in `message`.
+      let reason = `${res.status} ${res.statusText}`;
+      try { const j = JSON.parse(detail) as { message?: string }; if (j.message) reason = j.message; } catch { if (detail) reason = detail.slice(0, 300); }
+      return { ok: false, error: `Resend: ${reason}` };
     }
     // Resend returns `{ id: "..." }` on success — capture it for event correlation.
     const data = (await res.json().catch(() => null)) as { id?: string } | null;
     return { ok: true, messageId: data?.id };
   } catch (err) {
     console.warn("[Email] Resend request failed:", err);
-    return { ok: false };
+    return { ok: false, error: String(err instanceof Error ? err.message : err) };
   }
 }
 

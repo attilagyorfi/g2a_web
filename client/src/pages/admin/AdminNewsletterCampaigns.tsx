@@ -14,6 +14,7 @@ import { Send, TestTube2, Loader2, Sparkles, Mail, AlertTriangle, Users } from "
 import { parseFormError } from "@/lib/utils";
 import { useConfirm } from "@/components/ConfirmDialog";
 import { formatAdminDateTime } from "@/components/admin/formatDate";
+import NewsletterVisualEditor from "@/components/admin/NewsletterVisualEditor";
 
 const SEGMENTS = ["", "lead", "customer", "vip", "inactive", "prospect"];
 
@@ -37,7 +38,11 @@ export default function AdminNewsletterCampaigns() {
   const [html, setHtml] = useState(DEFAULT_HTML_TEMPLATE);
   const [segment, setSegment] = useState<string>("");
   const [testEmail, setTestEmail] = useState("");
-  const [previewMode, setPreviewMode] = useState<"code" | "preview">("preview");
+  const [previewMode, setPreviewMode] = useState<"visual" | "code" | "preview">("visual");
+  // Bumped whenever `html` is replaced from OUTSIDE the editor (AI rewrite,
+  // post-send reset) so the visual editor remounts + re-seeds. It does NOT
+  // change on normal typing, so the caret never jumps mid-edit.
+  const [visualSeed, setVisualSeed] = useState(0);
 
   const aiStatus = trpc.admin.ai.status.useQuery(undefined, { staleTime: 5 * 60 * 1000 });
   const recipientCountQ = trpc.admin.newsletter.estimateRecipients.useQuery({ segment: segment || null });
@@ -78,6 +83,7 @@ export default function AdminNewsletterCampaigns() {
       // Reset form
       setSubject("");
       setHtml(DEFAULT_HTML_TEMPLATE);
+      setVisualSeed((s) => s + 1);
     } catch (err) {
       toast.error(parseFormError(err, "Kampány küldés sikertelen"));
     }
@@ -90,6 +96,7 @@ export default function AdminNewsletterCampaigns() {
     try {
       const { text } = await improveMutation.mutateAsync({ text: html, mode: "rephrase", lang: "hu" });
       setHtml(text);
+      setVisualSeed((s) => s + 1);
       toast.success("AI átírás kész");
     } catch (err) {
       toast.error(parseFormError(err, "AI hiba"));
@@ -137,10 +144,14 @@ export default function AdminNewsletterCampaigns() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
               <label style={{ ...labelStyle, marginBottom: 0 }}>HTML body *</label>
               <div style={{ display: "flex", gap: 6 }}>
-                <button type="button" onClick={() => setPreviewMode(p => p === "code" ? "preview" : "code")}
-                  style={{ padding: "4px 10px", borderRadius: 4, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#aaa", cursor: "pointer", fontFamily: "Geist Mono, monospace", fontSize: "0.65rem" }}>
-                  {previewMode === "code" ? "👁 Preview" : "{ } Kód"}
-                </button>
+                <div style={{ display: "inline-flex", gap: 4 }}>
+                  {([["visual", "Vizuális"], ["code", "Kód"], ["preview", "Előnézet"]] as const).map(([m, label]) => (
+                    <button key={m} type="button" onClick={() => setPreviewMode(m)}
+                      style={{ padding: "4px 10px", borderRadius: 4, background: previewMode === m ? "rgba(20,184,166,0.18)" : "rgba(255,255,255,0.05)", border: `1px solid ${previewMode === m ? "rgba(20,184,166,0.5)" : "rgba(255,255,255,0.1)"}`, color: previewMode === m ? "#14B8A6" : "#aaa", cursor: "pointer", fontFamily: "Geist Mono, monospace", fontSize: "0.65rem" }}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
                 {aiConfigured && (
                   <button type="button" onClick={handleAiImprove} disabled={improveMutation.isPending}
                     style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "4px 10px", borderRadius: 4, background: "rgba(168,85,247,0.15)", border: "1px solid rgba(168,85,247,0.4)", color: "#c084fc", cursor: improveMutation.isPending ? "wait" : "pointer", fontFamily: "Geist Mono, monospace", fontSize: "0.65rem" }}>
@@ -150,7 +161,9 @@ export default function AdminNewsletterCampaigns() {
                 )}
               </div>
             </div>
-            {previewMode === "code" ? (
+            {previewMode === "visual" ? (
+              <NewsletterVisualEditor key={visualSeed} html={html} onChange={setHtml} />
+            ) : previewMode === "code" ? (
               <textarea value={html} onChange={(e) => setHtml(e.target.value)} rows={18} style={{ ...inputStyle, fontFamily: "Geist Mono, monospace", fontSize: "0.78rem", lineHeight: 1.4, resize: "vertical" }} />
             ) : (
               <div style={{ height: 460, overflow: "auto", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 5, background: "#fff" }}>

@@ -14,7 +14,7 @@ import { getClientIp } from "./_core/rateLimit";
 import { checkRateLimitDb } from "./_core/dbRateLimit";
 import { isHoneypotTriggered, HONEYPOT_FIELD } from "./_core/spam";
 import { verifyTurnstile, isTurnstileConfigured } from "./_core/turnstile";
-import { sendEmail, isEmailConfigured } from "./_core/email";
+import { sendEmail, sendEmailWithId, isEmailConfigured } from "./_core/email";
 import {
   renderConfirmationEmailHtml,
   CONFIRMATION_SUBJECTS,
@@ -841,12 +841,18 @@ const adminRouter = router({
         }
         // Fake unsubscribe link with placeholder so the test looks real
         const html = input.html.replace(/\{\{unsubscribeUrl\}\}/g, "https://g2amarketing.hu/api/newsletter/unsubscribe?token=TEST_TOKEN");
-        const ok = await sendEmail({
+        const result = await sendEmailWithId({
           to: input.to,
           subject: `[TEST] ${input.subject}`,
           html: `<div style="background:#fef3c7;padding:8px 12px;font-family:monospace;font-size:12px;color:#92400e;border-radius:4px;margin-bottom:16px">⚠ Ez egy TESZT email — nem ment ki a teljes listának.</div>${html}`,
         });
-        return { success: ok };
+        if (!result.ok) {
+          // Surface the real Resend reason (e.g. sandbox: "you can only send
+          // to your own address until a domain is verified") so the admin sees
+          // WHY it failed instead of a silent success.
+          throw new TRPCError({ code: "BAD_REQUEST", message: result.error || "A küldés sikertelen — ellenőrizd a Resend beállításokat." });
+        }
+        return { success: true };
       }),
 
     /**
@@ -889,7 +895,7 @@ const adminRouter = router({
         const origin = (ctx.req.headers.origin as string | undefined)
           || `${ctx.req.protocol}://${ctx.req.get("host")}`;
 
-        let sent = 0, failed = 0;
+        let sent = 0, failed = 0, lastError: string | undefined;
         // Sequential send with a 600ms gap = ~1.6 req/sec (safely under Resend free tier's 2/sec)
         for (const sub of subs) {
           const unsubscribeUrl = `${origin}/api/newsletter/unsubscribe?token=${sub.unsubscribeToken ?? ""}`;
@@ -899,28 +905,40 @@ const adminRouter = router({
             // Attach the campaign_id tag so the Resend webhook can attribute
             // delivered/opened/clicked events back to this campaign for the
             // stats dashboard. Tag values are strings only (Resend constraint).
-            const ok = await sendEmail({
+            const r = await sendEmailWithId({
               to: sub.email,
               subject: input.subject,
               html: personalizedHtml,
               text: personalizedText,
               tags: [{ name: "campaign_id", value: String(campaignId) }],
             });
-            if (ok) sent++; else failed++;
+            if (r.ok) sent++; else { failed++; lastError = r.error; }
           } catch (err) {
             console.error(`[campaign] send failed for ${sub.email}:`, err);
             failed++;
+            lastError = String(err instanceof Error ? err.message : err);
           }
+          // Early bail-out: if nothing has gone out after the first few tries
+          // it's almost certainly a config problem (unverified domain / bad
+          // key). No point hammering the whole list at 600ms each.
+          if (sent === 0 && failed >= 3) break;
           // Throttle
           await new Promise((r) => setTimeout(r, 600));
         }
 
         await db.updateEmailCampaign(campaignId, {
-          status: failed === subs.length ? "failed" : "sent",
+          status: sent === 0 ? "failed" : "sent",
           sentCount: sent,
           failedCount: failed,
           sentAt: new Date(),
         });
+
+        if (sent === 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: lastError ? `Egyetlen email sem ment ki. ${lastError}` : "Egyetlen email sem ment ki — ellenőrizd a Resend beállításokat (hitelesített domain).",
+          });
+        }
 
         return { campaignId, recipientCount: subs.length, sent, failed };
       }),

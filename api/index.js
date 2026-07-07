@@ -1653,12 +1653,12 @@ function resolveFromAddress() {
 async function sendEmailWithId(payload) {
   if (!ENV.resendApiKey) {
     console.warn("[Email] RESEND_API_KEY not set \u2014 skipping email send");
-    return { ok: false };
+    return { ok: false, error: "RESEND_API_KEY nincs be\xE1ll\xEDtva." };
   }
   const to = payload.to ?? ENV.resendNotifyEmail;
   if (!to || Array.isArray(to) && to.length === 0) {
     console.warn("[Email] No recipient (set RESEND_NOTIFY_EMAIL or pass `to`) \u2014 skipping");
-    return { ok: false };
+    return { ok: false, error: "Nincs c\xEDmzett (RESEND_NOTIFY_EMAIL vagy `to`)." };
   }
   try {
     const res = await fetch(RESEND_ENDPOINT, {
@@ -1680,13 +1680,20 @@ async function sendEmailWithId(payload) {
     if (!res.ok) {
       const detail = await res.text().catch(() => "");
       console.warn(`[Email] Resend ${res.status} ${res.statusText}${detail ? `: ${detail.slice(0, 300)}` : ""}`);
-      return { ok: false };
+      let reason = `${res.status} ${res.statusText}`;
+      try {
+        const j = JSON.parse(detail);
+        if (j.message) reason = j.message;
+      } catch {
+        if (detail) reason = detail.slice(0, 300);
+      }
+      return { ok: false, error: `Resend: ${reason}` };
     }
     const data = await res.json().catch(() => null);
     return { ok: true, messageId: data?.id };
   } catch (err) {
     console.warn("[Email] Resend request failed:", err);
-    return { ok: false };
+    return { ok: false, error: String(err instanceof Error ? err.message : err) };
   }
 }
 function renderNotificationHtml(content) {
@@ -3881,12 +3888,15 @@ var adminRouter = router({
         throw new TRPCError3({ code: "PRECONDITION_FAILED", message: "Resend nincs konfigur\xE1lva (.env: RESEND_API_KEY + RESEND_NOTIFY_EMAIL)" });
       }
       const html = input.html.replace(/\{\{unsubscribeUrl\}\}/g, "https://g2amarketing.hu/api/newsletter/unsubscribe?token=TEST_TOKEN");
-      const ok = await sendEmail({
+      const result = await sendEmailWithId({
         to: input.to,
         subject: `[TEST] ${input.subject}`,
         html: `<div style="background:#fef3c7;padding:8px 12px;font-family:monospace;font-size:12px;color:#92400e;border-radius:4px;margin-bottom:16px">\u26A0 Ez egy TESZT email \u2014 nem ment ki a teljes list\xE1nak.</div>${html}`
       });
-      return { success: ok };
+      if (!result.ok) {
+        throw new TRPCError3({ code: "BAD_REQUEST", message: result.error || "A k\xFCld\xE9s sikertelen \u2014 ellen\u0151rizd a Resend be\xE1ll\xEDt\xE1sokat." });
+      }
+      return { success: true };
     }),
     /**
      * Send a campaign to all active subscribers (optionally filtered by segment).
@@ -3921,33 +3931,44 @@ var adminRouter = router({
       }
       await updateEmailCampaign(campaignId, { status: "sending", recipientCount: subs.length });
       const origin = ctx.req.headers.origin || `${ctx.req.protocol}://${ctx.req.get("host")}`;
-      let sent = 0, failed = 0;
+      let sent = 0, failed = 0, lastError;
       for (const sub of subs) {
         const unsubscribeUrl = `${origin}/api/newsletter/unsubscribe?token=${sub.unsubscribeToken ?? ""}`;
         const personalizedHtml = input.html.replace(/\{\{unsubscribeUrl\}\}/g, unsubscribeUrl);
         const personalizedText = input.text?.replace(/\{\{unsubscribeUrl\}\}/g, unsubscribeUrl);
         try {
-          const ok = await sendEmail({
+          const r = await sendEmailWithId({
             to: sub.email,
             subject: input.subject,
             html: personalizedHtml,
             text: personalizedText,
             tags: [{ name: "campaign_id", value: String(campaignId) }]
           });
-          if (ok) sent++;
-          else failed++;
+          if (r.ok) sent++;
+          else {
+            failed++;
+            lastError = r.error;
+          }
         } catch (err) {
           console.error(`[campaign] send failed for ${sub.email}:`, err);
           failed++;
+          lastError = String(err instanceof Error ? err.message : err);
         }
+        if (sent === 0 && failed >= 3) break;
         await new Promise((r) => setTimeout(r, 600));
       }
       await updateEmailCampaign(campaignId, {
-        status: failed === subs.length ? "failed" : "sent",
+        status: sent === 0 ? "failed" : "sent",
         sentCount: sent,
         failedCount: failed,
         sentAt: /* @__PURE__ */ new Date()
       });
+      if (sent === 0) {
+        throw new TRPCError3({
+          code: "BAD_REQUEST",
+          message: lastError ? `Egyetlen email sem ment ki. ${lastError}` : "Egyetlen email sem ment ki \u2014 ellen\u0151rizd a Resend be\xE1ll\xEDt\xE1sokat (hiteles\xEDtett domain)."
+        });
+      }
       return { campaignId, recipientCount: subs.length, sent, failed };
     })
   }),
