@@ -84,6 +84,123 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+// ─── Staff accounts (multi-user admin) ────────────────────────────────────────
+
+/** Look up by email — the login form's identifier for staff accounts. */
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+/** Everyone who can reach the admin: the owner plus invited staff. */
+export async function listStaffUsers() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(users).where(eq(users.role, "admin")).orderBy(asc(users.id));
+}
+
+export async function getUserById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createStaffUser(data: {
+  openId: string;
+  name: string;
+  email: string;
+  permissions: string;
+  resetToken: string;
+  resetTokenExpiresAt: Date;
+}) {
+  const db = await getDb();
+  if (!db) return undefined;
+  await db.insert(users).values({
+    openId: data.openId,
+    name: data.name,
+    email: data.email,
+    role: "admin",
+    loginMethod: "password",
+    permissions: data.permissions,
+    isActive: true,
+    isOwner: false,
+    resetToken: data.resetToken,
+    resetTokenExpiresAt: data.resetTokenExpiresAt,
+    invitedAt: new Date(),
+  });
+  return getUserByEmail(data.email);
+}
+
+export async function updateStaffUser(
+  id: number,
+  patch: Partial<{
+    name: string;
+    permissions: string;
+    isActive: boolean;
+    passwordHash: string | null;
+    resetToken: string | null;
+    resetTokenExpiresAt: Date | null;
+  }>,
+) {
+  const db = await getDb();
+  if (!db) return;
+  // Drizzle throws on an empty SET clause; an all-undefined patch is a no-op.
+  if (Object.values(patch).every((v) => v === undefined)) return;
+  await db.update(users).set(patch).where(eq(users.id, id));
+}
+
+export async function deleteStaffUser(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  // Guard in SQL as well as in the router: the owner row is never deletable.
+  await db.delete(users).where(and(eq(users.id, id), eq(users.isOwner, false)));
+}
+
+/** Resolve a live (unexpired) invite / password-reset token. */
+export async function getUserByResetToken(token: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.resetToken, token)).limit(1);
+  const user = result[0];
+  if (!user) return undefined;
+  const exp = user.resetTokenExpiresAt ? new Date(user.resetTokenExpiresAt).getTime() : 0;
+  if (!exp || exp < Date.now()) return undefined;
+  return user;
+}
+
+/**
+ * Ensure the ADMIN_EMAIL owner exists as a real row with `isOwner` set, so the
+ * forgot-password flow has something to attach a token to (the env password
+ * itself can't be rewritten from the app).
+ */
+export async function ensureOwnerUser(openId: string, email: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const existing = await getUserByEmail(email);
+  if (existing) {
+    if (!existing.isOwner || existing.role !== "admin" || !existing.isActive) {
+      await db
+        .update(users)
+        .set({ isOwner: true, role: "admin", isActive: true })
+        .where(eq(users.id, existing.id));
+    }
+    return getUserByEmail(email);
+  }
+  await db.insert(users).values({
+    openId,
+    name: "Admin",
+    email,
+    role: "admin",
+    loginMethod: "password",
+    isOwner: true,
+    isActive: true,
+  });
+  return getUserByEmail(email);
+}
+
 // ─── Site Settings ────────────────────────────────────────────────────────────
 export async function getSiteSetting(key: string) {
   const db = await getDb();

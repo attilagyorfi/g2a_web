@@ -27,14 +27,60 @@ import {
   type BrandVoice,
 } from "./_core/brandVoice";
 import { randomBytes } from "node:crypto";
+import { hasPermission, parsePermissions, PERMISSION_KEYS, type Permission } from "@shared/permissions";
+import { generateResetToken } from "./_core/password";
 
 // Admin guard middleware
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== "admin") {
     throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
   }
+  // Suspended staff keep their row (and history) but lose access immediately.
+  if (ctx.user.isActive === false) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Ez a hozzáférés fel van függesztve." });
+  }
   return next({ ctx });
 });
+
+/**
+ * Admin procedure additionally gated on one granular permission.
+ *
+ * Invited staff carry a permission list (`users.permissions`); the owner
+ * bypasses it. Use this on routers that map to a section of the admin sidebar
+ * so a limited account can't reach an area by calling the endpoint directly.
+ */
+function permissionProcedure(permission: Permission) {
+  return adminProcedure.use(({ ctx, next }) => {
+    if (!hasPermission(ctx.user, permission)) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Ehhez a részhez nincs jogosultságod. Kérj hozzáférést az adminisztrátortól.",
+      });
+    }
+    return next({ ctx });
+  });
+}
+
+/** Absolute origin for building invite / reset links in emails. */
+function originFromRequest(req: { headers: Record<string, unknown>; protocol?: string; get?: (h: string) => string | undefined }): string {
+  const origin = req.headers?.origin as string | undefined;
+  if (origin) return origin.replace(/\/$/, "");
+  const host = req.get?.("host") ?? "g2amarketing.hu";
+  return `${req.protocol ?? "https"}://${host}`;
+}
+
+function renderInviteEmail(name: string, link: string): string {
+  const greeting = name ? `Szia ${name}!` : "Szia!";
+  return `<div style="max-width:520px;margin:0 auto;padding:32px 24px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#1f2937">
+  <h1 style="font-size:20px;color:#0f172a;border-left:4px solid #14B8A6;padding-left:14px;margin:0 0 20px">Meghívó a G2A admin felületre</h1>
+  <p style="line-height:1.6;font-size:15px">${greeting}</p>
+  <p style="line-height:1.6;font-size:15px">Hozzáférést kaptál a G2A Marketing admin felületéhez. Az alábbi gombbal tudod beállítani a jelszavad — a link <strong>1 óráig</strong> érvényes.</p>
+  <p style="margin:26px 0"><a href="${link}" style="display:inline-block;background:#14B8A6;color:#fff;text-decoration:none;padding:12px 22px;border-radius:6px;font-weight:600">Jelszó beállítása</a></p>
+  <p style="line-height:1.6;font-size:13px;color:#6b7280">Ha a gomb nem működik, másold be ezt a linket a böngésződbe:<br><span style="word-break:break-all;color:#0d9488">${link}</span></p>
+  <hr style="margin:28px 0;border:none;border-top:1px solid #e5e7eb">
+  <p style="font-size:12px;color:#9ca3af;line-height:1.5">G2A Marketing · g2amarketing.hu</p>
+</div>`;
+}
 
 /**
  * Apply rate-limit + honeypot guard to a public form submission.
@@ -448,8 +494,8 @@ const newsletterRouter = router({
 const adminRouter = router({
   // Hero Slides
   heroSlides: router({
-    list: adminProcedure.query(() => db.getAllHeroSlides()),
-    create: adminProcedure.input(z.object({
+    list: permissionProcedure("hero_slides").query(() => db.getAllHeroSlides()),
+    create: permissionProcedure("hero_slides").input(z.object({
       title: z.string(),
       titleEn: z.string().optional(),
       titleZh: z.string().optional(),
@@ -469,7 +515,7 @@ const adminRouter = router({
       sortOrder: z.number().default(0),
       isActive: z.boolean().default(true),
     })).mutation(({ input }) => db.createHeroSlide(input)),
-    update: adminProcedure.input(z.object({ id: z.number(), data: z.object({
+    update: permissionProcedure("hero_slides").input(z.object({ id: z.number(), data: z.object({
       title: z.string().optional(),
       titleEn: z.string().optional(),
       titleZh: z.string().optional(),
@@ -489,13 +535,13 @@ const adminRouter = router({
       sortOrder: z.number().optional(),
       isActive: z.boolean().optional(),
     }) })).mutation(({ input }) => db.updateHeroSlide(input.id, input.data)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteHeroSlide(input.id)),
+    delete: permissionProcedure("hero_slides").input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteHeroSlide(input.id)),
   }),
 
   // Services
   services: router({
-    list: adminProcedure.query(() => db.getServices()),
-    create: adminProcedure.input(z.object({
+    list: permissionProcedure("services").query(() => db.getServices()),
+    create: permissionProcedure("services").input(z.object({
       slug: z.string(),
       number: z.string().optional(),
       title: z.string(),
@@ -537,7 +583,7 @@ const adminRouter = router({
       faq: z.string().optional(),
       sortOrder: z.number().default(0),
     })).mutation(({ input }) => db.createService(input)),
-    update: adminProcedure.input(z.object({ id: z.number(), data: z.object({
+    update: permissionProcedure("services").input(z.object({ id: z.number(), data: z.object({
       slug: z.string().optional(),
       number: z.string().optional(),
       title: z.string().optional(),
@@ -579,30 +625,30 @@ const adminRouter = router({
       faq: z.string().optional(),
       sortOrder: z.number().optional(),
     }) })).mutation(({ input }) => db.updateService(input.id, input.data)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteService(input.id)),
+    delete: permissionProcedure("services").input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteService(input.id)),
   }),
 
   // Categories
   categories: router({
-    list: adminProcedure.query(() => db.getCategories()),
-    create: adminProcedure.input(z.object({
+    list: permissionProcedure("categories").query(() => db.getCategories()),
+    create: permissionProcedure("categories").input(z.object({
       name: z.string(), nameEn: z.string().optional(), nameZh: z.string().optional(),
       slug: z.string(),
       description: z.string().optional(), descriptionEn: z.string().optional(), descriptionZh: z.string().optional(),
     })).mutation(({ input }) => db.createCategory(input)),
-    update: adminProcedure.input(z.object({ id: z.number(), data: z.object({
+    update: permissionProcedure("categories").input(z.object({ id: z.number(), data: z.object({
       name: z.string().optional(), nameEn: z.string().optional(), nameZh: z.string().optional(),
       slug: z.string().optional(),
       description: z.string().optional(), descriptionEn: z.string().optional(), descriptionZh: z.string().optional(),
     }) })).mutation(({ input }) => db.updateCategory(input.id, input.data)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteCategory(input.id)),
-    deleteMany: adminProcedure.input(z.object({ ids: z.array(z.number()).min(1).max(100) })).mutation(({ input }) => db.deleteCategoriesBulk(input.ids)),
+    delete: permissionProcedure("categories").input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteCategory(input.id)),
+    deleteMany: permissionProcedure("categories").input(z.object({ ids: z.array(z.number()).min(1).max(100) })).mutation(({ input }) => db.deleteCategoriesBulk(input.ids)),
   }),
 
   // Posts
   posts: router({
-    list: adminProcedure.query(() => db.getAllPostsAdmin()),
-    create: adminProcedure.input(z.object({
+    list: permissionProcedure("posts").query(() => db.getAllPostsAdmin()),
+    create: permissionProcedure("posts").input(z.object({
       title: z.string(),
       titleEn: z.string().optional(),
       titleZh: z.string().optional(),
@@ -627,7 +673,7 @@ const adminRouter = router({
       ogImage: z.string().optional(),
       publishedAt: z.date().optional(),
     })).mutation(({ input }) => db.createPost(input)),
-    update: adminProcedure.input(z.object({ id: z.number(), data: z.object({
+    update: permissionProcedure("posts").input(z.object({ id: z.number(), data: z.object({
       title: z.string().optional(),
       titleEn: z.string().optional(),
       titleZh: z.string().optional(),
@@ -652,14 +698,14 @@ const adminRouter = router({
       ogImage: z.string().optional(),
       publishedAt: z.date().optional(),
     }) })).mutation(({ input }) => db.updatePost(input.id, input.data)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deletePost(input.id)),
-    deleteMany: adminProcedure.input(z.object({ ids: z.array(z.number()).min(1).max(200) })).mutation(({ input }) => db.deletePostsBulk(input.ids)),
+    delete: permissionProcedure("posts").input(z.object({ id: z.number() })).mutation(({ input }) => db.deletePost(input.id)),
+    deleteMany: permissionProcedure("posts").input(z.object({ ids: z.array(z.number()).min(1).max(200) })).mutation(({ input }) => db.deletePostsBulk(input.ids)),
   }),
 
   // Testimonials
   testimonials: router({
-    list: adminProcedure.query(() => db.getAllTestimonials()),
-    create: adminProcedure.input(z.object({
+    list: permissionProcedure("testimonials").query(() => db.getAllTestimonials()),
+    create: permissionProcedure("testimonials").input(z.object({
       quote: z.string(), quoteEn: z.string().optional(), quoteZh: z.string().optional(),
       authorName: z.string(),
       authorTitle: z.string().optional(), authorTitleEn: z.string().optional(), authorTitleZh: z.string().optional(),
@@ -669,7 +715,7 @@ const adminRouter = router({
       isActive: z.boolean().default(true),
       sortOrder: z.number().default(0),
     })).mutation(({ input }) => db.createTestimonial(input)),
-    update: adminProcedure.input(z.object({ id: z.number(), data: z.object({
+    update: permissionProcedure("testimonials").input(z.object({ id: z.number(), data: z.object({
       quote: z.string().optional(), quoteEn: z.string().optional(), quoteZh: z.string().optional(),
       authorName: z.string().optional(),
       authorTitle: z.string().optional(), authorTitleEn: z.string().optional(), authorTitleZh: z.string().optional(),
@@ -679,14 +725,14 @@ const adminRouter = router({
       isActive: z.boolean().optional(),
       sortOrder: z.number().optional(),
     }) })).mutation(({ input }) => db.updateTestimonial(input.id, input.data)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteTestimonial(input.id)),
-    deleteMany: adminProcedure.input(z.object({ ids: z.array(z.number()).min(1).max(100) })).mutation(({ input }) => db.deleteTestimonialsBulk(input.ids)),
+    delete: permissionProcedure("testimonials").input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteTestimonial(input.id)),
+    deleteMany: permissionProcedure("testimonials").input(z.object({ ids: z.array(z.number()).min(1).max(100) })).mutation(({ input }) => db.deleteTestimonialsBulk(input.ids)),
   }),
 
   // Partners
   partners: router({
-    list: adminProcedure.query(() => db.getAllPartners()),
-    create: adminProcedure.input(z.object({
+    list: permissionProcedure("partners").query(() => db.getAllPartners()),
+    create: permissionProcedure("partners").input(z.object({
       name: z.string(),
       slug: z.string().optional(),
       logo: z.string().optional(),
@@ -697,7 +743,7 @@ const adminRouter = router({
       isActive: z.boolean().default(true),
       sortOrder: z.number().default(0),
     })).mutation(({ input }) => db.createPartner(input)),
-    update: adminProcedure.input(z.object({ id: z.number(), data: z.object({
+    update: permissionProcedure("partners").input(z.object({ id: z.number(), data: z.object({
       name: z.string().optional(),
       slug: z.string().optional(),
       logo: z.string().optional(),
@@ -708,14 +754,14 @@ const adminRouter = router({
       isActive: z.boolean().optional(),
       sortOrder: z.number().optional(),
     }) })).mutation(({ input }) => db.updatePartner(input.id, input.data)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deletePartner(input.id)),
-    deleteMany: adminProcedure.input(z.object({ ids: z.array(z.number()).min(1).max(100) })).mutation(({ input }) => db.deletePartnersBulk(input.ids)),
+    delete: permissionProcedure("partners").input(z.object({ id: z.number() })).mutation(({ input }) => db.deletePartner(input.id)),
+    deleteMany: permissionProcedure("partners").input(z.object({ ids: z.array(z.number()).min(1).max(100) })).mutation(({ input }) => db.deletePartnersBulk(input.ids)),
   }),
 
   // Industries
   industries: router({
-    list: adminProcedure.query(() => db.getAllIndustries()),
-    create: adminProcedure.input(z.object({
+    list: permissionProcedure("industries").query(() => db.getAllIndustries()),
+    create: permissionProcedure("industries").input(z.object({
       name: z.string(), nameEn: z.string().optional(), nameZh: z.string().optional(),
       slug: z.string(),
       description: z.string().optional(), descriptionEn: z.string().optional(), descriptionZh: z.string().optional(),
@@ -725,7 +771,7 @@ const adminRouter = router({
       sortOrder: z.number().default(0),
       isActive: z.boolean().default(true),
     })).mutation(({ input }) => db.createIndustry(input)),
-    update: adminProcedure.input(z.object({ id: z.number(), data: z.object({
+    update: permissionProcedure("industries").input(z.object({ id: z.number(), data: z.object({
       name: z.string().optional(), nameEn: z.string().optional(), nameZh: z.string().optional(),
       slug: z.string().optional(),
       description: z.string().optional(), descriptionEn: z.string().optional(), descriptionZh: z.string().optional(),
@@ -735,14 +781,14 @@ const adminRouter = router({
       sortOrder: z.number().optional(),
       isActive: z.boolean().optional(),
     }) })).mutation(({ input }) => db.updateIndustry(input.id, input.data)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteIndustry(input.id)),
-    deleteMany: adminProcedure.input(z.object({ ids: z.array(z.number()).min(1).max(100) })).mutation(({ input }) => db.deleteIndustriesBulk(input.ids)),
+    delete: permissionProcedure("industries").input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteIndustry(input.id)),
+    deleteMany: permissionProcedure("industries").input(z.object({ ids: z.array(z.number()).min(1).max(100) })).mutation(({ input }) => db.deleteIndustriesBulk(input.ids)),
   }),
 
   // Technologies
   technologies: router({
-    list: adminProcedure.query(() => db.getAllTechnologies()),
-    create: adminProcedure.input(z.object({
+    list: permissionProcedure("technologies").query(() => db.getAllTechnologies()),
+    create: permissionProcedure("technologies").input(z.object({
       name: z.string(),
       logo: z.string().optional(),
       logoAlt: z.string().optional(),
@@ -752,7 +798,7 @@ const adminRouter = router({
       sortOrder: z.number().default(0),
       isActive: z.boolean().default(true),
     })).mutation(({ input }) => db.createTechnology(input)),
-    update: adminProcedure.input(z.object({ id: z.number(), data: z.object({
+    update: permissionProcedure("technologies").input(z.object({ id: z.number(), data: z.object({
       name: z.string().optional(),
       logo: z.string().optional(),
       logoAlt: z.string().optional(),
@@ -762,53 +808,53 @@ const adminRouter = router({
       sortOrder: z.number().optional(),
       isActive: z.boolean().optional(),
     }) })).mutation(({ input }) => db.updateTechnology(input.id, input.data)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteTechnology(input.id)),
-    deleteMany: adminProcedure.input(z.object({ ids: z.array(z.number()).min(1).max(100) })).mutation(({ input }) => db.deleteTechnologiesBulk(input.ids)),
+    delete: permissionProcedure("technologies").input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteTechnology(input.id)),
+    deleteMany: permissionProcedure("technologies").input(z.object({ ids: z.array(z.number()).min(1).max(100) })).mutation(({ input }) => db.deleteTechnologiesBulk(input.ids)),
   }),
 
   // Values
   values: router({
-    list: adminProcedure.query(() => db.getAllValues()),
-    create: adminProcedure.input(z.object({
+    list: permissionProcedure("values").query(() => db.getAllValues()),
+    create: permissionProcedure("values").input(z.object({
       title: z.string(), titleEn: z.string().optional(), titleZh: z.string().optional(),
       description: z.string().optional(), descriptionEn: z.string().optional(), descriptionZh: z.string().optional(),
       icon: z.string().optional(),
       sortOrder: z.number().default(0),
       isActive: z.boolean().default(true),
     })).mutation(({ input }) => db.createValue(input)),
-    update: adminProcedure.input(z.object({ id: z.number(), data: z.object({
+    update: permissionProcedure("values").input(z.object({ id: z.number(), data: z.object({
       title: z.string().optional(), titleEn: z.string().optional(), titleZh: z.string().optional(),
       description: z.string().optional(), descriptionEn: z.string().optional(), descriptionZh: z.string().optional(),
       icon: z.string().optional(),
       sortOrder: z.number().optional(),
       isActive: z.boolean().optional(),
     }) })).mutation(({ input }) => db.updateValue(input.id, input.data)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteValue(input.id)),
+    delete: permissionProcedure("values").input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteValue(input.id)),
   }),
 
   // Contact Submissions
   contacts: router({
-    list: adminProcedure.query(() => db.getContactSubmissions()),
-    markRead: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.markContactRead(input.id)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteContactSubmission(input.id)),
-    deleteMany: adminProcedure.input(z.object({ ids: z.array(z.number()).min(1).max(200) })).mutation(({ input }) => db.deleteContactSubmissionsBulk(input.ids)),
+    list: permissionProcedure("contacts").query(() => db.getContactSubmissions()),
+    markRead: permissionProcedure("contacts").input(z.object({ id: z.number() })).mutation(({ input }) => db.markContactRead(input.id)),
+    delete: permissionProcedure("contacts").input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteContactSubmission(input.id)),
+    deleteMany: permissionProcedure("contacts").input(z.object({ ids: z.array(z.number()).min(1).max(200) })).mutation(({ input }) => db.deleteContactSubmissionsBulk(input.ids)),
   }),
 
   // Newsletter
   newsletter: router({
-    list: adminProcedure.query(() => db.getAllNewsletterSubscribers()),
-    updateSegment: adminProcedure.input(z.object({
+    list: permissionProcedure("newsletter").query(() => db.getAllNewsletterSubscribers()),
+    updateSegment: permissionProcedure("newsletter").input(z.object({
       id: z.number(),
       segment: z.string().optional(),
       source: z.string().optional(),
       tags: z.string().optional(),
     })).mutation(({ input }) => db.updateNewsletterSubscriberSegment(input)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteNewsletterSubscriber(input.id)),
-    deleteMany: adminProcedure.input(z.object({ ids: z.array(z.number()).min(1).max(500) })).mutation(({ input }) => db.deleteNewsletterSubscribersBulk(input.ids)),
+    delete: permissionProcedure("newsletter").input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteNewsletterSubscriber(input.id)),
+    deleteMany: permissionProcedure("newsletter").input(z.object({ ids: z.array(z.number()).min(1).max(500) })).mutation(({ input }) => db.deleteNewsletterSubscribersBulk(input.ids)),
 
     // ─── Campaigns ────────────────────────────────────────────────────────────
     /** Count recipients for a given segment (preview before send). */
-    estimateRecipients: adminProcedure
+    estimateRecipients: permissionProcedure("newsletter")
       .input(z.object({ segment: z.string().nullable().optional() }))
       .query(async ({ input }) => {
         const subs = await db.getActiveSubscribersForCampaign(input.segment ?? null);
@@ -816,7 +862,7 @@ const adminRouter = router({
       }),
 
     /** List past + draft campaigns. */
-    campaignList: adminProcedure.query(() => db.listEmailCampaigns()),
+    campaignList: permissionProcedure("newsletter").query(() => db.listEmailCampaigns()),
 
     /**
      * Per-campaign event stats (delivered / opened / clicked / bounced /
@@ -824,12 +870,12 @@ const adminRouter = router({
      * in /admin/newsletter/campaigns. Returns zeros when the webhook
      * isn't yet configured (no events collected).
      */
-    campaignStats: adminProcedure
+    campaignStats: permissionProcedure("newsletter")
       .input(z.object({ campaignId: z.number() }))
       .query(({ input }) => db.getCampaignEventStats(input.campaignId)),
 
     /** Send a test email to a single address (admin's own email is the typical target). */
-    sendTest: adminProcedure
+    sendTest: permissionProcedure("newsletter")
       .input(z.object({
         to: z.string().email(),
         subject: z.string().min(1),
@@ -863,7 +909,7 @@ const adminRouter = router({
      * Resend rate limit: 2 req/s on free tier. We send sequentially with a
      * small delay between batches to stay safely under the limit.
      */
-    sendCampaign: adminProcedure
+    sendCampaign: permissionProcedure("newsletter")
       .input(z.object({
         subject: z.string().min(1),
         html: z.string().min(20),
@@ -946,8 +992,8 @@ const adminRouter = router({
 
   // Pages SEO
   pages: router({
-    list: adminProcedure.query(() => db.getAllPages()),
-    upsert: adminProcedure.input(z.object({
+    list: permissionProcedure("seo").query(() => db.getAllPages()),
+    upsert: permissionProcedure("seo").input(z.object({
       slug: z.string(),
       title: z.string().optional(), titleEn: z.string().optional(), titleZh: z.string().optional(),
       metaTitle: z.string().optional(), metaTitleEn: z.string().optional(), metaTitleZh: z.string().optional(),
@@ -963,8 +1009,8 @@ const adminRouter = router({
 
   // Case Studies
   caseStudies: router({
-    list: adminProcedure.query(() => db.getAllCaseStudies()),
-    upsert: adminProcedure.input(z.object({
+    list: permissionProcedure("case_studies").query(() => db.getAllCaseStudies()),
+    upsert: permissionProcedure("case_studies").input(z.object({
       id: z.number().optional(),
       title: z.string(), titleEn: z.string().optional(), titleZh: z.string().optional(),
       slug: z.string(),
@@ -981,8 +1027,8 @@ const adminRouter = router({
       metaTitle: z.string().optional(), metaTitleEn: z.string().optional(), metaTitleZh: z.string().optional(),
       metaDescription: z.string().optional(), metaDescriptionEn: z.string().optional(), metaDescriptionZh: z.string().optional(),
     })).mutation(({ input }) => db.upsertCaseStudy(input as any)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteCaseStudy(input.id)),
-    deleteMany: adminProcedure.input(z.object({ ids: z.array(z.number()).min(1).max(100) })).mutation(({ input }) => db.deleteCaseStudiesBulk(input.ids)),
+    delete: permissionProcedure("case_studies").input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteCaseStudy(input.id)),
+    deleteMany: permissionProcedure("case_studies").input(z.object({ ids: z.array(z.number()).min(1).max(100) })).mutation(({ input }) => db.deleteCaseStudiesBulk(input.ids)),
   }),
   // Translate (DeepL bridge)
   translate: router({
@@ -1156,25 +1202,25 @@ const adminRouter = router({
 
   // Audit Leads
   auditLeads: router({
-    list: adminProcedure.query(() => db.getAllAuditLeads()),
-    markContacted: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.markAuditLeadContacted(input.id)),
-    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteAuditLead(input.id)),
-    deleteMany: adminProcedure.input(z.object({ ids: z.array(z.number()).min(1).max(200) })).mutation(({ input }) => db.deleteAuditLeadsBulk(input.ids)),
+    list: permissionProcedure("audit_leads").query(() => db.getAllAuditLeads()),
+    markContacted: permissionProcedure("audit_leads").input(z.object({ id: z.number() })).mutation(({ input }) => db.markAuditLeadContacted(input.id)),
+    delete: permissionProcedure("audit_leads").input(z.object({ id: z.number() })).mutation(({ input }) => db.deleteAuditLead(input.id)),
+    deleteMany: permissionProcedure("audit_leads").input(z.object({ ids: z.array(z.number()).min(1).max(200) })).mutation(({ input }) => db.deleteAuditLeadsBulk(input.ids)),
   }),
   // Site Settings
   settings: router({
-    list: adminProcedure.query(() => db.getAllSiteSettings()),
-    upsert: adminProcedure.input(z.object({ key: z.string(), value: z.string() })).mutation(({ input }) => db.upsertSiteSetting(input.key, input.value)),
+    list: permissionProcedure("settings").query(() => db.getAllSiteSettings()),
+    upsert: permissionProcedure("settings").input(z.object({ key: z.string(), value: z.string() })).mutation(({ input }) => db.upsertSiteSetting(input.key, input.value)),
   }),
 
   // Brand voice — used by every AI generator (social copy, blog drafts,
   // SEO meta) to write in the G2A house style instead of generic agency tone.
   brandVoice: router({
-    get: adminProcedure.query(async () => {
+    get: permissionProcedure("brand_voice").query(async () => {
       const voice = await loadBrandVoice();
       return voice ?? EMPTY_BRAND_VOICE;
     }),
-    update: adminProcedure
+    update: permissionProcedure("brand_voice")
       .input(
         z.object({
           companyDescription: z.string().max(4000),
@@ -1213,7 +1259,7 @@ const adminRouter = router({
   }),
 
   // Stats
-  stats: adminProcedure.query(async () => {
+  stats: permissionProcedure("brand_voice").query(async () => {
     const [contactsData, subscribersData, postsData, partnersData, auditLeadsData] = await Promise.all([
       db.getContactSubmissions(),
       db.getAllNewsletterSubscribers(),
@@ -1239,7 +1285,7 @@ const adminRouter = router({
    * All counted client-side from the full lists; for tables under 50K rows this
    * is fast enough and avoids per-day SQL roundtrips.
    */
-  statsTimeSeries: adminProcedure
+  statsTimeSeries: permissionProcedure("brand_voice")
     .input(z.object({ days: z.number().int().min(7).max(365).default(30) }))
     .query(async ({ input }) => {
       const [contactsData, subscribersData, auditLeadsData] = await Promise.all([
@@ -1291,7 +1337,7 @@ const adminRouter = router({
    * normalised to a small shape with a `type` discriminator so the
    * client can render the right icon and link per row.
    */
-  recentActivity: adminProcedure
+  recentActivity: permissionProcedure("brand_voice")
     .input(z.object({ limit: z.number().int().min(1).max(50).default(10) }))
     .query(async ({ input }) => {
       const [contactsData, subscribersData, auditLeadsData] = await Promise.all([
@@ -1358,7 +1404,7 @@ const adminRouter = router({
    * we know the feature is dark; if it's set we trust the runtime
    * was tested at the relevant feature surface (forms, generators).
    */
-  systemHealth: adminProcedure.query(async () => {
+  systemHealth: permissionProcedure("brand_voice").query(async () => {
     return {
       openai: {
         configured: Boolean(process.env.OPENAI_API_KEY?.trim()),
@@ -1396,7 +1442,7 @@ const adminRouter = router({
    * — we don't track per-call AI cost yet, so this gives the admin
    * "content velocity" instead of a token meter.
    */
-  contentSummary: adminProcedure.query(async () => {
+  contentSummary: permissionProcedure("brand_voice").query(async () => {
     const posts = await db.getAllPostsAdmin();
     const now = Date.now();
     const oneDay = 24 * 60 * 60 * 1000;
@@ -1430,6 +1476,120 @@ const adminRouter = router({
       recentPublished,
     };
   }),
+  users: router({
+    list: permissionProcedure("users").query(async () => {
+      const rows = await db.listStaffUsers();
+      // Never ship the hash or a live invite token to the browser.
+      return rows.map((u) => ({
+        id: u.id,
+        name: u.name ?? "",
+        email: u.email ?? "",
+        permissions: parsePermissions(u.permissions),
+        isActive: Boolean(u.isActive),
+        isOwner: Boolean(u.isOwner),
+        hasPassword: Boolean(u.passwordHash),
+        invitedAt: u.invitedAt,
+        lastSignedIn: u.lastSignedIn,
+      }));
+    }),
+
+    /**
+     * Invite a colleague. Creates the row with no password and a one-hour
+     * set-password token, emails the link, and ALSO returns it so the owner
+     * can pass it on by hand — deliverability shouldn't block onboarding.
+     */
+    invite: permissionProcedure("users")
+      .input(z.object({
+        name: z.string().min(2).max(120),
+        email: z.string().email(),
+        permissions: z.array(z.enum(PERMISSION_KEYS)).max(PERMISSION_KEYS.length),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const email = input.email.trim().toLowerCase();
+        const existing = await db.getUserByEmail(email);
+        if (existing) {
+          throw new TRPCError({ code: "CONFLICT", message: "Ezzel az email címmel már létezik felhasználó." });
+        }
+        const token = generateResetToken();
+        const created = await db.createStaffUser({
+          openId: `staff-${randomBytes(12).toString("hex")}`,
+          name: input.name.trim(),
+          email,
+          permissions: JSON.stringify(input.permissions),
+          resetToken: token,
+          resetTokenExpiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        });
+        const link = `${originFromRequest(ctx.req)}/admin/reset-password?token=${token}`;
+        let emailSent = false;
+        let emailError: string | undefined;
+        const result = await sendEmailWithId({
+          to: email,
+          subject: "Meghívó a G2A admin felületre",
+          html: renderInviteEmail(input.name.trim(), link),
+          text: `Meghívtak a G2A admin felületre. Állítsd be a jelszavad: ${link} (a link 1 óráig érvényes)`,
+        });
+        emailSent = result.ok;
+        if (!result.ok) emailError = result.error;
+        return { id: created?.id ?? 0, link, emailSent, emailError };
+      }),
+
+    update: permissionProcedure("users")
+      .input(z.object({
+        id: z.number(),
+        name: z.string().min(2).max(120).optional(),
+        permissions: z.array(z.enum(PERMISSION_KEYS)).optional(),
+        isActive: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const target = await db.getUserById(input.id);
+        if (!target) throw new TRPCError({ code: "NOT_FOUND", message: "Nincs ilyen felhasználó." });
+        if (target.isOwner) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "A tulajdonos hozzáférése nem módosítható — mindig teljes jogosultsága van." });
+        }
+        await db.updateStaffUser(input.id, {
+          ...(input.name !== undefined ? { name: input.name.trim() } : {}),
+          ...(input.permissions !== undefined ? { permissions: JSON.stringify(input.permissions) } : {}),
+          ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),
+        });
+        return { success: true };
+      }),
+
+    /** New set-password link for someone who never used (or lost) the first. */
+    resendInvite: permissionProcedure("users")
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        const target = await db.getUserById(input.id);
+        if (!target || !target.email) throw new TRPCError({ code: "NOT_FOUND", message: "Nincs ilyen felhasználó." });
+        const token = generateResetToken();
+        await db.updateStaffUser(target.id, {
+          resetToken: token,
+          resetTokenExpiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        });
+        const link = `${originFromRequest(ctx.req)}/admin/reset-password?token=${token}`;
+        const result = await sendEmailWithId({
+          to: target.email,
+          subject: "G2A Admin — jelszó beállítása",
+          html: renderInviteEmail(target.name ?? "", link),
+          text: `Jelszó beállítása: ${link} (a link 1 óráig érvényes)`,
+        });
+        return { link, emailSent: result.ok, emailError: result.error };
+      }),
+
+    remove: permissionProcedure("users")
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        const target = await db.getUserById(input.id);
+        if (!target) throw new TRPCError({ code: "NOT_FOUND", message: "Nincs ilyen felhasználó." });
+        if (target.isOwner) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "A tulajdonos nem törölhető." });
+        }
+        if (target.id === ctx.user.id) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Saját magadat nem törölheted." });
+        }
+        await db.deleteStaffUser(input.id);
+        return { success: true };
+      }),
+  }),
 });
 
 // ─── Social Media Router ──────────────────────────────────────────────────
@@ -1439,18 +1599,18 @@ const SOCIAL_PLATFORM = z.enum(["linkedin", "facebook", "instagram"]);
 
 const socialRouter = router({
   /** List all connected social accounts (admin sees status per platform). */
-  listAccounts: adminProcedure.query(() => db.listSocialAccounts()),
+  listAccounts: permissionProcedure("brand_voice").query(() => db.listSocialAccounts()),
 
   /** All drafts/published posts attached to a given blog post — latest per
    *  platform. The admin UI uses this to render the per-platform share rows. */
-  listForPost: adminProcedure
+  listForPost: permissionProcedure("brand_voice")
     .input(z.object({ postId: z.number().int().positive() }))
     .query(({ input }) => db.getLatestSocialPostsForBlogPost(input.postId)),
 
   /** Generate AI copy for a (blog post, platform) combination. Doesn't
    *  persist on its own — the UI lets the admin tweak the result before
    *  saving via `saveDraft`. */
-  generateCopy: adminProcedure
+  generateCopy: permissionProcedure("brand_voice")
     .input(
       z.object({
         postId: z.number().int().positive(),
@@ -1484,7 +1644,7 @@ const socialRouter = router({
     }),
 
   /** Persist a draft (or overwrite the latest one for this platform). */
-  saveDraft: adminProcedure
+  saveDraft: permissionProcedure("brand_voice")
     .input(
       z.object({
         postId: z.number().int().positive(),
@@ -1506,7 +1666,22 @@ const socialRouter = router({
 export const appRouter = router({
   system: systemRouter,
   auth: router({
-    me: publicProcedure.query(opts => opts.ctx.user),
+    me: publicProcedure.query(opts => {
+      const u = opts.ctx.user;
+      if (!u) return null;
+      // Sanitised projection — the raw row now carries a password hash and a
+      // live reset token, neither of which may reach the client.
+      return {
+        id: u.id,
+        openId: u.openId,
+        name: u.name,
+        email: u.email,
+        role: u.role,
+        isOwner: Boolean(u.isOwner),
+        isActive: u.isActive !== false,
+        permissions: parsePermissions(u.permissions),
+      };
+    }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });

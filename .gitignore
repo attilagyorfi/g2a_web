@@ -121,3 +121,6 @@ backups/
 
 # Manus version file (auto-generated, not part of source)
 client/public/__manus__/version.json
+
+# Local secrets kept as a document — never commit
+env.docx

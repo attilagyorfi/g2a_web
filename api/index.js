@@ -29,6 +29,22 @@ var init_schema = __esm({
       email: varchar("email", { length: 320 }),
       loginMethod: varchar("loginMethod", { length: 64 }),
       role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+      // ─── Multi-user admin access (2026-07) ───────────────────────────────────
+      // Staff accounts live in this table with their own scrypt password hash and
+      // a granular permission list. The ADMIN_EMAIL/ADMIN_PASSWORD env pair still
+      // works as the owner's recovery path; the owner row is upserted on login.
+      /** scrypt hash in `scrypt$<saltHex>$<keyHex>` form. Null = invited, not set. */
+      passwordHash: varchar("passwordHash", { length: 255 }),
+      /** JSON array of permission keys (see shared/permissions.ts). */
+      permissions: text("permissions"),
+      /** Deactivated staff keep their history but can't sign in. */
+      isActive: boolean("isActive").default(true).notNull(),
+      /** True for the ADMIN_EMAIL owner — always full access, never removable. */
+      isOwner: boolean("isOwner").default(false).notNull(),
+      /** Single-use token for invite-set-password and forgot-password flows. */
+      resetToken: varchar("resetToken", { length: 128 }),
+      resetTokenExpiresAt: timestamp("resetTokenExpiresAt"),
+      invitedAt: timestamp("invitedAt"),
       createdAt: timestamp("createdAt").defaultNow().notNull(),
       updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
       lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull()
@@ -477,6 +493,7 @@ __export(db_exports, {
   createPost: () => createPost,
   createService: () => createService,
   createSocialPost: () => createSocialPost,
+  createStaffUser: () => createStaffUser,
   createTechnology: () => createTechnology,
   createTestimonial: () => createTestimonial,
   createValue: () => createValue,
@@ -498,11 +515,13 @@ __export(db_exports, {
   deletePost: () => deletePost,
   deletePostsBulk: () => deletePostsBulk,
   deleteService: () => deleteService,
+  deleteStaffUser: () => deleteStaffUser,
   deleteTechnologiesBulk: () => deleteTechnologiesBulk,
   deleteTechnology: () => deleteTechnology,
   deleteTestimonial: () => deleteTestimonial,
   deleteTestimonialsBulk: () => deleteTestimonialsBulk,
   deleteValue: () => deleteValue,
+  ensureOwnerUser: () => ensureOwnerUser,
   getActiveCaseStudies: () => getActiveCaseStudies,
   getActiveSubscribersForCampaign: () => getActiveSubscribersForCampaign,
   getAiJob: () => getAiJob,
@@ -537,10 +556,14 @@ __export(db_exports, {
   getSocialAccountByPlatform: () => getSocialAccountByPlatform,
   getTechnologies: () => getTechnologies,
   getTestimonials: () => getTestimonials,
+  getUserByEmail: () => getUserByEmail,
+  getUserById: () => getUserById,
   getUserByOpenId: () => getUserByOpenId,
+  getUserByResetToken: () => getUserByResetToken,
   getValues: () => getValues,
   listEmailCampaigns: () => listEmailCampaigns,
   listSocialAccounts: () => listSocialAccounts,
+  listStaffUsers: () => listStaffUsers,
   markAuditLeadContacted: () => markAuditLeadContacted,
   markContactRead: () => markContactRead,
   recordEmailEvent: () => recordEmailEvent,
@@ -555,6 +578,7 @@ __export(db_exports, {
   updatePost: () => updatePost,
   updateService: () => updateService,
   updateSocialPost: () => updateSocialPost,
+  updateStaffUser: () => updateStaffUser,
   updateTechnology: () => updateTechnology,
   updateTestimonial: () => updateTestimonial,
   updateValue: () => updateValue,
@@ -616,6 +640,83 @@ async function getUserByOpenId(openId) {
   if (!db) return void 0;
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
   return result.length > 0 ? result[0] : void 0;
+}
+async function getUserByEmail(email) {
+  const db = await getDb();
+  if (!db) return void 0;
+  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  return result.length > 0 ? result[0] : void 0;
+}
+async function listStaffUsers() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(users).where(eq(users.role, "admin")).orderBy(asc(users.id));
+}
+async function getUserById(id) {
+  const db = await getDb();
+  if (!db) return void 0;
+  const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  return result.length > 0 ? result[0] : void 0;
+}
+async function createStaffUser(data) {
+  const db = await getDb();
+  if (!db) return void 0;
+  await db.insert(users).values({
+    openId: data.openId,
+    name: data.name,
+    email: data.email,
+    role: "admin",
+    loginMethod: "password",
+    permissions: data.permissions,
+    isActive: true,
+    isOwner: false,
+    resetToken: data.resetToken,
+    resetTokenExpiresAt: data.resetTokenExpiresAt,
+    invitedAt: /* @__PURE__ */ new Date()
+  });
+  return getUserByEmail(data.email);
+}
+async function updateStaffUser(id, patch) {
+  const db = await getDb();
+  if (!db) return;
+  if (Object.values(patch).every((v) => v === void 0)) return;
+  await db.update(users).set(patch).where(eq(users.id, id));
+}
+async function deleteStaffUser(id) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(users).where(and(eq(users.id, id), eq(users.isOwner, false)));
+}
+async function getUserByResetToken(token) {
+  const db = await getDb();
+  if (!db) return void 0;
+  const result = await db.select().from(users).where(eq(users.resetToken, token)).limit(1);
+  const user = result[0];
+  if (!user) return void 0;
+  const exp = user.resetTokenExpiresAt ? new Date(user.resetTokenExpiresAt).getTime() : 0;
+  if (!exp || exp < Date.now()) return void 0;
+  return user;
+}
+async function ensureOwnerUser(openId, email) {
+  const db = await getDb();
+  if (!db) return void 0;
+  const existing = await getUserByEmail(email);
+  if (existing) {
+    if (!existing.isOwner || existing.role !== "admin" || !existing.isActive) {
+      await db.update(users).set({ isOwner: true, role: "admin", isActive: true }).where(eq(users.id, existing.id));
+    }
+    return getUserByEmail(email);
+  }
+  await db.insert(users).values({
+    openId,
+    name: "Admin",
+    email,
+    role: "admin",
+    loginMethod: "password",
+    isOwner: true,
+    isActive: true
+  });
+  return getUserByEmail(email);
 }
 async function getSiteSetting(key) {
   const db = await getDb();
@@ -1809,6 +1910,49 @@ async function notifyOwner(payload) {
   return sendViaResend(title, content, replyTo);
 }
 
+// shared/permissions.ts
+var PERMISSION_KEYS = [
+  // Tartalom
+  "posts",
+  "categories",
+  "case_studies",
+  "services",
+  "industries",
+  // Weboldal elemek
+  "hero_slides",
+  "partners",
+  "testimonials",
+  "technologies",
+  "values",
+  // Megkeresések
+  "contacts",
+  "audit_leads",
+  // Marketing
+  "newsletter",
+  "seo",
+  "brand_voice",
+  // Rendszer
+  "settings",
+  "users"
+];
+var VALID = new Set(PERMISSION_KEYS);
+function parsePermissions(raw) {
+  if (Array.isArray(raw)) return raw.filter((k) => typeof k === "string" && VALID.has(k));
+  if (typeof raw !== "string" || !raw.trim()) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((k) => typeof k === "string" && VALID.has(k));
+  } catch {
+    return [];
+  }
+}
+function hasPermission(user, permission) {
+  if (!user) return false;
+  if (user.isOwner) return true;
+  return parsePermissions(user.permissions).includes(permission);
+}
+
 // server/_core/trpc.ts
 import { initTRPC, TRPCError as TRPCError2 } from "@trpc/server";
 import superjson from "superjson";
@@ -1830,20 +1974,22 @@ var requireUser = t.middleware(async (opts) => {
   });
 });
 var protectedProcedure = t.procedure.use(requireUser);
-var adminProcedure = t.procedure.use(
-  t.middleware(async (opts) => {
-    const { ctx, next } = opts;
-    if (!ctx.user || ctx.user.role !== "admin") {
-      throw new TRPCError2({ code: "FORBIDDEN", message: NOT_ADMIN_ERR_MSG });
+var requireAdmin = t.middleware(async (opts) => {
+  const { ctx, next } = opts;
+  if (!ctx.user || ctx.user.role !== "admin") {
+    throw new TRPCError2({ code: "FORBIDDEN", message: NOT_ADMIN_ERR_MSG });
+  }
+  if (ctx.user.isActive === false) {
+    throw new TRPCError2({ code: "FORBIDDEN", message: "Ez a hozz\xE1f\xE9r\xE9s fel van f\xFCggesztve." });
+  }
+  return next({
+    ctx: {
+      ...ctx,
+      user: ctx.user
     }
-    return next({
-      ctx: {
-        ...ctx,
-        user: ctx.user
-      }
-    });
-  })
-);
+  });
+});
+var adminProcedure = t.procedure.use(requireAdmin);
 
 // server/_core/systemRouter.ts
 var systemRouter = router({
@@ -3138,13 +3284,89 @@ ${summarizeContent(input.content)}` : "",
 
 // server/routers.ts
 init_brandVoice();
-import { randomBytes } from "node:crypto";
+import { randomBytes as randomBytes2 } from "node:crypto";
+
+// server/_core/password.ts
+import { randomBytes, scrypt as scryptCb, timingSafeEqual } from "node:crypto";
+import { promisify } from "node:util";
+
+// shared/passwordPolicy.ts
+var MIN_PASSWORD_LENGTH = 10;
+function passwordPolicyError(plain) {
+  if (plain.length < MIN_PASSWORD_LENGTH) {
+    return `A jelsz\xF3 legal\xE1bb ${MIN_PASSWORD_LENGTH} karakter legyen.`;
+  }
+  if (!/[a-zA-Z]/.test(plain) || !/[0-9]/.test(plain)) {
+    return "A jelsz\xF3 tartalmazzon bet\u0171t \xE9s sz\xE1mot is.";
+  }
+  return null;
+}
+
+// server/_core/password.ts
+var scrypt = promisify(scryptCb);
+var KEY_LEN = 64;
+async function hashPassword(plain) {
+  const salt = randomBytes(16);
+  const key = await scrypt(plain, salt, KEY_LEN);
+  return `scrypt$${salt.toString("hex")}$${key.toString("hex")}`;
+}
+async function verifyPassword(plain, stored) {
+  if (!stored) return false;
+  const parts = stored.split("$");
+  if (parts.length !== 3 || parts[0] !== "scrypt") return false;
+  try {
+    const salt = Buffer.from(parts[1], "hex");
+    const expected = Buffer.from(parts[2], "hex");
+    if (expected.length !== KEY_LEN) return false;
+    const actual = await scrypt(plain, salt, KEY_LEN);
+    return timingSafeEqual(actual, expected);
+  } catch {
+    return false;
+  }
+}
+function generateResetToken() {
+  return randomBytes(32).toString("hex");
+}
+
+// server/routers.ts
 var adminProcedure2 = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== "admin") {
     throw new TRPCError3({ code: "FORBIDDEN", message: "Admin access required" });
   }
+  if (ctx.user.isActive === false) {
+    throw new TRPCError3({ code: "FORBIDDEN", message: "Ez a hozz\xE1f\xE9r\xE9s fel van f\xFCggesztve." });
+  }
   return next({ ctx });
 });
+function permissionProcedure(permission) {
+  return adminProcedure2.use(({ ctx, next }) => {
+    if (!hasPermission(ctx.user, permission)) {
+      throw new TRPCError3({
+        code: "FORBIDDEN",
+        message: "Ehhez a r\xE9szhez nincs jogosults\xE1god. K\xE9rj hozz\xE1f\xE9r\xE9st az adminisztr\xE1tort\xF3l."
+      });
+    }
+    return next({ ctx });
+  });
+}
+function originFromRequest(req) {
+  const origin = req.headers?.origin;
+  if (origin) return origin.replace(/\/$/, "");
+  const host = req.get?.("host") ?? "g2amarketing.hu";
+  return `${req.protocol ?? "https"}://${host}`;
+}
+function renderInviteEmail(name, link) {
+  const greeting = name ? `Szia ${name}!` : "Szia!";
+  return `<div style="max-width:520px;margin:0 auto;padding:32px 24px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#1f2937">
+  <h1 style="font-size:20px;color:#0f172a;border-left:4px solid #14B8A6;padding-left:14px;margin:0 0 20px">Megh\xEDv\xF3 a G2A admin fel\xFCletre</h1>
+  <p style="line-height:1.6;font-size:15px">${greeting}</p>
+  <p style="line-height:1.6;font-size:15px">Hozz\xE1f\xE9r\xE9st kapt\xE1l a G2A Marketing admin fel\xFClet\xE9hez. Az al\xE1bbi gombbal tudod be\xE1ll\xEDtani a jelszavad \u2014 a link <strong>1 \xF3r\xE1ig</strong> \xE9rv\xE9nyes.</p>
+  <p style="margin:26px 0"><a href="${link}" style="display:inline-block;background:#14B8A6;color:#fff;text-decoration:none;padding:12px 22px;border-radius:6px;font-weight:600">Jelsz\xF3 be\xE1ll\xEDt\xE1sa</a></p>
+  <p style="line-height:1.6;font-size:13px;color:#6b7280">Ha a gomb nem m\u0171k\xF6dik, m\xE1sold be ezt a linket a b\xF6ng\xE9sz\u0151dbe:<br><span style="word-break:break-all;color:#0d9488">${link}</span></p>
+  <hr style="margin:28px 0;border:none;border-top:1px solid #e5e7eb">
+  <p style="font-size:12px;color:#9ca3af;line-height:1.5">G2A Marketing \xB7 g2amarketing.hu</p>
+</div>`;
+}
 async function guardPublicFormOrSilent(ctx, input, formKey, silentSuccess) {
   if (isHoneypotTriggered(input)) {
     console.warn(`[spam] Honeypot triggered for ${formKey} from ${getClientIp(ctx.req)}`);
@@ -3433,7 +3655,7 @@ var newsletterRouter = router({
     if (guard) return guard;
     const exists = await checkNewsletterSubscriberExists(input.email);
     if (exists) return { success: true, alreadySubscribed: true };
-    const unsubscribeToken = randomBytes(16).toString("hex");
+    const unsubscribeToken = randomBytes2(16).toString("hex");
     await createNewsletterSubscriber({
       email: input.email,
       name: input.name,
@@ -3476,8 +3698,8 @@ G2A Marketing Bt. \xB7 P\xE9cs \xB7 info@g2amarketing.hu`
 var adminRouter = router({
   // Hero Slides
   heroSlides: router({
-    list: adminProcedure2.query(() => getAllHeroSlides()),
-    create: adminProcedure2.input(z2.object({
+    list: permissionProcedure("hero_slides").query(() => getAllHeroSlides()),
+    create: permissionProcedure("hero_slides").input(z2.object({
       title: z2.string(),
       titleEn: z2.string().optional(),
       titleZh: z2.string().optional(),
@@ -3497,7 +3719,7 @@ var adminRouter = router({
       sortOrder: z2.number().default(0),
       isActive: z2.boolean().default(true)
     })).mutation(({ input }) => createHeroSlide(input)),
-    update: adminProcedure2.input(z2.object({ id: z2.number(), data: z2.object({
+    update: permissionProcedure("hero_slides").input(z2.object({ id: z2.number(), data: z2.object({
       title: z2.string().optional(),
       titleEn: z2.string().optional(),
       titleZh: z2.string().optional(),
@@ -3517,12 +3739,12 @@ var adminRouter = router({
       sortOrder: z2.number().optional(),
       isActive: z2.boolean().optional()
     }) })).mutation(({ input }) => updateHeroSlide(input.id, input.data)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteHeroSlide(input.id))
+    delete: permissionProcedure("hero_slides").input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteHeroSlide(input.id))
   }),
   // Services
   services: router({
-    list: adminProcedure2.query(() => getServices()),
-    create: adminProcedure2.input(z2.object({
+    list: permissionProcedure("services").query(() => getServices()),
+    create: permissionProcedure("services").input(z2.object({
       slug: z2.string(),
       number: z2.string().optional(),
       title: z2.string(),
@@ -3564,7 +3786,7 @@ var adminRouter = router({
       faq: z2.string().optional(),
       sortOrder: z2.number().default(0)
     })).mutation(({ input }) => createService(input)),
-    update: adminProcedure2.input(z2.object({ id: z2.number(), data: z2.object({
+    update: permissionProcedure("services").input(z2.object({ id: z2.number(), data: z2.object({
       slug: z2.string().optional(),
       number: z2.string().optional(),
       title: z2.string().optional(),
@@ -3606,12 +3828,12 @@ var adminRouter = router({
       faq: z2.string().optional(),
       sortOrder: z2.number().optional()
     }) })).mutation(({ input }) => updateService(input.id, input.data)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteService(input.id))
+    delete: permissionProcedure("services").input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteService(input.id))
   }),
   // Categories
   categories: router({
-    list: adminProcedure2.query(() => getCategories()),
-    create: adminProcedure2.input(z2.object({
+    list: permissionProcedure("categories").query(() => getCategories()),
+    create: permissionProcedure("categories").input(z2.object({
       name: z2.string(),
       nameEn: z2.string().optional(),
       nameZh: z2.string().optional(),
@@ -3620,7 +3842,7 @@ var adminRouter = router({
       descriptionEn: z2.string().optional(),
       descriptionZh: z2.string().optional()
     })).mutation(({ input }) => createCategory(input)),
-    update: adminProcedure2.input(z2.object({ id: z2.number(), data: z2.object({
+    update: permissionProcedure("categories").input(z2.object({ id: z2.number(), data: z2.object({
       name: z2.string().optional(),
       nameEn: z2.string().optional(),
       nameZh: z2.string().optional(),
@@ -3629,13 +3851,13 @@ var adminRouter = router({
       descriptionEn: z2.string().optional(),
       descriptionZh: z2.string().optional()
     }) })).mutation(({ input }) => updateCategory(input.id, input.data)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteCategory(input.id)),
-    deleteMany: adminProcedure2.input(z2.object({ ids: z2.array(z2.number()).min(1).max(100) })).mutation(({ input }) => deleteCategoriesBulk(input.ids))
+    delete: permissionProcedure("categories").input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteCategory(input.id)),
+    deleteMany: permissionProcedure("categories").input(z2.object({ ids: z2.array(z2.number()).min(1).max(100) })).mutation(({ input }) => deleteCategoriesBulk(input.ids))
   }),
   // Posts
   posts: router({
-    list: adminProcedure2.query(() => getAllPostsAdmin()),
-    create: adminProcedure2.input(z2.object({
+    list: permissionProcedure("posts").query(() => getAllPostsAdmin()),
+    create: permissionProcedure("posts").input(z2.object({
       title: z2.string(),
       titleEn: z2.string().optional(),
       titleZh: z2.string().optional(),
@@ -3660,7 +3882,7 @@ var adminRouter = router({
       ogImage: z2.string().optional(),
       publishedAt: z2.date().optional()
     })).mutation(({ input }) => createPost(input)),
-    update: adminProcedure2.input(z2.object({ id: z2.number(), data: z2.object({
+    update: permissionProcedure("posts").input(z2.object({ id: z2.number(), data: z2.object({
       title: z2.string().optional(),
       titleEn: z2.string().optional(),
       titleZh: z2.string().optional(),
@@ -3685,13 +3907,13 @@ var adminRouter = router({
       ogImage: z2.string().optional(),
       publishedAt: z2.date().optional()
     }) })).mutation(({ input }) => updatePost(input.id, input.data)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deletePost(input.id)),
-    deleteMany: adminProcedure2.input(z2.object({ ids: z2.array(z2.number()).min(1).max(200) })).mutation(({ input }) => deletePostsBulk(input.ids))
+    delete: permissionProcedure("posts").input(z2.object({ id: z2.number() })).mutation(({ input }) => deletePost(input.id)),
+    deleteMany: permissionProcedure("posts").input(z2.object({ ids: z2.array(z2.number()).min(1).max(200) })).mutation(({ input }) => deletePostsBulk(input.ids))
   }),
   // Testimonials
   testimonials: router({
-    list: adminProcedure2.query(() => getAllTestimonials()),
-    create: adminProcedure2.input(z2.object({
+    list: permissionProcedure("testimonials").query(() => getAllTestimonials()),
+    create: permissionProcedure("testimonials").input(z2.object({
       quote: z2.string(),
       quoteEn: z2.string().optional(),
       quoteZh: z2.string().optional(),
@@ -3705,7 +3927,7 @@ var adminRouter = router({
       isActive: z2.boolean().default(true),
       sortOrder: z2.number().default(0)
     })).mutation(({ input }) => createTestimonial(input)),
-    update: adminProcedure2.input(z2.object({ id: z2.number(), data: z2.object({
+    update: permissionProcedure("testimonials").input(z2.object({ id: z2.number(), data: z2.object({
       quote: z2.string().optional(),
       quoteEn: z2.string().optional(),
       quoteZh: z2.string().optional(),
@@ -3719,13 +3941,13 @@ var adminRouter = router({
       isActive: z2.boolean().optional(),
       sortOrder: z2.number().optional()
     }) })).mutation(({ input }) => updateTestimonial(input.id, input.data)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteTestimonial(input.id)),
-    deleteMany: adminProcedure2.input(z2.object({ ids: z2.array(z2.number()).min(1).max(100) })).mutation(({ input }) => deleteTestimonialsBulk(input.ids))
+    delete: permissionProcedure("testimonials").input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteTestimonial(input.id)),
+    deleteMany: permissionProcedure("testimonials").input(z2.object({ ids: z2.array(z2.number()).min(1).max(100) })).mutation(({ input }) => deleteTestimonialsBulk(input.ids))
   }),
   // Partners
   partners: router({
-    list: adminProcedure2.query(() => getAllPartners()),
-    create: adminProcedure2.input(z2.object({
+    list: permissionProcedure("partners").query(() => getAllPartners()),
+    create: permissionProcedure("partners").input(z2.object({
       name: z2.string(),
       slug: z2.string().optional(),
       logo: z2.string().optional(),
@@ -3738,7 +3960,7 @@ var adminRouter = router({
       isActive: z2.boolean().default(true),
       sortOrder: z2.number().default(0)
     })).mutation(({ input }) => createPartner(input)),
-    update: adminProcedure2.input(z2.object({ id: z2.number(), data: z2.object({
+    update: permissionProcedure("partners").input(z2.object({ id: z2.number(), data: z2.object({
       name: z2.string().optional(),
       slug: z2.string().optional(),
       logo: z2.string().optional(),
@@ -3751,13 +3973,13 @@ var adminRouter = router({
       isActive: z2.boolean().optional(),
       sortOrder: z2.number().optional()
     }) })).mutation(({ input }) => updatePartner(input.id, input.data)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deletePartner(input.id)),
-    deleteMany: adminProcedure2.input(z2.object({ ids: z2.array(z2.number()).min(1).max(100) })).mutation(({ input }) => deletePartnersBulk(input.ids))
+    delete: permissionProcedure("partners").input(z2.object({ id: z2.number() })).mutation(({ input }) => deletePartner(input.id)),
+    deleteMany: permissionProcedure("partners").input(z2.object({ ids: z2.array(z2.number()).min(1).max(100) })).mutation(({ input }) => deletePartnersBulk(input.ids))
   }),
   // Industries
   industries: router({
-    list: adminProcedure2.query(() => getAllIndustries()),
-    create: adminProcedure2.input(z2.object({
+    list: permissionProcedure("industries").query(() => getAllIndustries()),
+    create: permissionProcedure("industries").input(z2.object({
       name: z2.string(),
       nameEn: z2.string().optional(),
       nameZh: z2.string().optional(),
@@ -3771,7 +3993,7 @@ var adminRouter = router({
       sortOrder: z2.number().default(0),
       isActive: z2.boolean().default(true)
     })).mutation(({ input }) => createIndustry(input)),
-    update: adminProcedure2.input(z2.object({ id: z2.number(), data: z2.object({
+    update: permissionProcedure("industries").input(z2.object({ id: z2.number(), data: z2.object({
       name: z2.string().optional(),
       nameEn: z2.string().optional(),
       nameZh: z2.string().optional(),
@@ -3785,13 +4007,13 @@ var adminRouter = router({
       sortOrder: z2.number().optional(),
       isActive: z2.boolean().optional()
     }) })).mutation(({ input }) => updateIndustry(input.id, input.data)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteIndustry(input.id)),
-    deleteMany: adminProcedure2.input(z2.object({ ids: z2.array(z2.number()).min(1).max(100) })).mutation(({ input }) => deleteIndustriesBulk(input.ids))
+    delete: permissionProcedure("industries").input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteIndustry(input.id)),
+    deleteMany: permissionProcedure("industries").input(z2.object({ ids: z2.array(z2.number()).min(1).max(100) })).mutation(({ input }) => deleteIndustriesBulk(input.ids))
   }),
   // Technologies
   technologies: router({
-    list: adminProcedure2.query(() => getAllTechnologies()),
-    create: adminProcedure2.input(z2.object({
+    list: permissionProcedure("technologies").query(() => getAllTechnologies()),
+    create: permissionProcedure("technologies").input(z2.object({
       name: z2.string(),
       logo: z2.string().optional(),
       logoAlt: z2.string().optional(),
@@ -3803,7 +4025,7 @@ var adminRouter = router({
       sortOrder: z2.number().default(0),
       isActive: z2.boolean().default(true)
     })).mutation(({ input }) => createTechnology(input)),
-    update: adminProcedure2.input(z2.object({ id: z2.number(), data: z2.object({
+    update: permissionProcedure("technologies").input(z2.object({ id: z2.number(), data: z2.object({
       name: z2.string().optional(),
       logo: z2.string().optional(),
       logoAlt: z2.string().optional(),
@@ -3815,13 +4037,13 @@ var adminRouter = router({
       sortOrder: z2.number().optional(),
       isActive: z2.boolean().optional()
     }) })).mutation(({ input }) => updateTechnology(input.id, input.data)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteTechnology(input.id)),
-    deleteMany: adminProcedure2.input(z2.object({ ids: z2.array(z2.number()).min(1).max(100) })).mutation(({ input }) => deleteTechnologiesBulk(input.ids))
+    delete: permissionProcedure("technologies").input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteTechnology(input.id)),
+    deleteMany: permissionProcedure("technologies").input(z2.object({ ids: z2.array(z2.number()).min(1).max(100) })).mutation(({ input }) => deleteTechnologiesBulk(input.ids))
   }),
   // Values
   values: router({
-    list: adminProcedure2.query(() => getAllValues()),
-    create: adminProcedure2.input(z2.object({
+    list: permissionProcedure("values").query(() => getAllValues()),
+    create: permissionProcedure("values").input(z2.object({
       title: z2.string(),
       titleEn: z2.string().optional(),
       titleZh: z2.string().optional(),
@@ -3832,7 +4054,7 @@ var adminRouter = router({
       sortOrder: z2.number().default(0),
       isActive: z2.boolean().default(true)
     })).mutation(({ input }) => createValue(input)),
-    update: adminProcedure2.input(z2.object({ id: z2.number(), data: z2.object({
+    update: permissionProcedure("values").input(z2.object({ id: z2.number(), data: z2.object({
       title: z2.string().optional(),
       titleEn: z2.string().optional(),
       titleZh: z2.string().optional(),
@@ -3843,43 +4065,43 @@ var adminRouter = router({
       sortOrder: z2.number().optional(),
       isActive: z2.boolean().optional()
     }) })).mutation(({ input }) => updateValue(input.id, input.data)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteValue(input.id))
+    delete: permissionProcedure("values").input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteValue(input.id))
   }),
   // Contact Submissions
   contacts: router({
-    list: adminProcedure2.query(() => getContactSubmissions()),
-    markRead: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => markContactRead(input.id)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteContactSubmission(input.id)),
-    deleteMany: adminProcedure2.input(z2.object({ ids: z2.array(z2.number()).min(1).max(200) })).mutation(({ input }) => deleteContactSubmissionsBulk(input.ids))
+    list: permissionProcedure("contacts").query(() => getContactSubmissions()),
+    markRead: permissionProcedure("contacts").input(z2.object({ id: z2.number() })).mutation(({ input }) => markContactRead(input.id)),
+    delete: permissionProcedure("contacts").input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteContactSubmission(input.id)),
+    deleteMany: permissionProcedure("contacts").input(z2.object({ ids: z2.array(z2.number()).min(1).max(200) })).mutation(({ input }) => deleteContactSubmissionsBulk(input.ids))
   }),
   // Newsletter
   newsletter: router({
-    list: adminProcedure2.query(() => getAllNewsletterSubscribers()),
-    updateSegment: adminProcedure2.input(z2.object({
+    list: permissionProcedure("newsletter").query(() => getAllNewsletterSubscribers()),
+    updateSegment: permissionProcedure("newsletter").input(z2.object({
       id: z2.number(),
       segment: z2.string().optional(),
       source: z2.string().optional(),
       tags: z2.string().optional()
     })).mutation(({ input }) => updateNewsletterSubscriberSegment(input)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteNewsletterSubscriber(input.id)),
-    deleteMany: adminProcedure2.input(z2.object({ ids: z2.array(z2.number()).min(1).max(500) })).mutation(({ input }) => deleteNewsletterSubscribersBulk(input.ids)),
+    delete: permissionProcedure("newsletter").input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteNewsletterSubscriber(input.id)),
+    deleteMany: permissionProcedure("newsletter").input(z2.object({ ids: z2.array(z2.number()).min(1).max(500) })).mutation(({ input }) => deleteNewsletterSubscribersBulk(input.ids)),
     // ─── Campaigns ────────────────────────────────────────────────────────────
     /** Count recipients for a given segment (preview before send). */
-    estimateRecipients: adminProcedure2.input(z2.object({ segment: z2.string().nullable().optional() })).query(async ({ input }) => {
+    estimateRecipients: permissionProcedure("newsletter").input(z2.object({ segment: z2.string().nullable().optional() })).query(async ({ input }) => {
       const subs = await getActiveSubscribersForCampaign(input.segment ?? null);
       return { count: subs.length };
     }),
     /** List past + draft campaigns. */
-    campaignList: adminProcedure2.query(() => listEmailCampaigns()),
+    campaignList: permissionProcedure("newsletter").query(() => listEmailCampaigns()),
     /**
      * Per-campaign event stats (delivered / opened / clicked / bounced /
      * complained — unique recipients). Powers the campaign-history table
      * in /admin/newsletter/campaigns. Returns zeros when the webhook
      * isn't yet configured (no events collected).
      */
-    campaignStats: adminProcedure2.input(z2.object({ campaignId: z2.number() })).query(({ input }) => getCampaignEventStats(input.campaignId)),
+    campaignStats: permissionProcedure("newsletter").input(z2.object({ campaignId: z2.number() })).query(({ input }) => getCampaignEventStats(input.campaignId)),
     /** Send a test email to a single address (admin's own email is the typical target). */
-    sendTest: adminProcedure2.input(z2.object({
+    sendTest: permissionProcedure("newsletter").input(z2.object({
       to: z2.string().email(),
       subject: z2.string().min(1),
       html: z2.string().min(20)
@@ -3906,7 +4128,7 @@ var adminRouter = router({
      * Resend rate limit: 2 req/s on free tier. We send sequentially with a
      * small delay between batches to stay safely under the limit.
      */
-    sendCampaign: adminProcedure2.input(z2.object({
+    sendCampaign: permissionProcedure("newsletter").input(z2.object({
       subject: z2.string().min(1),
       html: z2.string().min(20),
       text: z2.string().optional(),
@@ -3974,8 +4196,8 @@ var adminRouter = router({
   }),
   // Pages SEO
   pages: router({
-    list: adminProcedure2.query(() => getAllPages()),
-    upsert: adminProcedure2.input(z2.object({
+    list: permissionProcedure("seo").query(() => getAllPages()),
+    upsert: permissionProcedure("seo").input(z2.object({
       slug: z2.string(),
       title: z2.string().optional(),
       titleEn: z2.string().optional(),
@@ -4002,8 +4224,8 @@ var adminRouter = router({
   }),
   // Case Studies
   caseStudies: router({
-    list: adminProcedure2.query(() => getAllCaseStudies()),
-    upsert: adminProcedure2.input(z2.object({
+    list: permissionProcedure("case_studies").query(() => getAllCaseStudies()),
+    upsert: permissionProcedure("case_studies").input(z2.object({
       id: z2.number().optional(),
       title: z2.string(),
       titleEn: z2.string().optional(),
@@ -4036,8 +4258,8 @@ var adminRouter = router({
       metaDescriptionEn: z2.string().optional(),
       metaDescriptionZh: z2.string().optional()
     })).mutation(({ input }) => upsertCaseStudy(input)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteCaseStudy(input.id)),
-    deleteMany: adminProcedure2.input(z2.object({ ids: z2.array(z2.number()).min(1).max(100) })).mutation(({ input }) => deleteCaseStudiesBulk(input.ids))
+    delete: permissionProcedure("case_studies").input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteCaseStudy(input.id)),
+    deleteMany: permissionProcedure("case_studies").input(z2.object({ ids: z2.array(z2.number()).min(1).max(100) })).mutation(({ input }) => deleteCaseStudiesBulk(input.ids))
   }),
   // Translate (DeepL bridge)
   translate: router({
@@ -4183,24 +4405,24 @@ var adminRouter = router({
   }),
   // Audit Leads
   auditLeads: router({
-    list: adminProcedure2.query(() => getAllAuditLeads()),
-    markContacted: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => markAuditLeadContacted(input.id)),
-    delete: adminProcedure2.input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteAuditLead(input.id)),
-    deleteMany: adminProcedure2.input(z2.object({ ids: z2.array(z2.number()).min(1).max(200) })).mutation(({ input }) => deleteAuditLeadsBulk(input.ids))
+    list: permissionProcedure("audit_leads").query(() => getAllAuditLeads()),
+    markContacted: permissionProcedure("audit_leads").input(z2.object({ id: z2.number() })).mutation(({ input }) => markAuditLeadContacted(input.id)),
+    delete: permissionProcedure("audit_leads").input(z2.object({ id: z2.number() })).mutation(({ input }) => deleteAuditLead(input.id)),
+    deleteMany: permissionProcedure("audit_leads").input(z2.object({ ids: z2.array(z2.number()).min(1).max(200) })).mutation(({ input }) => deleteAuditLeadsBulk(input.ids))
   }),
   // Site Settings
   settings: router({
-    list: adminProcedure2.query(() => getAllSiteSettings()),
-    upsert: adminProcedure2.input(z2.object({ key: z2.string(), value: z2.string() })).mutation(({ input }) => upsertSiteSetting(input.key, input.value))
+    list: permissionProcedure("settings").query(() => getAllSiteSettings()),
+    upsert: permissionProcedure("settings").input(z2.object({ key: z2.string(), value: z2.string() })).mutation(({ input }) => upsertSiteSetting(input.key, input.value))
   }),
   // Brand voice — used by every AI generator (social copy, blog drafts,
   // SEO meta) to write in the G2A house style instead of generic agency tone.
   brandVoice: router({
-    get: adminProcedure2.query(async () => {
+    get: permissionProcedure("brand_voice").query(async () => {
       const voice = await loadBrandVoice();
       return voice ?? EMPTY_BRAND_VOICE;
     }),
-    update: adminProcedure2.input(
+    update: permissionProcedure("brand_voice").input(
       z2.object({
         companyDescription: z2.string().max(4e3),
         audience: z2.string().max(2e3),
@@ -4227,7 +4449,7 @@ var adminRouter = router({
     })
   }),
   // Stats
-  stats: adminProcedure2.query(async () => {
+  stats: permissionProcedure("brand_voice").query(async () => {
     const [contactsData, subscribersData, postsData, partnersData, auditLeadsData] = await Promise.all([
       getContactSubmissions(),
       getAllNewsletterSubscribers(),
@@ -4252,7 +4474,7 @@ var adminRouter = router({
    * All counted client-side from the full lists; for tables under 50K rows this
    * is fast enough and avoids per-day SQL roundtrips.
    */
-  statsTimeSeries: adminProcedure2.input(z2.object({ days: z2.number().int().min(7).max(365).default(30) })).query(async ({ input }) => {
+  statsTimeSeries: permissionProcedure("brand_voice").input(z2.object({ days: z2.number().int().min(7).max(365).default(30) })).query(async ({ input }) => {
     const [contactsData, subscribersData, auditLeadsData] = await Promise.all([
       getContactSubmissions(),
       getAllNewsletterSubscribers(),
@@ -4295,7 +4517,7 @@ var adminRouter = router({
    * normalised to a small shape with a `type` discriminator so the
    * client can render the right icon and link per row.
    */
-  recentActivity: adminProcedure2.input(z2.object({ limit: z2.number().int().min(1).max(50).default(10) })).query(async ({ input }) => {
+  recentActivity: permissionProcedure("brand_voice").input(z2.object({ limit: z2.number().int().min(1).max(50).default(10) })).query(async ({ input }) => {
     const [contactsData, subscribersData, auditLeadsData] = await Promise.all([
       getContactSubmissions(),
       getAllNewsletterSubscribers(),
@@ -4344,7 +4566,7 @@ var adminRouter = router({
    * we know the feature is dark; if it's set we trust the runtime
    * was tested at the relevant feature surface (forms, generators).
    */
-  systemHealth: adminProcedure2.query(async () => {
+  systemHealth: permissionProcedure("brand_voice").query(async () => {
     return {
       openai: {
         configured: Boolean(process.env.OPENAI_API_KEY?.trim()),
@@ -4381,7 +4603,7 @@ var adminRouter = router({
    * — we don't track per-call AI cost yet, so this gives the admin
    * "content velocity" instead of a token meter.
    */
-  contentSummary: adminProcedure2.query(async () => {
+  contentSummary: permissionProcedure("brand_voice").query(async () => {
     const posts2 = await getAllPostsAdmin();
     const now = Date.now();
     const oneDay = 24 * 60 * 60 * 1e3;
@@ -4406,19 +4628,120 @@ var adminRouter = router({
       publishedCount: posts2.filter((p) => p.status === "published").length,
       recentPublished
     };
+  }),
+  users: router({
+    list: permissionProcedure("users").query(async () => {
+      const rows = await listStaffUsers();
+      return rows.map((u) => ({
+        id: u.id,
+        name: u.name ?? "",
+        email: u.email ?? "",
+        permissions: parsePermissions(u.permissions),
+        isActive: Boolean(u.isActive),
+        isOwner: Boolean(u.isOwner),
+        hasPassword: Boolean(u.passwordHash),
+        invitedAt: u.invitedAt,
+        lastSignedIn: u.lastSignedIn
+      }));
+    }),
+    /**
+     * Invite a colleague. Creates the row with no password and a one-hour
+     * set-password token, emails the link, and ALSO returns it so the owner
+     * can pass it on by hand — deliverability shouldn't block onboarding.
+     */
+    invite: permissionProcedure("users").input(z2.object({
+      name: z2.string().min(2).max(120),
+      email: z2.string().email(),
+      permissions: z2.array(z2.enum(PERMISSION_KEYS)).max(PERMISSION_KEYS.length)
+    })).mutation(async ({ input, ctx }) => {
+      const email = input.email.trim().toLowerCase();
+      const existing = await getUserByEmail(email);
+      if (existing) {
+        throw new TRPCError3({ code: "CONFLICT", message: "Ezzel az email c\xEDmmel m\xE1r l\xE9tezik felhaszn\xE1l\xF3." });
+      }
+      const token = generateResetToken();
+      const created = await createStaffUser({
+        openId: `staff-${randomBytes2(12).toString("hex")}`,
+        name: input.name.trim(),
+        email,
+        permissions: JSON.stringify(input.permissions),
+        resetToken: token,
+        resetTokenExpiresAt: new Date(Date.now() + 60 * 60 * 1e3)
+      });
+      const link = `${originFromRequest(ctx.req)}/admin/reset-password?token=${token}`;
+      let emailSent = false;
+      let emailError;
+      const result = await sendEmailWithId({
+        to: email,
+        subject: "Megh\xEDv\xF3 a G2A admin fel\xFCletre",
+        html: renderInviteEmail(input.name.trim(), link),
+        text: `Megh\xEDvtak a G2A admin fel\xFCletre. \xC1ll\xEDtsd be a jelszavad: ${link} (a link 1 \xF3r\xE1ig \xE9rv\xE9nyes)`
+      });
+      emailSent = result.ok;
+      if (!result.ok) emailError = result.error;
+      return { id: created?.id ?? 0, link, emailSent, emailError };
+    }),
+    update: permissionProcedure("users").input(z2.object({
+      id: z2.number(),
+      name: z2.string().min(2).max(120).optional(),
+      permissions: z2.array(z2.enum(PERMISSION_KEYS)).optional(),
+      isActive: z2.boolean().optional()
+    })).mutation(async ({ input }) => {
+      const target = await getUserById(input.id);
+      if (!target) throw new TRPCError3({ code: "NOT_FOUND", message: "Nincs ilyen felhaszn\xE1l\xF3." });
+      if (target.isOwner) {
+        throw new TRPCError3({ code: "FORBIDDEN", message: "A tulajdonos hozz\xE1f\xE9r\xE9se nem m\xF3dos\xEDthat\xF3 \u2014 mindig teljes jogosults\xE1ga van." });
+      }
+      await updateStaffUser(input.id, {
+        ...input.name !== void 0 ? { name: input.name.trim() } : {},
+        ...input.permissions !== void 0 ? { permissions: JSON.stringify(input.permissions) } : {},
+        ...input.isActive !== void 0 ? { isActive: input.isActive } : {}
+      });
+      return { success: true };
+    }),
+    /** New set-password link for someone who never used (or lost) the first. */
+    resendInvite: permissionProcedure("users").input(z2.object({ id: z2.number() })).mutation(async ({ input, ctx }) => {
+      const target = await getUserById(input.id);
+      if (!target || !target.email) throw new TRPCError3({ code: "NOT_FOUND", message: "Nincs ilyen felhaszn\xE1l\xF3." });
+      const token = generateResetToken();
+      await updateStaffUser(target.id, {
+        resetToken: token,
+        resetTokenExpiresAt: new Date(Date.now() + 60 * 60 * 1e3)
+      });
+      const link = `${originFromRequest(ctx.req)}/admin/reset-password?token=${token}`;
+      const result = await sendEmailWithId({
+        to: target.email,
+        subject: "G2A Admin \u2014 jelsz\xF3 be\xE1ll\xEDt\xE1sa",
+        html: renderInviteEmail(target.name ?? "", link),
+        text: `Jelsz\xF3 be\xE1ll\xEDt\xE1sa: ${link} (a link 1 \xF3r\xE1ig \xE9rv\xE9nyes)`
+      });
+      return { link, emailSent: result.ok, emailError: result.error };
+    }),
+    remove: permissionProcedure("users").input(z2.object({ id: z2.number() })).mutation(async ({ input, ctx }) => {
+      const target = await getUserById(input.id);
+      if (!target) throw new TRPCError3({ code: "NOT_FOUND", message: "Nincs ilyen felhaszn\xE1l\xF3." });
+      if (target.isOwner) {
+        throw new TRPCError3({ code: "FORBIDDEN", message: "A tulajdonos nem t\xF6r\xF6lhet\u0151." });
+      }
+      if (target.id === ctx.user.id) {
+        throw new TRPCError3({ code: "BAD_REQUEST", message: "Saj\xE1t magadat nem t\xF6r\xF6lheted." });
+      }
+      await deleteStaffUser(input.id);
+      return { success: true };
+    })
   })
 });
 var SOCIAL_PLATFORM = z2.enum(["linkedin", "facebook", "instagram"]);
 var socialRouter = router({
   /** List all connected social accounts (admin sees status per platform). */
-  listAccounts: adminProcedure2.query(() => listSocialAccounts()),
+  listAccounts: permissionProcedure("brand_voice").query(() => listSocialAccounts()),
   /** All drafts/published posts attached to a given blog post — latest per
    *  platform. The admin UI uses this to render the per-platform share rows. */
-  listForPost: adminProcedure2.input(z2.object({ postId: z2.number().int().positive() })).query(({ input }) => getLatestSocialPostsForBlogPost(input.postId)),
+  listForPost: permissionProcedure("brand_voice").input(z2.object({ postId: z2.number().int().positive() })).query(({ input }) => getLatestSocialPostsForBlogPost(input.postId)),
   /** Generate AI copy for a (blog post, platform) combination. Doesn't
    *  persist on its own — the UI lets the admin tweak the result before
    *  saving via `saveDraft`. */
-  generateCopy: adminProcedure2.input(
+  generateCopy: permissionProcedure("brand_voice").input(
     z2.object({
       postId: z2.number().int().positive(),
       platform: SOCIAL_PLATFORM
@@ -4448,7 +4771,7 @@ var socialRouter = router({
     return { copy };
   }),
   /** Persist a draft (or overwrite the latest one for this platform). */
-  saveDraft: adminProcedure2.input(
+  saveDraft: permissionProcedure("brand_voice").input(
     z2.object({
       postId: z2.number().int().positive(),
       platform: SOCIAL_PLATFORM,
@@ -4467,7 +4790,20 @@ var socialRouter = router({
 var appRouter = router({
   system: systemRouter,
   auth: router({
-    me: publicProcedure.query((opts) => opts.ctx.user),
+    me: publicProcedure.query((opts) => {
+      const u = opts.ctx.user;
+      if (!u) return null;
+      return {
+        id: u.id,
+        openId: u.openId,
+        name: u.name,
+        email: u.email,
+        role: u.role,
+        isOwner: Boolean(u.isOwner),
+        isActive: u.isActive !== false,
+        permissions: parsePermissions(u.permissions)
+      };
+    }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
@@ -4492,6 +4828,14 @@ var DEV_ADMIN_USER = {
   email: "dev@local",
   loginMethod: "dev-bypass",
   role: "admin",
+  // Full access in dev so every admin screen stays reachable behind the bypass.
+  passwordHash: null,
+  permissions: null,
+  isActive: true,
+  isOwner: true,
+  resetToken: null,
+  resetTokenExpiresAt: null,
+  invitedAt: null,
   createdAt: /* @__PURE__ */ new Date(),
   updatedAt: /* @__PURE__ */ new Date(),
   lastSignedIn: /* @__PURE__ */ new Date()
@@ -4573,7 +4917,7 @@ function registerNewsletterRoutes(app2) {
 // server/_core/resendWebhookRoute.ts
 init_env();
 init_db();
-import { createHmac, timingSafeEqual } from "crypto";
+import { createHmac, timingSafeEqual as timingSafeEqual2 } from "crypto";
 var TOLERANCE_SECONDS = 5 * 60;
 function verifySvixSignature(rawBody, headers, secret) {
   const id = headers["svix-id"];
@@ -4593,7 +4937,7 @@ function verifySvixSignature(rawBody, headers, secret) {
     if (parts.length !== 2 || parts[0] !== "v1") continue;
     const provided = parts[1];
     if (provided.length !== expected.length) continue;
-    if (timingSafeEqual(
+    if (timingSafeEqual2(
       Buffer.from(provided, "utf8"),
       Buffer.from(expected, "utf8")
     )) {
@@ -4941,13 +5285,13 @@ function registerRssRoute(app2) {
 // server/_core/passwordAuthRoute.ts
 init_db();
 import { SignJWT as SignJWT2 } from "jose";
-import { timingSafeEqual as timingSafeEqual2 } from "node:crypto";
+import { timingSafeEqual as timingSafeEqual3 } from "node:crypto";
 init_env();
 var PASSWORD_ADMIN_OPEN_ID = "password-admin";
 var FALLBACK_APP_ID_TAG = "g2a-password-admin";
 function safeEquals(a, b) {
   if (a.length !== b.length) return false;
-  return timingSafeEqual2(Buffer.from(a, "utf8"), Buffer.from(b, "utf8"));
+  return timingSafeEqual3(Buffer.from(a, "utf8"), Buffer.from(b, "utf8"));
 }
 function registerPasswordAuthRoute(app2) {
   app2.get("/api/_diag/send-test", async (req, res) => {
@@ -5035,9 +5379,9 @@ To: ${to}`
       res.status(400).json({ error: "email and password are required" });
       return;
     }
-    if (!ENV.adminEmail || !ENV.adminPassword || !ENV.cookieSecret) {
+    if (!ENV.cookieSecret) {
       res.status(503).json({
-        error: "Password login not configured. Set ADMIN_EMAIL, ADMIN_PASSWORD, and JWT_SECRET in Vercel environment."
+        error: "Password login not configured. Set JWT_SECRET in the Vercel environment."
       });
       return;
     }
@@ -5053,37 +5397,144 @@ To: ${to}`
       });
       return;
     }
-    const emailOk = safeEquals(email, ENV.adminEmail);
-    const pwdOk = safeEquals(password, ENV.adminPassword);
-    if (!(emailOk && pwdOk)) {
-      res.status(401).json({ error: "Hib\xE1s email vagy jelsz\xF3." });
-      return;
-    }
     try {
+      const ownerEmailMatches = Boolean(ENV.adminEmail) && safeEquals(email, ENV.adminEmail);
+      const staff = await getUserByEmail(email);
+      if (staff && staff.passwordHash && !staff.isOwner && !ownerEmailMatches) {
+        const ok = await verifyPassword(password, staff.passwordHash);
+        if (!ok) {
+          res.status(401).json({ error: "Hib\xE1s email vagy jelsz\xF3." });
+          return;
+        }
+        if (!staff.isActive) {
+          res.status(403).json({ error: "Ez a hozz\xE1f\xE9r\xE9s fel van f\xFCggesztve. K\xE9rj hozz\xE1f\xE9r\xE9st az adminisztr\xE1tort\xF3l." });
+          return;
+        }
+        if (staff.resetToken) {
+          await updateStaffUser(staff.id, { resetToken: null, resetTokenExpiresAt: null });
+        }
+        await issueSession(req, res, staff.openId, staff.name || "Munkat\xE1rs");
+        return;
+      }
+      const ownerHashOk = (staff?.isOwner || ownerEmailMatches) && staff?.passwordHash ? await verifyPassword(password, staff.passwordHash) : false;
+      const ownerEnvOk = ownerEmailMatches && Boolean(ENV.adminPassword) && safeEquals(password, ENV.adminPassword);
+      if (!ownerHashOk && !ownerEnvOk) {
+        res.status(401).json({ error: "Hib\xE1s email vagy jelsz\xF3." });
+        return;
+      }
+      const owner = await ensureOwnerUser(PASSWORD_ADMIN_OPEN_ID, email);
       await upsertUser({
-        openId: PASSWORD_ADMIN_OPEN_ID,
-        name: "Admin",
+        openId: owner?.openId ?? PASSWORD_ADMIN_OPEN_ID,
+        name: owner?.name || "Admin",
         email,
         role: "admin",
         loginMethod: "password",
         lastSignedIn: /* @__PURE__ */ new Date()
       });
-      const secretKey = new TextEncoder().encode(ENV.cookieSecret);
-      const expirationSeconds = Math.floor((Date.now() + ONE_YEAR_MS) / 1e3);
-      const sessionToken = await new SignJWT2({
-        openId: PASSWORD_ADMIN_OPEN_ID,
-        appId: ENV.appId || FALLBACK_APP_ID_TAG,
-        name: "Admin"
-      }).setProtectedHeader({ alg: "HS256", typ: "JWT" }).setExpirationTime(expirationSeconds).sign(secretKey);
-      const cookieOptions = getSessionCookieOptions(req);
-      res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
-      res.json({ success: true });
+      await issueSession(req, res, owner?.openId ?? PASSWORD_ADMIN_OPEN_ID, owner?.name || "Admin");
     } catch (err) {
       console.error("[password-login] Session creation failed:", err);
       res.status(500).json({ error: "Bels\u0151 hiba a bejelentkez\xE9s sor\xE1n." });
     }
   });
+  app2.post("/api/auth/request-reset", async (req, res) => {
+    const { email } = req.body ?? {};
+    if (typeof email !== "string" || !email.includes("@")) {
+      res.status(400).json({ error: "\xC9rv\xE9nyes email c\xEDm sz\xFCks\xE9ges." });
+      return;
+    }
+    const ip = getClientIp(req);
+    const limit = await checkRateLimitDb(`pwd-reset:${ip}`, { max: 5, windowMs: 15 * 60 * 1e3 });
+    if (!limit.allowed) {
+      res.status(429).json({ error: "T\xFAl sok k\xE9r\xE9s. Pr\xF3b\xE1ld \xFAjra k\xE9s\u0151bb." });
+      return;
+    }
+    try {
+      let user = await getUserByEmail(email);
+      if (ENV.adminEmail && safeEquals(email, ENV.adminEmail)) {
+        user = await ensureOwnerUser(PASSWORD_ADMIN_OPEN_ID, email);
+      }
+      if (user && user.isActive) {
+        const token = generateResetToken();
+        await updateStaffUser(user.id, {
+          resetToken: token,
+          resetTokenExpiresAt: new Date(Date.now() + RESET_TTL_MS)
+        });
+        const link = `${resolveOrigin(req)}/admin/reset-password?token=${token}`;
+        await sendEmail({
+          to: email,
+          subject: "G2A Admin \u2014 jelsz\xF3 be\xE1ll\xEDt\xE1sa",
+          html: renderResetEmail(user.name || "", link),
+          text: `Jelsz\xF3 be\xE1ll\xEDt\xE1sa: ${link}
+
+A link 1 \xF3r\xE1ig \xE9rv\xE9nyes. Ha nem te k\xE9rted, hagyd figyelmen k\xEDv\xFCl ezt a levelet.`
+        });
+      }
+    } catch (err) {
+      console.error("[request-reset] failed:", err);
+    }
+    res.json({ success: true });
+  });
+  app2.post("/api/auth/reset-password", async (req, res) => {
+    const { token, password } = req.body ?? {};
+    if (typeof token !== "string" || typeof password !== "string" || !token || !password) {
+      res.status(400).json({ error: "Hi\xE1nyz\xF3 token vagy jelsz\xF3." });
+      return;
+    }
+    const policy = passwordPolicyError(password);
+    if (policy) {
+      res.status(400).json({ error: policy });
+      return;
+    }
+    try {
+      const user = await getUserByResetToken(token);
+      if (!user) {
+        res.status(400).json({ error: "A link \xE9rv\xE9nytelen vagy lej\xE1rt. K\xE9rj \xFAjat." });
+        return;
+      }
+      await updateStaffUser(user.id, {
+        passwordHash: await hashPassword(password),
+        resetToken: null,
+        resetTokenExpiresAt: null,
+        isActive: true
+      });
+      res.json({ success: true, email: user.email });
+    } catch (err) {
+      console.error("[reset-password] failed:", err);
+      res.status(500).json({ error: "Bels\u0151 hiba a jelsz\xF3 ment\xE9sekor." });
+    }
+  });
 }
+async function issueSession(req, res, openId, name) {
+  const secretKey = new TextEncoder().encode(ENV.cookieSecret);
+  const expirationSeconds = Math.floor((Date.now() + ONE_YEAR_MS) / 1e3);
+  const sessionToken = await new SignJWT2({
+    openId,
+    appId: ENV.appId || FALLBACK_APP_ID_TAG,
+    name
+  }).setProtectedHeader({ alg: "HS256", typ: "JWT" }).setExpirationTime(expirationSeconds).sign(secretKey);
+  const cookieOptions = getSessionCookieOptions(req);
+  res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+  res.json({ success: true });
+}
+function resolveOrigin(req) {
+  const origin = req.headers.origin;
+  if (origin) return origin.replace(/\/$/, "");
+  return `${req.protocol}://${req.get("host")}`;
+}
+function renderResetEmail(name, link) {
+  const greeting = name ? `Szia ${name}!` : "Szia!";
+  return `<div style="max-width:520px;margin:0 auto;padding:32px 24px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#1f2937">
+  <h1 style="font-size:20px;color:#0f172a;border-left:4px solid #14B8A6;padding-left:14px;margin:0 0 20px">G2A Admin \u2014 jelsz\xF3 be\xE1ll\xEDt\xE1sa</h1>
+  <p style="line-height:1.6;font-size:15px">${greeting}</p>
+  <p style="line-height:1.6;font-size:15px">Az al\xE1bbi gombbal tudsz \xFAj jelsz\xF3t be\xE1ll\xEDtani az admin fel\xFClethez. A link <strong>1 \xF3r\xE1ig</strong> \xE9rv\xE9nyes.</p>
+  <p style="margin:26px 0"><a href="${link}" style="display:inline-block;background:#14B8A6;color:#fff;text-decoration:none;padding:12px 22px;border-radius:6px;font-weight:600">Jelsz\xF3 be\xE1ll\xEDt\xE1sa</a></p>
+  <p style="line-height:1.6;font-size:13px;color:#6b7280">Ha a gomb nem m\u0171k\xF6dik, m\xE1sold be ezt a linket a b\xF6ng\xE9sz\u0151dbe:<br><span style="word-break:break-all;color:#0d9488">${link}</span></p>
+  <hr style="margin:28px 0;border:none;border-top:1px solid #e5e7eb">
+  <p style="font-size:12px;color:#9ca3af;line-height:1.5">Ha nem te k\xE9rted, hagyd figyelmen k\xEDv\xFCl ezt a levelet \u2014 a jelszavad v\xE1ltozatlan marad.<br>G2A Marketing \xB7 g2amarketing.hu</p>
+</div>`;
+}
+var RESET_TTL_MS = 60 * 60 * 1e3;
 
 // server/_core/digestCronRoute.ts
 init_db();

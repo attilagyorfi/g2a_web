@@ -79,6 +79,8 @@ const AdminNewsletter = lazy(() => import("./pages/admin/AdminNewsletter"));
 const AdminNewsletterCampaigns = lazy(() => import("./pages/admin/AdminNewsletterCampaigns"));
 const AdminSeoPages = lazy(() => import("./pages/admin/AdminSeoPages"));
 const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
+const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
+const AdminResetPassword = lazy(() => import("./pages/admin/AdminResetPassword"));
 const AdminHeroSlides = lazy(() => import("./pages/admin/AdminHeroSlides"));
 const AdminIndustries = lazy(() => import("./pages/admin/AdminIndustries"));
 const AdminTechnologies = lazy(() => import("./pages/admin/AdminTechnologies"));
@@ -136,6 +138,16 @@ function PublicRouter() {
 }
 
 function AdminRouter() {
+  // Password reset must render OUTSIDE AdminLayout — the visitor following an
+  // invite / forgot-password link isn't signed in yet, and AdminLayout would
+  // just show them the login screen instead.
+  if (window.location.pathname === "/admin/reset-password") {
+    return (
+      <Suspense fallback={<PageLoader />}>
+        <AdminResetPassword />
+      </Suspense>
+    );
+  }
   return (
     <Suspense fallback={<PageLoader />}>
     <AdminLayout>
@@ -159,6 +171,7 @@ function AdminRouter() {
         <Route path="/admin/audit-leads" component={AdminAuditLeads} />
         <Route path="/admin/brand-voice" component={AdminBrandVoice} />
         <Route path="/admin/seo" component={AdminSeoPages} />
+        <Route path="/admin/users" component={AdminUsers} />
         <Route path="/admin/settings" component={AdminSettings} />
         <Route component={AdminDashboard} />
       </Switch>

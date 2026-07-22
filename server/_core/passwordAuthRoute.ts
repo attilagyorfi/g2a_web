@@ -37,6 +37,8 @@ import { getSessionCookieOptions } from "./cookies";
 import { ENV } from "./env";
 import { checkRateLimitDb } from "./dbRateLimit";
 import { getClientIp } from "./rateLimit";
+import { sendEmail } from "./email";
+import { generateResetToken, hashPassword, passwordPolicyError, verifyPassword } from "./password";
 
 /** OpenId used for the synthetic admin row. Matches the shape `sdk` expects. */
 const PASSWORD_ADMIN_OPEN_ID = "password-admin";
@@ -170,10 +172,12 @@ export function registerPasswordAuthRoute(app: Express): void {
       return;
     }
 
-    // Refuse outright if not configured — prevents accidental blank-cred login.
-    if (!ENV.adminEmail || !ENV.adminPassword || !ENV.cookieSecret) {
+    // A session secret is always required. The ADMIN_EMAIL/ADMIN_PASSWORD pair
+    // is only needed for the owner's env-based recovery login — invited staff
+    // authenticate against their own hash in the DB.
+    if (!ENV.cookieSecret) {
       res.status(503).json({
-        error: "Password login not configured. Set ADMIN_EMAIL, ADMIN_PASSWORD, and JWT_SECRET in Vercel environment.",
+        error: "Password login not configured. Set JWT_SECRET in the Vercel environment.",
       });
       return;
     }
@@ -192,46 +196,181 @@ export function registerPasswordAuthRoute(app: Express): void {
       return;
     }
 
-    // Compare both fields in constant time — short-circuiting on the email
-    // first would leak whether the email is correct via timing.
-    const emailOk = safeEquals(email, ENV.adminEmail);
-    const pwdOk = safeEquals(password, ENV.adminPassword);
-    if (!(emailOk && pwdOk)) {
-      // Generic error — don't reveal which field failed
-      res.status(401).json({ error: "Hibás email vagy jelszó." });
-      return;
-    }
-
     try {
-      // Upsert the synthetic admin row so tRPC `auth.me` returns a real user.
+      // The configured ADMIN_EMAIL is always the owner, even if their row's
+      // `isOwner` flag is stale — never let the staff branch below claim it.
+      const ownerEmailMatches = Boolean(ENV.adminEmail) && safeEquals(email, ENV.adminEmail);
+
+      // 1) Invited staff account — own scrypt hash in the users table.
+      const staff = await db.getUserByEmail(email);
+      if (staff && staff.passwordHash && !staff.isOwner && !ownerEmailMatches) {
+        const ok = await verifyPassword(password, staff.passwordHash);
+        if (!ok) {
+          res.status(401).json({ error: "Hibás email vagy jelszó." });
+          return;
+        }
+        if (!staff.isActive) {
+          res.status(403).json({ error: "Ez a hozzáférés fel van függesztve. Kérj hozzáférést az adminisztrátortól." });
+          return;
+        }
+        // Remembering the password supersedes any outstanding reset request,
+        // so the emailed link stops working the moment it's no longer needed.
+        if (staff.resetToken) {
+          await db.updateStaffUser(staff.id, { resetToken: null, resetTokenExpiresAt: null });
+        }
+        await issueSession(req, res, staff.openId, staff.name || "Munkatárs");
+        return;
+      }
+
+      // 2) Owner. Their DB hash wins (set via forgot-password); the
+      //    ADMIN_PASSWORD env var stays as a permanent recovery path so a
+      //    broken mailbox can never lock the owner out of their own site.
+      const ownerHashOk = (staff?.isOwner || ownerEmailMatches) && staff?.passwordHash
+        ? await verifyPassword(password, staff.passwordHash)
+        : false;
+      const ownerEnvOk =
+        ownerEmailMatches && Boolean(ENV.adminPassword) && safeEquals(password, ENV.adminPassword);
+
+      if (!ownerHashOk && !ownerEnvOk) {
+        res.status(401).json({ error: "Hibás email vagy jelszó." });
+        return;
+      }
+
+      const owner = await db.ensureOwnerUser(PASSWORD_ADMIN_OPEN_ID, email);
       await db.upsertUser({
-        openId: PASSWORD_ADMIN_OPEN_ID,
-        name: "Admin",
+        openId: owner?.openId ?? PASSWORD_ADMIN_OPEN_ID,
+        name: owner?.name || "Admin",
         email,
         role: "admin",
         loginMethod: "password",
         lastSignedIn: new Date(),
       });
-
-      // Sign a session JWT with the same scheme as the OAuth flow. `appId`
-      // gets the sentinel tag so verifySession's non-empty check passes.
-      const secretKey = new TextEncoder().encode(ENV.cookieSecret);
-      const expirationSeconds = Math.floor((Date.now() + ONE_YEAR_MS) / 1000);
-      const sessionToken = await new SignJWT({
-        openId: PASSWORD_ADMIN_OPEN_ID,
-        appId: ENV.appId || FALLBACK_APP_ID_TAG,
-        name: "Admin",
-      })
-        .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-        .setExpirationTime(expirationSeconds)
-        .sign(secretKey);
-
-      const cookieOptions = getSessionCookieOptions(req);
-      res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
-      res.json({ success: true });
+      await issueSession(req, res, owner?.openId ?? PASSWORD_ADMIN_OPEN_ID, owner?.name || "Admin");
     } catch (err) {
       console.error("[password-login] Session creation failed:", err);
       res.status(500).json({ error: "Belső hiba a bejelentkezés során." });
     }
   });
+
+  /**
+   * Step 1 of forgot-password: email in, reset link out.
+   *
+   * Always answers `{ success: true }` regardless of whether the address
+   * exists — an attacker must not be able to enumerate staff addresses here.
+   * Works for the owner too: their row is created on demand so the token has
+   * somewhere to live, and setting a password writes `users.passwordHash`
+   * (which then takes precedence over ADMIN_PASSWORD at login).
+   */
+  app.post("/api/auth/request-reset", async (req: Request, res: Response) => {
+    const { email } = (req.body ?? {}) as { email?: unknown };
+    if (typeof email !== "string" || !email.includes("@")) {
+      res.status(400).json({ error: "Érvényes email cím szükséges." });
+      return;
+    }
+    const ip = getClientIp(req);
+    const limit = await checkRateLimitDb(`pwd-reset:${ip}`, { max: 5, windowMs: 15 * 60 * 1000 });
+    if (!limit.allowed) {
+      res.status(429).json({ error: "Túl sok kérés. Próbáld újra később." });
+      return;
+    }
+
+    try {
+      let user = await db.getUserByEmail(email);
+      // Normalise the owner row whether or not it already exists. A row that
+      // predates the `isOwner` column would otherwise get a password hash while
+      // still flagged as plain staff — which demotes the owner to whatever
+      // permissions that row happens to carry (i.e. none).
+      if (ENV.adminEmail && safeEquals(email, ENV.adminEmail)) {
+        user = await db.ensureOwnerUser(PASSWORD_ADMIN_OPEN_ID, email);
+      }
+      if (user && user.isActive) {
+        const token = generateResetToken();
+        await db.updateStaffUser(user.id, {
+          resetToken: token,
+          resetTokenExpiresAt: new Date(Date.now() + RESET_TTL_MS),
+        });
+        const link = `${resolveOrigin(req)}/admin/reset-password?token=${token}`;
+        await sendEmail({
+          to: email,
+          subject: "G2A Admin — jelszó beállítása",
+          html: renderResetEmail(user.name || "", link),
+          text: `Jelszó beállítása: ${link}\n\nA link 1 óráig érvényes. Ha nem te kérted, hagyd figyelmen kívül ezt a levelet.`,
+        });
+      }
+    } catch (err) {
+      console.error("[request-reset] failed:", err);
+    }
+    // Uniform response — never leaks whether the address is registered.
+    res.json({ success: true });
+  });
+
+  /** Step 2: consume the token and store the new password. */
+  app.post("/api/auth/reset-password", async (req: Request, res: Response) => {
+    const { token, password } = (req.body ?? {}) as { token?: unknown; password?: unknown };
+    if (typeof token !== "string" || typeof password !== "string" || !token || !password) {
+      res.status(400).json({ error: "Hiányzó token vagy jelszó." });
+      return;
+    }
+    const policy = passwordPolicyError(password);
+    if (policy) {
+      res.status(400).json({ error: policy });
+      return;
+    }
+    try {
+      const user = await db.getUserByResetToken(token);
+      if (!user) {
+        res.status(400).json({ error: "A link érvénytelen vagy lejárt. Kérj újat." });
+        return;
+      }
+      await db.updateStaffUser(user.id, {
+        passwordHash: await hashPassword(password),
+        resetToken: null,
+        resetTokenExpiresAt: null,
+        isActive: true,
+      });
+      res.json({ success: true, email: user.email });
+    } catch (err) {
+      console.error("[reset-password] failed:", err);
+      res.status(500).json({ error: "Belső hiba a jelszó mentésekor." });
+    }
+  });
 }
+
+/** Signs the session JWT and sets the cookie — shared by both login paths. */
+async function issueSession(req: Request, res: Response, openId: string, name: string): Promise<void> {
+  const secretKey = new TextEncoder().encode(ENV.cookieSecret);
+  const expirationSeconds = Math.floor((Date.now() + ONE_YEAR_MS) / 1000);
+  const sessionToken = await new SignJWT({
+    openId,
+    appId: ENV.appId || FALLBACK_APP_ID_TAG,
+    name,
+  })
+    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+    .setExpirationTime(expirationSeconds)
+    .sign(secretKey);
+  const cookieOptions = getSessionCookieOptions(req);
+  res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+  res.json({ success: true });
+}
+
+function resolveOrigin(req: Request): string {
+  const origin = req.headers.origin as string | undefined;
+  if (origin) return origin.replace(/\/$/, "");
+  return `${req.protocol}://${req.get("host")}`;
+}
+
+function renderResetEmail(name: string, link: string): string {
+  const greeting = name ? `Szia ${name}!` : "Szia!";
+  return `<div style="max-width:520px;margin:0 auto;padding:32px 24px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#1f2937">
+  <h1 style="font-size:20px;color:#0f172a;border-left:4px solid #14B8A6;padding-left:14px;margin:0 0 20px">G2A Admin — jelszó beállítása</h1>
+  <p style="line-height:1.6;font-size:15px">${greeting}</p>
+  <p style="line-height:1.6;font-size:15px">Az alábbi gombbal tudsz új jelszót beállítani az admin felülethez. A link <strong>1 óráig</strong> érvényes.</p>
+  <p style="margin:26px 0"><a href="${link}" style="display:inline-block;background:#14B8A6;color:#fff;text-decoration:none;padding:12px 22px;border-radius:6px;font-weight:600">Jelszó beállítása</a></p>
+  <p style="line-height:1.6;font-size:13px;color:#6b7280">Ha a gomb nem működik, másold be ezt a linket a böngésződbe:<br><span style="word-break:break-all;color:#0d9488">${link}</span></p>
+  <hr style="margin:28px 0;border:none;border-top:1px solid #e5e7eb">
+  <p style="font-size:12px;color:#9ca3af;line-height:1.5">Ha nem te kérted, hagyd figyelmen kívül ezt a levelet — a jelszavad változatlan marad.<br>G2A Marketing · g2amarketing.hu</p>
+</div>`;
+}
+
+/** Invite / reset links stay valid for one hour. */
+const RESET_TTL_MS = 60 * 60 * 1000;

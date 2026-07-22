@@ -5,9 +5,10 @@ import { getLoginUrl } from "@/const";
 import {
   LayoutDashboard, FileText, Settings, Mail, Newspaper,
   Image, Star, Briefcase, Globe, Cpu, Heart, Tag,
-  ChevronLeft, ChevronRight, LogOut, Shield, BookOpen, ClipboardList, Sparkles
+  ChevronLeft, ChevronRight, LogOut, Shield, BookOpen, ClipboardList, Sparkles, UserPlus
 } from "lucide-react";
 import AdminPasswordLogin from "./AdminPasswordLogin";
+import { hasPermission, type Permission } from "@shared/permissions";
 
 // Cloudinary-hosted logo (migrated from legacy WP). Auto-formatted (WebP/AVIF).
 const LOGO_URL = "https://res.cloudinary.com/dzh1unb6d/image/upload/f_auto,q_auto,w_64/g2a/og/default-logo.png";
@@ -19,23 +20,33 @@ const OAUTH_CONFIGURED = Boolean(
   import.meta.env.VITE_OAUTH_PORTAL_URL && import.meta.env.VITE_APP_ID,
 );
 
-const navItems = [
+/** `perm` maps the entry to a permission key; entries without one are open to
+ *  every signed-in staff member. The sidebar hides what the account can't use,
+ *  and the server enforces the same keys on the matching routers. */
+const navItems: Array<{
+  href: string;
+  icon: typeof LayoutDashboard;
+  label: string;
+  exact?: boolean;
+  perm?: Permission;
+}> = [
   { href: "/admin", icon: LayoutDashboard, label: "Irányítópult", exact: true },
-  { href: "/admin/posts", icon: Newspaper, label: "Blog cikkek" },
-  { href: "/admin/categories", icon: Tag, label: "Kategóriák" },
-  { href: "/admin/services", icon: Briefcase, label: "Szolgáltatások" },
-  { href: "/admin/partners", icon: Globe, label: "Partnerek" },
-  { href: "/admin/testimonials", icon: Star, label: "Vélemények" },
-  { href: "/admin/industries", icon: FileText, label: "Iparágak" },
-  { href: "/admin/technologies", icon: Cpu, label: "Technológiák" },
-  { href: "/admin/case-studies", icon: BookOpen, label: "Esettanulmányok" },
-  { href: "/admin/audit-leads", icon: ClipboardList, label: "Audit Kérések" },
-  { href: "/admin/contacts", icon: Mail, label: "Kapcsolatfelvételek" },
-  { href: "/admin/newsletter", icon: FileText, label: "Hírlevél feliratkozók" },
-  { href: "/admin/newsletter/campaigns", icon: Mail, label: "Email kampányok" },
-  { href: "/admin/seo", icon: Globe, label: "SEO Oldalak" },
-  { href: "/admin/brand-voice", icon: Sparkles, label: "Brand voice" },
-  { href: "/admin/settings", icon: Settings, label: "Beállítások" },
+  { href: "/admin/posts", icon: Newspaper, label: "Blog cikkek", perm: "posts" },
+  { href: "/admin/categories", icon: Tag, label: "Kategóriák", perm: "categories" },
+  { href: "/admin/services", icon: Briefcase, label: "Szolgáltatások", perm: "services" },
+  { href: "/admin/partners", icon: Globe, label: "Partnerek", perm: "partners" },
+  { href: "/admin/testimonials", icon: Star, label: "Vélemények", perm: "testimonials" },
+  { href: "/admin/industries", icon: FileText, label: "Iparágak", perm: "industries" },
+  { href: "/admin/technologies", icon: Cpu, label: "Technológiák", perm: "technologies" },
+  { href: "/admin/case-studies", icon: BookOpen, label: "Esettanulmányok", perm: "case_studies" },
+  { href: "/admin/audit-leads", icon: ClipboardList, label: "Audit Kérések", perm: "audit_leads" },
+  { href: "/admin/contacts", icon: Mail, label: "Kapcsolatfelvételek", perm: "contacts" },
+  { href: "/admin/newsletter", icon: FileText, label: "Hírlevél feliratkozók", perm: "newsletter" },
+  { href: "/admin/newsletter/campaigns", icon: Mail, label: "Email kampányok", perm: "newsletter" },
+  { href: "/admin/seo", icon: Globe, label: "SEO Oldalak", perm: "seo" },
+  { href: "/admin/brand-voice", icon: Sparkles, label: "Brand voice", perm: "brand_voice" },
+  { href: "/admin/users", icon: UserPlus, label: "Felhasználók", perm: "users" },
+  { href: "/admin/settings", icon: Settings, label: "Beállítások", perm: "settings" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -116,7 +127,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Nav */}
         <nav style={{ flex: 1, padding: "0.75rem 0", overflowY: "auto" }}>
-          {navItems.map(item => {
+          {navItems.filter(item => !item.perm || hasPermission(user, item.perm)).map(item => {
             const isActive = item.exact ? location === item.href : (location === item.href || location.startsWith(item.href + "/"));
             const Icon = item.icon;
             return (

@@ -16,6 +16,22 @@ export const users = mysqlTable("users", {
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  // ─── Multi-user admin access (2026-07) ───────────────────────────────────
+  // Staff accounts live in this table with their own scrypt password hash and
+  // a granular permission list. The ADMIN_EMAIL/ADMIN_PASSWORD env pair still
+  // works as the owner's recovery path; the owner row is upserted on login.
+  /** scrypt hash in `scrypt$<saltHex>$<keyHex>` form. Null = invited, not set. */
+  passwordHash: varchar("passwordHash", { length: 255 }),
+  /** JSON array of permission keys (see shared/permissions.ts). */
+  permissions: text("permissions"),
+  /** Deactivated staff keep their history but can't sign in. */
+  isActive: boolean("isActive").default(true).notNull(),
+  /** True for the ADMIN_EMAIL owner — always full access, never removable. */
+  isOwner: boolean("isOwner").default(false).notNull(),
+  /** Single-use token for invite-set-password and forgot-password flows. */
+  resetToken: varchar("resetToken", { length: 128 }),
+  resetTokenExpiresAt: timestamp("resetTokenExpiresAt"),
+  invitedAt: timestamp("invitedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
