@@ -17,7 +17,7 @@
  * Widget JS is loaded lazily on first mount of the first widget on
  * the page, never blocking initial paint.
  */
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 declare global {
@@ -79,6 +79,13 @@ type Props = {
   onToken: (token: string) => void;
   /** Optional handler for widget errors / expiry — usually clear the token in the parent. */
   onExpire?: () => void;
+  /**
+   * Fired when the widget can't work at all — the script failed to load, or
+   * Cloudflare rejected the render (most commonly: the site key doesn't allow
+   * this hostname). The form should surface this instead of leaving its submit
+   * button silently disabled forever.
+   */
+  onError?: () => void;
 };
 
 /**
@@ -86,7 +93,7 @@ type Props = {
  * configured. Use isTurnstileEnabled() at the form level if you want
  * to skip submit-button gating when the feature is off.
  */
-export default function TurnstileWidget({ onToken, onExpire }: Props) {
+export default function TurnstileWidget({ onToken, onExpire, onError }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
   const { lang } = useLanguage();
@@ -105,7 +112,7 @@ export default function TurnstileWidget({ onToken, onExpire }: Props) {
           sitekey: SITE_KEY,
           callback: (token) => onToken(token),
           "expired-callback": () => onExpire?.(),
-          "error-callback": () => onExpire?.(),
+          "error-callback": () => { onExpire?.(); onError?.(); },
           theme,
           size: "flexible",
           language: lang === "zh" ? "zh-cn" : lang,
@@ -116,6 +123,7 @@ export default function TurnstileWidget({ onToken, onExpire }: Props) {
       .catch((err) => {
         // eslint-disable-next-line no-console
         console.warn("[turnstile] failed to load:", err);
+        if (!cancelled) onError?.();
       });
 
     return () => {
@@ -130,8 +138,46 @@ export default function TurnstileWidget({ onToken, onExpire }: Props) {
       }
     };
     // Lang-change re-renders the widget so its UI strings update.
-  }, [lang, onToken, onExpire]);
+  }, [lang, onToken, onExpire, onError]);
 
   if (!SITE_KEY) return null;
   return <div ref={containerRef} style={{ minHeight: 0 }} />;
+}
+
+/**
+ * Submit-gating state for a form that uses Turnstile.
+ *
+ * The widget is `interaction-only`, so when it can't run — script blocked, or
+ * (most often) the site key doesn't allow the current hostname — it renders
+ * nothing and never issues a token. Previously that left the submit button
+ * disabled forever with no explanation, which reads to the visitor as "the
+ * form is broken". This hook gives the form an escape hatch:
+ *
+ *   - `waiting`  — enabled, no token yet, no failure: keep the button disabled
+ *                  briefly while the check runs.
+ *   - `failed`   — the widget errored or no token arrived in `timeoutMs`:
+ *                  stop blocking and show `notice`, letting the visitor submit
+ *                  so the server can answer with a real error if it rejects.
+ */
+export function useTurnstileGate(token: string, timeoutMs = 12_000) {
+  const enabled = isTurnstileEnabled();
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (!enabled || token) {
+      setFailed(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setFailed(true), timeoutMs);
+    return () => window.clearTimeout(timer);
+  }, [enabled, token, timeoutMs]);
+
+  const markFailed = useCallback(() => setFailed(true), []);
+  return {
+    enabled,
+    failed,
+    markFailed,
+    /** True while the check is still expected to deliver a token. */
+    waiting: enabled && !token && !failed,
+  };
 }

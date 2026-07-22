@@ -10,7 +10,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { pickLocalizedStrict } from "@/../../shared/i18n";
 import { parseFormError } from "@/lib/utils";
 import CalendlyEmbed, { isCalendlyConfigured } from "@/components/CalendlyEmbed";
-import TurnstileWidget, { isTurnstileEnabled } from "@/components/TurnstileWidget";
+import TurnstileWidget, { useTurnstileGate } from "@/components/TurnstileWidget";
 
 const MESSAGE_MIN = 10;
 
@@ -29,8 +29,12 @@ export default function ContactPage() {
 
   const messageLen = form.message.trim().length;
   const messageTooShort = messageLen > 0 && messageLen < MESSAGE_MIN;
-  const turnstileRequired = isTurnstileEnabled();
-  const canSubmit = !submitting && messageLen >= MESSAGE_MIN && (!turnstileRequired || turnstileToken !== "");
+  // Bot check gating. If Turnstile can't run (script blocked, or the site key
+  // doesn't allow this hostname) we stop blocking after a short wait and let
+  // the submit through, so the visitor gets a real answer instead of a button
+  // that stays greyed out forever.
+  const turnstile = useTurnstileGate(turnstileToken);
+  const canSubmit = !submitting && messageLen >= MESSAGE_MIN && !turnstile.waiting;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +43,7 @@ export default function ContactPage() {
       toast.error(t("contact.errorMessageMin"));
       return;
     }
-    if (turnstileRequired && !turnstileToken) {
+    if (turnstile.waiting) {
       toast.error(t("contact.turnstileWait"));
       return;
     }
@@ -250,7 +254,13 @@ export default function ContactPage() {
                     <TurnstileWidget
                       onToken={setTurnstileToken}
                       onExpire={() => setTurnstileToken("")}
+                      onError={turnstile.markFailed}
                     />
+                    {turnstile.failed && (
+                      <p role="status" style={{ margin: 0, fontSize: "0.78rem", lineHeight: 1.5, color: "#fbbf24" }}>
+                        {t("contact.turnstileUnavailable")}
+                      </p>
+                    )}
                     <button type="submit" className="g2a-btn-primary" disabled={!canSubmit} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%" }}>
                       <Send size={16} />
                       {submitting ? t("common.loading") : t("contact.send")}

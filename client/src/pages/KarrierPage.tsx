@@ -23,7 +23,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
-import TurnstileWidget, { isTurnstileEnabled } from "@/components/TurnstileWidget";
+import TurnstileWidget, { useTurnstileGate } from "@/components/TurnstileWidget";
 import {
   Briefcase,
   Heart,
@@ -483,7 +483,7 @@ const DOCS: Record<Language, KarrierDoc> = {
 };
 
 export default function KarrierPage() {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const doc = DOCS[lang];
 
   // Reuse the existing contact.submit endpoint with a "Karrier" subject prefix.
@@ -498,7 +498,7 @@ export default function KarrierPage() {
   const [consent, setConsent] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [turnstileToken, setTurnstileToken] = useState("");
-  const turnstileRequired = isTurnstileEnabled();
+  const turnstile = useTurnstileGate(turnstileToken);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
     "idle",
   );
@@ -520,7 +520,7 @@ export default function KarrierPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!consent) return;
-    if (turnstileRequired && !turnstileToken) return;
+    if (turnstile.waiting) return;
     setStatus("loading");
     submit.mutate({
       name,
@@ -1057,12 +1057,18 @@ export default function KarrierPage() {
                 <TurnstileWidget
                   onToken={setTurnstileToken}
                   onExpire={() => setTurnstileToken("")}
+                  onError={turnstile.markFailed}
                 />
+                {turnstile.failed && (
+                  <p role="status" style={{ margin: 0, fontSize: "0.78rem", lineHeight: 1.5, color: "#fbbf24" }}>
+                    {t("contact.turnstileUnavailable")}
+                  </p>
+                )}
 
                 <button
                   type="submit"
                   className="g2a-btn-primary"
-                  disabled={status === "loading" || !consent || (turnstileRequired && !turnstileToken)}
+                  disabled={status === "loading" || !consent || turnstile.waiting}
                   style={{
                     width: "100%",
                     justifyContent: "center",

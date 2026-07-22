@@ -18,7 +18,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
-import TurnstileWidget, { isTurnstileEnabled } from "@/components/TurnstileWidget";
+import TurnstileWidget, { useTurnstileGate } from "@/components/TurnstileWidget";
 import {
   CheckCircle2,
   Search,
@@ -390,7 +390,7 @@ const DOCS: Record<Language, AuditDoc> = {
 };
 
 export default function MarketingAuditPage() {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const doc = DOCS[lang];
 
   // Reuse the existing audit-form tRPC endpoint (audit.create on the backend
@@ -403,7 +403,7 @@ export default function MarketingAuditPage() {
   const [honeypot, setHoneypot] = useState("");
   const [consent, setConsent] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
-  const turnstileRequired = isTurnstileEnabled();
+  const turnstile = useTurnstileGate(turnstileToken);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
     "idle",
   );
@@ -424,11 +424,7 @@ export default function MarketingAuditPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!consent) return;
-    if (turnstileRequired && !turnstileToken) {
-      // Soft-fail — keep the user on the page; the widget will issue
-      // a token shortly and the button becomes enabled.
-      return;
-    }
+    if (turnstile.waiting) return;
     setStatus("loading");
     submit.mutate({
       name,
@@ -660,12 +656,18 @@ export default function MarketingAuditPage() {
                   <TurnstileWidget
                     onToken={setTurnstileToken}
                     onExpire={() => setTurnstileToken("")}
+                    onError={turnstile.markFailed}
                   />
+                  {turnstile.failed && (
+                    <p role="status" style={{ margin: 0, fontSize: "0.78rem", lineHeight: 1.5, color: "#fbbf24" }}>
+                      {t("contact.turnstileUnavailable")}
+                    </p>
+                  )}
 
                   <button
                     type="submit"
                     className="g2a-btn-primary"
-                    disabled={status === "loading" || !consent || (turnstileRequired && !turnstileToken)}
+                    disabled={status === "loading" || !consent || turnstile.waiting}
                     style={{
                       width: "100%",
                       justifyContent: "center",

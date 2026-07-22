@@ -21,7 +21,7 @@ import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
 import { Mail, Loader2, Check } from "lucide-react";
-import TurnstileWidget, { isTurnstileEnabled } from "@/components/TurnstileWidget";
+import TurnstileWidget, { useTurnstileGate } from "@/components/TurnstileWidget";
 
 type Variant = "compact" | "full";
 
@@ -65,7 +65,9 @@ export default function NewsletterForm({
   // Cloudflare Turnstile — feature-flagged. Token is populated by the
   // widget callback; submit is gated on it when the flag is on.
   const [turnstileToken, setTurnstileToken] = useState("");
-  const turnstileRequired = isTurnstileEnabled();
+  // Bot check gating — see useTurnstileGate. Stops the form from silently
+  // dying when the widget can't issue a token.
+  const turnstile = useTurnstileGate(turnstileToken);
 
   const subscribe = trpc.newsletter.subscribe.useMutation({
     onSuccess: () => {
@@ -83,9 +85,9 @@ export default function NewsletterForm({
     if (!email || !name) return;
     if (variant === "full" && !consent) return;
     if (variant === "full" && topics.size === 0) return;
-    // When Turnstile is configured but no token yet, soft-fail —
-    // the widget will issue one shortly and the button re-enables.
-    if (turnstileRequired && !turnstileToken) return;
+    // Only hold back while the check is still expected to deliver a token.
+    // If it failed outright we submit anyway and let the server answer.
+    if (turnstile.waiting) return;
     setStatus("loading");
     subscribe.mutate({
       email,
@@ -170,6 +172,15 @@ export default function NewsletterForm({
                 : t("newsletter.submit"))}
           </button>
         </div>
+        {/* Turnstile also runs on the compact band. It renders
+            interaction-only (invisible), so it costs no layout — and without
+            it this variant could never obtain a token, which left the footer
+            signup permanently dead whenever the feature flag was on. */}
+        <TurnstileWidget
+          onToken={setTurnstileToken}
+          onExpire={() => setTurnstileToken("")}
+          onError={turnstile.markFailed}
+        />
         <StatusLine status={status} />
         <style>{`
           @media (max-width: 600px) {
@@ -354,12 +365,18 @@ export default function NewsletterForm({
         <TurnstileWidget
           onToken={setTurnstileToken}
           onExpire={() => setTurnstileToken("")}
+          onError={turnstile.markFailed}
         />
+        {turnstile.failed && (
+          <p role="status" style={{ margin: 0, fontSize: "0.75rem", lineHeight: 1.5, color: "#fbbf24" }}>
+            {t("contact.turnstileUnavailable")}
+          </p>
+        )}
 
         <button
           type="submit"
           className="g2a-btn-primary"
-          disabled={status === "loading" || !consent || topics.size === 0 || (turnstileRequired && !turnstileToken)}
+          disabled={status === "loading" || !consent || topics.size === 0 || turnstile.waiting}
           style={{
             width: "100%",
             justifyContent: "center",
