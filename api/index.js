@@ -2673,8 +2673,18 @@ function isHoneypotTriggered(input) {
 
 // server/_core/turnstile.ts
 var VERIFY_ENDPOINT = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+function siteKey() {
+  return process.env.VITE_TURNSTILE_SITE_KEY?.trim() || process.env.TURNSTILE_SITE_KEY?.trim() || "";
+}
 function isTurnstileConfigured() {
-  return Boolean(process.env.TURNSTILE_SECRET_KEY?.trim());
+  const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
+  const site = siteKey();
+  if (secret && !site) {
+    console.warn(
+      "[turnstile] TURNSTILE_SECRET_KEY is set but no site key is configured \u2014 the browser can't produce a token, so verification is disabled. Set VITE_TURNSTILE_SITE_KEY (and redeploy) to enable, or remove the secret to silence this warning."
+    );
+  }
+  return Boolean(secret && site);
 }
 async function verifyTurnstile(token, remoteIp) {
   const secret = process.env.TURNSTILE_SECRET_KEY?.trim();

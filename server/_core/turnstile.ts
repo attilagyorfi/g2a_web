@@ -11,17 +11,45 @@
  *   - TURNSTILE_SITE_KEY:    public, sent to the browser
  *   - TURNSTILE_SECRET_KEY:  private, never leaves the server
  *
- * Feature-flag behaviour: if `TURNSTILE_SECRET_KEY` is unset, the server
- * skips verification entirely and the existing honeypot + rate-limit
- * stack remains the only defence. That way we can deploy the code path
- * before Attila has the Cloudflare account wired up, and the forms keep
- * working in local dev where Cloudflare keys aren't available.
+ * Feature-flag behaviour: Turnstile is only enforced when BOTH the secret
+ * key and a public site key are configured. Either one alone means the
+ * feature is effectively off — and enforcing with a secret but no site key
+ * is worse than off: the browser has no key to render the widget, so it can
+ * never produce a token, and every submission is rejected with
+ * `missing-token`. Requiring both makes "remove either key = Turnstile off"
+ * true, so a half-removed config can't silently lock every public form.
+ * With the feature off, the honeypot + rate-limit stack remains the defence.
  */
 
 const VERIFY_ENDPOINT = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
+/**
+ * The public site key as seen by the server. The client reads it from
+ * `VITE_TURNSTILE_SITE_KEY` (baked into the build); the plain
+ * `TURNSTILE_SITE_KEY` is accepted too so either naming works on Vercel.
+ */
+function siteKey(): string {
+  return (
+    process.env.VITE_TURNSTILE_SITE_KEY?.trim() ||
+    process.env.TURNSTILE_SITE_KEY?.trim() ||
+    ""
+  );
+}
+
 export function isTurnstileConfigured(): boolean {
-  return Boolean(process.env.TURNSTILE_SECRET_KEY?.trim());
+  const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
+  const site = siteKey();
+  // A secret with no site key would reject every submission — warn instead
+  // of silently enforcing an unusable config.
+  if (secret && !site) {
+    console.warn(
+      "[turnstile] TURNSTILE_SECRET_KEY is set but no site key is configured — " +
+        "the browser can't produce a token, so verification is disabled. " +
+        "Set VITE_TURNSTILE_SITE_KEY (and redeploy) to enable, or remove the " +
+        "secret to silence this warning.",
+    );
+  }
+  return Boolean(secret && site);
 }
 
 export type TurnstileVerifyResult =
