@@ -33,6 +33,7 @@ const DEV_ADMIN_USER: User = {
   isOwner: true,
   resetToken: null,
   resetTokenExpiresAt: null,
+  sessionsValidFrom: null,
   invitedAt: null,
   createdAt: new Date(),
   updatedAt: new Date(),

@@ -42,7 +42,12 @@ export function getSessionCookieOptions(
   return {
     httpOnly: true,
     path: "/",
-    sameSite: "none",
+    // "lax" (not "none") is the right default for a same-origin admin panel:
+    // the cookie rides top-level navigations but is withheld from cross-site
+    // sub-requests, which blunts CSRF. The login flow is same-origin, so lax
+    // doesn't break it. "none" would additionally require secure=true and would
+    // send the session on every third-party request.
+    sameSite: "lax",
     secure: isSecureRequest(req),
   };
 }

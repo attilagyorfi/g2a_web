@@ -143,6 +143,7 @@ export async function updateStaffUser(
     passwordHash: string | null;
     resetToken: string | null;
     resetTokenExpiresAt: Date | null;
+    sessionsValidFrom: Date | null;
   }>,
 ) {
   const db = await getDb();

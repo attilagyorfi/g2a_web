@@ -28,7 +28,7 @@
  * path; it can be disabled by clearing `ADMIN_EMAIL` / `ADMIN_PASSWORD` in
  * Vercel without removing any code.
  */
-import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { COOKIE_NAME, SESSION_TTL_MS } from "@shared/const";
 import type { Express, Request, Response } from "express";
 import { SignJWT } from "jose";
 import { timingSafeEqual } from "node:crypto";
@@ -188,17 +188,26 @@ export function registerPasswordAuthRoute(app: Express): void {
       return;
     }
 
-    // Rate limit — 5 attempts / 15 min per IP, in the shared sliding window.
+    // Rate limit on two axes so neither can be sidestepped:
+    //  - per IP (5/15min): stops one host hammering many accounts.
+    //  - per account (10/15min): stops a botnet spread across many IPs from
+    //    brute-forcing a single account, which the per-IP limit alone misses.
     const ip = getClientIp(req);
-    const limit = await checkRateLimitDb(`admin-login:${ip}`, {
-      max: 5,
-      windowMs: 15 * 60 * 1000,
-    });
-    if (!limit.allowed) {
-      const minutes = Math.ceil(((limit.retryAt ?? Date.now()) - Date.now()) / 60000);
+    const acct = email.trim().toLowerCase();
+    const tooMany = (retryAt: number | undefined) => {
+      const minutes = Math.ceil(((retryAt ?? Date.now()) - Date.now()) / 60000);
       res.status(429).json({
         error: `Túl sok bejelentkezési kísérlet. Próbáld újra ${minutes} perc múlva.`,
       });
+    };
+    const ipLimit = await checkRateLimitDb(`admin-login:${ip}`, { max: 5, windowMs: 15 * 60 * 1000 });
+    if (!ipLimit.allowed) {
+      tooMany(ipLimit.retryAt);
+      return;
+    }
+    const acctLimit = await checkRateLimitDb(`admin-login-acct:${acct}`, { max: 10, windowMs: 15 * 60 * 1000 });
+    if (!acctLimit.allowed) {
+      tooMany(acctLimit.retryAt);
       return;
     }
 
@@ -333,6 +342,9 @@ export function registerPasswordAuthRoute(app: Express): void {
         resetToken: null,
         resetTokenExpiresAt: null,
         isActive: true,
+        // Cut off every session issued before now — a reset must lock out
+        // anyone who was already signed in with the old credentials.
+        sessionsValidFrom: new Date(),
       });
       res.json({ success: true, email: user.email });
     } catch (err) {
@@ -345,17 +357,19 @@ export function registerPasswordAuthRoute(app: Express): void {
 /** Signs the session JWT and sets the cookie — shared by both login paths. */
 async function issueSession(req: Request, res: Response, openId: string, name: string): Promise<void> {
   const secretKey = new TextEncoder().encode(ENV.cookieSecret);
-  const expirationSeconds = Math.floor((Date.now() + ONE_YEAR_MS) / 1000);
+  const expirationSeconds = Math.floor((Date.now() + SESSION_TTL_MS) / 1000);
   const sessionToken = await new SignJWT({
     openId,
     appId: ENV.appId || FALLBACK_APP_ID_TAG,
     name,
   })
     .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+    // iat lets the server reject sessions issued before a password reset.
+    .setIssuedAt()
     .setExpirationTime(expirationSeconds)
     .sign(secretKey);
   const cookieOptions = getSessionCookieOptions(req);
-  res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+  res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: SESSION_TTL_MS });
   res.json({ success: true });
 }
 

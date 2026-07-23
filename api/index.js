@@ -44,6 +44,13 @@ var init_schema = __esm({
       /** Single-use token for invite-set-password and forgot-password flows. */
       resetToken: varchar("resetToken", { length: 128 }),
       resetTokenExpiresAt: timestamp("resetTokenExpiresAt"),
+      /**
+       * Sessions issued before this instant are rejected. Set to now() whenever the
+       * password is (re)set, so a password reset immediately invalidates every
+       * existing session — the point of "reset my password" when an account may be
+       * compromised. Null = no cutoff (all otherwise-valid sessions accepted).
+       */
+      sessionsValidFrom: timestamp("sessionsValidFrom"),
       invitedAt: timestamp("invitedAt"),
       createdAt: timestamp("createdAt").defaultNow().notNull(),
       updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -1386,6 +1393,7 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 // shared/const.ts
 var COOKIE_NAME = "app_session_id";
 var ONE_YEAR_MS = 1e3 * 60 * 60 * 24 * 365;
+var SESSION_TTL_MS = 1e3 * 60 * 60 * 24 * 14;
 var AXIOS_TIMEOUT_MS = 3e4;
 var UNAUTHED_ERR_MSG = "Please login (10001)";
 var NOT_ADMIN_ERR_MSG = "You do not have required permission (10002)";
@@ -1405,7 +1413,12 @@ function getSessionCookieOptions(req) {
   return {
     httpOnly: true,
     path: "/",
-    sameSite: "none",
+    // "lax" (not "none") is the right default for a same-origin admin panel:
+    // the cookie rides top-level navigations but is withheld from cross-site
+    // sub-requests, which blunts CSRF. The login flow is same-origin, so lax
+    // doesn't break it. "none" would additionally require secure=true and would
+    // send the session on every third-party request.
+    sameSite: "lax",
     secure: isSecureRequest(req)
   };
 }
@@ -1555,7 +1568,7 @@ var SDKServer = class {
       openId: payload.openId,
       appId: payload.appId,
       name: payload.name
-    }).setProtectedHeader({ alg: "HS256", typ: "JWT" }).setExpirationTime(expirationSeconds).sign(secretKey);
+    }).setProtectedHeader({ alg: "HS256", typ: "JWT" }).setIssuedAt(Math.floor(issuedAt / 1e3)).setExpirationTime(expirationSeconds).sign(secretKey);
   }
   async verifySession(cookieValue) {
     if (!cookieValue) {
@@ -1575,7 +1588,10 @@ var SDKServer = class {
       return {
         openId,
         appId,
-        name
+        name,
+        // iat is in seconds; expose as ms so the caller can compare it against
+        // the user's sessionsValidFrom cutoff. Null for legacy tokens without iat.
+        issuedAtMs: typeof payload.iat === "number" ? payload.iat * 1e3 : null
       };
     } catch (error) {
       console.warn("[Auth] Session verification failed", String(error));
@@ -1629,6 +1645,11 @@ var SDKServer = class {
     }
     if (!user) {
       throw ForbiddenError("User not found");
+    }
+    if (user.sessionsValidFrom && session.issuedAtMs !== null) {
+      if (session.issuedAtMs < user.sessionsValidFrom.getTime() - 5e3) {
+        throw ForbiddenError("Session invalidated");
+      }
     }
     await upsertUser({
       openId: user.openId,
@@ -4845,6 +4866,7 @@ var DEV_ADMIN_USER = {
   isOwner: true,
   resetToken: null,
   resetTokenExpiresAt: null,
+  sessionsValidFrom: null,
   invitedAt: null,
   createdAt: /* @__PURE__ */ new Date(),
   updatedAt: /* @__PURE__ */ new Date(),
@@ -5400,15 +5422,21 @@ To: ${to}`
       return;
     }
     const ip = getClientIp(req);
-    const limit = await checkRateLimitDb(`admin-login:${ip}`, {
-      max: 5,
-      windowMs: 15 * 60 * 1e3
-    });
-    if (!limit.allowed) {
-      const minutes = Math.ceil(((limit.retryAt ?? Date.now()) - Date.now()) / 6e4);
+    const acct = email.trim().toLowerCase();
+    const tooMany = (retryAt) => {
+      const minutes = Math.ceil(((retryAt ?? Date.now()) - Date.now()) / 6e4);
       res.status(429).json({
         error: `T\xFAl sok bejelentkez\xE9si k\xEDs\xE9rlet. Pr\xF3b\xE1ld \xFAjra ${minutes} perc m\xFAlva.`
       });
+    };
+    const ipLimit = await checkRateLimitDb(`admin-login:${ip}`, { max: 5, windowMs: 15 * 60 * 1e3 });
+    if (!ipLimit.allowed) {
+      tooMany(ipLimit.retryAt);
+      return;
+    }
+    const acctLimit = await checkRateLimitDb(`admin-login-acct:${acct}`, { max: 10, windowMs: 15 * 60 * 1e3 });
+    if (!acctLimit.allowed) {
+      tooMany(acctLimit.retryAt);
       return;
     }
     try {
@@ -5510,7 +5538,10 @@ A link 1 \xF3r\xE1ig \xE9rv\xE9nyes. Ha nem te k\xE9rted, hagyd figyelmen k\xEDv
         passwordHash: await hashPassword(password),
         resetToken: null,
         resetTokenExpiresAt: null,
-        isActive: true
+        isActive: true,
+        // Cut off every session issued before now — a reset must lock out
+        // anyone who was already signed in with the old credentials.
+        sessionsValidFrom: /* @__PURE__ */ new Date()
       });
       res.json({ success: true, email: user.email });
     } catch (err) {
@@ -5521,14 +5552,14 @@ A link 1 \xF3r\xE1ig \xE9rv\xE9nyes. Ha nem te k\xE9rted, hagyd figyelmen k\xEDv
 }
 async function issueSession(req, res, openId, name) {
   const secretKey = new TextEncoder().encode(ENV.cookieSecret);
-  const expirationSeconds = Math.floor((Date.now() + ONE_YEAR_MS) / 1e3);
+  const expirationSeconds = Math.floor((Date.now() + SESSION_TTL_MS) / 1e3);
   const sessionToken = await new SignJWT2({
     openId,
     appId: ENV.appId || FALLBACK_APP_ID_TAG,
     name
-  }).setProtectedHeader({ alg: "HS256", typ: "JWT" }).setExpirationTime(expirationSeconds).sign(secretKey);
+  }).setProtectedHeader({ alg: "HS256", typ: "JWT" }).setIssuedAt().setExpirationTime(expirationSeconds).sign(secretKey);
   const cookieOptions = getSessionCookieOptions(req);
-  res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+  res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: SESSION_TTL_MS });
   res.json({ success: true });
 }
 function resolveOrigin(req) {
@@ -5712,7 +5743,24 @@ ${a.excerpt}
 }
 
 // server/_core/app.ts
+init_env();
+var secretsChecked = false;
+function warnOnWeakSecrets() {
+  if (secretsChecked) return;
+  secretsChecked = true;
+  const jwt = (ENV.cookieSecret || "").trim();
+  if (!jwt) {
+    console.warn("[Security] JWT_SECRET is empty \u2014 password login is disabled and any session would be forgeable. Set a 32+ char random value.");
+  } else if (jwt.length < 32) {
+    console.warn(`[Security] JWT_SECRET is only ${jwt.length} chars \u2014 HS256 tokens are easier to brute-force. Use a 32+ char random value.`);
+  }
+  const pw = (ENV.adminPassword || "").trim();
+  if (pw && pw.length < 12) {
+    console.warn(`[Security] ADMIN_PASSWORD is only ${pw.length} chars \u2014 the owner recovery login is guessable. Use a 16+ char passphrase, or rely on the DB password + forgot-password flow.`);
+  }
+}
 function createApp() {
+  warnOnWeakSecrets();
   const app2 = express();
   registerResendWebhookRoute(app2);
   app2.use(express.json({ limit: "50mb" }));

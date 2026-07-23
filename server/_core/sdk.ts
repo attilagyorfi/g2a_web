@@ -193,13 +193,14 @@ class SDKServer {
       name: payload.name,
     })
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+      .setIssuedAt(Math.floor(issuedAt / 1000))
       .setExpirationTime(expirationSeconds)
       .sign(secretKey);
   }
 
   async verifySession(
     cookieValue: string | undefined | null
-  ): Promise<{ openId: string; appId: string; name: string } | null> {
+  ): Promise<{ openId: string; appId: string; name: string; issuedAtMs: number | null } | null> {
     if (!cookieValue) {
       console.warn("[Auth] Missing session cookie");
       return null;
@@ -225,6 +226,9 @@ class SDKServer {
         openId,
         appId,
         name,
+        // iat is in seconds; expose as ms so the caller can compare it against
+        // the user's sessionsValidFrom cutoff. Null for legacy tokens without iat.
+        issuedAtMs: typeof payload.iat === "number" ? payload.iat * 1000 : null,
       };
     } catch (error) {
       console.warn("[Auth] Session verification failed", String(error));
@@ -290,6 +294,15 @@ class SDKServer {
 
     if (!user) {
       throw ForbiddenError("User not found");
+    }
+
+    // Reject sessions minted before the account's cutoff (set on password
+    // reset). A 5s skew tolerates the tiny gap between writing the cutoff and
+    // issuing the fresh session in the same reset→login sequence.
+    if (user.sessionsValidFrom && session.issuedAtMs !== null) {
+      if (session.issuedAtMs < user.sessionsValidFrom.getTime() - 5000) {
+        throw ForbiddenError("Session invalidated");
+      }
     }
 
     await db.upsertUser({

@@ -31,6 +31,13 @@ export const users = mysqlTable("users", {
   /** Single-use token for invite-set-password and forgot-password flows. */
   resetToken: varchar("resetToken", { length: 128 }),
   resetTokenExpiresAt: timestamp("resetTokenExpiresAt"),
+  /**
+   * Sessions issued before this instant are rejected. Set to now() whenever the
+   * password is (re)set, so a password reset immediately invalidates every
+   * existing session — the point of "reset my password" when an account may be
+   * compromised. Null = no cutoff (all otherwise-valid sessions accepted).
+   */
+  sessionsValidFrom: timestamp("sessionsValidFrom"),
   invitedAt: timestamp("invitedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

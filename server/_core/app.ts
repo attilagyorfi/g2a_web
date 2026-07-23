@@ -20,8 +20,33 @@ import { registerSitemapRoute } from "./sitemapRoute";
 import { registerRssRoute } from "./rssRoute";
 import { registerPasswordAuthRoute } from "./passwordAuthRoute";
 import { registerDigestCronRoute } from "./digestCronRoute";
+import { ENV } from "./env";
+
+let secretsChecked = false;
+
+/**
+ * One-time startup sanity check on the two values the whole admin auth rests
+ * on. Weak/short secrets are the realistic way in: a short JWT_SECRET makes
+ * HS256 tokens forgeable, and a weak ADMIN_PASSWORD makes the owner login
+ * guessable. We only warn (never block) so a misconfigured deploy still boots.
+ */
+function warnOnWeakSecrets(): void {
+  if (secretsChecked) return;
+  secretsChecked = true;
+  const jwt = (ENV.cookieSecret || "").trim();
+  if (!jwt) {
+    console.warn("[Security] JWT_SECRET is empty — password login is disabled and any session would be forgeable. Set a 32+ char random value.");
+  } else if (jwt.length < 32) {
+    console.warn(`[Security] JWT_SECRET is only ${jwt.length} chars — HS256 tokens are easier to brute-force. Use a 32+ char random value.`);
+  }
+  const pw = (ENV.adminPassword || "").trim();
+  if (pw && pw.length < 12) {
+    console.warn(`[Security] ADMIN_PASSWORD is only ${pw.length} chars — the owner recovery login is guessable. Use a 16+ char passphrase, or rely on the DB password + forgot-password flow.`);
+  }
+}
 
 export function createApp(): Express {
+  warnOnWeakSecrets();
   const app = express();
 
   // Resend webhook — POST /api/webhooks/resend (open/click/bounce events).
