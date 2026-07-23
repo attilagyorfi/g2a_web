@@ -107,6 +107,7 @@ export default function AuditPage() {
       monthlyBudget: form.monthlyBudget || undefined,
       currentChallenges: form.currentChallenges || undefined,
       goals: form.goals || undefined,
+      lang,
       botField: honeypot, // honeypot — server-side AUDIT_HONEYPOT
     });
   };

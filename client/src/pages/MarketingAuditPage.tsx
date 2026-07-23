@@ -432,6 +432,7 @@ export default function MarketingAuditPage() {
       email,
       website: website || undefined,
       currentChallenges: message || undefined,
+      lang,
       botField: honeypot, // honeypot — server-side AUDIT_HONEYPOT
       turnstileToken: turnstileToken || undefined,
     });

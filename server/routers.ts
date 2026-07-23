@@ -17,7 +17,10 @@ import { verifyTurnstile, isTurnstileConfigured } from "./_core/turnstile";
 import { sendEmail, sendEmailWithId, isEmailConfigured } from "./_core/email";
 import {
   renderConfirmationEmailHtml,
-  CONFIRMATION_SUBJECTS,
+  confirmationSubject,
+  toLang,
+  FIELD_LABELS,
+  type Lang,
 } from "./_core/emailTemplates";
 import { generateSocialCopy } from "./_core/socialCopy";
 import {
@@ -67,6 +70,26 @@ function originFromRequest(req: { headers: Record<string, unknown>; protocol?: s
   if (origin) return origin.replace(/\/$/, "");
   const host = req.get?.("host") ?? "g2amarketing.hu";
   return `${req.protocol ?? "https"}://${host}`;
+}
+
+/**
+ * Which language to send a transactional email in. Prefers the explicit `lang`
+ * the client form sends; falls back to the /en/ or /zh/ prefix on the page the
+ * form was submitted from (Referer). Defaults to hu.
+ */
+function resolveFormLang(req: { headers: Record<string, unknown> }, explicit?: string | null): Lang {
+  if (explicit === "hu" || explicit === "en" || explicit === "zh") return explicit;
+  const referer = req.headers?.referer as string | undefined;
+  if (referer) {
+    try {
+      const path = new URL(referer).pathname;
+      if (/^\/en(\/|$)/.test(path)) return "en";
+      if (/^\/zh(\/|$)/.test(path)) return "zh";
+    } catch {
+      /* malformed referer — fall through to default */
+    }
+  }
+  return toLang(undefined);
 }
 
 function renderInviteEmail(name: string, link: string): string {
@@ -254,15 +277,18 @@ const contactRouter = router({
       // posts to contact.submit) keep separate rate-limit buckets so a job
       // applicant doesn't burn through the contact form's quota.
       formContext: z.enum(["contact", "careers"]).optional(),
+      // Visitor's language, so the confirmation email matches the site they
+      // submitted from. Falls back to the Referer path, then hu.
+      lang: z.enum(["hu", "en", "zh"]).optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       const bucket = input.formContext === "careers" ? "careers" : "contact";
       const guard = await guardPublicFormOrSilent(ctx, input, bucket, { success: true });
       if (guard) return guard;
-      // Strip honeypot + form-origin marker before persistence — neither
-      // belongs in the contact_submissions table.
-      const { [HONEYPOT_FIELD]: _hp, formContext: _fc, turnstileToken: _tt, ...submission } = input;
-      void _hp; void _fc; void _tt;
+      // Strip honeypot + form-origin marker + language before persistence —
+      // none of them belong in the contact_submissions table.
+      const { [HONEYPOT_FIELD]: _hp, formContext: _fc, turnstileToken: _tt, lang: _lang, ...submission } = input;
+      void _hp; void _fc; void _tt; void _lang;
       await db.createContactSubmission(submission);
       // Notify admin (best-effort — never blocks form submission)
       await notifyOwner({
@@ -276,28 +302,31 @@ const contactRouter = router({
       if (isEmailConfigured()) {
         try {
           const formType = input.formContext === "careers" ? "career" : "contact";
+          const lang = resolveFormLang(ctx.req, input.lang);
+          const L = FIELD_LABELS[lang];
           const submissionFields =
             formType === "career"
               ? [
-                  { label: "Email", value: input.email },
-                  { label: "Telefon", value: input.phone || "" },
-                  { label: "Pozíció", value: input.subject?.replace(/^Karrier jelentkezés:\s*/, "") || "" },
-                  { label: "Üzenet", value: input.message },
+                  { label: L.email, value: input.email },
+                  { label: L.phone, value: input.phone || "" },
+                  { label: L.position, value: input.subject?.replace(/^Karrier jelentkezés:\s*/, "") || "" },
+                  { label: L.message, value: input.message },
                 ]
               : [
-                  { label: "Email", value: input.email },
-                  { label: "Telefon", value: input.phone || "" },
-                  { label: "Tárgy", value: input.subject || "" },
-                  { label: "Szolgáltatás", value: input.serviceInterest || "" },
-                  { label: "Üzenet", value: input.message },
+                  { label: L.email, value: input.email },
+                  { label: L.phone, value: input.phone || "" },
+                  { label: L.subject, value: input.subject || "" },
+                  { label: L.service, value: input.serviceInterest || "" },
+                  { label: L.message, value: input.message },
                 ];
           await sendEmail({
             to: input.email,
-            subject: CONFIRMATION_SUBJECTS[formType],
+            subject: confirmationSubject(formType, lang),
             html: renderConfirmationEmailHtml({
               name: input.name,
               formType,
               submission: submissionFields,
+              lang,
             }),
             replyTo: "info@g2amarketing.hu",
           });
@@ -344,6 +373,8 @@ const auditRouter = router({
       goals: z.string().optional(),
       [AUDIT_HONEYPOT]: z.string().optional(),
       turnstileToken: z.string().optional(),
+      // Visitor's language for the confirmation email. Not persisted.
+      lang: z.enum(["hu", "en", "zh"]).optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       // Honeypot uses a custom field name here; build a normalized object for the guard.
@@ -357,10 +388,10 @@ const auditRouter = router({
         { success: true },
       );
       if (guard) return guard;
-      // Strip the Turnstile token before persistence — it's verified
-      // server-side and has no place in the audit_leads table.
-      const { turnstileToken: _tt, ...inputForDb } = input;
-      void _tt;
+      // Strip the Turnstile token + language before persistence — both are
+      // verified/used server-side and have no place in the audit_leads table.
+      const { turnstileToken: _tt, lang: _lang, ...inputForDb } = input;
+      void _tt; void _lang;
       // Normalize the website URL — visitors typically type bare hostnames
       // (`ceg.hu`, `www.ceg.hu`) without a protocol.
       const normalizedInput = { ...inputForDb, website: normalizeUrl(inputForDb.website) };
@@ -377,20 +408,23 @@ const auditRouter = router({
       // next". Best-effort; failure shouldn't block the form success state.
       if (isEmailConfigured()) {
         try {
+          const lang = resolveFormLang(ctx.req, input.lang);
+          const L = FIELD_LABELS[lang];
           await sendEmail({
             to: normalizedInput.email,
-            subject: CONFIRMATION_SUBJECTS.audit,
+            subject: confirmationSubject("audit", lang),
             html: renderConfirmationEmailHtml({
               name: normalizedInput.name,
               formType: "audit",
+              lang,
               submission: [
-                { label: "Email", value: normalizedInput.email },
-                { label: "Telefon", value: normalizedInput.phone || "" },
-                { label: "Cég", value: normalizedInput.company || "" },
-                { label: "Weboldal", value: normalizedInput.website || "" },
-                { label: "Havi büdzsé", value: normalizedInput.monthlyBudget || "" },
-                { label: "Kihívások", value: normalizedInput.currentChallenges || "" },
-                { label: "Célok", value: normalizedInput.goals || "" },
+                { label: L.email, value: normalizedInput.email },
+                { label: L.phone, value: normalizedInput.phone || "" },
+                { label: L.company, value: normalizedInput.company || "" },
+                { label: L.website, value: normalizedInput.website || "" },
+                { label: L.budget, value: normalizedInput.monthlyBudget || "" },
+                { label: L.challenges, value: normalizedInput.currentChallenges || "" },
+                { label: L.goals, value: normalizedInput.goals || "" },
               ],
             }),
             replyTo: "info@g2amarketing.hu",
@@ -417,9 +451,29 @@ function renderWelcomeEmailHtml(
   name: string | undefined,
   unsubscribeUrl: string,
   topics?: string[],
+  lang: Lang = "hu",
 ): string {
-  return _renderWelcomeEmail({ name, unsubscribeUrl, topics });
+  return _renderWelcomeEmail({ name, unsubscribeUrl, topics, lang });
 }
+
+/** Localised welcome subject + plain-text fallback for the newsletter. */
+const WELCOME_MISC: Record<Lang, { subject: string; text: (name: string, url: string) => string }> = {
+  hu: {
+    subject: "Üdv a G2A Marketing hírlevelében!",
+    text: (name, url) =>
+      `${name ? `Szia ${name}!` : "Szia!"}\n\nAttila vagyok a G2A Marketingtől — örülök, hogy itt vagy. Péntek reggelente írok egyszer, sose kéretlenül.\n\nLeiratkozás: ${url}\n\nG2A Marketing Bt. · Pécs · info@g2amarketing.hu`,
+  },
+  en: {
+    subject: "Welcome to the G2A Marketing newsletter",
+    text: (name, url) =>
+      `${name ? `Hi ${name}!` : "Hi there!"}\n\nI'm Attila from G2A Marketing — glad you're here. I write once, on Friday mornings, never unsolicited.\n\nUnsubscribe: ${url}\n\nG2A Marketing Bt. · Pécs, Hungary · info@g2amarketing.hu`,
+  },
+  zh: {
+    subject: "欢迎订阅 G2A Marketing 通讯",
+    text: (name, url) =>
+      `${name ? `${name}，您好！` : "您好！"}\n\n我是 G2A Marketing 的 Attila——很高兴您来到这里。我每周只在周五早上写一封，绝不打扰。\n\n退订：${url}\n\nG2A Marketing Bt. · 匈牙利佩奇 · info@g2amarketing.hu`,
+  },
+};
 
 const newsletterRouter = router({
   subscribe: publicProcedure
@@ -441,6 +495,9 @@ const newsletterRouter = router({
       // clients still work; the guard enforces presence when the
       // feature flag is on.
       turnstileToken: z.string().optional(),
+      // Visitor's language, so the welcome email matches the site they
+      // signed up from. Falls back to the Referer path, then hu.
+      lang: z.enum(["hu", "en", "zh"]).optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       const guard = await guardPublicFormOrSilent(ctx, input, "newsletter", { success: true, alreadySubscribed: false });
@@ -470,11 +527,12 @@ const newsletterRouter = router({
         const origin = (ctx.req.headers.origin as string | undefined)
           || `${ctx.req.protocol}://${ctx.req.get("host")}`;
         const unsubscribeUrl = `${origin}/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
+        const lang = resolveFormLang(ctx.req, input.lang);
         await sendEmail({
           to: input.email,
-          subject: "Üdv a G2A Marketing hírlevelében!",
-          html: renderWelcomeEmailHtml(input.name, unsubscribeUrl, input.topics),
-          text: `${input.name ? `Szia ${input.name}!` : "Szia!"}\n\nKöszönjük, hogy feliratkoztál a G2A Marketing hírlevelére. Heti max 1 emailt küldünk, sose kéretlenül.\n\nLeiratkozás: ${unsubscribeUrl}\n\nG2A Marketing Bt. · Pécs · info@g2amarketing.hu`,
+          subject: WELCOME_MISC[lang].subject,
+          html: renderWelcomeEmailHtml(input.name, unsubscribeUrl, input.topics, lang),
+          text: WELCOME_MISC[lang].text(input.name ?? "", unsubscribeUrl),
         });
       }
 

@@ -530,6 +530,7 @@ export default function KarrierPage() {
       message: `Pozíció: ${position || "spontán"}\nCV link: ${cv || "—"}\n\nMotiváció:\n${motivation}`,
       website: honeypot, // server-side HONEYPOT_FIELD === "website"
       formContext: "careers", // separate rate-limit bucket from /kapcsolat
+      lang,
       turnstileToken: turnstileToken || undefined,
     });
   };

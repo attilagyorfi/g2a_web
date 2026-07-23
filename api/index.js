@@ -2753,13 +2753,46 @@ var BG_SUBTLE = "#f8fafc";
 var BORDER = "#e2e8f0";
 var FONT_SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif";
 var FONT_MONO = "'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', Courier, monospace";
-function wrapper(inner, preheader) {
+function toLang(value) {
+  return value === "en" || value === "zh" ? value : "hu";
+}
+var UI = {
+  hu: {
+    partnerLine: "Strat\xE9giai \xE9s technol\xF3giai partner \xB7 P\xE9cs",
+    signOff: "\xDCdv,",
+    submittedLabel: "Amit elk\xFCldt\xE9l",
+    nextLabel: "Mi k\xF6vetkezik",
+    footerReason: "Ezt az emailt az\xE9rt kaptad, mert feliratkozt\xE1l a g2amarketing.hu h\xEDrlevel\xE9re.",
+    unsubscribe: "Leiratkoz\xE1s egy kattint\xE1ssal",
+    privacy: "Adatv\xE9delmi t\xE1j\xE9koztat\xF3"
+  },
+  en: {
+    partnerLine: "Strategic & technology partner \xB7 P\xE9cs, Hungary",
+    signOff: "Talk soon,",
+    submittedLabel: "What you sent",
+    nextLabel: "What happens next",
+    footerReason: "You're getting this because you signed up for the g2amarketing.hu newsletter.",
+    unsubscribe: "Unsubscribe in one click",
+    privacy: "Privacy notice"
+  },
+  zh: {
+    partnerLine: "\u6218\u7565\u4E0E\u6280\u672F\u5408\u4F5C\u4F19\u4F34 \xB7 \u5308\u7259\u5229\u4F69\u5947",
+    signOff: "\u987A\u9882\u5546\u797A\uFF0C",
+    submittedLabel: "\u60A8\u63D0\u4EA4\u7684\u5185\u5BB9",
+    nextLabel: "\u63A5\u4E0B\u6765\u4F1A\u53D1\u751F\u4EC0\u4E48",
+    footerReason: "\u60A8\u6536\u5230\u8FD9\u5C01\u90AE\u4EF6\uFF0C\u662F\u56E0\u4E3A\u60A8\u8BA2\u9605\u4E86 g2amarketing.hu \u7684\u901A\u8BAF\u3002",
+    unsubscribe: "\u4E00\u952E\u9000\u8BA2",
+    privacy: "\u9690\u79C1\u8BF4\u660E"
+  }
+};
+var PRIVACY_PATH = "/adatvedelmi-iranyelvek";
+function wrapper(inner, preheader, lang) {
   const preheaderHtml = `
     <div style="display:none;font-size:1px;color:#fefefe;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden">
       ${escapeHtml(preheader)}
     </div>`;
   return `<!DOCTYPE html>
-<html lang="hu">
+<html lang="${lang}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -2796,14 +2829,14 @@ function darkHeader(opts) {
       </tr>
     </table>`;
 }
-function signature(opts = {}) {
+function signature(lang, opts = {}) {
   const name = opts.name || "Attila";
   const role = opts.role || "G2A Marketing";
   return `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:8px 36px 36px">
-          <div style="font-size:14px;color:${TEXT_SECONDARY};line-height:1.6;margin-bottom:14px">\xDCdv,</div>
+          <div style="font-size:14px;color:${TEXT_SECONDARY};line-height:1.6;margin-bottom:14px">${escapeHtml(UI[lang].signOff)}</div>
           <div style="display:inline-block;border-left:3px solid ${BRAND_TEAL};padding-left:14px">
             <div style="font-size:16px;font-weight:700;color:${TEXT_PRIMARY};letter-spacing:-0.01em">${escapeHtml(name)}</div>
             <div style="font-size:12px;color:${TEXT_MUTED};font-family:${FONT_MONO};letter-spacing:0.04em;margin-top:3px">${escapeHtml(role)}</div>
@@ -2812,7 +2845,8 @@ function signature(opts = {}) {
       </tr>
     </table>`;
 }
-function footer(unsubscribeUrl) {
+function footer(unsubscribeUrl, lang) {
+  const t2 = UI[lang];
   return `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK};color:#94a3b8">
       <tr>
@@ -2832,8 +2866,8 @@ function footer(unsubscribeUrl) {
             </tr>
           </table>
           <div style="margin-top:22px;padding-top:16px;border-top:1px solid #1f2937;font-size:11px;color:#64748b;line-height:1.7">
-            Ezt az emailt az\xE9rt kaptad, mert feliratkozt\xE1l a g2amarketing.hu h\xEDrlevel\xE9re.<br>
-            <a href="${unsubscribeUrl}" style="color:#94a3b8;text-decoration:underline">Leiratkoz\xE1s egy kattint\xE1ssal</a> \xB7 <a href="https://g2amarketing.hu/adatvedelmi-iranyelvek" style="color:#94a3b8;text-decoration:underline">Adatv\xE9delmi t\xE1j\xE9koztat\xF3</a>
+            ${escapeHtml(t2.footerReason)}<br>
+            <a href="${unsubscribeUrl}" style="color:#94a3b8;text-decoration:underline">${escapeHtml(t2.unsubscribe)}</a> \xB7 <a href="https://g2amarketing.hu${PRIVACY_PATH}" style="color:#94a3b8;text-decoration:underline">${escapeHtml(t2.privacy)}</a>
           </div>
         </td>
       </tr>
@@ -2849,43 +2883,82 @@ function escapeHtml(s) {
   })[c]);
 }
 var TOPIC_CARDS = {
-  strategy: {
-    tag: "STRAT\xC9GIA",
-    title: "B2B marketing strat\xE9gia",
-    desc: "Poz\xEDcion\xE1l\xE1s, ICP, brand-\xE9p\xEDt\xE9s \xE9s go-to-market playbookok.",
-    icon: "\u25C6"
+  hu: {
+    strategy: { tag: "STRAT\xC9GIA", title: "B2B marketingstrat\xE9gia", desc: "Poz\xEDcion\xE1l\xE1s, ICP, brand-\xE9p\xEDt\xE9s \xE9s go-to-market playbookok.", icon: "\u25C6" },
+    ai: { tag: "AI", title: "AI & automatiz\xE1ci\xF3", desc: "AI-workflow-k, prompt-receptek, kipr\xF3b\xE1lt eszk\xF6z\xF6k B2B-kontextusban.", icon: "\u25B2" },
+    paid: { tag: "TELJES\xCDTM\xC9NY", title: "SEO & teljes\xEDtm\xE9nyhirdet\xE9s", desc: "Google Ads, Meta, organikus SEO \u2014 m\xE9rhet\u0151 eredm\xE9nyekkel.", icon: "\u25CF" },
+    case_studies: { tag: "ESETTANULM\xC1NY", title: "Esettanulm\xE1nyok & adatok", desc: "Val\xF3s \xFCgyf\xE9lprojektek konkr\xE9t sz\xE1mokkal \u2014 mi m\u0171k\xF6d\xF6tt, mi nem.", icon: "\u25A0" }
   },
-  ai: {
-    tag: "AI",
-    title: "AI & automatiz\xE1ci\xF3",
-    desc: "AI workflow-k, prompt-receptek, kipr\xF3b\xE1lt eszk\xF6z\xF6k B2B kontextusban.",
-    icon: "\u25B2"
+  en: {
+    strategy: { tag: "STRATEGY", title: "B2B marketing strategy", desc: "Positioning, ICP, brand-building and go-to-market playbooks.", icon: "\u25C6" },
+    ai: { tag: "AI", title: "AI & automation", desc: "AI workflows, prompt recipes and tools that actually earn their place in B2B.", icon: "\u25B2" },
+    paid: { tag: "PERFORMANCE", title: "SEO & paid performance", desc: "Google Ads, Meta, organic SEO \u2014 tied to results you can measure.", icon: "\u25CF" },
+    case_studies: { tag: "CASE STUDIES", title: "Case studies & data", desc: "Real client projects with real numbers \u2014 what worked, what didn't.", icon: "\u25A0" }
   },
-  paid: {
-    tag: "TELJES\xCDTM\xC9NY",
-    title: "SEO & teljes\xEDtm\xE9nyhirdet\xE9s",
-    desc: "Google Ads, Meta hirdet\xE9sek, organikus SEO \u2014 m\xE9rhet\u0151 eredm\xE9nyekkel.",
-    icon: "\u25CF"
-  },
-  case_studies: {
-    tag: "ESETTANULM\xC1NY",
-    title: "Esettanulm\xE1nyok & adatok",
-    desc: "Anonim \xFCgyf\xE9lprojektek val\xF3s sz\xE1mokkal \u2014 mi m\u0171k\xF6d\xF6tt, mi nem.",
-    icon: "\u25A0"
+  zh: {
+    strategy: { tag: "\u6218\u7565", title: "B2B \u8425\u9500\u6218\u7565", desc: "\u5B9A\u4F4D\u3001\u7406\u60F3\u5BA2\u6237\u753B\u50CF\u3001\u54C1\u724C\u5EFA\u8BBE\u4E0E\u5E02\u573A\u8FDB\u5165\u65B9\u6848\u3002", icon: "\u25C6" },
+    ai: { tag: "AI", title: "AI \u4E0E\u81EA\u52A8\u5316", desc: "\u5728 B2B \u573A\u666F\u4E2D\u771F\u6B63\u597D\u7528\u7684 AI \u5DE5\u4F5C\u6D41\u3001\u63D0\u793A\u8BCD\u4E0E\u5DE5\u5177\u3002", icon: "\u25B2" },
+    paid: { tag: "\u6548\u679C", title: "SEO \u4E0E\u6548\u679C\u5E7F\u544A", desc: "Google Ads\u3001Meta\u3001\u81EA\u7136\u641C\u7D22\u2014\u2014\u90FD\u5BF9\u5F97\u4E0A\u53EF\u8861\u91CF\u7684\u7ED3\u679C\u3002", icon: "\u25CF" },
+    case_studies: { tag: "\u6848\u4F8B", title: "\u6848\u4F8B\u4E0E\u6570\u636E", desc: "\u771F\u5B9E\u5BA2\u6237\u9879\u76EE\u3001\u771F\u5B9E\u6570\u5B57\u2014\u2014\u54EA\u4E9B\u6709\u6548\uFF0C\u54EA\u4E9B\u65E0\u6548\u3002", icon: "\u25A0" }
   }
 };
-function topicRow(keys) {
+var WELCOME_COPY = {
+  hu: {
+    headerTag: "\xDCdv a fed\xE9lzeten",
+    greeting: (name) => name ? `Szia ${name}!` : "Szia!",
+    lead: "Attila vagyok, a G2A Marketingt\u0151l. \xD6r\xFCl\xF6k, hogy itt vagy. P\xE9ntek reggelente \xEDrok egyszer \u2014 nem t\xF6bbsz\xF6r, \xE9s soha nem olyasmir\u0151l, ami ne \xE9rne meg \xF6t percet. Ennyi a meg\xE1llapod\xE1s.",
+    cardsLabel: "Amir\u0151l \xEDrni fogok",
+    ctaTag: "Addig is",
+    ctaTitle: "N\xE9zz sz\xE9t a kor\xE1bbi \xEDr\xE1sokban",
+    ctaDesc: "Konkr\xE9t magyar B2B- \xE9s AI-esetek, val\xF3s sz\xE1mokkal \u2014 nem elm\xE9leti okoskod\xE1s.",
+    ctaButton: "OLVASS BELE \u2192",
+    ctaHref: "https://g2amarketing.hu/hirek",
+    noteStrong: "Van egy konkr\xE9t k\xE9rd\xE9sed?",
+    noteBody: "Nyomj v\xE1laszt erre az emailre \u2014 \xE9n olvasom, \xE9n v\xE1laszolok, nem egy automata. Ha \xE9pp egy val\xF3s marketinges fejt\xF6r\u0151n \xFClsz, \xEDrd meg p\xE1r mondatban; sokszor egy 15 perces besz\xE9lget\xE9s t\xF6bbet tiszt\xE1z, mint egy \xF3r\xE1nyi keresg\xE9l\xE9s.",
+    preheader: "\xD6r\xFCl\xF6k, hogy itt vagy \u2014 r\xF6viden arr\xF3l, mire sz\xE1m\xEDthatsz."
+  },
+  en: {
+    headerTag: "Welcome aboard",
+    greeting: (name) => name ? `Hi ${name}!` : "Hi there!",
+    lead: "I'm Attila, from G2A Marketing. Glad you're here. I write once, on Friday mornings \u2014 no more than that, and never about anything that isn't worth five minutes of your time. That's the deal.",
+    cardsLabel: "What I'll write about",
+    ctaTag: "In the meantime",
+    ctaTitle: "Dig into the earlier pieces",
+    ctaDesc: "Concrete B2B and AI cases from the Hungarian market, with real numbers \u2014 not theory.",
+    ctaButton: "START READING \u2192",
+    ctaHref: "https://g2amarketing.hu/en/hirek",
+    noteStrong: "Got a specific question?",
+    noteBody: "Just hit reply \u2014 I read these myself and answer personally, no autoresponder. If you're stuck on a real marketing problem, tell me in a few lines; a 15-minute chat often clears up more than an hour of digging.",
+    preheader: "Glad you're here \u2014 a quick note on what to expect."
+  },
+  zh: {
+    headerTag: "\u6B22\u8FCE\u52A0\u5165",
+    greeting: (name) => name ? `${name}\uFF0C\u60A8\u597D\uFF01` : "\u60A8\u597D\uFF01",
+    lead: "\u6211\u662F G2A Marketing \u7684 Attila\uFF0C\u5F88\u9AD8\u5174\u60A8\u6765\u5230\u8FD9\u91CC\u3002\u6211\u6BCF\u5468\u53EA\u5728\u5468\u4E94\u65E9\u4E0A\u5199\u4E00\u5C01\u2014\u2014\u4E0D\u4F1A\u66F4\u591A\uFF0C\u4E5F\u7EDD\u4E0D\u4F1A\u5199\u4E0D\u503C\u5F97\u60A8\u82B1\u4E94\u5206\u949F\u7684\u5185\u5BB9\u3002\u8FD9\u5C31\u662F\u6211\u4EEC\u7684\u7EA6\u5B9A\u3002",
+    cardsLabel: "\u6211\u4F1A\u5199\u8FD9\u4E9B",
+    ctaTag: "\u5728\u6B64\u4E4B\u524D",
+    ctaTitle: "\u5148\u7FFB\u7FFB\u8FC7\u5F80\u7684\u6587\u7AE0",
+    ctaDesc: "\u6765\u81EA\u5308\u7259\u5229\u5E02\u573A\u7684\u771F\u5B9E B2B \u4E0E AI \u6848\u4F8B\uFF0C\u914D\u4E0A\u771F\u5B9E\u6570\u5B57\u2014\u2014\u4E0D\u662F\u7A7A\u8C08\u3002",
+    ctaButton: "\u5F00\u59CB\u9605\u8BFB \u2192",
+    ctaHref: "https://g2amarketing.hu/zh/hirek",
+    noteStrong: "\u6709\u5177\u4F53\u7684\u95EE\u9898\u5417\uFF1F",
+    noteBody: "\u76F4\u63A5\u56DE\u590D\u8FD9\u5C01\u90AE\u4EF6\u5C31\u597D\u2014\u2014\u662F\u6211\u672C\u4EBA\u5728\u8BFB\u3001\u672C\u4EBA\u5728\u56DE\uFF0C\u4E0D\u662F\u81EA\u52A8\u56DE\u590D\u3002\u5982\u679C\u60A8\u6B63\u5361\u5728\u4E00\u4E2A\u771F\u5B9E\u7684\u8425\u9500\u96BE\u9898\u4E0A\uFF0C\u7528\u51E0\u53E5\u8BDD\u544A\u8BC9\u6211\uFF1B\u5F88\u591A\u65F6\u5019\u4E00\u6B21 15 \u5206\u949F\u7684\u4EA4\u6D41\uFF0C\u6BD4\u67E5\u4E00\u4E2A\u5C0F\u65F6\u8D44\u6599\u66F4\u7BA1\u7528\u3002",
+    preheader: "\u5F88\u9AD8\u5174\u60A8\u6765\u5230\u8FD9\u91CC\u2014\u2014\u7B80\u5355\u8BF4\u8BF4\u60A8\u53EF\u4EE5\u671F\u5F85\u4EC0\u4E48\u3002"
+  }
+};
+function topicRow(keys, lang) {
+  const cards = TOPIC_CARDS[lang];
   const cell = (key) => {
-    const c = TOPIC_CARDS[key];
+    const c = cards[key];
     return `
       <td width="50%" valign="top" style="padding:8px">
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px">
           <tr>
             <td style="padding:18px 18px 16px">
               <div style="font-family:${FONT_MONO};font-size:14px;color:${BRAND_TEAL};line-height:1;margin-bottom:10px">${c.icon}</div>
-              <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL_DARK};text-transform:uppercase;margin-bottom:6px;font-weight:600">${c.tag}</div>
-              <div style="font-size:15px;font-weight:700;color:${TEXT_PRIMARY};margin-bottom:6px;line-height:1.35">${c.title}</div>
-              <div style="font-size:13px;color:${TEXT_SECONDARY};line-height:1.55">${c.desc}</div>
+              <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL_DARK};text-transform:uppercase;margin-bottom:6px;font-weight:600">${escapeHtml(c.tag)}</div>
+              <div style="font-size:15px;font-weight:700;color:${TEXT_PRIMARY};margin-bottom:6px;line-height:1.35">${escapeHtml(c.title)}</div>
+              <div style="font-size:13px;color:${TEXT_SECONDARY};line-height:1.55">${escapeHtml(c.desc)}</div>
             </td>
           </tr>
         </table>
@@ -2899,32 +2972,32 @@ function topicRow(keys) {
     </tr>`;
 }
 function renderWelcomeEmailHtml(input) {
-  const greeting = input.name ? `Szia ${escapeHtml(input.name)}!` : "Szia!";
-  const activeTopics = input.topics && input.topics.length > 0 ? input.topics.filter((t2) => TOPIC_CARDS[t2]) : Object.keys(TOPIC_CARDS);
+  const lang = input.lang ?? "hu";
+  const copy = WELCOME_COPY[lang];
+  const greeting = copy.greeting(input.name ? escapeHtml(input.name) : void 0);
+  const activeTopics = input.topics && input.topics.length > 0 ? input.topics.filter((t2) => TOPIC_CARDS[lang][t2]) : Object.keys(TOPIC_CARDS[lang]);
   const rows = [];
   for (let i = 0; i < activeTopics.length; i += 2) {
-    rows.push(topicRow([activeTopics[i], activeTopics[i + 1]].filter(Boolean)));
+    rows.push(topicRow([activeTopics[i], activeTopics[i + 1]].filter(Boolean), lang));
   }
   const body = `
-    ${darkHeader({ tag: "\xDCdv a fed\xE9lzeten", secondaryLine: "Adatvez\xE9relt marketing \xFCgyn\xF6ks\xE9g \xB7 P\xE9cs" })}
+    ${darkHeader({ tag: copy.headerTag, secondaryLine: UI[lang].partnerLine })}
 
-    <!-- Hero copy \u2014 first-person, personal -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:40px 36px 24px">
           <h1 style="margin:0 0 14px;font-size:28px;line-height:1.2;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
           <p style="margin:0 0 12px;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">
-            Attila vagyok a G2A Marketingt\u0151l \u2014 k\xF6sz\xF6n\xF6m, hogy feliratkozt\xE1l a h\xEDrlevel\xFCnkre. Heti maximum 1 email, p\xE9ntek reggel \u2014 sose k\xE9retlen\xFCl.
+            ${escapeHtml(copy.lead)}
           </p>
         </td>
       </tr>
     </table>
 
-    <!-- 2\xD72 topic grid -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:0 28px 8px">
-          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:6px;padding:0 8px">Amit kapni fogsz</div>
+          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:6px;padding:0 8px">${escapeHtml(copy.cardsLabel)}</div>
         </td>
       </tr>
     </table>
@@ -2932,17 +3005,16 @@ function renderWelcomeEmailHtml(input) {
       ${rows.join("")}
     </table>
 
-    <!-- Dark CTA block -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:24px 36px 0">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK_PANEL};border-radius:12px;border-left:4px solid ${BRAND_TEAL}">
             <tr>
               <td style="padding:24px 28px">
-                <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:10px;font-weight:600">K\xF6vetkez\u0151 l\xE9p\xE9s</div>
-                <div style="font-size:17px;line-height:1.4;color:#ffffff;font-weight:700;margin-bottom:8px">N\xE9zz k\xF6r\xFCl a blogunkban</div>
-                <div style="font-size:14px;line-height:1.6;color:#cbd5e1;margin-bottom:18px">Friss tartalom hetente \u2014 gyakorlati B2B \xE9s AI t\xE9m\xE1kban, magyar piaci p\xE9ld\xE1kkal.</div>
-                <a href="https://g2amarketing.hu/hirek" style="display:inline-block;background:${BRAND_TEAL};color:#ffffff;padding:11px 22px;border-radius:6px;font-size:13px;font-weight:700;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.06em">OLVASS BE A BLOGUNKBA \u2192</a>
+                <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:10px;font-weight:600">${escapeHtml(copy.ctaTag)}</div>
+                <div style="font-size:17px;line-height:1.4;color:#ffffff;font-weight:700;margin-bottom:8px">${escapeHtml(copy.ctaTitle)}</div>
+                <div style="font-size:14px;line-height:1.6;color:#cbd5e1;margin-bottom:18px">${escapeHtml(copy.ctaDesc)}</div>
+                <a href="${copy.ctaHref}" style="display:inline-block;background:${BRAND_TEAL};color:#ffffff;padding:11px 22px;border-radius:6px;font-size:13px;font-weight:700;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.06em">${escapeHtml(copy.ctaButton)}</a>
               </td>
             </tr>
           </table>
@@ -2950,7 +3022,6 @@ function renderWelcomeEmailHtml(input) {
       </tr>
     </table>
 
-    <!-- Personal note -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:24px 36px 8px">
@@ -2958,7 +3029,7 @@ function renderWelcomeEmailHtml(input) {
             <tr>
               <td style="padding:18px 22px">
                 <div style="font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">
-                  <strong style="color:${TEXT_PRIMARY}">K\xE9rd\xE9sed van?</strong> V\xE1laszolj erre az emailre \u2014 \xE1tolvasom \xE9s v\xE1laszolok szem\xE9lyesen. Ha konkr\xE9t marketing kih\xEDv\xE1son dolgozol, jelezd \u2014 gyakran egy 15 perces besz\xE9lget\xE9s is sokat tiszt\xE1z.
+                  <strong style="color:${TEXT_PRIMARY}">${escapeHtml(copy.noteStrong)}</strong> ${escapeHtml(copy.noteBody)}
                 </div>
               </td>
             </tr>
@@ -2967,31 +3038,59 @@ function renderWelcomeEmailHtml(input) {
       </tr>
     </table>
 
-    ${signature()}
+    ${signature(lang)}
 
-    ${footer(input.unsubscribeUrl)}
+    ${footer(input.unsubscribeUrl, lang)}
   `;
-  return wrapper(body, "\xDCdv a G2A Marketing fed\xE9lzet\xE9n \u2014 mit v\xE1rhatsz a h\xEDrlevel\xFCnkt\u0151l.");
+  return wrapper(body, copy.preheader, lang);
 }
-function digestArticleBlock(a, index) {
-  const card = TOPIC_CARDS[a.topic];
+var DIGEST_COPY = {
+  hu: {
+    greeting: (n) => n ? `Szia ${n}!` : "Szia!",
+    intro: "Itt a heti gyakorlati B2B- \xE9s AI-marketing v\xE1logat\xE1s \u2014 egy cikk minden t\xE9mak\xF6rb\u0151l, 5-10 perces olvasm\xE1nyok.",
+    reactTag: "Mit gondolsz?",
+    reactBody: "Hasznos volt? V\xE1laszolj egyetlen mondattal \u2014 \xE1tolvasom \xE9s v\xE1laszolok. Konkr\xE9t k\xE9rd\xE9sed van?",
+    reactCta: "\xCDrj nek\xFCnk \u2192",
+    reactHref: "https://g2amarketing.hu/kapcsolat",
+    readSuffix: (m) => `\xB7 ${m} perc olvas\xE1s`
+  },
+  en: {
+    greeting: (n) => n ? `Hi ${n}!` : "Hi there!",
+    intro: "This week's practical B2B and AI marketing picks \u2014 one piece per topic, 5-10 minute reads.",
+    reactTag: "What do you think?",
+    reactBody: "Useful? Reply with a single line \u2014 I read them and answer. Got a specific question?",
+    reactCta: "Get in touch \u2192",
+    reactHref: "https://g2amarketing.hu/en/kapcsolat",
+    readSuffix: (m) => `\xB7 ${m} min read`
+  },
+  zh: {
+    greeting: (n) => n ? `${n}\uFF0C\u60A8\u597D\uFF01` : "\u60A8\u597D\uFF01",
+    intro: "\u672C\u5468\u5B9E\u7528\u7684 B2B \u4E0E AI \u8425\u9500\u7CBE\u9009\u2014\u2014\u6BCF\u4E2A\u4E3B\u9898\u4E00\u7BC7\uFF0C5-10 \u5206\u949F\u8BFB\u5B8C\u3002",
+    reactTag: "\u60A8\u600E\u4E48\u770B\uFF1F",
+    reactBody: "\u6709\u7528\u5417\uFF1F\u7528\u4E00\u53E5\u8BDD\u56DE\u590D\u5373\u53EF\u2014\u2014\u6211\u4F1A\u4EB2\u81EA\u9605\u8BFB\u5E76\u56DE\u590D\u3002\u6709\u5177\u4F53\u95EE\u9898\uFF1F",
+    reactCta: "\u8054\u7CFB\u6211\u4EEC \u2192",
+    reactHref: "https://g2amarketing.hu/zh/kapcsolat",
+    readSuffix: (m) => `\xB7 ${m} \u5206\u949F\u9605\u8BFB`
+  }
+};
+function digestArticleBlock(a, index, lang) {
+  const card = TOPIC_CARDS[lang][a.topic];
   const tag = card?.tag || a.topic.toUpperCase();
   const icon = card?.icon || "\u25C6";
   const isAlt = index % 2 === 1;
   const bg = isAlt ? BG_SUBTLE : "#ffffff";
   const num = String(index + 1).padStart(2, "0");
-  const readChip = a.readMin ? `<span style="font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED};margin-left:14px">\xB7 ${a.readMin} perc olvas\xE1s</span>` : "";
+  const readChip = a.readMin ? `<span style="font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED};margin-left:14px">${escapeHtml(DIGEST_COPY[lang].readSuffix(a.readMin))}</span>` : "";
   return `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${bg}">
       <tr>
         <td style="padding:32px 36px">
 
-          <!-- Tag row: topic chip + article number -->
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
             <tr>
               <td>
                 <span style="display:inline-block;background:#ffffff;border:1px solid ${BORDER};color:${BRAND_TEAL_DARK};font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;padding:5px 10px;border-radius:4px">
-                  <span style="color:${BRAND_TEAL}">${icon}</span> &nbsp;${tag}
+                  <span style="color:${BRAND_TEAL}">${icon}</span> &nbsp;${escapeHtml(tag)}
                 </span>
               </td>
               <td align="right" style="font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED};letter-spacing:0.1em">
@@ -3000,19 +3099,16 @@ function digestArticleBlock(a, index) {
             </tr>
           </table>
 
-          <!-- Headline -->
           <h2 style="margin:16px 0 12px;font-size:22px;line-height:1.25;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.02em">
             <a href="${a.url}" style="color:${TEXT_PRIMARY};text-decoration:none">${escapeHtml(a.title)}</a>
           </h2>
 
-          <!-- Excerpt -->
           <p style="margin:0 0 18px;font-size:14.5px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(a.excerpt)}</p>
 
-          <!-- CTA row -->
           <table role="presentation" cellpadding="0" cellspacing="0" border="0">
             <tr>
               <td>
-                <a href="${a.url}" style="display:inline-block;background:${TEXT_PRIMARY};color:#ffffff;padding:9px 18px;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.06em">OLVASD EL \u2192</a>
+                <a href="${a.url}" style="display:inline-block;background:${TEXT_PRIMARY};color:#ffffff;padding:9px 18px;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.06em">${lang === "zh" ? "\u9605\u8BFB\u5168\u6587 \u2192" : lang === "en" ? "READ \u2192" : "OLVASD EL \u2192"}</a>
               </td>
               <td valign="middle" style="padding-left:8px">${readChip}</td>
             </tr>
@@ -3023,13 +3119,14 @@ function digestArticleBlock(a, index) {
     </table>`;
 }
 function renderDigestEmailHtml(input) {
-  const greeting = input.name ? `Szia ${escapeHtml(input.name)}!` : "Szia!";
-  const intro = input.intro || "Itt a heti gyakorlati B2B \xE9s AI marketing v\xE1logat\xE1s \u2014 egy cikk minden t\xE9mak\xF6rb\u0151l, 5-10 perces olvasm\xE1nyok.";
-  const articleBlocks = input.articles.map((a, i) => digestArticleBlock(a, i)).join('<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td style="height:1px;background:' + BORDER + '"></td></tr></table>');
+  const lang = input.lang ?? "hu";
+  const dc = DIGEST_COPY[lang];
+  const greeting = input.name ? dc.greeting(escapeHtml(input.name)) : dc.greeting();
+  const intro = input.intro || dc.intro;
+  const articleBlocks = input.articles.map((a, i) => digestArticleBlock(a, i, lang)).join('<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td style="height:1px;background:' + BORDER + '"></td></tr></table>');
   const body = `
-    ${darkHeader({ tag: input.weekLabel, secondaryLine: "Heti v\xE1logat\xE1s" })}
+    ${darkHeader({ tag: input.weekLabel, secondaryLine: UI[lang].partnerLine })}
 
-    <!-- Greeting -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:36px 36px 8px">
@@ -3039,24 +3136,21 @@ function renderDigestEmailHtml(input) {
       </tr>
     </table>
 
-    <!-- Top divider with brand colour -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr><td style="padding:0 36px"><div style="height:3px;background:${BRAND_TEAL};border-radius:2px"></div></td></tr>
     </table>
 
-    <!-- Articles with alternating row backgrounds -->
     ${articleBlocks}
 
-    <!-- Reply callout -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:24px 36px 8px">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK_PANEL};border-radius:12px;border-left:4px solid ${BRAND_TEAL}">
             <tr>
               <td style="padding:22px 26px">
-                <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:8px;font-weight:600">Mit gondolsz?</div>
+                <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:8px;font-weight:600">${escapeHtml(dc.reactTag)}</div>
                 <div style="font-size:14px;line-height:1.6;color:#cbd5e1">
-                  Hasznos volt? V\xE1laszolj erre az emailre egyetlen mondattal \u2014 \xE1tolvasom \xE9s v\xE1laszolok. Konkr\xE9t marketing k\xE9rd\xE9sed van? <a href="https://g2amarketing.hu/kapcsolat" style="color:${BRAND_TEAL};text-decoration:none;font-weight:600">Vedd fel vel\xFCnk a kapcsolatot \u2192</a>
+                  ${escapeHtml(dc.reactBody)} <a href="${dc.reactHref}" style="color:${BRAND_TEAL};text-decoration:none;font-weight:600">${escapeHtml(dc.reactCta)}</a>
                 </div>
               </td>
             </tr>
@@ -3065,54 +3159,145 @@ function renderDigestEmailHtml(input) {
       </tr>
     </table>
 
-    ${signature()}
+    ${signature(lang)}
 
-    ${footer(input.unsubscribeUrl)}
+    ${footer(input.unsubscribeUrl, lang)}
   `;
-  return wrapper(body, intro);
+  return wrapper(body, intro, lang);
 }
-var CONFIRMATION_LABELS = {
-  audit: {
-    tag: "AUDIT K\xC9R\xC9S",
-    subject: "K\xF6sz\xF6nj\xFCk az audit k\xE9r\xE9sedet \u2014 hamarosan jelentkez\xFCnk",
-    heading: "Megkaptam a k\xE9r\xE9sedet",
-    intro: "K\xF6sz\xF6n\xF6m, hogy id\u0151t sz\xE1nt\xE1l a kapcsolatfelv\xE9telre. Az al\xE1bbiakban \xF6sszefoglaltam, mit k\xFCldt\xE9l el \u2014 ha b\xE1rmelyik adat pontatlan, v\xE1laszolj erre az emailre.",
-    nextSteps: [
-      "<strong>24 \xF3r\xE1n bel\xFCl</strong> megn\xE9zem a megadott weboldalt \xE9s a hivatkozott digit\xE1lis jelenl\xE9tet.",
-      "<strong>2-3 munkanapon bel\xFCl</strong> k\xFCld\xF6k egy els\u0151 \xE9rt\xE9kel\xE9st a f\u0151 \xE9szrev\xE9telekkel.",
-      "<strong>5-7 munkanapon bel\xFCl</strong> kapsz egy r\xE9szletes auditot (15-25 oldal) prioritiz\xE1lt akci\xF3pontokkal.",
-      "A teljes folyamat <strong>ingyenes</strong>, k\xF6telezetts\xE9gmentes \u2014 nincs \xFCzlettelefon\xE1l\xE1s, csak a riport."
-    ],
-    closing: "Ha k\xF6zben b\xE1rmi k\xE9rd\xE9sed van \u2014 p\xE9ld\xE1ul egy konkr\xE9t marketing kih\xEDv\xE1son dolgozol \u2014 v\xE1laszolj nyugodtan erre az emailre. Olvasok r\xE1."
+var CONFIRMATION_COPY = {
+  hu: {
+    audit: {
+      tag: "AUDIT K\xC9R\xC9S",
+      subject: "Megvan az audit k\xE9r\xE9sed \u2014 nekil\xE1tok",
+      heading: "Megkaptam a k\xE9r\xE9sedet",
+      intro: "K\xF6sz\xF6n\xF6m, hogy r\xE1m b\xEDztad ezt. Megvan minden, amit elk\xFCldt\xE9l \u2014 lent visszaellen\u0151rizheted. Ha valamelyik adat nem stimmel, csak v\xE1laszolj, \xE9s pontos\xEDtjuk, miel\u0151tt belekezdek.",
+      nextSteps: [
+        "<strong>24 \xF3r\xE1n bel\xFCl</strong> r\xE1n\xE9zek a weboldaladra \xE9s arra, hol vagy jelen online.",
+        "<strong>2-3 munkanap</strong> m\xFAlva k\xFCld\xF6k egy els\u0151 visszajelz\xE9st a legfontosabb \xE9szrev\xE9telekkel.",
+        "<strong>5-7 munkanap</strong> alatt elk\xE9sz\xFCl a r\xE9szletes audit (15-25 oldal), prioriz\xE1lt teend\u0151kkel.",
+        "Az eg\xE9sz <strong>ingyenes</strong> \xE9s k\xF6telezetts\xE9gmentes \u2014 nincs ut\xE1na \xE9rt\xE9kes\xEDt\u0151s telefon, csak a riport, amit haszn\xE1lni tudsz."
+      ],
+      closing: "Ha k\xF6zben k\xE9rd\xE9sed t\xE1mad \u2014 mondjuk \xE9pp egy konkr\xE9t kih\xEDv\xE1son dolgozol \u2014, csak v\xE1laszolj erre a lev\xE9lre. Olvasom.",
+      secondaryLine: "Visszaigazol\xE1s \xB7 G2A Marketing"
+    },
+    contact: {
+      tag: "KAPCSOLATFELV\xC9TEL",
+      subject: "Megvan az \xFCzeneted \u2014 jelentkezem",
+      heading: "Megkaptam az \xFCzeneted",
+      intro: "K\xF6sz\xF6n\xF6m, hogy \xEDrt\xE1l. Megvan minden \u2014 lent visszaolvashatod, amit elk\xFCldt\xE9l. Ha valami el\xEDr\xE1s cs\xFAszott bele, csak v\xE1laszolj erre a lev\xE9lre, \xE9s jav\xEDtjuk.",
+      nextSteps: [
+        "<strong>Egy munkanapon bel\xFCl</strong> szem\xE9lyesen v\xE1laszolok \u2014 nem sablonlev\xE9llel, hanem arra, amit \xEDrt\xE1l.",
+        "Ha a t\xE9ma megk\xEDv\xE1nja, keresek egy id\u0151pontot egy <strong>15-30 perces besz\xE9lget\xE9sre</strong>.",
+        "Ha s\xFCrg\u0151s, h\xEDvj nyugodtan: <strong>+36 30 190 2575</strong> (h\xE9tk\xF6znap 8-17 k\xF6z\xF6tt)."
+      ],
+      closing: "Ha addig eszedbe jut m\xE9g valami, csak \xEDrd hozz\xE1 egy v\xE1laszban \u2014 \xFAgyis ugyanitt olvasom.",
+      secondaryLine: "Visszaigazol\xE1s \xB7 G2A Marketing"
+    },
+    career: {
+      tag: "KARRIER JELENTKEZ\xC9S",
+      subject: "Megvan a jelentkez\xE9sed \u2014 \xE1tn\xE9zem",
+      heading: "Megkaptam a jelentkez\xE9sedet",
+      intro: "K\xF6sz\xF6n\xF6m, hogy jelentkezt\xE9l \u2014 \xF6r\xFCl\xF6k neki. Megvan minden, amit elk\xFCldt\xE9l; ha valamit pontos\xEDtan\xE1l, csak v\xE1laszolj erre a lev\xE9lre.",
+      nextSteps: [
+        "<strong>3-5 munkanapon bel\xFCl</strong> v\xE9gigolvasom a jelentkez\xE9sed \xE9s az \xF6n\xE9letrajzod.",
+        "Ha passzol, amit keres\xFCnk, h\xEDvlak egy <strong>r\xF6vid online besz\xE9lget\xE9sre</strong> (kb. 30 perc).",
+        "Ut\xE1na egy <strong>gyakorlati feladat</strong> a saj\xE1t szakter\xFCleteden \u2014 val\xF3s helyzetben, nem elvont fejt\xF6r\u0151."
+      ],
+      closing: "Ha k\xF6zben k\xE9rd\xE9sed van \u2014 a poz\xEDci\xF3r\xF3l, a csapatr\xF3l, arr\xF3l, milyen n\xE1lunk dolgozni \u2014, csak v\xE1laszolj. Olvasom.",
+      secondaryLine: "Visszaigazol\xE1s \xB7 G2A Marketing"
+    }
   },
-  contact: {
-    tag: "KAPCSOLATFELV\xC9TEL",
-    subject: "K\xF6sz\xF6nj\xFCk az \xFCzeneted \u2014 hamarosan jelentkez\xFCnk",
-    heading: "Megkaptam az \xFCzeneted",
-    intro: "K\xF6sz\xF6n\xF6m, hogy felvetted vel\xFCnk a kapcsolatot. Az al\xE1bbiakban \xF6sszefoglaltam, mit k\xFCldt\xE9l el \u2014 ha b\xE1rmi pontatlan, v\xE1laszolj erre az emailre.",
-    nextSteps: [
-      "<strong>1 munkanapon bel\xFCl</strong> szem\xE9lyesen v\xE1laszolok az \xFCzeneted tartalm\xE1ra.",
-      "Ha bonyolultabb t\xE9ma, jelzem mikor tudunk <strong>15-30 perces besz\xE9lget\xE9st</strong> egyeztetni.",
-      "S\xFCrg\u0151s? H\xEDvj nyugodtan: <strong>+36 30 190 2575</strong> (munkanapokon 8-17h k\xF6z\xF6tt)."
-    ],
-    closing: "Mindezek mellett ha k\xF6zben b\xE1rmi kieg\xE9sz\xEDt\xE9s jut eszedbe, v\xE1laszolj erre az emailre \u2014 olvasom."
+  en: {
+    audit: {
+      tag: "AUDIT REQUEST",
+      subject: "Got your audit request \u2014 I'm on it",
+      heading: "Your request is in",
+      intro: "Thanks for trusting me with this. I have everything you sent \u2014 you can double-check it below. If any detail is off, just reply and we'll fix it before I start.",
+      nextSteps: [
+        "<strong>Within 24 hours</strong> I'll look at your site and where you show up online.",
+        "In <strong>2-3 working days</strong> I'll send a first read with the most important findings.",
+        "Within <strong>5-7 working days</strong> you'll get the full audit (15-25 pages) with prioritised actions.",
+        "The whole thing is <strong>free</strong> and no-strings \u2014 no sales call afterwards, just a report you can actually use."
+      ],
+      closing: "If a question comes up in the meantime \u2014 say you're wrestling with a specific challenge \u2014 just reply to this email. I read them.",
+      secondaryLine: "Confirmation \xB7 G2A Marketing"
+    },
+    contact: {
+      tag: "MESSAGE RECEIVED",
+      subject: "Got your message \u2014 I'll be in touch",
+      heading: "Your message is in",
+      intro: "Thanks for reaching out. I have everything \u2014 you can read back what you sent below. If a typo slipped in, just reply to this email and we'll sort it.",
+      nextSteps: [
+        "<strong>Within one working day</strong> I'll reply personally \u2014 not a template, but to what you actually wrote.",
+        "If the topic calls for it, I'll find a slot for a <strong>15-30 minute chat</strong>.",
+        "Urgent? Call me: <strong>+36 30 190 2575</strong> (weekdays, 8am-5pm CET)."
+      ],
+      closing: "If something else comes to mind before then, just add it in a reply \u2014 it lands in the same place.",
+      secondaryLine: "Confirmation \xB7 G2A Marketing"
+    },
+    career: {
+      tag: "APPLICATION",
+      subject: "Got your application \u2014 I'll read it",
+      heading: "Your application is in",
+      intro: "Thanks for applying \u2014 genuinely glad you did. I have everything you sent; if you'd like to correct anything, just reply to this email.",
+      nextSteps: [
+        "<strong>Within 3-5 working days</strong> I'll read your application and CV.",
+        "If it's a fit, I'll invite you to a <strong>short online chat</strong> (around 30 minutes).",
+        "After that, a <strong>hands-on task</strong> in your own field \u2014 a real situation, not an abstract puzzle."
+      ],
+      closing: "If any question comes up \u2014 about the role, the team, what it's like to work here \u2014 just reply. I read them.",
+      secondaryLine: "Confirmation \xB7 G2A Marketing"
+    }
   },
-  career: {
-    tag: "KARRIER JELENTKEZ\xC9S",
-    subject: "K\xF6sz\xF6nj\xFCk a jelentkez\xE9sedet \u2014 hamarosan jelentkez\xFCnk",
-    heading: "Megkaptam a jelentkez\xE9sedet",
-    intro: "K\xF6sz\xF6n\xF6m, hogy jelentkezt\xE9l hozz\xE1nk. Az al\xE1bbiakban \xF6sszefoglaltam, amit elk\xFCldt\xE9l \u2014 ha b\xE1rmi pontatlan, v\xE1laszolj erre az emailre.",
-    nextSteps: [
-      "<strong>3-5 munkanapon bel\xFCl</strong> \xE1tn\xE9zem a jelentkez\xE9st \xE9s a CV-d.",
-      "Ha tov\xE1bbl\xE9p\xFCnk, <strong>egy r\xF6vid online besz\xE9lget\xE9sre</strong> h\xEDvlak (kb. 30 perc).",
-      "M\xE1sodik k\xF6r: gyakorlati feladat a saj\xE1t szakter\xFCleteden \u2014 kontextusban."
-    ],
-    closing: "Ha k\xF6zben jut eszedbe b\xE1rmilyen k\xE9rd\xE9s \u2014 a poz\xEDci\xF3r\xF3l, csapatr\xF3l, kult\xFAr\xE1r\xF3l \u2014 v\xE1laszolj erre az emailre. Olvasok r\xE1."
+  zh: {
+    audit: {
+      tag: "\u5BA1\u8BA1\u7533\u8BF7",
+      subject: "\u5DF2\u6536\u5230\u60A8\u7684\u8425\u9500\u5BA1\u8BA1\u7533\u8BF7\u2014\u2014\u6211\u9A6C\u4E0A\u5F00\u59CB",
+      heading: "\u60A8\u7684\u7533\u8BF7\u5DF2\u6536\u5230",
+      intro: "\u8C22\u8C22\u60A8\u628A\u8FD9\u4EF6\u4E8B\u4EA4\u7ED9\u6211\u3002\u60A8\u63D0\u4EA4\u7684\u5185\u5BB9\u6211\u90FD\u6536\u5230\u4E86\uFF0C\u53EF\u4EE5\u5728\u4E0B\u65B9\u518D\u6838\u5BF9\u4E00\u904D\u3002\u5982\u679C\u6709\u4EFB\u4F55\u4FE1\u606F\u4E0D\u5BF9\uFF0C\u56DE\u590D\u6211\u5373\u53EF\uFF0C\u6211\u4F1A\u5728\u5F00\u59CB\u524D\u5148\u66F4\u6B63\u3002",
+      nextSteps: [
+        "<strong>24 \u5C0F\u65F6\u5185</strong>\uFF0C\u6211\u4F1A\u770B\u4E00\u4E0B\u60A8\u7684\u7F51\u7AD9\u4EE5\u53CA\u60A8\u5728\u7F51\u4E0A\u7684\u5448\u73B0\u3002",
+        "<strong>2-3 \u4E2A\u5DE5\u4F5C\u65E5\u5185</strong>\uFF0C\u6211\u4F1A\u5148\u53D1\u4E00\u4EFD\u521D\u6B65\u53CD\u9988\uFF0C\u5217\u51FA\u6700\u91CD\u8981\u7684\u53D1\u73B0\u3002",
+        "<strong>5-7 \u4E2A\u5DE5\u4F5C\u65E5\u5185</strong>\uFF0C\u60A8\u4F1A\u6536\u5230\u5B8C\u6574\u5BA1\u8BA1\u62A5\u544A\uFF0815-25 \u9875\uFF09\uFF0C\u5E76\u9644\u4E0A\u6309\u4F18\u5148\u7EA7\u6392\u5E8F\u7684\u884C\u52A8\u5EFA\u8BAE\u3002",
+        "\u6574\u4E2A\u8FC7\u7A0B<strong>\u514D\u8D39</strong>\u3001\u65E0\u4EFB\u4F55\u9644\u52A0\u6761\u4EF6\u2014\u2014\u4E4B\u540E\u4E0D\u4F1A\u6709\u63A8\u9500\u7535\u8BDD\uFF0C\u53EA\u6709\u4E00\u4EFD\u60A8\u771F\u6B63\u7528\u5F97\u4E0A\u7684\u62A5\u544A\u3002"
+      ],
+      closing: "\u5982\u679C\u8FD9\u671F\u95F4\u60A8\u6709\u4EFB\u4F55\u95EE\u9898\u2014\u2014\u6BD4\u5982\u6B63\u5361\u5728\u67D0\u4E2A\u5177\u4F53\u96BE\u9898\u4E0A\u2014\u2014\u76F4\u63A5\u56DE\u590D\u8FD9\u5C01\u90AE\u4EF6\u5C31\u597D\uFF0C\u6211\u4F1A\u770B\u3002",
+      secondaryLine: "\u786E\u8BA4\u51FD \xB7 G2A Marketing"
+    },
+    contact: {
+      tag: "\u5DF2\u6536\u5230\u7559\u8A00",
+      subject: "\u5DF2\u6536\u5230\u60A8\u7684\u7559\u8A00\u2014\u2014\u6211\u4F1A\u5C3D\u5FEB\u8054\u7CFB\u60A8",
+      heading: "\u60A8\u7684\u7559\u8A00\u5DF2\u6536\u5230",
+      intro: "\u8C22\u8C22\u60A8\u7684\u8054\u7CFB\u3002\u5185\u5BB9\u6211\u90FD\u6536\u5230\u4E86\uFF0C\u53EF\u4EE5\u5728\u4E0B\u65B9\u56DE\u770B\u60A8\u63D0\u4EA4\u7684\u4FE1\u606F\u3002\u5982\u679C\u6709\u7B14\u8BEF\uFF0C\u56DE\u590D\u8FD9\u5C01\u90AE\u4EF6\u5373\u53EF\uFF0C\u6211\u4EEC\u4E00\u8D77\u66F4\u6B63\u3002",
+      nextSteps: [
+        "<strong>\u4E00\u4E2A\u5DE5\u4F5C\u65E5\u5185</strong>\uFF0C\u6211\u4F1A\u4EB2\u81EA\u56DE\u590D\u2014\u2014\u4E0D\u662F\u6A21\u677F\uFF0C\u800C\u662F\u9488\u5BF9\u60A8\u6240\u5199\u7684\u5185\u5BB9\u3002",
+        "\u5982\u679C\u8BDD\u9898\u9700\u8981\uFF0C\u6211\u4F1A\u5B89\u6392\u4E00\u6B21 <strong>15-30 \u5206\u949F\u7684\u4EA4\u6D41</strong>\u3002",
+        "\u6025\u4E8B\u8BF7\u76F4\u63A5\u6765\u7535\uFF1A<strong>+36 30 190 2575</strong>\uFF08\u5DE5\u4F5C\u65E5 8:00-17:00\uFF0C\u4E2D\u6B27\u65F6\u95F4\uFF09\u3002"
+      ],
+      closing: "\u5728\u90A3\u4E4B\u524D\u5982\u679C\u53C8\u60F3\u5230\u4EC0\u4E48\uFF0C\u56DE\u590D\u8865\u5145\u4E00\u53E5\u5C31\u597D\u2014\u2014\u90FD\u4F1A\u843D\u5230\u540C\u4E00\u4E2A\u5730\u65B9\u3002",
+      secondaryLine: "\u786E\u8BA4\u51FD \xB7 G2A Marketing"
+    },
+    career: {
+      tag: "\u6C42\u804C\u7533\u8BF7",
+      subject: "\u5DF2\u6536\u5230\u60A8\u7684\u7533\u8BF7\u2014\u2014\u6211\u4F1A\u8BA4\u771F\u770B",
+      heading: "\u60A8\u7684\u7533\u8BF7\u5DF2\u6536\u5230",
+      intro: "\u8C22\u8C22\u60A8\u7684\u5E94\u8058\uFF0C\u771F\u7684\u5F88\u9AD8\u5174\u3002\u60A8\u63D0\u4EA4\u7684\u5185\u5BB9\u6211\u90FD\u6536\u5230\u4E86\uFF1B\u5982\u679C\u60F3\u66F4\u6B63\u4EC0\u4E48\uFF0C\u56DE\u590D\u8FD9\u5C01\u90AE\u4EF6\u5373\u53EF\u3002",
+      nextSteps: [
+        "<strong>3-5 \u4E2A\u5DE5\u4F5C\u65E5\u5185</strong>\uFF0C\u6211\u4F1A\u8BFB\u5B8C\u60A8\u7684\u7533\u8BF7\u548C\u7B80\u5386\u3002",
+        "\u5982\u679C\u5408\u9002\uFF0C\u6211\u4F1A\u9080\u8BF7\u60A8\u505A\u4E00\u6B21 <strong>\u7B80\u77ED\u7684\u7EBF\u4E0A\u4EA4\u6D41</strong>\uFF08\u7EA6 30 \u5206\u949F\uFF09\u3002",
+        "\u4E4B\u540E\u662F\u4E00\u4E2A\u60A8\u6240\u5728\u9886\u57DF\u7684 <strong>\u5B9E\u64CD\u5C0F\u4EFB\u52A1</strong>\u2014\u2014\u771F\u5B9E\u573A\u666F\uFF0C\u800C\u4E0D\u662F\u62BD\u8C61\u8003\u9898\u3002"
+      ],
+      closing: "\u8FD9\u671F\u95F4\u5982\u679C\u6709\u4EFB\u4F55\u95EE\u9898\u2014\u2014\u5173\u4E8E\u804C\u4F4D\u3001\u56E2\u961F\uFF0C\u6216\u5728\u6211\u4EEC\u8FD9\u91CC\u5DE5\u4F5C\u662F\u4EC0\u4E48\u611F\u89C9\u2014\u2014\u56DE\u590D\u5C31\u597D\uFF0C\u6211\u4F1A\u770B\u3002",
+      secondaryLine: "\u786E\u8BA4\u51FD \xB7 G2A Marketing"
+    }
   }
 };
 function renderConfirmationEmailHtml(input) {
-  const cfg = CONFIRMATION_LABELS[input.formType];
-  const greeting = `Szia ${escapeHtml(input.name)}!`;
+  const lang = input.lang ?? "hu";
+  const cfg = CONFIRMATION_COPY[lang][input.formType];
+  const ui = UI[lang];
+  const greeting = lang === "zh" ? `${escapeHtml(input.name)}\uFF0C\u60A8\u597D\uFF01` : lang === "en" ? `Hi ${escapeHtml(input.name)}!` : `Szia ${escapeHtml(input.name)}!`;
   const submissionRows = input.submission && input.submission.length > 0 ? input.submission.filter((s) => s.value && s.value.trim() !== "" && s.value.trim() !== "\u2013").map(
     (s) => `
             <tr>
@@ -3134,24 +3319,22 @@ function renderConfirmationEmailHtml(input) {
         </tr>`
   ).join("");
   const body = `
-    ${darkHeader({ tag: cfg.tag, secondaryLine: "Visszaigazol\xE1s \xB7 G2A Marketing" })}
+    ${darkHeader({ tag: cfg.tag, secondaryLine: cfg.secondaryLine })}
 
-    <!-- Greeting -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:40px 36px 8px">
           <h1 style="margin:0 0 14px;font-size:26px;line-height:1.25;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
-          <p style="margin:0;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">${cfg.intro}</p>
+          <p style="margin:0;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(cfg.intro)}</p>
         </td>
       </tr>
     </table>
 
     ${submissionRows ? `
-    <!-- Submission echo -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:24px 36px 8px">
-          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:10px">Amit elk\xFCldt\xE9l</div>
+          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:10px">${escapeHtml(ui.submittedLabel)}</div>
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px">
             <tr>
               <td style="padding:6px 18px">
@@ -3165,11 +3348,10 @@ function renderConfirmationEmailHtml(input) {
       </tr>
     </table>` : ""}
 
-    <!-- Next steps -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:32px 36px 8px">
-          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:14px">Mi k\xF6vetkezik</div>
+          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:14px">${escapeHtml(ui.nextLabel)}</div>
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
             ${steps}
           </table>
@@ -3177,25 +3359,63 @@ function renderConfirmationEmailHtml(input) {
       </tr>
     </table>
 
-    <!-- Closing note -->
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:20px 36px 8px">
-          <div style="font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">${cfg.closing}</div>
+          <div style="font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(cfg.closing)}</div>
         </td>
       </tr>
     </table>
 
-    ${signature()}
+    ${signature(lang)}
 
-    ${footer("https://g2amarketing.hu/kapcsolat")}
+    ${footer("https://g2amarketing.hu/kapcsolat", lang)}
   `;
-  return wrapper(body, cfg.intro);
+  return wrapper(body, cfg.intro, lang);
 }
-var CONFIRMATION_SUBJECTS = {
-  audit: CONFIRMATION_LABELS.audit.subject,
-  contact: CONFIRMATION_LABELS.contact.subject,
-  career: CONFIRMATION_LABELS.career.subject
+function confirmationSubject(formType, lang) {
+  return CONFIRMATION_COPY[lang][formType].subject;
+}
+var FIELD_LABELS = {
+  hu: {
+    email: "Email",
+    phone: "Telefon",
+    subject: "T\xE1rgy",
+    service: "Szolg\xE1ltat\xE1s",
+    message: "\xDCzenet",
+    position: "Poz\xEDci\xF3",
+    company: "C\xE9g",
+    website: "Weboldal",
+    budget: "Havi b\xFCdzs\xE9",
+    challenges: "Kih\xEDv\xE1sok",
+    goals: "C\xE9lok"
+  },
+  en: {
+    email: "Email",
+    phone: "Phone",
+    subject: "Subject",
+    service: "Service",
+    message: "Message",
+    position: "Position",
+    company: "Company",
+    website: "Website",
+    budget: "Monthly budget",
+    challenges: "Challenges",
+    goals: "Goals"
+  },
+  zh: {
+    email: "\u90AE\u7BB1",
+    phone: "\u7535\u8BDD",
+    subject: "\u4E3B\u9898",
+    service: "\u670D\u52A1",
+    message: "\u7559\u8A00",
+    position: "\u5E94\u8058\u804C\u4F4D",
+    company: "\u516C\u53F8",
+    website: "\u7F51\u7AD9",
+    budget: "\u6BCF\u6708\u9884\u7B97",
+    challenges: "\u9762\u4E34\u7684\u6311\u6218",
+    goals: "\u76EE\u6807"
+  }
 };
 
 // server/_core/socialCopy.ts
@@ -3386,6 +3606,19 @@ function originFromRequest(req) {
   const host = req.get?.("host") ?? "g2amarketing.hu";
   return `${req.protocol ?? "https"}://${host}`;
 }
+function resolveFormLang(req, explicit) {
+  if (explicit === "hu" || explicit === "en" || explicit === "zh") return explicit;
+  const referer = req.headers?.referer;
+  if (referer) {
+    try {
+      const path = new URL(referer).pathname;
+      if (/^\/en(\/|$)/.test(path)) return "en";
+      if (/^\/zh(\/|$)/.test(path)) return "zh";
+    } catch {
+    }
+  }
+  return toLang(void 0);
+}
 function renderInviteEmail(name, link) {
   const greeting = name ? `Szia ${name}!` : "Szia!";
   return `<div style="max-width:520px;margin:0 auto;padding:32px 24px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#1f2937">
@@ -3526,15 +3759,19 @@ var contactRouter = router({
     // Optional form-origin marker. Lets shared endpoints (e.g. /karrier
     // posts to contact.submit) keep separate rate-limit buckets so a job
     // applicant doesn't burn through the contact form's quota.
-    formContext: z2.enum(["contact", "careers"]).optional()
+    formContext: z2.enum(["contact", "careers"]).optional(),
+    // Visitor's language, so the confirmation email matches the site they
+    // submitted from. Falls back to the Referer path, then hu.
+    lang: z2.enum(["hu", "en", "zh"]).optional()
   })).mutation(async ({ input, ctx }) => {
     const bucket = input.formContext === "careers" ? "careers" : "contact";
     const guard = await guardPublicFormOrSilent(ctx, input, bucket, { success: true });
     if (guard) return guard;
-    const { [HONEYPOT_FIELD]: _hp, formContext: _fc, turnstileToken: _tt, ...submission } = input;
+    const { [HONEYPOT_FIELD]: _hp, formContext: _fc, turnstileToken: _tt, lang: _lang, ...submission } = input;
     void _hp;
     void _fc;
     void _tt;
+    void _lang;
     await createContactSubmission(submission);
     await notifyOwner({
       title: `\xDAj kapcsolatfelv\xE9tel: ${input.name}`,
@@ -3551,25 +3788,28 @@ ${input.message}`,
     if (isEmailConfigured()) {
       try {
         const formType = input.formContext === "careers" ? "career" : "contact";
+        const lang = resolveFormLang(ctx.req, input.lang);
+        const L = FIELD_LABELS[lang];
         const submissionFields = formType === "career" ? [
-          { label: "Email", value: input.email },
-          { label: "Telefon", value: input.phone || "" },
-          { label: "Poz\xEDci\xF3", value: input.subject?.replace(/^Karrier jelentkezés:\s*/, "") || "" },
-          { label: "\xDCzenet", value: input.message }
+          { label: L.email, value: input.email },
+          { label: L.phone, value: input.phone || "" },
+          { label: L.position, value: input.subject?.replace(/^Karrier jelentkezés:\s*/, "") || "" },
+          { label: L.message, value: input.message }
         ] : [
-          { label: "Email", value: input.email },
-          { label: "Telefon", value: input.phone || "" },
-          { label: "T\xE1rgy", value: input.subject || "" },
-          { label: "Szolg\xE1ltat\xE1s", value: input.serviceInterest || "" },
-          { label: "\xDCzenet", value: input.message }
+          { label: L.email, value: input.email },
+          { label: L.phone, value: input.phone || "" },
+          { label: L.subject, value: input.subject || "" },
+          { label: L.service, value: input.serviceInterest || "" },
+          { label: L.message, value: input.message }
         ];
         await sendEmail({
           to: input.email,
-          subject: CONFIRMATION_SUBJECTS[formType],
+          subject: confirmationSubject(formType, lang),
           html: renderConfirmationEmailHtml({
             name: input.name,
             formType,
-            submission: submissionFields
+            submission: submissionFields,
+            lang
           }),
           replyTo: "info@g2amarketing.hu"
         });
@@ -3600,7 +3840,9 @@ var auditRouter = router({
     currentChallenges: z2.string().optional(),
     goals: z2.string().optional(),
     [AUDIT_HONEYPOT]: z2.string().optional(),
-    turnstileToken: z2.string().optional()
+    turnstileToken: z2.string().optional(),
+    // Visitor's language for the confirmation email. Not persisted.
+    lang: z2.enum(["hu", "en", "zh"]).optional()
   })).mutation(async ({ input, ctx }) => {
     const guard = await guardPublicFormOrSilent(
       ctx,
@@ -3612,8 +3854,9 @@ var auditRouter = router({
       { success: true }
     );
     if (guard) return guard;
-    const { turnstileToken: _tt, ...inputForDb } = input;
+    const { turnstileToken: _tt, lang: _lang, ...inputForDb } = input;
     void _tt;
+    void _lang;
     const normalizedInput = { ...inputForDb, website: normalizeUrl(inputForDb.website) };
     await createAuditLead(normalizedInput);
     await notifyOwner({
@@ -3634,20 +3877,23 @@ ${normalizedInput.goals || "\u2013"}`,
     });
     if (isEmailConfigured()) {
       try {
+        const lang = resolveFormLang(ctx.req, input.lang);
+        const L = FIELD_LABELS[lang];
         await sendEmail({
           to: normalizedInput.email,
-          subject: CONFIRMATION_SUBJECTS.audit,
+          subject: confirmationSubject("audit", lang),
           html: renderConfirmationEmailHtml({
             name: normalizedInput.name,
             formType: "audit",
+            lang,
             submission: [
-              { label: "Email", value: normalizedInput.email },
-              { label: "Telefon", value: normalizedInput.phone || "" },
-              { label: "C\xE9g", value: normalizedInput.company || "" },
-              { label: "Weboldal", value: normalizedInput.website || "" },
-              { label: "Havi b\xFCdzs\xE9", value: normalizedInput.monthlyBudget || "" },
-              { label: "Kih\xEDv\xE1sok", value: normalizedInput.currentChallenges || "" },
-              { label: "C\xE9lok", value: normalizedInput.goals || "" }
+              { label: L.email, value: normalizedInput.email },
+              { label: L.phone, value: normalizedInput.phone || "" },
+              { label: L.company, value: normalizedInput.company || "" },
+              { label: L.website, value: normalizedInput.website || "" },
+              { label: L.budget, value: normalizedInput.monthlyBudget || "" },
+              { label: L.challenges, value: normalizedInput.currentChallenges || "" },
+              { label: L.goals, value: normalizedInput.goals || "" }
             ]
           }),
           replyTo: "info@g2amarketing.hu"
@@ -3659,9 +3905,41 @@ ${normalizedInput.goals || "\u2013"}`,
     return { success: true };
   })
 });
-function renderWelcomeEmailHtml2(name, unsubscribeUrl, topics) {
-  return renderWelcomeEmailHtml({ name, unsubscribeUrl, topics });
+function renderWelcomeEmailHtml2(name, unsubscribeUrl, topics, lang = "hu") {
+  return renderWelcomeEmailHtml({ name, unsubscribeUrl, topics, lang });
 }
+var WELCOME_MISC = {
+  hu: {
+    subject: "\xDCdv a G2A Marketing h\xEDrlevel\xE9ben!",
+    text: (name, url) => `${name ? `Szia ${name}!` : "Szia!"}
+
+Attila vagyok a G2A Marketingt\u0151l \u2014 \xF6r\xFCl\xF6k, hogy itt vagy. P\xE9ntek reggelente \xEDrok egyszer, sose k\xE9retlen\xFCl.
+
+Leiratkoz\xE1s: ${url}
+
+G2A Marketing Bt. \xB7 P\xE9cs \xB7 info@g2amarketing.hu`
+  },
+  en: {
+    subject: "Welcome to the G2A Marketing newsletter",
+    text: (name, url) => `${name ? `Hi ${name}!` : "Hi there!"}
+
+I'm Attila from G2A Marketing \u2014 glad you're here. I write once, on Friday mornings, never unsolicited.
+
+Unsubscribe: ${url}
+
+G2A Marketing Bt. \xB7 P\xE9cs, Hungary \xB7 info@g2amarketing.hu`
+  },
+  zh: {
+    subject: "\u6B22\u8FCE\u8BA2\u9605 G2A Marketing \u901A\u8BAF",
+    text: (name, url) => `${name ? `${name}\uFF0C\u60A8\u597D\uFF01` : "\u60A8\u597D\uFF01"}
+
+\u6211\u662F G2A Marketing \u7684 Attila\u2014\u2014\u5F88\u9AD8\u5174\u60A8\u6765\u5230\u8FD9\u91CC\u3002\u6211\u6BCF\u5468\u53EA\u5728\u5468\u4E94\u65E9\u4E0A\u5199\u4E00\u5C01\uFF0C\u7EDD\u4E0D\u6253\u6270\u3002
+
+\u9000\u8BA2\uFF1A${url}
+
+G2A Marketing Bt. \xB7 \u5308\u7259\u5229\u4F69\u5947 \xB7 info@g2amarketing.hu`
+  }
+};
 var newsletterRouter = router({
   subscribe: publicProcedure.input(z2.object({
     email: z2.string().email("\xC9rv\xE9nyes email c\xEDm sz\xFCks\xE9ges"),
@@ -3680,7 +3958,10 @@ var newsletterRouter = router({
     // against the secret key. Optional in the schema so legacy
     // clients still work; the guard enforces presence when the
     // feature flag is on.
-    turnstileToken: z2.string().optional()
+    turnstileToken: z2.string().optional(),
+    // Visitor's language, so the welcome email matches the site they
+    // signed up from. Falls back to the Referer path, then hu.
+    lang: z2.enum(["hu", "en", "zh"]).optional()
   })).mutation(async ({ input, ctx }) => {
     const guard = await guardPublicFormOrSilent(ctx, input, "newsletter", { success: true, alreadySubscribed: false });
     if (guard) return guard;
@@ -3705,17 +3986,12 @@ var newsletterRouter = router({
     if (isEmailConfigured()) {
       const origin = ctx.req.headers.origin || `${ctx.req.protocol}://${ctx.req.get("host")}`;
       const unsubscribeUrl = `${origin}/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
+      const lang = resolveFormLang(ctx.req, input.lang);
       await sendEmail({
         to: input.email,
-        subject: "\xDCdv a G2A Marketing h\xEDrlevel\xE9ben!",
-        html: renderWelcomeEmailHtml2(input.name, unsubscribeUrl, input.topics),
-        text: `${input.name ? `Szia ${input.name}!` : "Szia!"}
-
-K\xF6sz\xF6nj\xFCk, hogy feliratkozt\xE1l a G2A Marketing h\xEDrlevel\xE9re. Heti max 1 emailt k\xFCld\xFCnk, sose k\xE9retlen\xFCl.
-
-Leiratkoz\xE1s: ${unsubscribeUrl}
-
-G2A Marketing Bt. \xB7 P\xE9cs \xB7 info@g2amarketing.hu`
+        subject: WELCOME_MISC[lang].subject,
+        html: renderWelcomeEmailHtml2(input.name, unsubscribeUrl, input.topics, lang),
+        text: WELCOME_MISC[lang].text(input.name ?? "", unsubscribeUrl)
       });
     }
     return { success: true, alreadySubscribed: false };

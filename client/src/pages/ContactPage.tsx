@@ -49,7 +49,7 @@ export default function ContactPage() {
     }
     setSubmitting(true);
     try {
-      await submitMutation.mutateAsync({ ...form, turnstileToken: turnstileToken || undefined });
+      await submitMutation.mutateAsync({ ...form, lang, turnstileToken: turnstileToken || undefined });
       setSuccess(true);
       setForm({ name: "", email: "", phone: "", subject: "", message: "", website: "" });
       setTurnstileToken("");

@@ -49,7 +49,7 @@ export default function NewsletterForm({
   surface = "transparent",
   onSuccess,
 }: Props) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [website, setWebsite] = useState(""); // honeypot
@@ -95,6 +95,7 @@ export default function NewsletterForm({
       website,
       topics:
         variant === "full" ? Array.from(topics) : Array.from(NEWSLETTER_TOPICS),
+      lang,
       turnstileToken: turnstileToken || undefined,
     });
   };
