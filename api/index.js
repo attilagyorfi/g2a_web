@@ -5355,7 +5355,11 @@ To: ${to}`
       })()
     });
   });
-  app2.get("/api/_diag/admin-env", (_req, res) => {
+  app2.get("/api/_diag/admin-env", (req, res) => {
+    const provided = req.query.key || "";
+    if (!ENV.cookieSecret || provided !== ENV.cookieSecret) {
+      return res.status(401).json({ error: "Wrong or missing ?key=" });
+    }
     res.json({
       // Admin login
       ADMIN_EMAIL_set: Boolean(ENV.adminEmail),

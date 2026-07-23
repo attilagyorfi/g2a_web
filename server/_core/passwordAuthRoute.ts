@@ -130,7 +130,13 @@ export function registerPasswordAuthRoute(app: Express): void {
     });
   });
 
-  app.get("/api/_diag/admin-env", (_req: Request, res: Response) => {
+  app.get("/api/_diag/admin-env", (req: Request, res: Response) => {
+    // Same gate as /api/_diag/send-test — this leaks the config shape (which
+    // env vars are set, the from/notify addresses), so keep it behind ?key=.
+    const provided = (req.query.key as string | undefined) || "";
+    if (!ENV.cookieSecret || provided !== ENV.cookieSecret) {
+      return res.status(401).json({ error: "Wrong or missing ?key=" });
+    }
     res.json({
       // Admin login
       ADMIN_EMAIL_set: Boolean(ENV.adminEmail),
