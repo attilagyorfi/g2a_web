@@ -6,11 +6,11 @@
  * call site and threaded in as `lang`, so a Chinese lead who signs up on the
  * /zh/ site gets a Chinese welcome, not a Hungarian one.
  *
- * Voice (per the brand_voice profile): first-person, warm, direct, a little
- * provocative — a message from Attila, not a faceless system. Hungarian is
- * tegező. We position as a strategic PARTNER, never an "ügynökség/agency",
- * never promise guaranteed results, no emoji, no ChatGPT-style scaffolding
- * ("Firstly… In summary… Don't forget…").
+ * Voice (per the client-approved copy, "G2A hírlevél szövegezés"): warm but
+ * professional, company "we" voice (not a personal note), Hungarian is tegező,
+ * greeting "Kedves {name}!". We position as a strategic PARTNER, sign off with
+ * "Stratégia. Technológia. Mérhető eredmények." No guaranteed results, no
+ * emoji, no ChatGPT-style scaffolding.
  *
  * Email-rendering constraints these templates respect:
  *   - Inline CSS only (Gmail strips <style> blocks)
@@ -48,28 +48,37 @@ export function toLang(value: string | null | undefined): Lang {
 
 const UI = {
   hu: {
-    partnerLine: "Stratégiai és technológiai partner · Pécs",
-    signOff: "Üdv,",
+    partnerLine: "Stratégia. Technológia. Mérhető eredmények.",
+    signOff: "Üdvözlettel,",
+    signName: "Győrfi Attila",
+    tagline: "Stratégia. Technológia. Mérhető eredmények.",
     submittedLabel: "Amit elküldtél",
     nextLabel: "Mi következik",
+    autoNote: "Ez az üzenet automatikusan készült, kérjük, ne válaszolj rá.",
     footerReason: "Ezt az emailt azért kaptad, mert feliratkoztál a g2amarketing.hu hírlevelére.",
     unsubscribe: "Leiratkozás egy kattintással",
     privacy: "Adatvédelmi tájékoztató",
   },
   en: {
-    partnerLine: "Strategic & technology partner · Pécs, Hungary",
-    signOff: "Talk soon,",
+    partnerLine: "Strategy. Technology. Measurable results.",
+    signOff: "Best regards,",
+    signName: "Attila Győrfi",
+    tagline: "Strategy. Technology. Measurable results.",
     submittedLabel: "What you sent",
     nextLabel: "What happens next",
+    autoNote: "This message was generated automatically — please don't reply to it.",
     footerReason: "You're getting this because you signed up for the g2amarketing.hu newsletter.",
     unsubscribe: "Unsubscribe in one click",
     privacy: "Privacy notice",
   },
   zh: {
-    partnerLine: "战略与技术合作伙伴 · 匈牙利佩奇",
+    partnerLine: "战略。技术。可衡量的成果。",
     signOff: "顺颂商祺，",
+    signName: "Győrfi Attila（久尔菲·阿蒂拉）",
+    tagline: "战略。技术。可衡量的成果。",
     submittedLabel: "您提交的内容",
     nextLabel: "接下来会发生什么",
+    autoNote: "本邮件为系统自动发送，请勿直接回复。",
     footerReason: "您收到这封邮件，是因为您订阅了 g2amarketing.hu 的通讯。",
     unsubscribe: "一键退订",
     privacy: "隐私说明",
@@ -77,6 +86,11 @@ const UI = {
 } satisfies Record<Lang, Record<string, string>>;
 
 const PRIVACY_PATH = "/adatvedelmi-iranyelvek";
+const SITE_HREF: Record<Lang, string> = {
+  hu: "https://g2amarketing.hu",
+  en: "https://g2amarketing.hu/en",
+  zh: "https://g2amarketing.hu/zh",
+};
 
 /** Outer wrapper. The dark grey page background gives the white email card
  *  visible borders in clients that render emails edge-to-edge. */
@@ -109,8 +123,7 @@ function wrapper(inner: string, preheader: string, lang: Lang): string {
 </html>`;
 }
 
-/** Cloudinary-hosted G2A logo at email size (180px wide, 2× DPI = 360px source).
- *  Auto-format (Cloudinary `f_auto`) serves PNG to Outlook and WebP to Gmail. */
+/** Cloudinary-hosted G2A logo at email size (180px wide, 2× DPI = 360px source). */
 const LOGO_URL =
   "https://res.cloudinary.com/dzh1unb6d/image/upload/f_auto,q_auto,w_360/g2a/og/default-logo.png";
 
@@ -134,20 +147,31 @@ function darkHeader(opts: { tag?: string; secondaryLine?: string }): string {
     </table>`;
 }
 
-/** Personal sign-off block — appended above the footer so every message feels
- *  written by a human, not shipped by a faceless system. */
-function signature(lang: Lang, opts: { name?: string; role?: string } = {}): string {
-  const name = opts.name || "Attila";
-  const role = opts.role || "G2A Marketing";
+/** Sign-off block — "Üdvözlettel, / Győrfi Attila / G2A Marketing" + tagline. */
+function signature(lang: Lang): string {
+  const t = UI[lang];
   return `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="padding:8px 36px 36px">
-          <div style="font-size:14px;color:${TEXT_SECONDARY};line-height:1.6;margin-bottom:14px">${escapeHtml(UI[lang].signOff)}</div>
+          <div style="font-size:14px;color:${TEXT_SECONDARY};line-height:1.6;margin-bottom:14px">${escapeHtml(t.signOff)}</div>
           <div style="display:inline-block;border-left:3px solid ${BRAND_TEAL};padding-left:14px">
-            <div style="font-size:16px;font-weight:700;color:${TEXT_PRIMARY};letter-spacing:-0.01em">${escapeHtml(name)}</div>
-            <div style="font-size:12px;color:${TEXT_MUTED};font-family:${FONT_MONO};letter-spacing:0.04em;margin-top:3px">${escapeHtml(role)}</div>
+            <div style="font-size:16px;font-weight:700;color:${TEXT_PRIMARY};letter-spacing:-0.01em">${escapeHtml(t.signName)}</div>
+            <div style="font-size:12px;color:${TEXT_MUTED};font-family:${FONT_MONO};letter-spacing:0.04em;margin-top:3px">G2A Marketing</div>
+            <div style="font-size:11px;color:${BRAND_TEAL_DARK};font-family:${FONT_MONO};letter-spacing:0.04em;margin-top:6px">${escapeHtml(t.tagline)}</div>
           </div>
+        </td>
+      </tr>
+    </table>`;
+}
+
+/** Muted "this is an automated message, don't reply" strip (career email). */
+function autoNoteBlock(lang: Lang): string {
+  return `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:0 36px 24px">
+          <div style="font-size:12px;color:${TEXT_MUTED};line-height:1.6;font-style:italic">${escapeHtml(UI[lang].autoNote)}</div>
         </td>
       </tr>
     </table>`;
@@ -198,117 +222,83 @@ function escapeHtml(s: string): string {
 export type WelcomeEmailInput = {
   name?: string | null;
   unsubscribeUrl: string;
-  /** Topics the subscriber picked — controls which cards we highlight.
-   *  Empty array means "all" (footer band signup with no topic selector). */
+  /** Kept for API compatibility with the newsletter router; no longer used to
+   *  branch the layout (the approved copy uses a single fixed "what to expect"
+   *  list rather than per-topic cards). */
   topics?: string[];
   lang?: Lang;
-};
-
-type TopicCard = { tag: string; title: string; desc: string; icon: string };
-
-const TOPIC_CARDS: Record<Lang, Record<string, TopicCard>> = {
-  hu: {
-    strategy: { tag: "STRATÉGIA", title: "B2B marketingstratégia", desc: "Pozícionálás, ICP, brand-építés és go-to-market playbookok.", icon: "◆" },
-    ai: { tag: "AI", title: "AI & automatizáció", desc: "AI-workflow-k, prompt-receptek, kipróbált eszközök B2B-kontextusban.", icon: "▲" },
-    paid: { tag: "TELJESÍTMÉNY", title: "SEO & teljesítményhirdetés", desc: "Google Ads, Meta, organikus SEO — mérhető eredményekkel.", icon: "●" },
-    case_studies: { tag: "ESETTANULMÁNY", title: "Esettanulmányok & adatok", desc: "Valós ügyfélprojektek konkrét számokkal — mi működött, mi nem.", icon: "■" },
-  },
-  en: {
-    strategy: { tag: "STRATEGY", title: "B2B marketing strategy", desc: "Positioning, ICP, brand-building and go-to-market playbooks.", icon: "◆" },
-    ai: { tag: "AI", title: "AI & automation", desc: "AI workflows, prompt recipes and tools that actually earn their place in B2B.", icon: "▲" },
-    paid: { tag: "PERFORMANCE", title: "SEO & paid performance", desc: "Google Ads, Meta, organic SEO — tied to results you can measure.", icon: "●" },
-    case_studies: { tag: "CASE STUDIES", title: "Case studies & data", desc: "Real client projects with real numbers — what worked, what didn't.", icon: "■" },
-  },
-  zh: {
-    strategy: { tag: "战略", title: "B2B 营销战略", desc: "定位、理想客户画像、品牌建设与市场进入方案。", icon: "◆" },
-    ai: { tag: "AI", title: "AI 与自动化", desc: "在 B2B 场景中真正好用的 AI 工作流、提示词与工具。", icon: "▲" },
-    paid: { tag: "效果", title: "SEO 与效果广告", desc: "Google Ads、Meta、自然搜索——都对得上可衡量的结果。", icon: "●" },
-    case_studies: { tag: "案例", title: "案例与数据", desc: "真实客户项目、真实数字——哪些有效，哪些无效。", icon: "■" },
-  },
 };
 
 const WELCOME_COPY: Record<Lang, {
   headerTag: string;
   greeting: (name?: string) => string;
   lead: string;
-  cardsLabel: string;
-  ctaTag: string;
-  ctaTitle: string;
-  ctaDesc: string;
+  expectLabel: string;
+  expectItems: string[];
+  statement: string;
+  comingSoon: string;
   ctaButton: string;
-  ctaHref: string;
-  noteStrong: string;
-  noteBody: string;
   preheader: string;
 }> = {
   hu: {
-    headerTag: "Üdv a fedélzeten",
-    greeting: (name) => (name ? `Szia ${name}!` : "Szia!"),
-    lead: "Attila vagyok, a G2A Marketingtől. Örülök, hogy itt vagy. Péntek reggelente írok egyszer — nem többször, és soha nem olyasmiről, ami ne érne meg öt percet. Ennyi a megállapodás.",
-    cardsLabel: "Amiről írni fogok",
-    ctaTag: "Addig is",
-    ctaTitle: "Nézz szét a korábbi írásokban",
-    ctaDesc: "Konkrét magyar B2B- és AI-esetek, valós számokkal — nem elméleti okoskodás.",
-    ctaButton: "OLVASS BELE →",
-    ctaHref: "https://g2amarketing.hu/hirek",
-    noteStrong: "Van egy konkrét kérdésed?",
-    noteBody: "Nyomj választ erre az emailre — én olvasom, én válaszolok, nem egy automata. Ha épp egy valós marketinges fejtörőn ülsz, írd meg pár mondatban; sokszor egy 15 perces beszélgetés többet tisztáz, mint egy órányi keresgélés.",
-    preheader: "Örülök, hogy itt vagy — röviden arról, mire számíthatsz.",
+    headerTag: "Üdvözlünk a fedélzeten",
+    greeting: (name) => (name ? `Kedves ${name}!` : "Kedves Feliratkozó!"),
+    lead: "Köszönjük, hogy feliratkoztál a G2A Marketing hírlevelére. Mostantól rendszeresen küldünk számodra olyan marketinghíreket, gyakorlati megoldásokat és szakmai elemzéseket, amelyek segítenek tudatosabban fejleszteni vállalkozásod online jelenlétét.",
+    expectLabel: "Mire számíthatsz tőlünk?",
+    expectItems: [
+      "Aktuális marketing- és technológiai trendek",
+      "Azonnal alkalmazható gyakorlati tippek",
+      "Kampány-, weboldal- és tartalommarketing-megoldások",
+      "Mesterséges intelligenciával támogatott marketingmódszerek",
+      "Valódi üzleti tapasztalatok és tanulságok",
+    ],
+    statement: "Nem hiszünk a felesleges körökben és az öncélú marketingben. Olyan információkat küldünk, amelyeknek üzleti értékük van, és amelyekből valódi döntések születhetnek.",
+    comingSoon: "Hamarosan érkezik az első levelünk.",
+    ctaButton: "WEBOLDAL MEGTEKINTÉSE →",
+    preheader: "Köszönjük a feliratkozást — röviden arról, mire számíthatsz tőlünk.",
   },
   en: {
     headerTag: "Welcome aboard",
-    greeting: (name) => (name ? `Hi ${name}!` : "Hi there!"),
-    lead: "I'm Attila, from G2A Marketing. Glad you're here. I write once, on Friday mornings — no more than that, and never about anything that isn't worth five minutes of your time. That's the deal.",
-    cardsLabel: "What I'll write about",
-    ctaTag: "In the meantime",
-    ctaTitle: "Dig into the earlier pieces",
-    ctaDesc: "Concrete B2B and AI cases from the Hungarian market, with real numbers — not theory.",
-    ctaButton: "START READING →",
-    ctaHref: "https://g2amarketing.hu/en/hirek",
-    noteStrong: "Got a specific question?",
-    noteBody: "Just hit reply — I read these myself and answer personally, no autoresponder. If you're stuck on a real marketing problem, tell me in a few lines; a 15-minute chat often clears up more than an hour of digging.",
-    preheader: "Glad you're here — a quick note on what to expect.",
+    greeting: (name) => (name ? `Hello ${name}!` : "Hello!"),
+    lead: "Thank you for subscribing to the G2A Marketing newsletter. From now on we'll regularly send you marketing news, practical solutions and professional analysis that help you grow your business's online presence more deliberately.",
+    expectLabel: "What to expect from us",
+    expectItems: [
+      "Current marketing and technology trends",
+      "Practical tips you can apply right away",
+      "Campaign, website and content-marketing solutions",
+      "AI-supported marketing methods",
+      "Real business experience and lessons learned",
+    ],
+    statement: "We don't believe in wasted effort or marketing for its own sake. We send information that carries business value — the kind you can base real decisions on.",
+    comingSoon: "Your first proper issue is on its way.",
+    ctaButton: "VISIT THE WEBSITE →",
+    preheader: "Thanks for subscribing — a quick note on what to expect from us.",
   },
   zh: {
     headerTag: "欢迎加入",
     greeting: (name) => (name ? `${name}，您好！` : "您好！"),
-    lead: "我是 G2A Marketing 的 Attila，很高兴您来到这里。我每周只在周五早上写一封——不会更多，也绝不会写不值得您花五分钟的内容。这就是我们的约定。",
-    cardsLabel: "我会写这些",
-    ctaTag: "在此之前",
-    ctaTitle: "先翻翻过往的文章",
-    ctaDesc: "来自匈牙利市场的真实 B2B 与 AI 案例，配上真实数字——不是空谈。",
-    ctaButton: "开始阅读 →",
-    ctaHref: "https://g2amarketing.hu/zh/hirek",
-    noteStrong: "有具体的问题吗？",
-    noteBody: "直接回复这封邮件就好——是我本人在读、本人在回，不是自动回复。如果您正卡在一个真实的营销难题上，用几句话告诉我；很多时候一次 15 分钟的交流，比查一个小时资料更管用。",
-    preheader: "很高兴您来到这里——简单说说您可以期待什么。",
+    lead: "感谢您订阅 G2A Marketing 通讯。从现在起，我们会定期为您发送营销资讯、实用方案和专业分析，帮助您更有意识地提升企业的线上表现。",
+    expectLabel: "您可以期待",
+    expectItems: [
+      "最新的营销与技术趋势",
+      "可立即上手的实用技巧",
+      "推广、网站与内容营销方案",
+      "由人工智能支持的营销方法",
+      "真实的商业经验与启示",
+    ],
+    statement: "我们不做无谓的花样，也不做为营销而营销的事。我们发送的，是有商业价值、能支撑真实决策的信息。",
+    comingSoon: "第一封正式邮件很快就会送达。",
+    ctaButton: "浏览网站 →",
+    preheader: "感谢订阅——简单说说您可以期待什么。",
   },
 };
 
-/** Build a single 2-column row of topic cards. */
-function topicRow(keys: string[], lang: Lang): string {
-  const cards = TOPIC_CARDS[lang];
-  const cell = (key: string) => {
-    const c = cards[key]!;
-    return `
-      <td width="50%" valign="top" style="padding:8px">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px">
-          <tr>
-            <td style="padding:18px 18px 16px">
-              <div style="font-family:${FONT_MONO};font-size:14px;color:${BRAND_TEAL};line-height:1;margin-bottom:10px">${c.icon}</div>
-              <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL_DARK};text-transform:uppercase;margin-bottom:6px;font-weight:600">${escapeHtml(c.tag)}</div>
-              <div style="font-size:15px;font-weight:700;color:${TEXT_PRIMARY};margin-bottom:6px;line-height:1.35">${escapeHtml(c.title)}</div>
-              <div style="font-size:13px;color:${TEXT_SECONDARY};line-height:1.55">${escapeHtml(c.desc)}</div>
-            </td>
-          </tr>
-        </table>
-      </td>`;
-  };
-  const second = keys[1] ? cell(keys[1]) : '<td width="50%"></td>';
+/** One "what to expect" list item with a teal check mark. */
+function expectRow(text: string, last: boolean): string {
   return `
     <tr>
-      ${cell(keys[0])}
-      ${second}
+      <td valign="top" style="width:26px;padding:7px 10px 7px 0;color:${BRAND_TEAL};font-size:15px;line-height:1.5">✓</td>
+      <td style="padding:7px 0;font-size:14.5px;color:${TEXT_PRIMARY};line-height:1.5;border-bottom:${last ? "none" : `1px solid ${BORDER}`}">${escapeHtml(text)}</td>
     </tr>`;
 }
 
@@ -316,70 +306,58 @@ export function renderWelcomeEmailHtml(input: WelcomeEmailInput): string {
   const lang = input.lang ?? "hu";
   const copy = WELCOME_COPY[lang];
   const greeting = copy.greeting(input.name ? escapeHtml(input.name) : undefined);
-  const activeTopics =
-    input.topics && input.topics.length > 0
-      ? input.topics.filter((t) => TOPIC_CARDS[lang][t])
-      : Object.keys(TOPIC_CARDS[lang]);
-
-  const rows: string[] = [];
-  for (let i = 0; i < activeTopics.length; i += 2) {
-    rows.push(topicRow([activeTopics[i], activeTopics[i + 1]].filter(Boolean), lang));
-  }
+  const items = copy.expectItems
+    .map((it, i) => expectRow(it, i === copy.expectItems.length - 1))
+    .join("");
 
   const body = `
     ${darkHeader({ tag: copy.headerTag, secondaryLine: UI[lang].partnerLine })}
 
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
-        <td style="padding:40px 36px 24px">
-          <h1 style="margin:0 0 14px;font-size:28px;line-height:1.2;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
-          <p style="margin:0 0 12px;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">
-            ${escapeHtml(copy.lead)}
-          </p>
+        <td style="padding:40px 36px 8px">
+          <h1 style="margin:0 0 16px;font-size:26px;line-height:1.25;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
+          <p style="margin:0;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(copy.lead)}</p>
         </td>
       </tr>
     </table>
 
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
-        <td style="padding:0 28px 8px">
-          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:6px;padding:0 8px">${escapeHtml(copy.cardsLabel)}</div>
-        </td>
-      </tr>
-    </table>
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="padding:0 28px">
-      ${rows.join("")}
-    </table>
-
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-      <tr>
-        <td style="padding:24px 36px 0">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK_PANEL};border-radius:12px;border-left:4px solid ${BRAND_TEAL}">
-            <tr>
-              <td style="padding:24px 28px">
-                <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:10px;font-weight:600">${escapeHtml(copy.ctaTag)}</div>
-                <div style="font-size:17px;line-height:1.4;color:#ffffff;font-weight:700;margin-bottom:8px">${escapeHtml(copy.ctaTitle)}</div>
-                <div style="font-size:14px;line-height:1.6;color:#cbd5e1;margin-bottom:18px">${escapeHtml(copy.ctaDesc)}</div>
-                <a href="${copy.ctaHref}" style="display:inline-block;background:${BRAND_TEAL};color:#ffffff;padding:11px 22px;border-radius:6px;font-size:13px;font-weight:700;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.06em">${escapeHtml(copy.ctaButton)}</a>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-      <tr>
-        <td style="padding:24px 36px 8px">
+        <td style="padding:28px 36px 8px">
+          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:12px">${escapeHtml(copy.expectLabel)}</div>
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px">
             <tr>
-              <td style="padding:18px 22px">
-                <div style="font-size:14px;line-height:1.65;color:${TEXT_SECONDARY}">
-                  <strong style="color:${TEXT_PRIMARY}">${escapeHtml(copy.noteStrong)}</strong> ${escapeHtml(copy.noteBody)}
-                </div>
+              <td style="padding:8px 20px">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                  ${items}
+                </table>
               </td>
             </tr>
           </table>
+        </td>
+      </tr>
+    </table>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:20px 36px 0">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK_PANEL};border-radius:12px;border-left:4px solid ${BRAND_TEAL}">
+            <tr>
+              <td style="padding:22px 26px">
+                <div style="font-size:14.5px;line-height:1.65;color:#e2e8f0">${escapeHtml(copy.statement)}</div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:24px 36px 4px">
+          <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:${TEXT_SECONDARY}">${escapeHtml(copy.comingSoon)}</p>
+          <a href="${SITE_HREF[lang]}" style="display:inline-block;background:${BRAND_TEAL};color:#ffffff;padding:12px 24px;border-radius:6px;font-size:13px;font-weight:700;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.06em">${escapeHtml(copy.ctaButton)}</a>
         </td>
       </tr>
     </table>
@@ -399,7 +377,6 @@ export type DigestArticle = {
   title: string;
   excerpt: string;
   url: string;
-  /** Optional reading-time minutes. Hidden if absent. */
   readMin?: number;
 };
 
@@ -412,43 +389,44 @@ export type DigestEmailInput = {
   lang?: Lang;
 };
 
-const DIGEST_COPY: Record<Lang, { greeting: (n?: string) => string; intro: string; reactTag: string; reactBody: string; reactCta: string; reactHref: string; readSuffix: (m: number) => string }> = {
+const DIGEST_COPY: Record<Lang, { greeting: (n?: string) => string; intro: string; reactTag: string; reactBody: string; reactCta: string; reactHref: string; readSuffix: (m: number) => string; readCta: string }> = {
   hu: {
-    greeting: (n) => (n ? `Szia ${n}!` : "Szia!"),
-    intro: "Itt a heti gyakorlati B2B- és AI-marketing válogatás — egy cikk minden témakörből, 5-10 perces olvasmányok.",
-    reactTag: "Mit gondolsz?",
-    reactBody: "Hasznos volt? Válaszolj egyetlen mondattal — átolvasom és válaszolok. Konkrét kérdésed van?",
-    reactCta: "Írj nekünk →",
+    greeting: (n) => (n ? `Kedves ${n}!` : "Kedves Olvasó!"),
+    intro: "A digitális marketing folyamatosan változik, de nem minden újdonság érdemel azonnali figyelmet. Ebben a heti összefoglalóban azokat a híreket és gyakorlati megoldásokat válogattuk össze, amelyek valóban hatással lehetnek a vállalkozásod marketingjére.",
+    reactTag: "G2A Marketing-szemszög",
+    reactBody: "A marketingben nem az nyer, aki minden új trendet azonnal követ, hanem aki meg tudja különböztetni a valódi üzleti lehetőséget az átmeneti zajtól. Szeretnéd átnézni, hol lehetne hatékonyabb a vállalkozásod online marketingje?",
+    reactCta: "Marketingkonzultáció kérése →",
     reactHref: "https://g2amarketing.hu/kapcsolat",
     readSuffix: (m) => `· ${m} perc olvasás`,
+    readCta: "OLVASD EL →",
   },
   en: {
-    greeting: (n) => (n ? `Hi ${n}!` : "Hi there!"),
-    intro: "This week's practical B2B and AI marketing picks — one piece per topic, 5-10 minute reads.",
-    reactTag: "What do you think?",
-    reactBody: "Useful? Reply with a single line — I read them and answer. Got a specific question?",
-    reactCta: "Get in touch →",
+    greeting: (n) => (n ? `Hello ${n}!` : "Hello!"),
+    intro: "Digital marketing changes constantly, but not every new thing deserves immediate attention. This week's roundup collects the news and practical solutions that can genuinely affect your business's marketing.",
+    reactTag: "The G2A Marketing view",
+    reactBody: "In marketing, the winner isn't whoever chases every new trend — it's whoever can tell a real business opportunity from passing noise. Want to review where your online marketing could work harder?",
+    reactCta: "Request a consultation →",
     reactHref: "https://g2amarketing.hu/en/kapcsolat",
     readSuffix: (m) => `· ${m} min read`,
+    readCta: "READ →",
   },
   zh: {
     greeting: (n) => (n ? `${n}，您好！` : "您好！"),
-    intro: "本周实用的 B2B 与 AI 营销精选——每个主题一篇，5-10 分钟读完。",
-    reactTag: "您怎么看？",
-    reactBody: "有用吗？用一句话回复即可——我会亲自阅读并回复。有具体问题？",
-    reactCta: "联系我们 →",
+    intro: "数字营销在不断变化，但并非每个新事物都值得立刻关注。本周精选，我们挑出了那些真正可能影响您企业营销的资讯与实用方案。",
+    reactTag: "G2A Marketing 观点",
+    reactBody: "在营销中，赢家不是追逐每一个新趋势的人，而是能把真正的商业机会与一时的噪音区分开来的人。想看看您的线上营销还能在哪里做得更好吗？",
+    reactCta: "预约营销咨询 →",
     reactHref: "https://g2amarketing.hu/zh/kapcsolat",
     readSuffix: (m) => `· ${m} 分钟阅读`,
+    readCta: "阅读全文 →",
   },
 };
 
 function digestArticleBlock(a: DigestArticle, index: number, lang: Lang): string {
-  const card = TOPIC_CARDS[lang][a.topic];
-  const tag = card?.tag || a.topic.toUpperCase();
-  const icon = card?.icon || "◆";
   const isAlt = index % 2 === 1;
   const bg = isAlt ? BG_SUBTLE : "#ffffff";
   const num = String(index + 1).padStart(2, "0");
+  const total = String(0);
 
   const readChip = a.readMin
     ? `<span style="font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED};margin-left:14px">${escapeHtml(DIGEST_COPY[lang].readSuffix(a.readMin))}</span>`
@@ -463,11 +441,11 @@ function digestArticleBlock(a: DigestArticle, index: number, lang: Lang): string
             <tr>
               <td>
                 <span style="display:inline-block;background:#ffffff;border:1px solid ${BORDER};color:${BRAND_TEAL_DARK};font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;padding:5px 10px;border-radius:4px">
-                  <span style="color:${BRAND_TEAL}">${icon}</span> &nbsp;${escapeHtml(tag)}
+                  <span style="color:${BRAND_TEAL}">◆</span> &nbsp;${escapeHtml(a.topic)}
                 </span>
               </td>
               <td align="right" style="font-family:${FONT_MONO};font-size:11px;color:${TEXT_MUTED};letter-spacing:0.1em">
-                ${num} / 04
+                ${num}${total ? "" : ""}
               </td>
             </tr>
           </table>
@@ -481,7 +459,7 @@ function digestArticleBlock(a: DigestArticle, index: number, lang: Lang): string
           <table role="presentation" cellpadding="0" cellspacing="0" border="0">
             <tr>
               <td>
-                <a href="${a.url}" style="display:inline-block;background:${TEXT_PRIMARY};color:#ffffff;padding:9px 18px;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.06em">${lang === "zh" ? "阅读全文 →" : lang === "en" ? "READ →" : "OLVASD EL →"}</a>
+                <a href="${a.url}" style="display:inline-block;background:${TEXT_PRIMARY};color:#ffffff;padding:9px 18px;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.06em">${escapeHtml(DIGEST_COPY[lang].readCta)}</a>
               </td>
               <td valign="middle" style="padding-left:8px">${readChip}</td>
             </tr>
@@ -559,10 +537,14 @@ export type ConfirmationEmailInput = {
 type ConfirmationCopy = {
   tag: string;
   subject: string;
-  heading: string;
   intro: string;
-  nextSteps: string[];
+  /** Numbered "what happens next" steps (contact / audit). */
+  nextSteps?: string[];
+  /** Prose paragraphs used instead of numbered steps (career). */
+  bodyParagraphs?: string[];
   closing: string;
+  /** Career email is a no-reply automated notification. */
+  noReply?: boolean;
   secondaryLine: string;
 };
 
@@ -570,126 +552,120 @@ const CONFIRMATION_COPY: Record<Lang, Record<ConfirmationFormType, ConfirmationC
   hu: {
     audit: {
       tag: "AUDIT KÉRÉS",
-      subject: "Megvan az audit kérésed — nekilátok",
-      heading: "Megkaptam a kérésedet",
-      intro: "Köszönöm, hogy rám bíztad ezt. Megvan minden, amit elküldtél — lent visszaellenőrizheted. Ha valamelyik adat nem stimmel, csak válaszolj, és pontosítjuk, mielőtt belekezdek.",
+      subject: "Köszönjük az audit kérésed — hamarosan jelentkezünk",
+      intro: "Köszönjük, hogy megkerestél minket. Kérésed megérkezett — az alábbiakban ellenőrizheted, amit elküldtél. Ha valamelyik adat pontosításra szorul, elég válaszolnod erre a levélre.",
       nextSteps: [
-        "<strong>24 órán belül</strong> ránézek a weboldaladra és arra, hol vagy jelen online.",
-        "<strong>2-3 munkanap</strong> múlva küldök egy első visszajelzést a legfontosabb észrevételekkel.",
-        "<strong>5-7 munkanap</strong> alatt elkészül a részletes audit (15-25 oldal), priorizált teendőkkel.",
-        "Az egész <strong>ingyenes</strong> és kötelezettségmentes — nincs utána értékesítős telefon, csak a riport, amit használni tudsz.",
+        "<strong>24 órán belül</strong> áttekintjük a weboldalad és a megadott online jelenléted.",
+        "<strong>2-3 munkanapon belül</strong> küldünk egy első értékelést a legfontosabb észrevételekkel.",
+        "<strong>5-7 munkanapon belül</strong> elkészül a részletes audit (15-25 oldal), priorizált teendőkkel.",
+        "A teljes folyamat <strong>ingyenes</strong> és kötelezettségmentes — nincs utána értékesítési hívás, csak a riport, amit használni tudsz.",
       ],
-      closing: "Ha közben kérdésed támad — mondjuk épp egy konkrét kihíváson dolgozol —, csak válaszolj erre a levélre. Olvasom.",
+      closing: "Ha időközben kérdésed merülne fel, válaszolj nyugodtan erre a levélre — minden üzenetet elolvasunk.",
       secondaryLine: "Visszaigazolás · G2A Marketing",
     },
     contact: {
       tag: "KAPCSOLATFELVÉTEL",
-      subject: "Megvan az üzeneted — jelentkezem",
-      heading: "Megkaptam az üzeneted",
-      intro: "Köszönöm, hogy írtál. Megvan minden — lent visszaolvashatod, amit elküldtél. Ha valami elírás csúszott bele, csak válaszolj erre a levélre, és javítjuk.",
+      subject: "Köszönjük az üzeneted — hamarosan válaszolunk",
+      intro: "Köszönjük, hogy felvetted velünk a kapcsolatot. Üzeneted megérkezett hozzánk — az alábbiakban visszaolvashatod, amit elküldtél. Ha bármelyik adat pontatlan, elég válaszolnod erre a levélre.",
       nextSteps: [
-        "<strong>Egy munkanapon belül</strong> személyesen válaszolok — nem sablonlevéllel, hanem arra, amit írtál.",
-        "Ha a téma megkívánja, keresek egy időpontot egy <strong>15-30 perces beszélgetésre</strong>.",
-        "Ha sürgős, hívj nyugodtan: <strong>+36 30 190 2575</strong> (hétköznap 8-17 között).",
+        "<strong>Egy munkanapon belül</strong> személyre szabott választ küldünk az üzenetedre — nem sablonlevelet.",
+        "Ha a téma összetettebb, egyeztetünk egy <strong>15-30 perces beszélgetést</strong>.",
+        "Ha sürgős, hívj minket: <strong>+36 30 190 2575</strong> (hétköznap 8-17 óra között).",
       ],
-      closing: "Ha addig eszedbe jut még valami, csak írd hozzá egy válaszban — úgyis ugyanitt olvasom.",
+      closing: "Ha időközben bármi kiegészítenivalód lenne, csak válaszolj erre a levélre — minden üzenetet elolvasunk.",
       secondaryLine: "Visszaigazolás · G2A Marketing",
     },
     career: {
-      tag: "KARRIER JELENTKEZÉS",
-      subject: "Megvan a jelentkezésed — átnézem",
-      heading: "Megkaptam a jelentkezésedet",
-      intro: "Köszönöm, hogy jelentkeztél — örülök neki. Megvan minden, amit elküldtél; ha valamit pontosítanál, csak válaszolj erre a levélre.",
-      nextSteps: [
-        "<strong>3-5 munkanapon belül</strong> végigolvasom a jelentkezésed és az önéletrajzod.",
-        "Ha passzol, amit keresünk, hívlak egy <strong>rövid online beszélgetésre</strong> (kb. 30 perc).",
-        "Utána egy <strong>gyakorlati feladat</strong> a saját szakterületeden — valós helyzetben, nem elvont fejtörő.",
+      tag: "JELENTKEZÉS",
+      subject: "Köszönjük a jelentkezésed — megkaptuk",
+      intro: "Köszönjük, hogy jelentkeztél a G2A Marketing csapatába. Jelentkezésed sikeresen megérkezett hozzánk. A beküldött önéletrajzot és a megadott anyagokat a kiválasztási folyamat során részletesen áttekintjük.",
+      bodyParagraphs: [
+        "Számunkra nemcsak a szakmai tapasztalat fontos, hanem az önállóság, a precizitás, a problémamegoldó gondolkodás, és az is, mennyire tudsz felelősséget vállalni a saját munkádért.",
+        "Ha a hátter és a tapasztalataid illeszkednek egy aktuális lehetőséghez, felvesszük veled a kapcsolatot a kiválasztási folyamat következő lépéseivel kapcsolatban.",
+        "A jelentkezések számától függően az elbírálás több munkanapot is igénybe vehet — kérjük, addig ne küldd el ismét a jelentkezésed.",
       ],
-      closing: "Ha közben kérdésed van — a pozícióról, a csapatról, arról, milyen nálunk dolgozni —, csak válaszolj. Olvasom.",
+      closing: "Köszönjük a G2A Marketing iránti érdeklődésed és a jelentkezésre fordított időd.",
+      noReply: true,
       secondaryLine: "Visszaigazolás · G2A Marketing",
     },
   },
   en: {
     audit: {
       tag: "AUDIT REQUEST",
-      subject: "Got your audit request — I'm on it",
-      heading: "Your request is in",
-      intro: "Thanks for trusting me with this. I have everything you sent — you can double-check it below. If any detail is off, just reply and we'll fix it before I start.",
+      subject: "Thanks for your audit request — we'll be in touch soon",
+      intro: "Thank you for reaching out. Your request has arrived — you can check below what you sent. If any detail needs correcting, simply reply to this email.",
       nextSteps: [
-        "<strong>Within 24 hours</strong> I'll look at your site and where you show up online.",
-        "In <strong>2-3 working days</strong> I'll send a first read with the most important findings.",
-        "Within <strong>5-7 working days</strong> you'll get the full audit (15-25 pages) with prioritised actions.",
-        "The whole thing is <strong>free</strong> and no-strings — no sales call afterwards, just a report you can actually use.",
+        "<strong>Within 24 hours</strong> we'll review your website and the online presence you gave us.",
+        "<strong>Within 2-3 working days</strong> we'll send a first assessment with the most important findings.",
+        "<strong>Within 5-7 working days</strong> you'll get the full audit (15-25 pages) with prioritised actions.",
+        "The whole process is <strong>free</strong> and no-strings — no sales call afterwards, just a report you can actually use.",
       ],
-      closing: "If a question comes up in the meantime — say you're wrestling with a specific challenge — just reply to this email. I read them.",
+      closing: "If a question comes up in the meantime, just reply to this email — we read every message.",
       secondaryLine: "Confirmation · G2A Marketing",
     },
     contact: {
       tag: "MESSAGE RECEIVED",
-      subject: "Got your message — I'll be in touch",
-      heading: "Your message is in",
-      intro: "Thanks for reaching out. I have everything — you can read back what you sent below. If a typo slipped in, just reply to this email and we'll sort it.",
+      subject: "Thanks for your message — we'll reply soon",
+      intro: "Thank you for getting in touch. Your message has reached us — you can read back below what you sent. If any detail is off, simply reply to this email.",
       nextSteps: [
-        "<strong>Within one working day</strong> I'll reply personally — not a template, but to what you actually wrote.",
-        "If the topic calls for it, I'll find a slot for a <strong>15-30 minute chat</strong>.",
-        "Urgent? Call me: <strong>+36 30 190 2575</strong> (weekdays, 8am-5pm CET).",
+        "<strong>Within one working day</strong> we'll send a tailored reply to your message — not a template.",
+        "If the topic is more involved, we'll arrange a <strong>15-30 minute call</strong>.",
+        "If it's urgent, call us: <strong>+36 30 190 2575</strong> (weekdays, 8am-5pm CET).",
       ],
-      closing: "If something else comes to mind before then, just add it in a reply — it lands in the same place.",
+      closing: "If anything else comes to mind in the meantime, just reply to this email — we read every message.",
       secondaryLine: "Confirmation · G2A Marketing",
     },
     career: {
       tag: "APPLICATION",
-      subject: "Got your application — I'll read it",
-      heading: "Your application is in",
-      intro: "Thanks for applying — genuinely glad you did. I have everything you sent; if you'd like to correct anything, just reply to this email.",
-      nextSteps: [
-        "<strong>Within 3-5 working days</strong> I'll read your application and CV.",
-        "If it's a fit, I'll invite you to a <strong>short online chat</strong> (around 30 minutes).",
-        "After that, a <strong>hands-on task</strong> in your own field — a real situation, not an abstract puzzle.",
+      subject: "Thanks for your application — we've received it",
+      intro: "Thank you for applying to join the G2A Marketing team. Your application has reached us successfully. We'll review the CV and materials you submitted in detail during the selection process.",
+      bodyParagraphs: [
+        "What matters to us isn't only professional experience, but also independence, precision, problem-solving, and how far you can take ownership of your own work.",
+        "If your background and experience match a current opportunity, we'll get in touch about the next steps in the selection process.",
+        "Depending on the number of applications, the review can take several working days — please don't resend your application in the meantime.",
       ],
-      closing: "If any question comes up — about the role, the team, what it's like to work here — just reply. I read them.",
+      closing: "Thank you for your interest in G2A Marketing and for the time you spent applying.",
+      noReply: true,
       secondaryLine: "Confirmation · G2A Marketing",
     },
   },
   zh: {
     audit: {
       tag: "审计申请",
-      subject: "已收到您的营销审计申请——我马上开始",
-      heading: "您的申请已收到",
-      intro: "谢谢您把这件事交给我。您提交的内容我都收到了，可以在下方再核对一遍。如果有任何信息不对，回复我即可，我会在开始前先更正。",
+      subject: "感谢您的营销审计申请——我们会尽快与您联系",
+      intro: "感谢您的联系。您的申请已收到——您可以在下方核对提交的内容。如需更正任何信息，回复这封邮件即可。",
       nextSteps: [
-        "<strong>24 小时内</strong>，我会看一下您的网站以及您在网上的呈现。",
-        "<strong>2-3 个工作日内</strong>，我会先发一份初步反馈，列出最重要的发现。",
+        "<strong>24 小时内</strong>，我们会查看您的网站以及您提供的线上呈现。",
+        "<strong>2-3 个工作日内</strong>，我们会先发一份初步评估，列出最重要的发现。",
         "<strong>5-7 个工作日内</strong>，您会收到完整审计报告（15-25 页），并附上按优先级排序的行动建议。",
         "整个过程<strong>免费</strong>、无任何附加条件——之后不会有推销电话，只有一份您真正用得上的报告。",
       ],
-      closing: "如果这期间您有任何问题——比如正卡在某个具体难题上——直接回复这封邮件就好，我会看。",
+      closing: "如果这期间您有任何问题，欢迎直接回复这封邮件——每一封我们都会看。",
       secondaryLine: "确认函 · G2A Marketing",
     },
     contact: {
       tag: "已收到留言",
-      subject: "已收到您的留言——我会尽快联系您",
-      heading: "您的留言已收到",
-      intro: "谢谢您的联系。内容我都收到了，可以在下方回看您提交的信息。如果有笔误，回复这封邮件即可，我们一起更正。",
+      subject: "感谢您的留言——我们会尽快回复",
+      intro: "感谢您的联系。您的留言已送达——您可以在下方回看提交的内容。如有任何信息不准确，回复这封邮件即可。",
       nextSteps: [
-        "<strong>一个工作日内</strong>，我会亲自回复——不是模板，而是针对您所写的内容。",
-        "如果话题需要，我会安排一次 <strong>15-30 分钟的交流</strong>。",
-        "急事请直接来电：<strong>+36 30 190 2575</strong>（工作日 8:00-17:00，中欧时间）。",
+        "<strong>一个工作日内</strong>，我们会针对您的留言发送一份专门的回复，而不是模板。",
+        "如果话题较为复杂，我们会安排一次 <strong>15-30 分钟的交流</strong>。",
+        "如有急事，请致电：<strong>+36 30 190 2575</strong>（工作日 8:00-17:00，中欧时间）。",
       ],
-      closing: "在那之前如果又想到什么，回复补充一句就好——都会落到同一个地方。",
+      closing: "这期间如果还有想补充的内容，回复这封邮件即可——每一封我们都会看。",
       secondaryLine: "确认函 · G2A Marketing",
     },
     career: {
       tag: "求职申请",
-      subject: "已收到您的申请——我会认真看",
-      heading: "您的申请已收到",
-      intro: "谢谢您的应聘，真的很高兴。您提交的内容我都收到了；如果想更正什么，回复这封邮件即可。",
-      nextSteps: [
-        "<strong>3-5 个工作日内</strong>，我会读完您的申请和简历。",
-        "如果合适，我会邀请您做一次 <strong>简短的线上交流</strong>（约 30 分钟）。",
-        "之后是一个您所在领域的 <strong>实操小任务</strong>——真实场景，而不是抽象考题。",
+      subject: "感谢您的应聘——我们已收到",
+      intro: "感谢您应聘加入 G2A Marketing 团队。您的申请已成功送达。在甄选过程中，我们会仔细查阅您提交的简历和相关材料。",
+      bodyParagraphs: [
+        "对我们而言，重要的不只是专业经验，还有独立性、严谨、解决问题的思维，以及您能在多大程度上为自己的工作负责。",
+        "如果您的背景与经验与当前的机会相匹配，我们会就甄选流程的后续步骤与您联系。",
+        "视申请数量而定，评估可能需要几个工作日——在此之前，请勿重复提交申请。",
       ],
-      closing: "这期间如果有任何问题——关于职位、团队，或在我们这里工作是什么感觉——回复就好，我会看。",
+      closing: "感谢您对 G2A Marketing 的关注，以及您为这次申请付出的时间。",
+      noReply: true,
       secondaryLine: "确认函 · G2A Marketing",
     },
   },
@@ -699,7 +675,11 @@ export function renderConfirmationEmailHtml(input: ConfirmationEmailInput): stri
   const lang = input.lang ?? "hu";
   const cfg = CONFIRMATION_COPY[lang][input.formType];
   const ui = UI[lang];
-  const greeting = lang === "zh" ? `${escapeHtml(input.name)}，您好！` : lang === "en" ? `Hi ${escapeHtml(input.name)}!` : `Szia ${escapeHtml(input.name)}!`;
+  const greeting = lang === "zh"
+    ? `${escapeHtml(input.name)}，您好！`
+    : lang === "en"
+      ? `Hello ${escapeHtml(input.name)}!`
+      : `Kedves ${escapeHtml(input.name)}!`;
 
   const submissionRows =
     input.submission && input.submission.length > 0
@@ -719,17 +699,43 @@ export function renderConfirmationEmailHtml(input: ConfirmationEmailInput): stri
           .join("")
       : "";
 
-  const steps = cfg.nextSteps
-    .map(
-      (s, i) => `
+  // Either numbered steps (contact/audit) or prose paragraphs (career).
+  const stepsBlock = cfg.nextSteps
+    ? `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:32px 36px 8px">
+          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:14px">${escapeHtml(ui.nextLabel)}</div>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            ${cfg.nextSteps
+              .map(
+                (s, i) => `
         <tr>
           <td valign="top" style="padding:8px 12px 8px 0;width:32px">
             <div style="background:${BRAND_TEAL};color:#ffffff;font-family:${FONT_MONO};font-size:11px;font-weight:700;width:24px;height:24px;border-radius:50%;text-align:center;line-height:24px">${i + 1}</div>
           </td>
           <td style="padding:8px 0;font-size:14px;color:${TEXT_SECONDARY};line-height:1.6">${s}</td>
         </tr>`,
-    )
-    .join("");
+              )
+              .join("")}
+          </table>
+        </td>
+      </tr>
+    </table>`
+    : "";
+
+  const proseBlock = cfg.bodyParagraphs
+    ? `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:20px 36px 0">
+          ${cfg.bodyParagraphs
+            .map((p) => `<p style="margin:0 0 14px;font-size:14.5px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(p)}</p>`)
+            .join("")}
+        </td>
+      </tr>
+    </table>`
+    : "";
 
   const body = `
     ${darkHeader({ tag: cfg.tag, secondaryLine: cfg.secondaryLine })}
@@ -765,16 +771,8 @@ export function renderConfirmationEmailHtml(input: ConfirmationEmailInput): stri
         : ""
     }
 
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-      <tr>
-        <td style="padding:32px 36px 8px">
-          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:14px">${escapeHtml(ui.nextLabel)}</div>
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-            ${steps}
-          </table>
-        </td>
-      </tr>
-    </table>
+    ${stepsBlock}
+    ${proseBlock}
 
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
@@ -785,6 +783,7 @@ export function renderConfirmationEmailHtml(input: ConfirmationEmailInput): stri
     </table>
 
     ${signature(lang)}
+    ${cfg.noReply ? autoNoteBlock(lang) : ""}
 
     ${footer("https://g2amarketing.hu/kapcsolat", lang)}
   `;
@@ -803,16 +802,16 @@ export const FIELD_LABELS: Record<Lang, Record<string, string>> = {
   hu: {
     email: "Email", phone: "Telefon", subject: "Tárgy", service: "Szolgáltatás",
     message: "Üzenet", position: "Pozíció", company: "Cég", website: "Weboldal",
-    budget: "Havi büdzsé", challenges: "Kihívások", goals: "Célok",
+    budget: "Havi büdzsé", challenges: "Kihívások", goals: "Célok", areas: "Területek",
   },
   en: {
     email: "Email", phone: "Phone", subject: "Subject", service: "Service",
     message: "Message", position: "Position", company: "Company", website: "Website",
-    budget: "Monthly budget", challenges: "Challenges", goals: "Goals",
+    budget: "Monthly budget", challenges: "Challenges", goals: "Goals", areas: "Areas",
   },
   zh: {
     email: "邮箱", phone: "电话", subject: "主题", service: "服务",
     message: "留言", position: "应聘职位", company: "公司", website: "网站",
-    budget: "每月预算", challenges: "面临的挑战", goals: "目标",
+    budget: "每月预算", challenges: "面临的挑战", goals: "目标", areas: "意向领域",
   },
 };
