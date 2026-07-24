@@ -181,8 +181,7 @@ const DOCS: Record<Language, KarrierDoc> = {
       cta: "Pályázat elküldése",
       submitting: "Küldés...",
       successHeading: "Köszönjük a pályázatod!",
-      successBody:
-        "5 munkanapon belül jelentkezünk e-mailben. Addig is: nézz körül a /technologia oldalon a stack-ünkkel, vagy a /referenciak között az ügyfél-projektjeinkkel.",
+      successBody: "5 munkanapon belül jelentkezünk e-mailben.",
       error: "Hiba történt a küldés során. Próbáld újra, vagy írj az info@g2amarketing.hu címre.",
       consentBefore:
         "Hozzájárulok, hogy a G2A Marketing Bt. a jelentkezésem adatait a kiválasztási folyamat lebonyolításához kezelje az",
@@ -194,7 +193,7 @@ const DOCS: Record<Language, KarrierDoc> = {
       items: [
         {
           q: "Csak Pécsen dolgozó kollégákat kerestek?",
-          a: "Hibrid modellben dolgozunk: kéthetente egy közös nap a pécsi irodában, a többi remote. Pécsi környékről ideális — de Magyarország bármely városából tudunk együttműködni, ha az utazás kéthetente megvalósítható.",
+          a: "Nem — nem csak pécsi kollégákat keresünk. Munkatársaink az ország különböző részein dolgoznak, és van home-office lehetőség.",
         },
         {
           q: "Junior pozíciókra is felvesztek?",
@@ -202,7 +201,7 @@ const DOCS: Record<Language, KarrierDoc> = {
         },
         {
           q: "Milyen bér-tartomány?",
-          a: "Az interjú elején tisztázzuk a tartományt — pozíciónként eltér. Általánosan: a magyar piaci átlag felett vagyunk, de nem agency-csúcson. Cserébe a tanulási büdzsé, a tool-stack és a hosszú-távú szerepkör kiemelt. Konkrét számokat az ismerkedő hívás alatt.",
+          a: "Az interjú elején tisztázzuk a tartományt — pozíciónként eltér. A konkrét számokat az ismerkedő hívás alatt.",
         },
         {
           q: "Lehet részmunkaidőben dolgozni?",
@@ -313,8 +312,7 @@ const DOCS: Record<Language, KarrierDoc> = {
       cta: "Send application",
       submitting: "Sending...",
       successHeading: "Thank you for applying!",
-      successBody:
-        "We'll respond within 5 business days. Meanwhile: browse /technologia for our stack, or /referenciak for client projects.",
+      successBody: "We'll get back to you by email within 5 business days.",
       error: "Something went wrong. Please try again or email info@g2amarketing.hu.",
       consentBefore:
         "I consent to G2A Marketing Bt. processing my application data for the selection process per the",
@@ -326,7 +324,7 @@ const DOCS: Record<Language, KarrierDoc> = {
       items: [
         {
           q: "Do you only hire Pécs-based colleagues?",
-          a: "We work hybrid: bi-weekly team day at the Pécs office, the rest remote. Pécs region is ideal — but anywhere in Hungary works if the bi-weekly travel is feasible.",
+          a: "No — we don't only look for Pécs-based colleagues. Our team works from different parts of the country, and home office is available.",
         },
         {
           q: "Do you hire juniors?",
@@ -334,7 +332,7 @@ const DOCS: Record<Language, KarrierDoc> = {
         },
         {
           q: "What's the salary range?",
-          a: "We clarify the range early in the interview — varies by role. Generally: above Hungarian market average, but not at agency-peak. In exchange, the learning budget, tool stack and long-term role are foregrounded. Specific numbers in the introductory call.",
+          a: "We clarify the range at the start of the interview — it varies by position. The specific numbers during the introductory call.",
         },
         {
           q: "Is part-time possible?",
@@ -444,8 +442,7 @@ const DOCS: Record<Language, KarrierDoc> = {
       cta: "发送申请",
       submitting: "发送中...",
       successHeading: "感谢您的申请!",
-      successBody:
-        "我们将在 5 个工作日内回复。同时:浏览 /technologia 了解我们的技术栈,或在 /referenciak 查看客户项目。",
+      successBody: "我们将在 5 个工作日内通过邮件与您联系。",
       error: "出错了。请重试,或邮件至 info@g2amarketing.hu。",
       consentBefore:
         "我同意 G2A Marketing Bt. 按",
@@ -457,7 +454,7 @@ const DOCS: Record<Language, KarrierDoc> = {
       items: [
         {
           q: "你们只招聘佩奇本地员工吗?",
-          a: "我们采用混合模式:每两周一次在佩奇办公室的团队日,其余远程。佩奇地区最理想 —— 但若每两周往返可行,匈牙利任何城市都可。",
+          a: "不 —— 我们不只招聘佩奇本地的同事。我们的团队分布在匈牙利各地,并提供在家办公(home office)的可能。",
         },
         {
           q: "你们招初级员工吗?",
@@ -465,7 +462,7 @@ const DOCS: Record<Language, KarrierDoc> = {
         },
         {
           q: "薪资范围是多少?",
-          a: "我们在面试早期澄清范围 —— 因职位而异。总体上:高于匈牙利市场平均水平,但不在代理巅峰。作为交换,学习预算、工具栈与长期角色是重点。具体数字在介绍性通话中。",
+          a: "面试开始时我们会说明范围 —— 因职位而异。具体数字在介绍性通话中。",
         },
         {
           q: "可以兼职吗?",
