@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Phone, Mail, Send, CheckCircle, QrCode } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { track } from "@/lib/analytics";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
@@ -50,6 +51,7 @@ export default function ContactPage() {
     setSubmitting(true);
     try {
       await submitMutation.mutateAsync({ ...form, lang, turnstileToken: turnstileToken || undefined });
+      track.lead("contact-page");
       setSuccess(true);
       setForm({ name: "", email: "", phone: "", subject: "", message: "", website: "" });
       setTurnstileToken("");

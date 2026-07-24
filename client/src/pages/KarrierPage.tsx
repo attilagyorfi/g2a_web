@@ -23,6 +23,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
 import { CAREER_AREAS } from "@shared/careerAreas";
+import { track } from "@/lib/analytics";
 import { useState } from "react";
 import TurnstileWidget, { useTurnstileGate } from "@/components/TurnstileWidget";
 import {
@@ -577,6 +578,7 @@ export default function KarrierPage() {
   const submit = trpc.careers.submit.useMutation({
     onSuccess: () => {
       setStatus("success");
+      track.jobApplication();
       setName(""); setEmail(""); setPhone(""); setPositionId(""); setAreas([]);
       setCvFile(null); setMotivation(""); setConsent(false);
     },

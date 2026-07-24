@@ -1,11 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { ChevronUp } from "lucide-react";
+import { trackPageView } from "@/lib/analytics";
 
 export function RouteScrollToTop() {
   const [location] = useLocation();
+  const firstRun = useRef(true);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    // Skip the initial mount — GA4's config tag already sends that page_view.
+    // Every later route change fires a virtual page view so the SPA is counted.
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
+    if (location.startsWith("/admin")) return;
+    trackPageView(location);
   }, [location]);
   return null;
 }

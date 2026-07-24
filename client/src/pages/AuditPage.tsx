@@ -5,6 +5,7 @@ import SeoHead from "@/components/SeoHead";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import AuditHeroDemo from "@/components/page-demos/AuditHeroDemo";
 import { trpc } from "@/lib/trpc";
+import { track } from "@/lib/analytics";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
@@ -91,7 +92,7 @@ export default function AuditPage() {
   const processSteps = PROCESS[lang];
 
   const auditMutation = trpc.audit.submit.useMutation({
-    onSuccess: () => setStatus("success"),
+    onSuccess: () => { setStatus("success"); track.auditRequest("audit-page"); },
     onError: () => setStatus("error"),
   });
 

@@ -18,6 +18,7 @@
  */
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
+import { track } from "@/lib/analytics";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
 import { Mail, Loader2, Check } from "lucide-react";
@@ -72,6 +73,7 @@ export default function NewsletterForm({
   const subscribe = trpc.newsletter.subscribe.useMutation({
     onSuccess: () => {
       setStatus("success");
+      track.newsletterSignup(variant);
       setEmail("");
       setName("");
       setConsent(false);
