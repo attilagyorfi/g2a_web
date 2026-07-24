@@ -452,6 +452,136 @@ export function renderLeadMagnetWelcomeHtml(input: LeadMagnetWelcomeInput): stri
   return wrapper(body, "Itt a négy anyag az AI Marketing Csomagból — letöltés egy kattintással.", lang);
 }
 
+// ─── Interactive checklist result (marketing-teszt) — HU only ───────────────
+
+/** Band copy keyed by the label the client sends. */
+const CHECKLIST_BANDS: Record<string, string> = {
+  "Erős alapok": "A gépezet működik — innen a finomhangolás és a skálázás jön. Nem az alapokon kell dolgoznod, hanem azon, hogy a meglévőkből többet hozz ki: mélyebb mérés, optimalizálás, rendszerezés.",
+  "Jó úton vagy": "Az alapok nagyrészt megvannak, de van pár rés, amit betömve aránytalanul sokat nyersz. A következő hónapban csak az alábbi 3 leggyengébb pontodra fókuszálj.",
+  "Sok a lehetőség": "Több területen van tennivaló — ez nem kudarc, hanem térkép. Ne akard egyszerre az egészet: priorizálj, és havonta 3 javítás bőven elég a látható előrelépéshez.",
+  "Nagy potenciál": "Itt a legnagyobb a növekedési pontod: minden javítás azonnal érezhető különbséget hoz. Kezdd egyetlen alappal, és onnan építkezz.",
+};
+
+/** One concrete next step per checklist area (matches the section names the
+ *  test sends in `weakestAreas`). */
+const CHECKLIST_AREA_TIPS: Record<string, string> = {
+  "Weboldal & élmény": "Kezdd a mobil-élménnyel és a betöltési sebességgel — és minden fő oldalon legyen egy világos, kiemelt következő lépés (CTA).",
+  "SEO alapok": "Adj minden fontos oldalnak egyedi, kulcsszavas címet és meta-leírást, majd kösd be a Google Search Console-t egy sitemap-pel.",
+  "Tartalom": "Készíts egy egyszerű tartalomnaptárat, és minden tartalom az ügyfél egy konkrét kérdésére válaszoljon — egyértelmű következő lépéssel.",
+  "Közösségi média": "Rögzíts egy tartható posztolási ritmust és egységes arculatot; a bióban legyen világos ajánlat és működő link.",
+  "E-mail marketing": "Tegyél ki jól látható feliratkozási lehetőséget, állíts be automatikus üdvözlő emailt, és kövesd a megnyitási/átkattintási arányt.",
+  "Hirdetés & PPC": "Minden kampányhoz legyen cél + keret + dedikált landing oldal, és konverziót mérj, ne csak kattintást.",
+  "Analitika & mérés": "Kösd be a GA4-et és a konverziókövetést, válassz 3-5 kulcsmutatót, és havonta nézd át őket.",
+  "Konverzió & bizalom": "Tedd ki a véleményeket és referenciákat, az első képernyőn legyen világos az értékajánlat, és előre kezeld a gyakori kifogásokat.",
+};
+
+export type ChecklistResultInput = {
+  name?: string | null;
+  score: number;
+  band: string;
+  /** Comma-separated area names, weakest first (as the test sends them). */
+  weakestAreas: string;
+  unsubscribeUrl: string;
+};
+
+export function renderChecklistResultHtml(input: ChecklistResultInput): string {
+  const lang: Lang = "hu";
+  const greeting = input.name ? `Kedves ${escapeHtml(input.name)}!` : "Kedves Kitöltő!";
+  const bandDesc = CHECKLIST_BANDS[input.band] ?? "";
+  const areas = input.weakestAreas.split(",").map((a) => a.trim()).filter(Boolean).slice(0, 3);
+
+  const weakRows = areas.map((name, i) => `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:10px">
+      <tr>
+        <td valign="top" style="width:26px;padding:2px 10px 0 0;color:${BRAND_TEAL};font-family:${FONT_MONO};font-size:13px;font-weight:700">${i + 1}</td>
+        <td>
+          <div style="font-size:14px;font-weight:700;color:${TEXT_PRIMARY};margin-bottom:2px">${escapeHtml(name)}</div>
+          <div style="font-size:13px;color:${TEXT_SECONDARY};line-height:1.55">${escapeHtml(CHECKLIST_AREA_TIPS[name] ?? "")}</div>
+        </td>
+      </tr>
+    </table>`).join("");
+
+  const downloadRows = LEAD_MAGNETS.map((m) => `
+    <tr>
+      <td style="padding:6px 0;font-size:13.5px;color:${TEXT_PRIMARY}">${escapeHtml(m.title)}</td>
+      <td align="right" style="padding:6px 0"><a href="${LEAD_MAGNET_BASE}/${m.file}" style="color:${BRAND_TEAL_DARK};font-size:12.5px;font-weight:700;text-decoration:none;font-family:${FONT_MONO}">Letöltés →</a></td>
+    </tr>`).join("");
+
+  const body = `
+    ${darkHeader({ tag: "A teszted eredménye", secondaryLine: UI[lang].partnerLine })}
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:40px 36px 8px">
+          <h1 style="margin:0 0 14px;font-size:26px;line-height:1.25;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
+          <p style="margin:0;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">
+            Kitöltötted a marketing önellenőrző tesztet — itt a kiértékelt eredményed, és pontosan az, hol nyered a legtöbbet.
+          </p>
+        </td>
+      </tr>
+    </table>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:24px 36px 4px">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK_PANEL};border-radius:12px;border-left:4px solid ${BRAND_TEAL}">
+            <tr>
+              <td style="padding:24px 28px">
+                <div style="font-family:${FONT_MONO};font-size:40px;font-weight:700;color:#ffffff;line-height:1;letter-spacing:-1px">${input.score}<span style="font-size:20px;color:#94a3b8"> / 34 pont</span></div>
+                <div style="font-size:18px;font-weight:800;color:${BRAND_TEAL};margin:12px 0 6px">${escapeHtml(input.band)}</div>
+                <div style="font-size:14px;line-height:1.6;color:#e2e8f0">${escapeHtml(bandDesc)}</div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    ${areas.length ? `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:26px 36px 4px">
+          <div style="font-family:${FONT_MONO};font-size:11px;letter-spacing:0.18em;color:${TEXT_MUTED};text-transform:uppercase;margin-bottom:14px">Itt nyered a legtöbbet</div>
+          ${weakRows}
+        </td>
+      </tr>
+    </table>` : ""}
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:20px 36px 4px">
+          <div style="font-size:14px;color:${TEXT_SECONDARY};line-height:1.6;margin-bottom:10px">És itt a 4 anyag az AI Marketing Csomagból, amivel neki is tudsz vágni:</div>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px">
+            <tr><td style="padding:8px 18px"><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">${downloadRows}</table></td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:24px 36px 4px">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK_PANEL};border-radius:12px">
+            <tr>
+              <td style="padding:22px 26px">
+                <div style="font-size:15px;font-weight:700;color:#ffffff;margin-bottom:6px">Átnézzük együtt?</div>
+                <div style="font-size:14px;line-height:1.6;color:#cbd5e1;margin-bottom:16px">Ha szeretnéd, egy 30 perces ingyenes konzultáción konkrétan végigvesszük a 3 leggyengébb pontod — és azt, mivel érdemes kezdened.</div>
+                <a href="https://g2amarketing.hu/ingyenes-audit" style="display:inline-block;background:${BRAND_TEAL};color:#06201d;padding:12px 24px;border-radius:6px;font-size:13px;font-weight:800;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.04em">Ingyenes konzultáció →</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    ${signature(lang)}
+
+    ${footer(input.unsubscribeUrl, lang)}
+  `;
+
+  return wrapper(body, `A marketing önellenőrző teszted eredménye: ${input.score}/34 pont — ${input.band}.`, lang);
+}
+
 // ─── Weekly digest / sample newsletter ──────────────────────────────────────
 
 export type DigestArticle = {

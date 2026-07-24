@@ -22,6 +22,7 @@ import {
   toLang,
   FIELD_LABELS,
   renderLeadMagnetWelcomeHtml,
+  renderChecklistResultHtml,
   type Lang,
 } from "./_core/emailTemplates";
 import { generateSocialCopy } from "./_core/socialCopy";
@@ -1824,14 +1825,30 @@ const leadMagnetRouter = router({
         });
       }
 
-      // Deliver the 4 downloads (they explicitly asked for the materials).
       if (isEmailConfigured() && unsubscribeToken) {
         const unsubscribeUrl = `${origin}/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
-        await sendEmail({
-          to: input.email,
-          subject: "Itt a 4 anyag — G2A AI Marketing Csomag",
-          html: renderLeadMagnetWelcomeHtml({ name: input.name, unsubscribeUrl }),
-        });
+        // The checklist promises the *evaluated result* by email, not just the
+        // downloads — send the scored result email when we have a score.
+        if (input.source === "marketing-teszt" && input.score !== undefined && input.band) {
+          await sendEmail({
+            to: input.email,
+            subject: `A teszted eredménye: ${input.score}/34 pont — ${input.band}`,
+            html: renderChecklistResultHtml({
+              name: input.name,
+              score: input.score,
+              band: input.band,
+              weakestAreas: input.weakestAreas ?? "",
+              unsubscribeUrl,
+            }),
+          });
+        } else {
+          // Plain landing opt-in: deliver the 4 downloads.
+          await sendEmail({
+            to: input.email,
+            subject: "Itt a 4 anyag — G2A AI Marketing Csomag",
+            html: renderLeadMagnetWelcomeHtml({ name: input.name, unsubscribeUrl }),
+          });
+        }
       }
 
       return { success: true };
