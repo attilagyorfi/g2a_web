@@ -34,8 +34,8 @@ export default function ExitIntentPopup() {
   if (!visible || location.startsWith("/admin")) return null;
 
   return (
-    <div className="g2a-popup-overlay" style={{ position: "fixed", inset: 0, zIndex: 10000, backgroundColor: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={dismiss}>
-      <div style={{ background: "var(--g2a-bg-2)", border: "1px solid var(--g2a-border)", borderRadius: "1rem", padding: "2.5rem", maxWidth: "480px", width: "100%", position: "relative", boxShadow: "0 25px 60px rgba(0,0,0,0.5)" }} onClick={e => e.stopPropagation()}>
+    <div className="g2a-popup-overlay" style={{ position: "fixed", inset: 0, zIndex: 10000, backgroundColor: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", overflowY: "auto", padding: "1rem" }} onClick={dismiss}>
+      <div style={{ background: "var(--g2a-bg-2)", border: "1px solid var(--g2a-border)", borderRadius: "1rem", padding: "2.5rem", maxWidth: "480px", width: "100%", margin: "auto", position: "relative", boxShadow: "0 25px 60px rgba(0,0,0,0.5)" }} onClick={e => e.stopPropagation()}>
         <button onClick={dismiss} style={{ position: "absolute", top: "1rem", right: "1rem", background: "none", border: "none", cursor: "pointer", color: "var(--g2a-text-secondary)", padding: "0.25rem" }}>
           <X size={20} />
         </button>

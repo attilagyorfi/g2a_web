@@ -86,8 +86,11 @@ export default function NewsletterPopup() {
         backgroundColor: "rgba(0,0,0,0.7)",
         backdropFilter: "blur(4px)",
         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        // Scrollable overlay + `margin:auto` on the card centres it when it
+        // fits and lets it scroll (top reachable) when it's taller than the
+        // viewport. Without this, a tall card on a phone pushes the close
+        // button above the screen edge — unreachable, "can't close it".
+        overflowY: "auto",
         padding: "1rem",
         animation: "fadeIn 0.25s ease",
       }}
@@ -101,6 +104,7 @@ export default function NewsletterPopup() {
           padding: "2.25rem",
           maxWidth: "520px",
           width: "100%",
+          margin: "auto",
           position: "relative",
           boxShadow: "0 25px 60px rgba(0,0,0,0.5)",
         }}

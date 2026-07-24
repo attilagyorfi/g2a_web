@@ -525,8 +525,10 @@ html.light ::-webkit-scrollbar-track { background: var(--g2a-bg-3); }
   position: fixed; bottom: 2rem; right: 2rem; z-index: 1000;
   animation: slideInRight 0.4s ease;
 }
-@media (max-width: 768px) {
-  .sticky-cta { bottom: 1.25rem; right: 1.25rem; }
+@media (max-width: 767px) {
+  /* The floating "Ingyenes Audit" pill is desktop-only — on phones it covers
+     content and duplicates the CTA already in the hamburger menu. */
+  .sticky-cta { display: none !important; }
 }
 
 /* Floating dashboard collage – only on wide viewports */
