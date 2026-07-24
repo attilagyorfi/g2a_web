@@ -34,6 +34,12 @@ export type EmailPayload = {
    * rejects others with 422).
    */
   tags?: Array<{ name: string; value: string }>;
+  /**
+   * File attachments. `content` is the raw file as a base64 string (no data:
+   * prefix). Used to forward a job applicant's CV to the owner without ever
+   * storing it on a public CDN.
+   */
+  attachments?: Array<{ filename: string; content: string }>;
 };
 
 /**
@@ -102,6 +108,7 @@ export async function sendEmailWithId(
         text: payload.text,
         reply_to: payload.replyTo,
         tags: payload.tags,
+        attachments: payload.attachments,
       }),
     });
 

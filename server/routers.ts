@@ -14,7 +14,8 @@ import { getClientIp } from "./_core/rateLimit";
 import { checkRateLimitDb } from "./_core/dbRateLimit";
 import { isHoneypotTriggered, HONEYPOT_FIELD } from "./_core/spam";
 import { verifyTurnstile, isTurnstileConfigured } from "./_core/turnstile";
-import { sendEmail, sendEmailWithId, isEmailConfigured } from "./_core/email";
+import { sendEmail, sendEmailWithId, isEmailConfigured, renderNotificationHtml } from "./_core/email";
+import { areaLabels, areValidAreaKeys } from "@shared/careerAreas";
 import {
   renderConfirmationEmailHtml,
   confirmationSubject,
@@ -1648,6 +1649,48 @@ const adminRouter = router({
         return { success: true };
       }),
   }),
+
+  careers: router({
+    listPositions: permissionProcedure("careers").query(() => db.listAllJobPositions()),
+    createPosition: permissionProcedure("careers")
+      .input(z.object({
+        titleHu: z.string().min(1).max(256),
+        titleEn: z.string().max(256).optional(),
+        titleZh: z.string().max(256).optional(),
+        descHu: z.string().optional(),
+        descEn: z.string().optional(),
+        descZh: z.string().optional(),
+        location: z.string().max(128).optional(),
+        employmentType: z.string().max(128).optional(),
+        isActive: z.boolean().optional(),
+        sortOrder: z.number().int().optional(),
+      }))
+      .mutation(async ({ input }) => { await db.createJobPosition(input); return { success: true }; }),
+    updatePosition: permissionProcedure("careers")
+      .input(z.object({ id: z.number(), data: z.object({
+        titleHu: z.string().min(1).max(256).optional(),
+        titleEn: z.string().max(256).optional(),
+        titleZh: z.string().max(256).optional(),
+        descHu: z.string().optional(),
+        descEn: z.string().optional(),
+        descZh: z.string().optional(),
+        location: z.string().max(128).optional(),
+        employmentType: z.string().max(128).optional(),
+        isActive: z.boolean().optional(),
+        sortOrder: z.number().int().optional(),
+      }) }))
+      .mutation(async ({ input }) => { await db.updateJobPosition(input.id, input.data); return { success: true }; }),
+    deletePosition: permissionProcedure("careers")
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => { await db.deleteJobPosition(input.id); return { success: true }; }),
+    listApplications: permissionProcedure("careers").query(() => db.listJobApplications()),
+    updateApplicationStatus: permissionProcedure("careers")
+      .input(z.object({ id: z.number(), status: z.enum(["new", "reviewed", "archived"]) }))
+      .mutation(async ({ input }) => { await db.updateJobApplicationStatus(input.id, input.status); return { success: true }; }),
+    deleteApplication: permissionProcedure("careers")
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => { await db.deleteJobApplication(input.id); return { success: true }; }),
+  }),
 });
 
 // ─── Social Media Router ──────────────────────────────────────────────────
@@ -1721,6 +1764,97 @@ const socialRouter = router({
     }),
 });
 
+const careersRouter = router({
+  /** Public — active positions for the career page. Empty is the normal state. */
+  positions: publicProcedure.query(() => db.listActiveJobPositions()),
+
+  /** Public — submit a job application. The CV (if any) is emailed to the owner
+   *  as an attachment; only metadata is stored (PII stays out of the DB/CDN).
+   *  Named `submit` not `apply` — tRPC reserves `apply` (a Function method). */
+  submit: publicProcedure
+    .input(
+      z.object({
+        name: z.string().min(1, "A név megadása kötelező").max(256),
+        email: z.string().email("Érvényes email cím szükséges"),
+        phone: z.string().max(64).optional(),
+        positionId: z.number().int().positive().optional(),
+        areas: z.array(z.string().max(64)).max(20).optional(),
+        message: z.string().max(4000).optional(),
+        cv: z
+          .object({
+            filename: z.string().min(1).max(256),
+            // base64 without the `data:` prefix; ~4.5MB cap keeps us under the
+            // Vercel serverless request-body limit (a ~3MB file).
+            contentBase64: z.string().min(1).max(4_500_000),
+            contentType: z.string().max(128).optional(),
+          })
+          .optional(),
+        lang: z.enum(["hu", "en", "zh"]).optional(),
+        [HONEYPOT_FIELD]: z.string().optional(),
+        turnstileToken: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const guard = await guardPublicFormOrSilent(ctx, input, "careers", { success: true });
+      if (guard) return guard;
+
+      const areas = (input.areas ?? []).filter((a) => areValidAreaKeys([a]));
+      let positionTitle: string | undefined;
+      if (input.positionId) {
+        const pos = await db.getJobPosition(input.positionId);
+        positionTitle = pos?.titleHu ?? undefined;
+      }
+
+      await db.createJobApplication({
+        name: input.name,
+        email: input.email,
+        phone: input.phone,
+        positionId: input.positionId,
+        positionTitle,
+        areas: areas.length ? areas.join(",") : null,
+        message: input.message,
+        cvFilename: input.cv?.filename ?? null,
+      });
+
+      const lang = toLang(input.lang);
+      if (isEmailConfigured()) {
+        // Owner notification, CV attached.
+        const content =
+          `**Név:** ${input.name}\n**Email:** ${input.email}\n**Telefon:** ${input.phone || "–"}\n` +
+          `**Pozíció:** ${positionTitle || "Spontán jelentkezés"}\n` +
+          `**Területek:** ${areaLabels(areas, "hu").join(", ") || "–"}\n` +
+          `**CV:** ${input.cv ? input.cv.filename : "nincs csatolva"}\n\n` +
+          `**Üzenet:**\n${input.message || "–"}`;
+        await sendEmail({
+          subject: `Új karrier-jelentkezés: ${input.name}`,
+          html: renderNotificationHtml(content),
+          replyTo: input.email,
+          attachments: input.cv ? [{ filename: input.cv.filename, content: input.cv.contentBase64 }] : undefined,
+        });
+
+        // Applicant confirmation (career email — the no-reply automated notice).
+        const L = FIELD_LABELS[lang];
+        await sendEmail({
+          to: input.email,
+          subject: confirmationSubject("career", lang),
+          html: renderConfirmationEmailHtml({
+            name: input.name,
+            formType: "career",
+            lang,
+            submission: [
+              { label: L.email, value: input.email },
+              { label: L.phone, value: input.phone || "" },
+              { label: L.areas, value: areaLabels(areas, lang).join(", ") },
+            ],
+          }),
+          replyTo: "info@g2amarketing.hu",
+        });
+      }
+
+      return { success: true };
+    }),
+});
+
 export const appRouter = router({
   system: systemRouter,
   auth: router({
@@ -1750,6 +1884,7 @@ export const appRouter = router({
   contact: contactRouter,
   audit: auditRouter,
   newsletter: newsletterRouter,
+  careers: careersRouter,
   admin: adminRouter,
   upload: uploadRouter,
   social: socialRouter,

@@ -9,6 +9,8 @@ import {
   contactSubmissions,
   heroSlides,
   industries,
+  jobPositions,
+  jobApplications,
   newsletterSubscribers,
   emailCampaigns,
   emailEvents,
@@ -962,4 +964,71 @@ export async function getAiJob(id: string) {
   if (!db) return null;
   const rows = await db.select().from(aiJobs).where(eq(aiJobs.id, id)).limit(1);
   return rows[0] ?? null;
+}
+
+// ─── Careers ────────────────────────────────────────────────────────────────
+
+/** Public — active positions only, ordered for display. */
+export async function listActiveJobPositions() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(jobPositions).where(eq(jobPositions.isActive, true))
+    .orderBy(asc(jobPositions.sortOrder), desc(jobPositions.createdAt));
+}
+
+/** Admin — every position, active or not. */
+export async function listAllJobPositions() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(jobPositions).orderBy(asc(jobPositions.sortOrder), desc(jobPositions.createdAt));
+}
+
+export async function getJobPosition(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(jobPositions).where(eq(jobPositions.id, id)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function createJobPosition(data: Omit<typeof jobPositions.$inferInsert, "id" | "createdAt" | "updatedAt">) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(jobPositions).values(data);
+}
+
+export async function updateJobPosition(id: number, patch: Partial<typeof jobPositions.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return;
+  if (Object.values(patch).every((v) => v === undefined)) return;
+  await db.update(jobPositions).set(patch).where(eq(jobPositions.id, id));
+}
+
+export async function deleteJobPosition(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(jobPositions).where(eq(jobPositions.id, id));
+}
+
+export async function createJobApplication(data: Omit<typeof jobApplications.$inferInsert, "id" | "createdAt" | "status">) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(jobApplications).values(data);
+}
+
+export async function listJobApplications() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(jobApplications).orderBy(desc(jobApplications.createdAt));
+}
+
+export async function updateJobApplicationStatus(id: number, status: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(jobApplications).set({ status }).where(eq(jobApplications.id, id));
+}
+
+export async function deleteJobApplication(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(jobApplications).where(eq(jobApplications.id, id));
 }

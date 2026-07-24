@@ -41,6 +41,7 @@ const navItems: Array<{
   { href: "/admin/case-studies", icon: BookOpen, label: "Esettanulmányok", perm: "case_studies" },
   { href: "/admin/audit-leads", icon: ClipboardList, label: "Audit Kérések", perm: "audit_leads" },
   { href: "/admin/contacts", icon: Mail, label: "Kapcsolatfelvételek", perm: "contacts" },
+  { href: "/admin/careers", icon: Briefcase, label: "Karrier", perm: "careers" },
   { href: "/admin/newsletter", icon: FileText, label: "Hírlevél feliratkozók", perm: "newsletter" },
   { href: "/admin/newsletter/campaigns", icon: Mail, label: "Email kampányok", perm: "newsletter" },
   { href: "/admin/seo", icon: Globe, label: "SEO Oldalak", perm: "seo" },

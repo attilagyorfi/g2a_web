@@ -89,6 +89,7 @@ const AdminValues = lazy(() => import("./pages/admin/AdminValues"));
 const AdminCategories = lazy(() => import("./pages/admin/AdminCategories"));
 const AdminCaseStudies = lazy(() => import("./pages/admin/AdminCaseStudies"));
 const AdminAuditLeads = lazy(() => import("./pages/admin/AdminAuditLeads"));
+const AdminCareers = lazy(() => import("./pages/admin/AdminCareers"));
 const AdminBrandVoice = lazy(() => import("./pages/admin/AdminBrandVoice"));
 
 function PublicRouter() {
@@ -170,6 +171,7 @@ function AdminRouter() {
         <Route path="/admin/newsletter/campaigns" component={AdminNewsletterCampaigns} />
         <Route path="/admin/case-studies" component={AdminCaseStudies} />
         <Route path="/admin/audit-leads" component={AdminAuditLeads} />
+        <Route path="/admin/careers" component={AdminCareers} />
         <Route path="/admin/brand-voice" component={AdminBrandVoice} />
         <Route path="/admin/seo" component={AdminSeoPages} />
         <Route path="/admin/users" component={AdminUsers} />

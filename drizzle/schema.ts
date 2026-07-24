@@ -494,8 +494,46 @@ export const auditLeads = mysqlTable("audit_leads", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
+// ─── Careers ────────────────────────────────────────────────────────────────
+/** Admin-managed open positions. Empty by default — the career page then shows
+ *  the "no open roles, but we take spontaneous applications" state. */
+export const jobPositions = mysqlTable("job_positions", {
+  id: int("id").autoincrement().primaryKey(),
+  titleHu: varchar("titleHu", { length: 256 }).notNull(),
+  titleEn: varchar("titleEn", { length: 256 }),
+  titleZh: varchar("titleZh", { length: 256 }),
+  descHu: text("descHu"),
+  descEn: text("descEn"),
+  descZh: text("descZh"),
+  location: varchar("location", { length: 128 }),
+  employmentType: varchar("employmentType", { length: 128 }),
+  isActive: boolean("isActive").default(true).notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+/** Applications. The CV itself is emailed to the owner as an attachment (PII —
+ *  not stored on a public CDN); we keep only metadata + the original filename. */
+export const jobApplications = mysqlTable("job_applications", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 256 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  phone: varchar("phone", { length: 64 }),
+  positionId: int("positionId"),
+  positionTitle: varchar("positionTitle", { length: 256 }),
+  /** Comma-separated activity-area keys (see shared/careerAreas.ts). */
+  areas: text("areas"),
+  message: text("message"),
+  cvFilename: varchar("cvFilename", { length: 256 }),
+  status: varchar("status", { length: 32 }).default("new").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
+export type JobPosition = typeof jobPositions.$inferSelect;
+export type JobApplication = typeof jobApplications.$inferSelect;
 export type Post = typeof posts.$inferSelect;
 export type InsertPost = typeof posts.$inferInsert;
 export type Service = typeof services.$inferSelect;

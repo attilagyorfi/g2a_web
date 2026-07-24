@@ -24,6 +24,7 @@ export const PERMISSION_KEYS = [
   // Megkeresések
   "contacts",
   "audit_leads",
+  "careers",
   // Marketing
   "newsletter",
   "seo",
@@ -69,6 +70,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     items: [
       { key: "contacts", label: "Kapcsolatfelvételek", desc: "Beérkezett üzenetek olvasása" },
       { key: "audit_leads", label: "Audit kérések", desc: "Ingyenes audit igénylések" },
+      { key: "careers", label: "Karrier", desc: "Pozíciók kezelése és jelentkezések" },
     ],
   },
   {

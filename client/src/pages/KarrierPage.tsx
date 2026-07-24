@@ -22,6 +22,7 @@ import SeoHead from "@/components/SeoHead";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
+import { CAREER_AREAS } from "@shared/careerAreas";
 import { useState } from "react";
 import TurnstileWidget, { useTurnstileGate } from "@/components/TurnstileWidget";
 import {
@@ -482,17 +483,62 @@ const DOCS: Record<Language, KarrierDoc> = {
   },
 };
 
+/** Trilingual labels for the structured application fields (areas + CV upload +
+ *  position select) that aren't in the legacy DOCS copy. */
+const CAREER_FORM_COPY = {
+  hu: {
+    areasLabel: "Milyen területeken dolgoznál szívesen?",
+    areasHint: "Válaszd ki, ami érdekel — több is lehet.",
+    positionSelectLabel: "Melyik pozícióra jelentkezel?",
+    positionSpontaneous: "Spontán jelentkezés (nincs konkrét pozíció)",
+    cvUploadLabel: "Önéletrajz (PDF/DOC, max. 3 MB)",
+    cvChoose: "Fájl kiválasztása",
+    cvNone: "Nincs fájl kiválasztva",
+    tooLarge: "A fájl túl nagy (max. 3 MB).",
+    readError: "A fájlt nem sikerült beolvasni.",
+  },
+  en: {
+    areasLabel: "What would you enjoy working on?",
+    areasHint: "Pick anything that interests you — more than one is fine.",
+    positionSelectLabel: "Which position are you applying for?",
+    positionSpontaneous: "Spontaneous application (no specific role)",
+    cvUploadLabel: "CV / résumé (PDF/DOC, max 3 MB)",
+    cvChoose: "Choose file",
+    cvNone: "No file selected",
+    tooLarge: "The file is too large (max 3 MB).",
+    readError: "Could not read the file.",
+  },
+  zh: {
+    areasLabel: "您希望从事哪些方向的工作？",
+    areasHint: "选择您感兴趣的——可多选。",
+    positionSelectLabel: "您应聘哪个职位？",
+    positionSpontaneous: "主动申请（无特定职位）",
+    cvUploadLabel: "简历（PDF/DOC，最大 3 MB）",
+    cvChoose: "选择文件",
+    cvNone: "未选择文件",
+    tooLarge: "文件过大（最大 3 MB）。",
+    readError: "无法读取文件。",
+  },
+} as const;
+
 export default function KarrierPage() {
   const { lang, t } = useLanguage();
   const doc = DOCS[lang];
 
-  // Reuse the existing contact.submit endpoint with a "Karrier" subject prefix.
-  // Applications land in /admin/contacts alongside regular contact submissions.
+  // Dedicated careers backend: careers.apply stores metadata + emails the CV to
+  // the owner as an attachment; the applicant gets the career confirmation email.
+  const positionsQuery = trpc.careers.positions.useQuery(undefined, { staleTime: 60_000 });
+  const positions = positionsQuery.data ?? [];
+
+  const cvCopy = CAREER_FORM_COPY[lang];
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [position, setPosition] = useState("");
-  const [cv, setCv] = useState("");
+  const [positionId, setPositionId] = useState<number | "">("");
+  const [areas, setAreas] = useState<string[]>([]);
+  const [cvFile, setCvFile] = useState<{ filename: string; contentBase64: string; contentType?: string } | null>(null);
+  const [cvError, setCvError] = useState<string | null>(null);
   const [motivation, setMotivation] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [consent, setConsent] = useState(false);
@@ -503,16 +549,36 @@ export default function KarrierPage() {
     "idle",
   );
 
-  const submit = trpc.contact.submit.useMutation({
+  const CV_MAX_BYTES = 3 * 1024 * 1024; // 3 MB — stays under the Vercel body limit
+
+  const onCvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCvError(null);
+    const file = e.target.files?.[0];
+    if (!file) { setCvFile(null); return; }
+    if (file.size > CV_MAX_BYTES) {
+      setCvError(cvCopy.tooLarge);
+      setCvFile(null);
+      e.target.value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      const base64 = result.includes(",") ? result.split(",")[1] : result;
+      setCvFile({ filename: file.name, contentBase64: base64, contentType: file.type || undefined });
+    };
+    reader.onerror = () => setCvError(cvCopy.readError);
+    reader.readAsDataURL(file);
+  };
+
+  const toggleArea = (key: string) =>
+    setAreas((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
+
+  const submit = trpc.careers.submit.useMutation({
     onSuccess: () => {
       setStatus("success");
-      setName("");
-      setEmail("");
-      setPhone("");
-      setPosition("");
-      setCv("");
-      setMotivation("");
-      setConsent(false);
+      setName(""); setEmail(""); setPhone(""); setPositionId(""); setAreas([]);
+      setCvFile(null); setMotivation(""); setConsent(false);
     },
     onError: () => setStatus("error"),
   });
@@ -526,16 +592,17 @@ export default function KarrierPage() {
       name,
       email,
       phone: phone || undefined,
-      subject: `Karrier jelentkezés: ${position || "spontán"}`,
-      message: `Pozíció: ${position || "spontán"}\nCV link: ${cv || "—"}\n\nMotiváció:\n${motivation}`,
+      positionId: positionId === "" ? undefined : Number(positionId),
+      areas: areas.length ? areas : undefined,
+      message: motivation || undefined,
+      cv: cvFile ?? undefined,
       website: honeypot, // server-side HONEYPOT_FIELD === "website"
-      formContext: "careers", // separate rate-limit bucket from /kapcsolat
       lang,
       turnstileToken: turnstileToken || undefined,
     });
   };
 
-  const hasOpenPositions = doc.openPositions.positions.length > 0;
+  const hasOpenPositions = positions.length > 0;
 
   return (
     <>
@@ -983,27 +1050,62 @@ export default function KarrierPage() {
                     style={{ width: "100%" }}
                   />
                 </FormField>
-                <FormField label={doc.applyForm.positionLabel}>
-                  <input
-                    type="text"
-                    value={position}
-                    onChange={(e) => setPosition(e.target.value)}
-                    placeholder={doc.applyForm.positionPlaceholder}
-                    className="g2a-input"
-                    style={{ width: "100%" }}
-                  />
+                {positions.length > 0 && (
+                  <FormField label={cvCopy.positionSelectLabel}>
+                    <select
+                      value={positionId}
+                      onChange={(e) => setPositionId(e.target.value === "" ? "" : Number(e.target.value))}
+                      className="g2a-input"
+                      style={{ width: "100%" }}
+                    >
+                      <option value="">{cvCopy.positionSpontaneous}</option>
+                      {positions.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {(lang === "en" && p.titleEn) || (lang === "zh" && p.titleZh) || p.titleHu}
+                        </option>
+                      ))}
+                    </select>
+                  </FormField>
+                )}
+
+                <FormField label={cvCopy.areasLabel}>
+                  <div style={{ fontSize: "0.78rem", color: "var(--g2a-text-muted)", marginBottom: "0.6rem" }}>{cvCopy.areasHint}</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "0.5rem" }}>
+                    {CAREER_AREAS.map((a) => {
+                      const checked = areas.includes(a.key);
+                      return (
+                        <label key={a.key} style={{
+                          display: "flex", alignItems: "center", gap: "0.5rem",
+                          padding: "0.6rem 0.75rem", borderRadius: 8, cursor: "pointer",
+                          border: `1px solid ${checked ? "var(--g2a-brand-teal)" : "var(--g2a-border)"}`,
+                          background: checked ? "rgba(20,184,166,0.08)" : "transparent",
+                          fontSize: "0.85rem", color: "var(--g2a-text-secondary)",
+                        }}>
+                          <input type="checkbox" checked={checked} onChange={() => toggleArea(a.key)}
+                            style={{ accentColor: "var(--g2a-brand-teal)", flexShrink: 0 }} />
+                          {a.label[lang]}
+                        </label>
+                      );
+                    })}
+                  </div>
                 </FormField>
-                <FormField label={doc.applyForm.cvLabel}>
-                  <input
-                    type="text"
-                    inputMode="url"
-                    autoComplete="url"
-                    value={cv}
-                    onChange={(e) => setCv(e.target.value)}
-                    placeholder={doc.applyForm.cvPlaceholder}
-                    className="g2a-input"
-                    style={{ width: "100%" }}
-                  />
+
+                <FormField label={cvCopy.cvUploadLabel}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+                    <label className="g2a-btn-secondary" style={{ cursor: "pointer", margin: 0 }}>
+                      {cvCopy.cvChoose}
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        onChange={onCvChange}
+                        style={{ display: "none" }}
+                      />
+                    </label>
+                    <span style={{ fontSize: "0.82rem", color: "var(--g2a-text-muted)" }}>
+                      {cvFile ? cvFile.filename : cvCopy.cvNone}
+                    </span>
+                  </div>
+                  {cvError && <div style={{ color: "#f87171", fontSize: "0.8rem", marginTop: "0.4rem" }}>{cvError}</div>}
                 </FormField>
                 <FormField label={doc.applyForm.motivationLabel} required>
                   <textarea

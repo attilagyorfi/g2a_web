@@ -18,7 +18,7 @@ import {
   timestamp,
   varchar
 } from "drizzle-orm/mysql-core";
-var users, siteSettings, pages, categories, posts, services, heroSlides, testimonials, partners, industries, technologies, values, contactSubmissions, emailCampaigns, emailEvents, rateLimitHits, socialAccounts, socialPosts, newsletterSubscribers, caseStudies, aiJobs, auditLeads;
+var users, siteSettings, pages, categories, posts, services, heroSlides, testimonials, partners, industries, technologies, values, contactSubmissions, emailCampaigns, emailEvents, rateLimitHits, socialAccounts, socialPosts, newsletterSubscribers, caseStudies, aiJobs, auditLeads, jobPositions, jobApplications;
 var init_schema = __esm({
   "drizzle/schema.ts"() {
     "use strict";
@@ -438,6 +438,35 @@ var init_schema = __esm({
       isContacted: boolean("isContacted").default(false).notNull(),
       createdAt: timestamp("createdAt").defaultNow().notNull()
     });
+    jobPositions = mysqlTable("job_positions", {
+      id: int("id").autoincrement().primaryKey(),
+      titleHu: varchar("titleHu", { length: 256 }).notNull(),
+      titleEn: varchar("titleEn", { length: 256 }),
+      titleZh: varchar("titleZh", { length: 256 }),
+      descHu: text("descHu"),
+      descEn: text("descEn"),
+      descZh: text("descZh"),
+      location: varchar("location", { length: 128 }),
+      employmentType: varchar("employmentType", { length: 128 }),
+      isActive: boolean("isActive").default(true).notNull(),
+      sortOrder: int("sortOrder").default(0).notNull(),
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+    });
+    jobApplications = mysqlTable("job_applications", {
+      id: int("id").autoincrement().primaryKey(),
+      name: varchar("name", { length: 256 }).notNull(),
+      email: varchar("email", { length: 320 }).notNull(),
+      phone: varchar("phone", { length: 64 }),
+      positionId: int("positionId"),
+      positionTitle: varchar("positionTitle", { length: 256 }),
+      /** Comma-separated activity-area keys (see shared/careerAreas.ts). */
+      areas: text("areas"),
+      message: text("message"),
+      cvFilename: varchar("cvFilename", { length: 256 }),
+      status: varchar("status", { length: 32 }).default("new").notNull(),
+      createdAt: timestamp("createdAt").defaultNow().notNull()
+    });
   }
 });
 
@@ -495,6 +524,8 @@ __export(db_exports, {
   createEmailCampaign: () => createEmailCampaign,
   createHeroSlide: () => createHeroSlide,
   createIndustry: () => createIndustry,
+  createJobApplication: () => createJobApplication,
+  createJobPosition: () => createJobPosition,
   createNewsletterSubscriber: () => createNewsletterSubscriber,
   createPartner: () => createPartner,
   createPost: () => createPost,
@@ -515,6 +546,8 @@ __export(db_exports, {
   deleteHeroSlide: () => deleteHeroSlide,
   deleteIndustriesBulk: () => deleteIndustriesBulk,
   deleteIndustry: () => deleteIndustry,
+  deleteJobApplication: () => deleteJobApplication,
+  deleteJobPosition: () => deleteJobPosition,
   deleteNewsletterSubscriber: () => deleteNewsletterSubscriber,
   deleteNewsletterSubscribersBulk: () => deleteNewsletterSubscribersBulk,
   deletePartner: () => deletePartner,
@@ -551,6 +584,7 @@ __export(db_exports, {
   getDb: () => getDb,
   getHeroSlides: () => getHeroSlides,
   getIndustries: () => getIndustries,
+  getJobPosition: () => getJobPosition,
   getLatestSocialPostsForBlogPost: () => getLatestSocialPostsForBlogPost,
   getNewsletterSubscribers: () => getNewsletterSubscribers,
   getPageSeo: () => getPageSeo,
@@ -568,7 +602,10 @@ __export(db_exports, {
   getUserByOpenId: () => getUserByOpenId,
   getUserByResetToken: () => getUserByResetToken,
   getValues: () => getValues,
+  listActiveJobPositions: () => listActiveJobPositions,
+  listAllJobPositions: () => listAllJobPositions,
   listEmailCampaigns: () => listEmailCampaigns,
+  listJobApplications: () => listJobApplications,
   listSocialAccounts: () => listSocialAccounts,
   listStaffUsers: () => listStaffUsers,
   markAuditLeadContacted: () => markAuditLeadContacted,
@@ -580,6 +617,8 @@ __export(db_exports, {
   updateEmailCampaign: () => updateEmailCampaign,
   updateHeroSlide: () => updateHeroSlide,
   updateIndustry: () => updateIndustry,
+  updateJobApplicationStatus: () => updateJobApplicationStatus,
+  updateJobPosition: () => updateJobPosition,
   updateNewsletterSubscriberSegment: () => updateNewsletterSubscriberSegment,
   updatePartner: () => updatePartner,
   updatePost: () => updatePost,
@@ -1281,6 +1320,58 @@ async function getAiJob(id) {
   const rows = await db.select().from(aiJobs).where(eq(aiJobs.id, id)).limit(1);
   return rows[0] ?? null;
 }
+async function listActiveJobPositions() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(jobPositions).where(eq(jobPositions.isActive, true)).orderBy(asc(jobPositions.sortOrder), desc(jobPositions.createdAt));
+}
+async function listAllJobPositions() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(jobPositions).orderBy(asc(jobPositions.sortOrder), desc(jobPositions.createdAt));
+}
+async function getJobPosition(id) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(jobPositions).where(eq(jobPositions.id, id)).limit(1);
+  return rows[0] ?? null;
+}
+async function createJobPosition(data) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(jobPositions).values(data);
+}
+async function updateJobPosition(id, patch) {
+  const db = await getDb();
+  if (!db) return;
+  if (Object.values(patch).every((v) => v === void 0)) return;
+  await db.update(jobPositions).set(patch).where(eq(jobPositions.id, id));
+}
+async function deleteJobPosition(id) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(jobPositions).where(eq(jobPositions.id, id));
+}
+async function createJobApplication(data) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(jobApplications).values(data);
+}
+async function listJobApplications() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(jobApplications).orderBy(desc(jobApplications.createdAt));
+}
+async function updateJobApplicationStatus(id, status) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(jobApplications).set({ status }).where(eq(jobApplications.id, id));
+}
+async function deleteJobApplication(id) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(jobApplications).where(eq(jobApplications.id, id));
+}
 var _db;
 var init_db = __esm({
   "server/db.ts"() {
@@ -1796,7 +1887,8 @@ async function sendEmailWithId(payload) {
         html: payload.html,
         text: payload.text,
         reply_to: payload.replyTo,
-        tags: payload.tags
+        tags: payload.tags,
+        attachments: payload.attachments
       })
     });
     if (!res.ok) {
@@ -1948,6 +2040,7 @@ var PERMISSION_KEYS = [
   // Megkeresések
   "contacts",
   "audit_leads",
+  "careers",
   // Marketing
   "newsletter",
   "seo",
@@ -2738,6 +2831,27 @@ async function verifyTurnstile(token, remoteIp) {
     const msg = err instanceof Error ? err.message : String(err);
     return { ok: false, reason: `network:${msg}` };
   }
+}
+
+// shared/careerAreas.ts
+var CAREER_AREAS = [
+  { key: "content_seo", label: { hu: "Tartalomgy\xE1rt\xE1s & SEO", en: "Content & SEO", zh: "\u5185\u5BB9\u521B\u4F5C\u4E0E SEO" } },
+  { key: "ppc", label: { hu: "Hirdet\xE9skezel\xE9s (PPC)", en: "Paid ads (PPC)", zh: "\u4ED8\u8D39\u5E7F\u544A\uFF08PPC\uFF09" } },
+  { key: "social", label: { hu: "K\xF6z\xF6ss\xE9gi m\xE9dia", en: "Social media", zh: "\u793E\u4EA4\u5A92\u4F53" } },
+  { key: "ai_marketing", label: { hu: "AI-marketing & automatiz\xE1ci\xF3", en: "AI marketing & automation", zh: "AI \u8425\u9500\u4E0E\u81EA\u52A8\u5316" } },
+  { key: "account", label: { hu: "B2B account management", en: "B2B account management", zh: "B2B \u5BA2\u6237\u7BA1\u7406" } },
+  { key: "strategy", label: { hu: "Marketingstrat\xE9gia", en: "Marketing strategy", zh: "\u8425\u9500\u6218\u7565" } },
+  { key: "webdev", label: { hu: "Webfejleszt\xE9s", en: "Web development", zh: "\u7F51\u7AD9\u5F00\u53D1" } },
+  { key: "design", label: { hu: "Grafika & arculat", en: "Graphic design & branding", zh: "\u5E73\u9762\u8BBE\u8BA1\u4E0E\u54C1\u724C" } },
+  { key: "video", label: { hu: "Vide\xF3 & kreat\xEDv", en: "Video & creative", zh: "\u89C6\u9891\u4E0E\u521B\u610F" } },
+  { key: "other", label: { hu: "Egy\xE9b", en: "Other", zh: "\u5176\u4ED6" } }
+];
+var AREA_MAP = new Map(CAREER_AREAS.map((a) => [a.key, a]));
+function areValidAreaKeys(keys) {
+  return keys.every((k) => AREA_MAP.has(k));
+}
+function areaLabels(keys, lang = "hu") {
+  return keys.map((k) => AREA_MAP.get(k)?.label[lang] ?? k);
 }
 
 // server/_core/emailTemplates.ts
@@ -5030,6 +5144,52 @@ var adminRouter = router({
       await deleteStaffUser(input.id);
       return { success: true };
     })
+  }),
+  careers: router({
+    listPositions: permissionProcedure("careers").query(() => listAllJobPositions()),
+    createPosition: permissionProcedure("careers").input(z2.object({
+      titleHu: z2.string().min(1).max(256),
+      titleEn: z2.string().max(256).optional(),
+      titleZh: z2.string().max(256).optional(),
+      descHu: z2.string().optional(),
+      descEn: z2.string().optional(),
+      descZh: z2.string().optional(),
+      location: z2.string().max(128).optional(),
+      employmentType: z2.string().max(128).optional(),
+      isActive: z2.boolean().optional(),
+      sortOrder: z2.number().int().optional()
+    })).mutation(async ({ input }) => {
+      await createJobPosition(input);
+      return { success: true };
+    }),
+    updatePosition: permissionProcedure("careers").input(z2.object({ id: z2.number(), data: z2.object({
+      titleHu: z2.string().min(1).max(256).optional(),
+      titleEn: z2.string().max(256).optional(),
+      titleZh: z2.string().max(256).optional(),
+      descHu: z2.string().optional(),
+      descEn: z2.string().optional(),
+      descZh: z2.string().optional(),
+      location: z2.string().max(128).optional(),
+      employmentType: z2.string().max(128).optional(),
+      isActive: z2.boolean().optional(),
+      sortOrder: z2.number().int().optional()
+    }) })).mutation(async ({ input }) => {
+      await updateJobPosition(input.id, input.data);
+      return { success: true };
+    }),
+    deletePosition: permissionProcedure("careers").input(z2.object({ id: z2.number() })).mutation(async ({ input }) => {
+      await deleteJobPosition(input.id);
+      return { success: true };
+    }),
+    listApplications: permissionProcedure("careers").query(() => listJobApplications()),
+    updateApplicationStatus: permissionProcedure("careers").input(z2.object({ id: z2.number(), status: z2.enum(["new", "reviewed", "archived"]) })).mutation(async ({ input }) => {
+      await updateJobApplicationStatus(input.id, input.status);
+      return { success: true };
+    }),
+    deleteApplication: permissionProcedure("careers").input(z2.object({ id: z2.number() })).mutation(async ({ input }) => {
+      await deleteJobApplication(input.id);
+      return { success: true };
+    })
   })
 });
 var SOCIAL_PLATFORM = z2.enum(["linkedin", "facebook", "instagram"]);
@@ -5088,6 +5248,87 @@ var socialRouter = router({
     return { id, success: true };
   })
 });
+var careersRouter = router({
+  /** Public — active positions for the career page. Empty is the normal state. */
+  positions: publicProcedure.query(() => listActiveJobPositions()),
+  /** Public — submit a job application. The CV (if any) is emailed to the owner
+   *  as an attachment; only metadata is stored (PII stays out of the DB/CDN).
+   *  Named `submit` not `apply` — tRPC reserves `apply` (a Function method). */
+  submit: publicProcedure.input(
+    z2.object({
+      name: z2.string().min(1, "A n\xE9v megad\xE1sa k\xF6telez\u0151").max(256),
+      email: z2.string().email("\xC9rv\xE9nyes email c\xEDm sz\xFCks\xE9ges"),
+      phone: z2.string().max(64).optional(),
+      positionId: z2.number().int().positive().optional(),
+      areas: z2.array(z2.string().max(64)).max(20).optional(),
+      message: z2.string().max(4e3).optional(),
+      cv: z2.object({
+        filename: z2.string().min(1).max(256),
+        // base64 without the `data:` prefix; ~4.5MB cap keeps us under the
+        // Vercel serverless request-body limit (a ~3MB file).
+        contentBase64: z2.string().min(1).max(45e5),
+        contentType: z2.string().max(128).optional()
+      }).optional(),
+      lang: z2.enum(["hu", "en", "zh"]).optional(),
+      [HONEYPOT_FIELD]: z2.string().optional(),
+      turnstileToken: z2.string().optional()
+    })
+  ).mutation(async ({ input, ctx }) => {
+    const guard = await guardPublicFormOrSilent(ctx, input, "careers", { success: true });
+    if (guard) return guard;
+    const areas = (input.areas ?? []).filter((a) => areValidAreaKeys([a]));
+    let positionTitle;
+    if (input.positionId) {
+      const pos = await getJobPosition(input.positionId);
+      positionTitle = pos?.titleHu ?? void 0;
+    }
+    await createJobApplication({
+      name: input.name,
+      email: input.email,
+      phone: input.phone,
+      positionId: input.positionId,
+      positionTitle,
+      areas: areas.length ? areas.join(",") : null,
+      message: input.message,
+      cvFilename: input.cv?.filename ?? null
+    });
+    const lang = toLang(input.lang);
+    if (isEmailConfigured()) {
+      const content = `**N\xE9v:** ${input.name}
+**Email:** ${input.email}
+**Telefon:** ${input.phone || "\u2013"}
+**Poz\xEDci\xF3:** ${positionTitle || "Spont\xE1n jelentkez\xE9s"}
+**Ter\xFCletek:** ${areaLabels(areas, "hu").join(", ") || "\u2013"}
+**CV:** ${input.cv ? input.cv.filename : "nincs csatolva"}
+
+**\xDCzenet:**
+${input.message || "\u2013"}`;
+      await sendEmail({
+        subject: `\xDAj karrier-jelentkez\xE9s: ${input.name}`,
+        html: renderNotificationHtml(content),
+        replyTo: input.email,
+        attachments: input.cv ? [{ filename: input.cv.filename, content: input.cv.contentBase64 }] : void 0
+      });
+      const L = FIELD_LABELS[lang];
+      await sendEmail({
+        to: input.email,
+        subject: confirmationSubject("career", lang),
+        html: renderConfirmationEmailHtml({
+          name: input.name,
+          formType: "career",
+          lang,
+          submission: [
+            { label: L.email, value: input.email },
+            { label: L.phone, value: input.phone || "" },
+            { label: L.areas, value: areaLabels(areas, lang).join(", ") }
+          ]
+        }),
+        replyTo: "info@g2amarketing.hu"
+      });
+    }
+    return { success: true };
+  })
+});
 var appRouter = router({
   system: systemRouter,
   auth: router({
@@ -5115,6 +5356,7 @@ var appRouter = router({
   contact: contactRouter,
   audit: auditRouter,
   newsletter: newsletterRouter,
+  careers: careersRouter,
   admin: adminRouter,
   upload: uploadRouter,
   social: socialRouter
