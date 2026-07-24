@@ -123,8 +123,8 @@ const DOCS: Record<Language, KarrierDoc> = {
         },
         {
           icon: <Coffee size={20} />,
-          title: "Hibrid + Pécs központ",
-          desc: "Kéthetente egy közös nap a pécsi irodában (7625 Péter utca 1.), a többi remote. Rugalmas: 9-17 vagy 11-19, ahogy neked jó. Nincs micromanagement — output-alapú.",
+          title: "Home-office + rugalmasság",
+          desc: "Home-office lehetőség, rugalmas időbeosztás (9-17 vagy 11-19, ahogy neked jó). Nincs micromanagement — output-alapú.",
         },
         {
           icon: <Briefcase size={20} />,
@@ -254,8 +254,8 @@ const DOCS: Record<Language, KarrierDoc> = {
         },
         {
           icon: <Coffee size={20} />,
-          title: "Hybrid + Pécs base",
-          desc: "Bi-weekly team day at the Pécs office (7625 Péter utca 1.), the rest remote. Flexible 9-5 or 11-7, your preference. No micromanagement — output-based.",
+          title: "Home office + flexibility",
+          desc: "Home office, flexible hours (9-5 or 11-7, your preference). No micromanagement — output-based.",
         },
         {
           icon: <Briefcase size={20} />,
@@ -385,8 +385,8 @@ const DOCS: Record<Language, KarrierDoc> = {
         },
         {
           icon: <Coffee size={20} />,
-          title: "混合 + 佩奇基地",
-          desc: "每两周一次在佩奇办公室(7625 Péter utca 1.)的团队日,其余远程。灵活 9-5 或 11-7,按您偏好。无微观管理 —— 以产出为基础。",
+          title: "在家办公 + 弹性",
+          desc: "在家办公,弹性工作时间(9-5 或 11-7,按您偏好)。无微观管理 —— 以产出为基础。",
         },
         {
           icon: <Briefcase size={20} />,
