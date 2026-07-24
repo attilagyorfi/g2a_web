@@ -21,6 +21,7 @@ import {
   confirmationSubject,
   toLang,
   FIELD_LABELS,
+  renderLeadMagnetWelcomeHtml,
   type Lang,
 } from "./_core/emailTemplates";
 import { generateSocialCopy } from "./_core/socialCopy";
@@ -1764,6 +1765,79 @@ const socialRouter = router({
     }),
 });
 
+const leadMagnetRouter = router({
+  /** Public — AI Marketing Csomag opt-in (HU-only funnel). Stores into the
+   *  newsletter list with source + segmentation, and emails the 4 downloads. */
+  subscribe: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email("Érvényes email cím szükséges"),
+        name: z.string().max(256).optional(),
+        source: z.enum(["ai-csomag", "marketing-teszt"]).default("ai-csomag"),
+        // From the interactive checklist (/marketing-teszt); absent on the plain landing.
+        score: z.number().int().min(0).max(100).optional(),
+        band: z.string().max(64).optional(),
+        weakestAreas: z.string().max(512).optional(),
+        [HONEYPOT_FIELD]: z.string().optional(),
+        turnstileToken: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const guard = await guardPublicFormOrSilent(ctx, input, "newsletter", { success: true });
+      if (guard) return guard;
+
+      const seg = {
+        score: input.score ?? null,
+        band: input.band ?? null,
+        weakestAreas: input.weakestAreas ?? null,
+      };
+      const origin =
+        (ctx.req.headers.origin as string | undefined) ||
+        `${ctx.req.protocol}://${ctx.req.get("host")}`;
+
+      const existing = await db.getNewsletterSubscriberByEmail(input.email);
+      let unsubscribeToken = existing?.unsubscribeToken ?? null;
+
+      if (existing) {
+        // Update segmentation only when the checklist actually supplied it, so a
+        // later plain-landing opt-in doesn't wipe an earlier checklist score.
+        await db.updateNewsletterSubscriberSegmentation(input.email, {
+          source: input.source,
+          ...(input.score !== undefined ? seg : {}),
+        });
+      } else {
+        unsubscribeToken = randomBytes(16).toString("hex");
+        await db.createNewsletterSubscriber({
+          email: input.email,
+          name: input.name ?? null,
+          source: input.source,
+          tags: input.source,
+          unsubscribeToken,
+          ...seg,
+        });
+        await notifyOwner({
+          title: "Új lead-magnet feliratkozó",
+          content:
+            `**Email:** ${input.email}\n**Név:** ${input.name || "–"}\n**Forrás:** ${input.source}\n` +
+            `**Pontszám:** ${input.score ?? "–"}\n**Sáv:** ${input.band || "–"}\n**Leggyengébb:** ${input.weakestAreas || "–"}`,
+          replyTo: input.email,
+        });
+      }
+
+      // Deliver the 4 downloads (they explicitly asked for the materials).
+      if (isEmailConfigured() && unsubscribeToken) {
+        const unsubscribeUrl = `${origin}/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
+        await sendEmail({
+          to: input.email,
+          subject: "Itt a 4 anyag — G2A AI Marketing Csomag",
+          html: renderLeadMagnetWelcomeHtml({ name: input.name, unsubscribeUrl }),
+        });
+      }
+
+      return { success: true };
+    }),
+});
+
 const careersRouter = router({
   /** Public — active positions for the career page. Empty is the normal state. */
   positions: publicProcedure.query(() => db.listActiveJobPositions()),
@@ -1885,6 +1959,7 @@ export const appRouter = router({
   audit: auditRouter,
   newsletter: newsletterRouter,
   careers: careersRouter,
+  leadmagnet: leadMagnetRouter,
   admin: adminRouter,
   upload: uploadRouter,
   social: socialRouter,

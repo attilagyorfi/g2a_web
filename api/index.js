@@ -361,6 +361,14 @@ var init_schema = __esm({
       segment: varchar("segment", { length: 128 }),
       source: varchar("source", { length: 128 }),
       tags: text("tags"),
+      // ─── Lead-magnet funnel segmentation (2026-07) ─────────────────────────
+      // Captured from the interactive checklist (/marketing-teszt). Forward-
+      // compatible with the planned scoring/automation layer: `score` also holds
+      // behavioural points later, `band` drives which nurture branch a subscriber
+      // is enrolled into.
+      score: int("score"),
+      band: varchar("band", { length: 64 }),
+      weakestAreas: text("weakestAreas"),
       // One-click unsubscribe token (64-char URL-safe). Generated on insert.
       unsubscribeToken: varchar("unsubscribeToken", { length: 64 }).unique(),
       // Set when user clicks confirmation link (NULL = single-opt-in, never confirmed).
@@ -586,6 +594,7 @@ __export(db_exports, {
   getIndustries: () => getIndustries,
   getJobPosition: () => getJobPosition,
   getLatestSocialPostsForBlogPost: () => getLatestSocialPostsForBlogPost,
+  getNewsletterSubscriberByEmail: () => getNewsletterSubscriberByEmail,
   getNewsletterSubscribers: () => getNewsletterSubscribers,
   getPageSeo: () => getPageSeo,
   getPartners: () => getPartners,
@@ -620,6 +629,7 @@ __export(db_exports, {
   updateJobApplicationStatus: () => updateJobApplicationStatus,
   updateJobPosition: () => updateJobPosition,
   updateNewsletterSubscriberSegment: () => updateNewsletterSubscriberSegment,
+  updateNewsletterSubscriberSegmentation: () => updateNewsletterSubscriberSegmentation,
   updatePartner: () => updatePartner,
   updatePost: () => updatePost,
   updateService: () => updateService,
@@ -1067,6 +1077,12 @@ async function createNewsletterSubscriber(data) {
   const [result] = await db.insert(newsletterSubscribers).values(data);
   return result;
 }
+async function updateNewsletterSubscriberSegmentation(email, data) {
+  const db = await getDb();
+  if (!db) return;
+  if (Object.values(data).every((v) => v === void 0)) return;
+  await db.update(newsletterSubscribers).set(data).where(eq(newsletterSubscribers.email, email));
+}
 async function getNewsletterSubscribers() {
   const db = await getDb();
   if (!db) return [];
@@ -1082,6 +1098,12 @@ async function checkNewsletterSubscriberExists(email) {
   if (!db) return false;
   const result = await db.select().from(newsletterSubscribers).where(eq(newsletterSubscribers.email, email)).limit(1);
   return result.length > 0;
+}
+async function getNewsletterSubscriberByEmail(email) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(newsletterSubscribers).where(eq(newsletterSubscribers.email, email)).limit(1);
+  return result[0] ?? null;
 }
 async function deleteNewsletterSubscriber(id) {
   const db = await getDb();
@@ -3142,6 +3164,76 @@ function renderWelcomeEmailHtml(input) {
     ${footer(input.unsubscribeUrl, lang)}
   `;
   return wrapper(body, copy.preheader, lang);
+}
+var LEAD_MAGNET_BASE = "https://g2amarketing.hu/letoltesek";
+var LEAD_MAGNETS = [
+  { title: "AI eszk\xF6zriport 2026", desc: "A legjobb AI-marketingeszk\xF6z\xF6k hat kateg\xF3ri\xE1ban, val\xF3s \xE1rakkal \xE9s tippekkel.", file: "G2A_AI_eszkozok_a_marketingben_2026.pdf" },
+  { title: "Marketinges prompt-gy\u0171jtem\xE9ny", desc: "50 k\xE9sz, magyar nyelv\u0171 AI-prompt poszthoz, h\xEDrlev\xE9lhez, hirdet\xE9shez, cikkhez.", file: "G2A_Prompt_gyujtemeny_2026.pdf" },
+  { title: "Marketing \xF6nellen\u0151rz\u0151 checklista", desc: "34 pont \u2014 15 perc alatt \xE1tvil\xE1g\xEDtod a marketinged, \xE9s l\xE1tod, mit er\u0151s\xEDts.", file: "G2A_Marketing_checklista_2026.pdf" },
+  { title: "Tartalom sablon-csomag", desc: "Tartalompill\xE9rek, kit\xF6lthet\u0151 napt\xE1r, 12 posztsablon, hook- \xE9s CTA-formul\xE1k.", file: "G2A_Tartalom_sablon_csomag_2026.pdf" }
+];
+function renderLeadMagnetWelcomeHtml(input) {
+  const lang = "hu";
+  const greeting = input.name ? `Kedves ${escapeHtml(input.name)}!` : "Kedves Feliratkoz\xF3!";
+  const cards = LEAD_MAGNETS.map((m, i) => `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px;margin-bottom:12px">
+      <tr>
+        <td style="padding:16px 18px">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+              <td valign="top">
+                <div style="font-family:${FONT_MONO};font-size:11px;color:${BRAND_TEAL_DARK};letter-spacing:0.1em;margin-bottom:4px">0${i + 1}</div>
+                <div style="font-size:15px;font-weight:700;color:${TEXT_PRIMARY};margin-bottom:4px">${escapeHtml(m.title)}</div>
+                <div style="font-size:13px;color:${TEXT_SECONDARY};line-height:1.5">${escapeHtml(m.desc)}</div>
+              </td>
+              <td valign="middle" align="right" style="padding-left:14px;white-space:nowrap">
+                <a href="${LEAD_MAGNET_BASE}/${m.file}" style="display:inline-block;background:${TEXT_PRIMARY};color:#ffffff;font-size:12px;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:6px;font-family:${FONT_MONO};letter-spacing:0.04em">Let\xF6lt\xE9s \u2192</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>`).join("");
+  const body = `
+    ${darkHeader({ tag: "AI Marketing Csomag", secondaryLine: UI[lang].partnerLine })}
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:40px 36px 8px">
+          <h1 style="margin:0 0 14px;font-size:26px;line-height:1.25;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
+          <p style="margin:0;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">
+            K\xF6sz\xF6nj\xFCk, hogy let\xF6lt\xF6tted az AI Marketing Csomagot! Itt a n\xE9gy anyag \u2014 kattints a let\xF6lt\xE9sekre, \xE9s b\xE1rmikor megnyithatod telefonon vagy g\xE9pen.
+          </p>
+        </td>
+      </tr>
+    </table>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr><td style="padding:24px 36px 4px">${cards}</td></tr>
+    </table>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:8px 36px 4px">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK_PANEL};border-radius:12px;border-left:4px solid ${BRAND_TEAL}">
+            <tr>
+              <td style="padding:22px 26px">
+                <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:8px;font-weight:600">Egy j\xF3 tan\xE1cs</div>
+                <div style="font-size:14px;line-height:1.6;color:#e2e8f0">
+                  Ne akard egyszerre az eg\xE9szet. T\xF6ltsd ki el\u0151bb a checklist\xE1t: 15 perc alatt l\xE1tod, hol sziv\xE1rog el a p\xE9nz a marketingedb\u0151l \u2014 \xE9s a k\xF6vetkez\u0151 h\xF3napban csak a 3 leggyeng\xE9bb pontodra f\xF3kusz\xE1lj.
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    ${signature(lang)}
+
+    ${footer(input.unsubscribeUrl, lang)}
+  `;
+  return wrapper(body, "Itt a n\xE9gy anyag az AI Marketing Csomagb\xF3l \u2014 let\xF6lt\xE9s egy kattint\xE1ssal.", lang);
 }
 var DIGEST_COPY = {
   hu: {
@@ -5248,6 +5340,69 @@ var socialRouter = router({
     return { id, success: true };
   })
 });
+var leadMagnetRouter = router({
+  /** Public — AI Marketing Csomag opt-in (HU-only funnel). Stores into the
+   *  newsletter list with source + segmentation, and emails the 4 downloads. */
+  subscribe: publicProcedure.input(
+    z2.object({
+      email: z2.string().email("\xC9rv\xE9nyes email c\xEDm sz\xFCks\xE9ges"),
+      name: z2.string().max(256).optional(),
+      source: z2.enum(["ai-csomag", "marketing-teszt"]).default("ai-csomag"),
+      // From the interactive checklist (/marketing-teszt); absent on the plain landing.
+      score: z2.number().int().min(0).max(100).optional(),
+      band: z2.string().max(64).optional(),
+      weakestAreas: z2.string().max(512).optional(),
+      [HONEYPOT_FIELD]: z2.string().optional(),
+      turnstileToken: z2.string().optional()
+    })
+  ).mutation(async ({ input, ctx }) => {
+    const guard = await guardPublicFormOrSilent(ctx, input, "newsletter", { success: true });
+    if (guard) return guard;
+    const seg = {
+      score: input.score ?? null,
+      band: input.band ?? null,
+      weakestAreas: input.weakestAreas ?? null
+    };
+    const origin = ctx.req.headers.origin || `${ctx.req.protocol}://${ctx.req.get("host")}`;
+    const existing = await getNewsletterSubscriberByEmail(input.email);
+    let unsubscribeToken = existing?.unsubscribeToken ?? null;
+    if (existing) {
+      await updateNewsletterSubscriberSegmentation(input.email, {
+        source: input.source,
+        ...input.score !== void 0 ? seg : {}
+      });
+    } else {
+      unsubscribeToken = randomBytes2(16).toString("hex");
+      await createNewsletterSubscriber({
+        email: input.email,
+        name: input.name ?? null,
+        source: input.source,
+        tags: input.source,
+        unsubscribeToken,
+        ...seg
+      });
+      await notifyOwner({
+        title: "\xDAj lead-magnet feliratkoz\xF3",
+        content: `**Email:** ${input.email}
+**N\xE9v:** ${input.name || "\u2013"}
+**Forr\xE1s:** ${input.source}
+**Pontsz\xE1m:** ${input.score ?? "\u2013"}
+**S\xE1v:** ${input.band || "\u2013"}
+**Leggyeng\xE9bb:** ${input.weakestAreas || "\u2013"}`,
+        replyTo: input.email
+      });
+    }
+    if (isEmailConfigured() && unsubscribeToken) {
+      const unsubscribeUrl = `${origin}/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
+      await sendEmail({
+        to: input.email,
+        subject: "Itt a 4 anyag \u2014 G2A AI Marketing Csomag",
+        html: renderLeadMagnetWelcomeHtml({ name: input.name, unsubscribeUrl })
+      });
+    }
+    return { success: true };
+  })
+});
 var careersRouter = router({
   /** Public — active positions for the career page. Empty is the normal state. */
   positions: publicProcedure.query(() => listActiveJobPositions()),
@@ -5357,6 +5512,7 @@ var appRouter = router({
   audit: auditRouter,
   newsletter: newsletterRouter,
   careers: careersRouter,
+  leadmagnet: leadMagnetRouter,
   admin: adminRouter,
   upload: uploadRouter,
   social: socialRouter

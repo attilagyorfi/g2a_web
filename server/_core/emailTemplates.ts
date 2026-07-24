@@ -370,6 +370,88 @@ export function renderWelcomeEmailHtml(input: WelcomeEmailInput): string {
   return wrapper(body, copy.preheader, lang);
 }
 
+// ─── Lead-magnet welcome (AI Marketing Csomag) — HU only ────────────────────
+
+const LEAD_MAGNET_BASE = "https://g2amarketing.hu/letoltesek";
+
+const LEAD_MAGNETS: { title: string; desc: string; file: string }[] = [
+  { title: "AI eszközriport 2026", desc: "A legjobb AI-marketingeszközök hat kategóriában, valós árakkal és tippekkel.", file: "G2A_AI_eszkozok_a_marketingben_2026.pdf" },
+  { title: "Marketinges prompt-gyűjtemény", desc: "50 kész, magyar nyelvű AI-prompt poszthoz, hírlevélhez, hirdetéshez, cikkhez.", file: "G2A_Prompt_gyujtemeny_2026.pdf" },
+  { title: "Marketing önellenőrző checklista", desc: "34 pont — 15 perc alatt átvilágítod a marketinged, és látod, mit erősíts.", file: "G2A_Marketing_checklista_2026.pdf" },
+  { title: "Tartalom sablon-csomag", desc: "Tartalompillérek, kitölthető naptár, 12 posztsablon, hook- és CTA-formulák.", file: "G2A_Tartalom_sablon_csomag_2026.pdf" },
+];
+
+export type LeadMagnetWelcomeInput = { name?: string | null; unsubscribeUrl: string };
+
+/** Delivers the four AI Marketing Csomag PDFs. Always Hungarian — this funnel
+ *  runs only on the HU branch. Uses the client-approved email voice. */
+export function renderLeadMagnetWelcomeHtml(input: LeadMagnetWelcomeInput): string {
+  const lang: Lang = "hu";
+  const greeting = input.name ? `Kedves ${escapeHtml(input.name)}!` : "Kedves Feliratkozó!";
+
+  const cards = LEAD_MAGNETS.map((m, i) => `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BG_SUBTLE};border:1px solid ${BORDER};border-radius:10px;margin-bottom:12px">
+      <tr>
+        <td style="padding:16px 18px">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+              <td valign="top">
+                <div style="font-family:${FONT_MONO};font-size:11px;color:${BRAND_TEAL_DARK};letter-spacing:0.1em;margin-bottom:4px">0${i + 1}</div>
+                <div style="font-size:15px;font-weight:700;color:${TEXT_PRIMARY};margin-bottom:4px">${escapeHtml(m.title)}</div>
+                <div style="font-size:13px;color:${TEXT_SECONDARY};line-height:1.5">${escapeHtml(m.desc)}</div>
+              </td>
+              <td valign="middle" align="right" style="padding-left:14px;white-space:nowrap">
+                <a href="${LEAD_MAGNET_BASE}/${m.file}" style="display:inline-block;background:${TEXT_PRIMARY};color:#ffffff;font-size:12px;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:6px;font-family:${FONT_MONO};letter-spacing:0.04em">Letöltés →</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>`).join("");
+
+  const body = `
+    ${darkHeader({ tag: "AI Marketing Csomag", secondaryLine: UI[lang].partnerLine })}
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:40px 36px 8px">
+          <h1 style="margin:0 0 14px;font-size:26px;line-height:1.25;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.025em">${greeting}</h1>
+          <p style="margin:0;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">
+            Köszönjük, hogy letöltötted az AI Marketing Csomagot! Itt a négy anyag — kattints a letöltésekre, és bármikor megnyithatod telefonon vagy gépen.
+          </p>
+        </td>
+      </tr>
+    </table>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr><td style="padding:24px 36px 4px">${cards}</td></tr>
+    </table>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:8px 36px 4px">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${BRAND_DARK_PANEL};border-radius:12px;border-left:4px solid ${BRAND_TEAL}">
+            <tr>
+              <td style="padding:22px 26px">
+                <div style="font-family:${FONT_MONO};font-size:10px;letter-spacing:0.18em;color:${BRAND_TEAL};text-transform:uppercase;margin-bottom:8px;font-weight:600">Egy jó tanács</div>
+                <div style="font-size:14px;line-height:1.6;color:#e2e8f0">
+                  Ne akard egyszerre az egészet. Töltsd ki előbb a checklistát: 15 perc alatt látod, hol szivárog el a pénz a marketingedből — és a következő hónapban csak a 3 leggyengébb pontodra fókuszálj.
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    ${signature(lang)}
+
+    ${footer(input.unsubscribeUrl, lang)}
+  `;
+
+  return wrapper(body, "Itt a négy anyag az AI Marketing Csomagból — letöltés egy kattintással.", lang);
+}
+
 // ─── Weekly digest / sample newsletter ──────────────────────────────────────
 
 export type DigestArticle = {

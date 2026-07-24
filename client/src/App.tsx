@@ -59,6 +59,10 @@ const HirlevelPage = lazy(() => import("./pages/HirlevelPage"));
 // to /ingyenes-audit (audit §3.3 consolidation). The component file is kept
 // so the previous content is recoverable, just no longer route-mounted.
 const KarrierPage = lazy(() => import("./pages/KarrierPage"));
+// AI Marketing Csomag lead-magnet funnel (HU-only)
+const AiCsomagPage = lazy(() => import("./pages/funnel/AiCsomagPage"));
+const MarketingTesztPage = lazy(() => import("./pages/funnel/MarketingTesztPage"));
+const KoszonjukPage = lazy(() => import("./pages/funnel/KoszonjukPage"));
 const RolunkPage = lazy(() => import("./pages/RolunkPage"));
 const NewServicePage = lazy(() => import("./pages/NewServicePage"));
 const AuditPage = lazy(() => import("./pages/AuditPage"));
@@ -131,6 +135,10 @@ function PublicRouter() {
       <Route path="/hirlevel" component={HirlevelPage} />
       {/* /marketing-audit → /ingyenes-audit, handled by vercel.json 301 (audit §3.3) */}
       <Route path="/karrier" component={KarrierPage} />
+      {/* AI Marketing Csomag funnel — HU-only, not in the main nav (reached via campaigns) */}
+      <Route path="/ai-csomag" component={AiCsomagPage} />
+      <Route path="/marketing-teszt" component={MarketingTesztPage} />
+      <Route path="/koszonjuk" component={KoszonjukPage} />
       <Route path="/ingyenes-seo-audit" component={SeoAuditPage} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

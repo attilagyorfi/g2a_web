@@ -590,6 +590,18 @@ export async function createNewsletterSubscriber(data: Omit<typeof newsletterSub
   return result;
 }
 
+/** Update an existing subscriber's segmentation — e.g. they retook the
+ *  checklist, or a lead-magnet opt-in arrived for an already-known email. */
+export async function updateNewsletterSubscriberSegmentation(
+  email: string,
+  data: Partial<{ score: number | null; band: string | null; weakestAreas: string | null; source: string | null; tags: string | null }>,
+) {
+  const db = await getDb();
+  if (!db) return;
+  if (Object.values(data).every((v) => v === undefined)) return;
+  await db.update(newsletterSubscribers).set(data).where(eq(newsletterSubscribers.email, email));
+}
+
 export async function getNewsletterSubscribers() {
   const db = await getDb();
   if (!db) return [];
@@ -607,6 +619,13 @@ export async function checkNewsletterSubscriberExists(email: string) {
   if (!db) return false;
   const result = await db.select().from(newsletterSubscribers).where(eq(newsletterSubscribers.email, email)).limit(1);
   return result.length > 0;
+}
+
+export async function getNewsletterSubscriberByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(newsletterSubscribers).where(eq(newsletterSubscribers.email, email)).limit(1);
+  return result[0] ?? null;
 }
 
 export async function deleteNewsletterSubscriber(id: number) {

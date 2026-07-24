@@ -403,6 +403,14 @@ export const newsletterSubscribers = mysqlTable("newsletter_subscribers", {
   segment: varchar("segment", { length: 128 }),
   source: varchar("source", { length: 128 }),
   tags: text("tags"),
+  // ─── Lead-magnet funnel segmentation (2026-07) ─────────────────────────
+  // Captured from the interactive checklist (/marketing-teszt). Forward-
+  // compatible with the planned scoring/automation layer: `score` also holds
+  // behavioural points later, `band` drives which nurture branch a subscriber
+  // is enrolled into.
+  score: int("score"),
+  band: varchar("band", { length: 64 }),
+  weakestAreas: text("weakestAreas"),
   // One-click unsubscribe token (64-char URL-safe). Generated on insert.
   unsubscribeToken: varchar("unsubscribeToken", { length: 64 }).unique(),
   // Set when user clicks confirmation link (NULL = single-opt-in, never confirmed).
