@@ -11,6 +11,7 @@ import PageLoader from "./components/PageLoader";
 import { ConfirmDialogHost } from "./components/ConfirmDialog";
 import { RouteScrollToTop } from "./components/ScrollToTop";
 import DeferredMount from "./components/DeferredMount";
+import { useIsMobile } from "@/hooks/useMobile";
 
 // ─── First-paint-critical chrome (eager) ─────────────────────────────────
 // CustomCursor: small, mounted very early so the teal pointer appears
@@ -202,6 +203,7 @@ function Router() {
 function PublicOnlyChrome() {
   const [location] = useLocation();
   const [searchOpen, setSearchOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   // Cmd/Ctrl+K to open search anywhere on the public site (admin has its own UI)
   useEffect(() => {
@@ -245,14 +247,17 @@ function PublicOnlyChrome() {
       </Suspense>
       <CustomCursor />
       <Suspense fallback={null}>
-        <WhatsAppButton />
-        <WechatButton />
+        {/* Floating contact icons — WhatsApp, WeChat and the Calendly booking
+            badge. Desktop only: on phones they stack over the content and the
+            user asked to drop them (the hamburger + footer carry the same CTAs). */}
+        {!isMobile && <WhatsAppButton />}
+        {!isMobile && <WechatButton />}
         <ExitIntentPopup />
         <NewsletterPopup />
         <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
         {/* Calendly floating badge — bottom-right pill that opens booking popup.
-            Hidden on /kapcsolat (already has inline embed) and /admin. */}
-        <CalendlyBadge />
+            Hidden on /kapcsolat (already has inline embed), /admin, and mobile. */}
+        {!isMobile && <CalendlyBadge />}
       </Suspense>
     </>
   );

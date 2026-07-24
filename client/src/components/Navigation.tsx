@@ -6,6 +6,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useSiteSettings } from "@/lib/useSiteSettings";
+import { useIsMobile } from "@/hooks/useMobile";
 
 const LOGO_URL = "https://g2amarketing.hu/wp-content/uploads/2022/06/g2a_512x512_transparent_feher.png";
 
@@ -19,6 +20,7 @@ export default function Navigation() {
   const [location] = useLocation();
   const { theme } = useTheme();
   const { lang, setLang, t } = useLanguage();
+  const isMobile = useIsMobile();
   // Admin-configurable social URLs (Beállítások panel). Fallbacks
   // below are the production values, so the nav still works on a
   // fresh DB with no settings rows.
@@ -105,8 +107,10 @@ export default function Navigation() {
         backdropFilter: scrolled ? "blur(16px)" : "none",
         transition: "backdrop-filter 0.3s ease",
       }}>
-      {/* Top bar */}
-      <div style={{
+      {/* Top bar — contact strip. Hidden on phones (it overflows: phone +
+          email + hours + 4 social icons don't fit a narrow row); the same
+          info lives in the hamburger flyout and the footer. */}
+      <div className="hidden md:block" style={{
         backgroundColor: isLight ? "#f0f0f0" : "#080808",
         borderBottom: `1px solid ${isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.05)"}`,
         padding: "0.4rem 0",
@@ -159,8 +163,10 @@ export default function Navigation() {
             <img src={LOGO_URL} alt={t("nav.logoAlt")} style={{ height: "38px", width: "auto", filter: isLight ? "invert(1)" : "none" }} />
           </Link>
 
-          {/* Desktop nav */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.125rem" }} className="hidden md:flex">
+          {/* Desktop nav — display is controlled purely by the `hidden md:flex`
+              classes. An inline `display:flex` here would override `hidden` and
+              leak the full desktop menu onto mobile next to the hamburger. */}
+          <div style={{ alignItems: "center", gap: "0.125rem" }} className="hidden md:flex">
             <NavLink href="/" label={t("nav.home")} current={location} isLight={isLight} />
 
             {/* Services mega dropdown – hover triggered */}
@@ -362,8 +368,9 @@ export default function Navigation() {
         )}
       </nav>
       </div>
-      {/* Spacer to compensate for fixed header (top-bar ~32px + main-nav 68px = ~100px) */}
-      <div aria-hidden style={{ height: "100px" }} />
+      {/* Spacer to compensate for the fixed header. On phones the top bar is
+          hidden, so only the 68px main nav needs clearing. */}
+      <div aria-hidden style={{ height: isMobile ? "68px" : "100px" }} />
     </>
   );
 }

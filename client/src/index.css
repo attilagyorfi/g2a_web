@@ -970,3 +970,19 @@ img {
   .g2a-btn-group { flex-direction: column; }
   .g2a-btn-primary, .g2a-btn-secondary { width: 100%; justify-content: center; }
 }
+
+/* ── Mobile retrofit: collapse inline multi-column grids ──────────────────
+   Most public sections set `grid-template-columns` as a React inline style
+   (e.g. "1fr 1fr", "minmax(0,1fr) minmax(0,460px)"). Inline styles win over
+   classes, so a stylesheet can only override them with !important. Below the
+   md breakpoint these side-by-side blocks (text + form, feature/stat grids)
+   don't fit a phone and read as "broken"; force a single column. Opt an
+   element out by adding the `g2a-keep-cols` class where a multi-column layout
+   is genuinely wanted on mobile. */
+@media (max-width: 767px) {
+  [style*="grid-template-columns"]:not(.g2a-keep-cols) {
+    grid-template-columns: 1fr !important;
+  }
+  /* Long inline flex rows (two panels side by side) wrap instead of squashing. */
+  .g2a-stack-mobile { flex-direction: column !important; }
+}
