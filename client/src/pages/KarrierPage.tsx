@@ -91,11 +91,11 @@ const DOCS: Record<Language, KarrierDoc> = {
     // Audit B1: ≤ 60 / ≤ 155 char + the docx tightening
     seoTitle: "Karrier — Csatlakozz a G2A csapathoz | G2A Marketing",
     seoDesc:
-      "Kis, AI-eszközöket napi szinten használó marketingcsapat Pécsen (hibrid). Konkrét projektek, prémium AI-stack, fizetett munkapróba. Nézd meg a pozíciókat.",
+      "Kis, AI-eszközöket napi szinten használó marketingcsapat — home-office, rugalmas munka. Konkrét projektek, prémium AI-stack, fizetett munkapróba. Nézd meg a pozíciókat.",
     badge: "Karrier",
     title: "Csatlakozz a G2A csapathoz",
     lead:
-      "Egy kis, fókuszált csapat vagyunk, ami AI-eszközöket használ napi szinten — Claude, Manus, Midjourney, Runway, ElevenLabs. Olyan kollégákat keresünk, akiket a stratégiai marketing + tech-fókuszú megközelítés vonz, és Pécsen vagy hibrid módon (PTE-régió + remote) tudnának dolgozni.",
+      "Egy kis, fókuszált csapat vagyunk, ami AI-eszközöket használ napi szinten — Claude, Manus, Midjourney, Runway, ElevenLabs. Olyan kollégákat keresünk, akiket a stratégiai marketing + tech-fókuszú megközelítés vonz, és akik home-office-ban, az ország bármely részéről tudnának dolgozni.",
     workWithUs: {
       heading: "Miért érdemes nálunk dolgozni?",
       intro:
@@ -223,11 +223,11 @@ const DOCS: Record<Language, KarrierDoc> = {
   en: {
     seoTitle: "Careers — Join the G2A Team | AI-Focused Agency",
     seoDesc:
-      "A small, focused marketing team using AI tools daily in Pécs (hybrid). Real projects, measurable growth, a premium AI stack, a paid work trial. See open positions.",
+      "A small, focused marketing team using AI tools daily — home office, flexible work. Real projects, measurable growth, a premium AI stack, a paid work trial. See open positions.",
     badge: "Careers",
     title: "Join the G2A team",
     lead:
-      "We're a small, focused team using AI tools daily — Claude, Manus, Midjourney, Runway, ElevenLabs. We look for colleagues drawn to strategic marketing + tech-forward thinking who can work in Pécs or hybrid (Pécs region + remote).",
+      "We're a small, focused team using AI tools daily — Claude, Manus, Midjourney, Runway, ElevenLabs. We look for colleagues drawn to strategic marketing + tech-forward thinking who can work from home office, anywhere in the country.",
     workWithUs: {
       heading: "Why work with us?",
       intro: "Six things we deliver that a classical agency mostly doesn't:",
@@ -354,11 +354,11 @@ const DOCS: Record<Language, KarrierDoc> = {
   zh: {
     seoTitle: "招聘 — 加入 G2A 团队 | 以 AI 为核心的营销代理",
     seoDesc:
-      "一支在佩奇每天使用 AI 工具的小型专注营销团队（混合办公）。真实项目、可衡量的成长、高端 AI 工具栈、带薪试岗。查看空缺职位。",
+      "一支每天使用 AI 工具的小型专注营销团队 —— 在家办公、灵活办公。真实项目、可衡量的成长、高端 AI 工具栈、带薪试岗。查看空缺职位。",
     badge: "招聘",
     title: "加入 G2A 团队",
     lead:
-      "我们是一支小型聚焦团队,日常使用 AI 工具 — Claude、Manus、Midjourney、Runway、ElevenLabs。我们寻找被战略营销 + 技术导向思维吸引,可在佩奇或混合(佩奇地区 + 远程)工作的同事。",
+      "我们是一支小型聚焦团队,日常使用 AI 工具 — Claude、Manus、Midjourney、Runway、ElevenLabs。我们寻找被战略营销 + 技术导向思维吸引,可在家办公、在全国任何地方工作的同事。",
     workWithUs: {
       heading: "为何与我们合作?",
       intro: "六件传统代理机构通常做不到的事:",
