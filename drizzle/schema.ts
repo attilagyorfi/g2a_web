@@ -411,6 +411,13 @@ export const newsletterSubscribers = mysqlTable("newsletter_subscribers", {
   score: int("score"),
   band: varchar("band", { length: 64 }),
   weakestAreas: text("weakestAreas"),
+  // ─── Behavioural lead scoring / churn (2026-07) ───────────────────────────
+  // Bumped by the Resend webhook: open +1, click +3. `lastEngagedAt` drives
+  // churn detection (no engagement in N days → win-back → sunset).
+  engagementScore: int("engagementScore").default(0).notNull(),
+  lastEngagedAt: timestamp("lastEngagedAt"),
+  /** Set when a win-back sequence has already run, so we don't loop it. */
+  winbackSentAt: timestamp("winbackSentAt"),
   // One-click unsubscribe token (64-char URL-safe). Generated on insert.
   unsubscribeToken: varchar("unsubscribeToken", { length: 64 }).unique(),
   // Set when user clicks confirmation link (NULL = single-opt-in, never confirmed).

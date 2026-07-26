@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, like, lte, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNotNull, isNull, like, lte, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser,
@@ -633,6 +633,70 @@ export async function deleteNewsletterSubscriber(id: number) {
   const db = await getDb();
   if (!db) return;
   await db.delete(newsletterSubscribers).where(eq(newsletterSubscribers.id, id));
+}
+
+/** Behavioural lead scoring — bumped from the Resend webhook (open +1, click +3).
+ *  Also stamps recency (lastEngagedAt) used by churn detection. */
+export async function bumpEngagement(email: string, points: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(newsletterSubscribers)
+    .set({
+      engagementScore: sql`${newsletterSubscribers.engagementScore} + ${points}`,
+      lastEngagedAt: new Date(),
+    })
+    .where(eq(newsletterSubscribers.email, email));
+}
+
+// ─── Churn: win-back + sunset ─────────────────────────────────────────────────
+/** Cold subscribers to enrol into win-back. SAFE: only those we KNOW are cold —
+ *  they have engagement history (lastEngagedAt not null) that's gone stale.
+ *  Never-tracked subscribers (null) are left alone, so this can't mass-sunset
+ *  the list before the Resend webhook is wired. */
+export async function getChurnCandidates(coldDays: number, limit = 200) {
+  const db = await getDb();
+  if (!db) return [];
+  const cutoff = new Date(Date.now() - coldDays * 86400000);
+  return db.select({ id: newsletterSubscribers.id, email: newsletterSubscribers.email, name: newsletterSubscribers.name, band: newsletterSubscribers.band })
+    .from(newsletterSubscribers)
+    .where(and(
+      eq(newsletterSubscribers.isActive, true),
+      isNotNull(newsletterSubscribers.lastEngagedAt),
+      lte(newsletterSubscribers.lastEngagedAt, cutoff),
+      isNull(newsletterSubscribers.winbackSentAt),
+    ))
+    .limit(limit);
+}
+
+export async function markWinbackSent(email: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(newsletterSubscribers).set({ winbackSentAt: new Date() }).where(eq(newsletterSubscribers.email, email));
+}
+
+/** After the win-back window, subscribers who still didn't re-engage → sunset. */
+export async function getSunsetCandidates(winbackDays: number, limit = 200) {
+  const db = await getDb();
+  if (!db) return [];
+  const cutoff = new Date(Date.now() - winbackDays * 86400000);
+  return db.select({ id: newsletterSubscribers.id, email: newsletterSubscribers.email })
+    .from(newsletterSubscribers)
+    .where(and(
+      eq(newsletterSubscribers.isActive, true),
+      isNotNull(newsletterSubscribers.winbackSentAt),
+      lte(newsletterSubscribers.winbackSentAt, cutoff),
+      or(
+        isNull(newsletterSubscribers.lastEngagedAt),
+        sql`${newsletterSubscribers.lastEngagedAt} < ${newsletterSubscribers.winbackSentAt}`,
+      ),
+    ))
+    .limit(limit);
+}
+
+export async function sunsetSubscriber(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(newsletterSubscribers).set({ isActive: false }).where(eq(newsletterSubscribers.id, id));
 }
 
 // ─── Email automation enrollments ─────────────────────────────────────────────

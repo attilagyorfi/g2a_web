@@ -23,7 +23,7 @@
 import type { Express, Request, Response } from "express";
 import { createHmac, timingSafeEqual } from "crypto";
 import { ENV } from "./env";
-import { recordEmailEvent } from "../db";
+import { recordEmailEvent, bumpEngagement } from "../db";
 
 const TOLERANCE_SECONDS = 5 * 60; // reject events older than 5 minutes (replay protection)
 
@@ -192,6 +192,11 @@ export function registerResendWebhookRoute(app: Express) {
           resendMessageId: messageId,
           rawData: JSON.stringify(event),
         });
+        // Behavioural lead scoring: reward engagement + refresh recency.
+        if (recipient && recipient !== "unknown") {
+          if (event.type === "email.opened") await bumpEngagement(recipient, 1);
+          else if (event.type === "email.clicked") await bumpEngagement(recipient, 3);
+        }
       } catch (err) {
         // Resend retries on 5xx — only return 500 for genuine DB failures
         console.error("[resend-webhook] DB write failed:", err);

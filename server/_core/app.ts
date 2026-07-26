@@ -21,6 +21,7 @@ import { registerRssRoute } from "./rssRoute";
 import { registerPasswordAuthRoute } from "./passwordAuthRoute";
 import { registerDigestCronRoute } from "./digestCronRoute";
 import { registerAutomationCronRoute } from "./automationCronRoute";
+import { registerChurnCronRoute } from "./churnCronRoute";
 import { ENV } from "./env";
 
 let secretsChecked = false;
@@ -84,6 +85,7 @@ export function createApp(): Express {
   // by the schedule in vercel.json (Fridays 07:00 UTC = 09:00 CEST).
   registerDigestCronRoute(app);
   registerAutomationCronRoute(app);
+  registerChurnCronRoute(app);
 
   // tRPC API — /api/trpc/*
   app.use(

@@ -369,6 +369,13 @@ var init_schema = __esm({
       score: int("score"),
       band: varchar("band", { length: 64 }),
       weakestAreas: text("weakestAreas"),
+      // ─── Behavioural lead scoring / churn (2026-07) ───────────────────────────
+      // Bumped by the Resend webhook: open +1, click +3. `lastEngagedAt` drives
+      // churn detection (no engagement in N days → win-back → sunset).
+      engagementScore: int("engagementScore").default(0).notNull(),
+      lastEngagedAt: timestamp("lastEngagedAt"),
+      /** Set when a win-back sequence has already run, so we don't loop it. */
+      winbackSentAt: timestamp("winbackSentAt"),
       // One-click unsubscribe token (64-char URL-safe). Generated on insert.
       unsubscribeToken: varchar("unsubscribeToken", { length: 64 }).unique(),
       // Set when user clicks confirmation link (NULL = single-opt-in, never confirmed).
@@ -536,6 +543,7 @@ var init_env = __esm({
 // server/db.ts
 var db_exports = {};
 __export(db_exports, {
+  bumpEngagement: () => bumpEngagement,
   cancelEnrollmentsForEmail: () => cancelEnrollmentsForEmail,
   checkNewsletterSubscriberExists: () => checkNewsletterSubscriberExists,
   createAiJob: () => createAiJob,
@@ -602,6 +610,7 @@ __export(db_exports, {
   getCampaignEventStats: () => getCampaignEventStats,
   getCaseStudyBySlug: () => getCaseStudyBySlug,
   getCategories: () => getCategories,
+  getChurnCandidates: () => getChurnCandidates,
   getContactSubmissions: () => getContactSubmissions,
   getDb: () => getDb,
   getDueEnrollments: () => getDueEnrollments,
@@ -620,6 +629,7 @@ __export(db_exports, {
   getServices: () => getServices,
   getSiteSetting: () => getSiteSetting,
   getSocialAccountByPlatform: () => getSocialAccountByPlatform,
+  getSunsetCandidates: () => getSunsetCandidates,
   getTechnologies: () => getTechnologies,
   getTestimonials: () => getTestimonials,
   getUserByEmail: () => getUserByEmail,
@@ -636,7 +646,9 @@ __export(db_exports, {
   listStaffUsers: () => listStaffUsers,
   markAuditLeadContacted: () => markAuditLeadContacted,
   markContactRead: () => markContactRead,
+  markWinbackSent: () => markWinbackSent,
   recordEmailEvent: () => recordEmailEvent,
+  sunsetSubscriber: () => sunsetSubscriber,
   unsubscribeByToken: () => unsubscribeByToken,
   updateAiJob: () => updateAiJob,
   updateCategory: () => updateCategory,
@@ -661,7 +673,7 @@ __export(db_exports, {
   upsertSiteSetting: () => upsertSiteSetting,
   upsertUser: () => upsertUser
 });
-import { and, asc, desc, eq, inArray, lte, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNotNull, isNull, lte, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
@@ -1127,6 +1139,49 @@ async function deleteNewsletterSubscriber(id) {
   const db = await getDb();
   if (!db) return;
   await db.delete(newsletterSubscribers).where(eq(newsletterSubscribers.id, id));
+}
+async function bumpEngagement(email, points) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(newsletterSubscribers).set({
+    engagementScore: sql`${newsletterSubscribers.engagementScore} + ${points}`,
+    lastEngagedAt: /* @__PURE__ */ new Date()
+  }).where(eq(newsletterSubscribers.email, email));
+}
+async function getChurnCandidates(coldDays, limit = 200) {
+  const db = await getDb();
+  if (!db) return [];
+  const cutoff = new Date(Date.now() - coldDays * 864e5);
+  return db.select({ id: newsletterSubscribers.id, email: newsletterSubscribers.email, name: newsletterSubscribers.name, band: newsletterSubscribers.band }).from(newsletterSubscribers).where(and(
+    eq(newsletterSubscribers.isActive, true),
+    isNotNull(newsletterSubscribers.lastEngagedAt),
+    lte(newsletterSubscribers.lastEngagedAt, cutoff),
+    isNull(newsletterSubscribers.winbackSentAt)
+  )).limit(limit);
+}
+async function markWinbackSent(email) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(newsletterSubscribers).set({ winbackSentAt: /* @__PURE__ */ new Date() }).where(eq(newsletterSubscribers.email, email));
+}
+async function getSunsetCandidates(winbackDays, limit = 200) {
+  const db = await getDb();
+  if (!db) return [];
+  const cutoff = new Date(Date.now() - winbackDays * 864e5);
+  return db.select({ id: newsletterSubscribers.id, email: newsletterSubscribers.email }).from(newsletterSubscribers).where(and(
+    eq(newsletterSubscribers.isActive, true),
+    isNotNull(newsletterSubscribers.winbackSentAt),
+    lte(newsletterSubscribers.winbackSentAt, cutoff),
+    or(
+      isNull(newsletterSubscribers.lastEngagedAt),
+      sql`${newsletterSubscribers.lastEngagedAt} < ${newsletterSubscribers.winbackSentAt}`
+    )
+  )).limit(limit);
+}
+async function sunsetSubscriber(id) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(newsletterSubscribers).set({ isActive: false }).where(eq(newsletterSubscribers.id, id));
 }
 async function hasActiveEnrollment(email, automationKey) {
   const db = await getDb();
@@ -3928,6 +3983,46 @@ var AUTOMATIONS = {
     ]
   }
 };
+AUTOMATIONS["winback"] = {
+  key: "winback",
+  name: "Win-back (churn)",
+  steps: [
+    {
+      dayOffset: 0,
+      build: (ctx) => ({
+        subject: "M\xE9g hasznosak a leveleink?",
+        html: renderSimpleEmailHtml({
+          name: ctx.name,
+          tag: "R\xE9g tal\xE1lkoztunk",
+          unsubscribeUrl: ctx.unsubscribeUrl,
+          preheader: "Egy kattint\xE1s, \xE9s maradsz \u2014 ha nem, csendben kivesz\xFCnk.",
+          paragraphs: [
+            "Egy ideje nem nyitottad meg a leveleinket \u2014 \xE9s ez teljesen rendben van. Csak nem szeretn\xE9nk feleslegesen foglalni a postal\xE1d\xE1d.",
+            "Ha m\xE9g hasznosnak tal\xE1lod a gyakorlati marketing- \xE9s AI-tippeket, egyetlen kattint\xE1s el\xE9g, \xE9s minden marad a r\xE9giben. Ha nem, semmi teend\u0151d \u2014 hamarosan magunkt\xF3l kivesz\xFCnk a list\xE1r\xF3l."
+          ],
+          cta: { label: "Igen, maradok \u2014 mutasd a friss cikkeket \u2192", href: `${SITE}/hirek` }
+        })
+      })
+    },
+    {
+      dayOffset: 7,
+      build: (ctx) => ({
+        subject: "Utols\xF3 lev\xE9l \u2014 ha most sem \xE9rdekel",
+        html: renderSimpleEmailHtml({
+          name: ctx.name,
+          tag: "B\xFAcs\xFAzunk?",
+          unsubscribeUrl: ctx.unsubscribeUrl,
+          preheader: "Ha maradn\xE1l, egy kattint\xE1s. Ha nem, nincs teend\u0151d.",
+          paragraphs: [
+            "Ez az utols\xF3 level\xFCnk, ha most sem \xE9rdekel. Nem akarunk tolakodni \u2014 ink\xE1bb csak azoknak \xEDrunk, akiknek t\xE9nyleg hasznos.",
+            "Ha maradn\xE1l, kattints az al\xE1bbi gombra, \xE9s minden marad a r\xE9giben. Ha nem, nincs teend\u0151d: csendben kivesz\xFCnk a list\xE1r\xF3l, hogy tiszta maradjon a postal\xE1d\xE1d."
+          ],
+          cta: { label: "Maradok \u2192", href: `${SITE}/hirek` }
+        })
+      })
+    }
+  ]
+};
 function getAutomation(key) {
   return AUTOMATIONS[key];
 }
@@ -6064,6 +6159,10 @@ function registerResendWebhookRoute(app2) {
           resendMessageId: messageId,
           rawData: JSON.stringify(event)
         });
+        if (recipient && recipient !== "unknown") {
+          if (event.type === "email.opened") await bumpEngagement(recipient, 1);
+          else if (event.type === "email.clicked") await bumpEngagement(recipient, 3);
+        }
       } catch (err) {
         console.error("[resend-webhook] DB write failed:", err);
         res.status(500).json({ error: "Storage failed" });
@@ -6753,6 +6852,48 @@ ${a.excerpt}
 
 // server/_core/automationCronRoute.ts
 init_db();
+
+// server/_core/churnCronRoute.ts
+init_db();
+var COLD_DAYS = 60;
+var GRACE_DAYS = 21;
+async function runChurn() {
+  let winbackEnrolled = 0, sunset = 0;
+  if (isEmailConfigured() && getAutomation("winback")) {
+    const cold = await getChurnCandidates(COLD_DAYS);
+    for (const c of cold) {
+      if (await hasActiveEnrollment(c.email, "winback")) continue;
+      await createEnrollment({ email: c.email, automationKey: "winback", band: c.band, name: c.name, nextRunAt: /* @__PURE__ */ new Date() });
+      await markWinbackSent(c.email);
+      winbackEnrolled++;
+    }
+  }
+  const toSunset = await getSunsetCandidates(GRACE_DAYS);
+  for (const s of toSunset) {
+    await sunsetSubscriber(s.id);
+    await cancelEnrollmentsForEmail(s.email);
+    sunset++;
+  }
+  return { winbackEnrolled, sunset };
+}
+function registerChurnCronRoute(app2) {
+  const handler = async (req, res) => {
+    const secret = process.env.CRON_SECRET;
+    if (secret) {
+      if ((req.headers.authorization || "") !== `Bearer ${secret}`) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+    } else if (process.env.NODE_ENV === "production") {
+      return res.status(503).json({ error: "CRON_SECRET not set in production." });
+    }
+    const result = await runChurn();
+    return res.status(200).json({ ok: true, ...result });
+  };
+  app2.get("/api/cron/churn", handler);
+  app2.post("/api/cron/churn", handler);
+}
+
+// server/_core/automationCronRoute.ts
 var ORIGIN4 = "https://g2amarketing.hu";
 var BATCH = 200;
 var DAY_MS = 24 * 60 * 60 * 1e3;
@@ -6770,6 +6911,7 @@ function registerAutomationCronRoute(app2) {
     if (!isEmailConfigured()) {
       return res.status(200).json({ ok: true, note: "email not configured \u2014 nothing sent", sent: 0 });
     }
+    const churn = await runChurn();
     const due = await getDueEnrollments(BATCH);
     let sent = 0, completed = 0, cancelled = 0, failed = 0;
     for (const e of due) {
@@ -6809,7 +6951,7 @@ function registerAutomationCronRoute(app2) {
         completed++;
       }
     }
-    return res.status(200).json({ ok: true, processed: due.length, sent, completed, cancelled, failed });
+    return res.status(200).json({ ok: true, processed: due.length, sent, completed, cancelled, failed, churn });
   };
   app2.get("/api/cron/automations", handler);
   app2.post("/api/cron/automations", handler);
@@ -6845,6 +6987,7 @@ function createApp() {
   registerRssRoute(app2);
   registerDigestCronRoute(app2);
   registerAutomationCronRoute(app2);
+  registerChurnCronRoute(app2);
   app2.use(
     "/api/trpc",
     createExpressMiddleware({

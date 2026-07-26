@@ -130,6 +130,44 @@ export const AUTOMATIONS: Record<string, Automation> = {
   },
 };
 
+// Win-back — cold subscribers get two re-engagement nudges before sunset.
+AUTOMATIONS["winback"] = {
+  key: "winback",
+  name: "Win-back (churn)",
+  steps: [
+    {
+      dayOffset: 0,
+      build: (ctx) => ({
+        subject: "Még hasznosak a leveleink?",
+        html: renderSimpleEmailHtml({
+          name: ctx.name, tag: "Rég találkoztunk", unsubscribeUrl: ctx.unsubscribeUrl,
+          preheader: "Egy kattintás, és maradsz — ha nem, csendben kiveszünk.",
+          paragraphs: [
+            "Egy ideje nem nyitottad meg a leveleinket — és ez teljesen rendben van. Csak nem szeretnénk feleslegesen foglalni a postaládád.",
+            "Ha még hasznosnak találod a gyakorlati marketing- és AI-tippeket, egyetlen kattintás elég, és minden marad a régiben. Ha nem, semmi teendőd — hamarosan magunktól kiveszünk a listáról.",
+          ],
+          cta: { label: "Igen, maradok — mutasd a friss cikkeket →", href: `${SITE}/hirek` },
+        }),
+      }),
+    },
+    {
+      dayOffset: 7,
+      build: (ctx) => ({
+        subject: "Utolsó levél — ha most sem érdekel",
+        html: renderSimpleEmailHtml({
+          name: ctx.name, tag: "Búcsúzunk?", unsubscribeUrl: ctx.unsubscribeUrl,
+          preheader: "Ha maradnál, egy kattintás. Ha nem, nincs teendőd.",
+          paragraphs: [
+            "Ez az utolsó levelünk, ha most sem érdekel. Nem akarunk tolakodni — inkább csak azoknak írunk, akiknek tényleg hasznos.",
+            "Ha maradnál, kattints az alábbi gombra, és minden marad a régiben. Ha nem, nincs teendőd: csendben kiveszünk a listáról, hogy tiszta maradjon a postaládád.",
+          ],
+          cta: { label: "Maradok →", href: `${SITE}/hirek` },
+        }),
+      }),
+    },
+  ],
+};
+
 export function getAutomation(key: string): Automation | undefined {
   return AUTOMATIONS[key];
 }

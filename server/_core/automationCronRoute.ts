@@ -21,6 +21,7 @@ import type { Express, Request, Response } from "express";
 import * as db from "../db";
 import { getAutomation } from "./automations";
 import { sendEmail, isEmailConfigured } from "./email";
+import { runChurn } from "./churnCronRoute";
 
 const ORIGIN = "https://g2amarketing.hu";
 const BATCH = 200;
@@ -42,6 +43,10 @@ export function registerAutomationCronRoute(app: Express): void {
     if (!isEmailConfigured()) {
       return res.status(200).json({ ok: true, note: "email not configured — nothing sent", sent: 0 });
     }
+
+    // Run churn first so freshly-enrolled win-backs (nextRunAt=now) go out in
+    // this same pass. Cheap + idempotent (winbackSentAt guards re-enrolment).
+    const churn = await runChurn();
 
     const due = await db.getDueEnrollments(BATCH);
     let sent = 0, completed = 0, cancelled = 0, failed = 0;
@@ -74,7 +79,7 @@ export function registerAutomationCronRoute(app: Express): void {
       }
     }
 
-    return res.status(200).json({ ok: true, processed: due.length, sent, completed, cancelled, failed });
+    return res.status(200).json({ ok: true, processed: due.length, sent, completed, cancelled, failed, churn });
   };
 
   app.get("/api/cron/automations", handler);
