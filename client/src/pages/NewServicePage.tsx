@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
 import { serviceSchema, faqPageSchema, breadcrumbSchema } from "@/lib/jsonLd";
 import { trpc } from "@/lib/trpc";
+import { track } from "@/lib/analytics";
 import { toast } from "sonner";
 import { parseFormError } from "@/lib/utils";
 import { Link } from "wouter";
@@ -78,7 +79,7 @@ export default function NewServicePage({ params }: Props) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   const contactMutation = trpc.contact.submit.useMutation({
-    onSuccess: () => { setStatus("success"); toast.success(t("contact.messageSentToast")); },
+    onSuccess: () => { setStatus("success"); toast.success(t("contact.messageSentToast")); track.lead("service-page"); },
     onError: (e) => { setStatus("error"); toast.error(parseFormError(e, t("common.error"))); },
   });
 

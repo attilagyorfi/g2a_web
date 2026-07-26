@@ -2,6 +2,7 @@ import { Link, useParams } from "wouter";
 import { ArrowRight, ArrowLeft, Phone, Mail } from "lucide-react";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
+import { track } from "@/lib/analytics";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SeoHead from "@/components/SeoHead";
@@ -28,6 +29,7 @@ export default function ServicePage() {
     setSubmitting(true);
     try {
       await submitMutation.mutateAsync({ ...form, serviceInterest: service?.title });
+      track.lead("service-page");
       toast.success(t("contact.messageSentToast"));
       setForm({ name: "", email: "", phone: "", message: "" });
     } catch {

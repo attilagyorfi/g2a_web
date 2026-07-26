@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { track } from "@/lib/analytics";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
@@ -933,7 +934,7 @@ function AuditForm() {
   const [errorMsg, setErrorMsg] = useState<string>("");
 
   const contactMutation = trpc.contact.submit.useMutation({
-    onSuccess: () => { setStatus("success"); setErrorMsg(""); },
+    onSuccess: () => { setStatus("success"); setErrorMsg(""); track.lead("home"); },
     onError: (err) => { setStatus("error"); setErrorMsg(parseFormError(err, t("common.tryAgainError"))); },
   });
 
