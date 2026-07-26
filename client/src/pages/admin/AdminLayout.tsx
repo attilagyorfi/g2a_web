@@ -5,7 +5,7 @@ import { getLoginUrl } from "@/const";
 import {
   LayoutDashboard, FileText, Settings, Mail, Newspaper,
   Image, Star, Briefcase, Globe, Cpu, Heart, Tag,
-  ChevronLeft, ChevronRight, LogOut, Shield, BookOpen, ClipboardList, Sparkles, UserPlus
+  ChevronLeft, ChevronRight, LogOut, Shield, BookOpen, ClipboardList, Sparkles, UserPlus, Filter
 } from "lucide-react";
 import AdminPasswordLogin from "./AdminPasswordLogin";
 import { hasPermission, type Permission } from "@shared/permissions";
@@ -44,6 +44,7 @@ const navItems: Array<{
   { href: "/admin/careers", icon: Briefcase, label: "Karrier", perm: "careers" },
   { href: "/admin/newsletter", icon: FileText, label: "Hírlevél feliratkozók", perm: "newsletter" },
   { href: "/admin/newsletter/campaigns", icon: Mail, label: "Email kampányok", perm: "newsletter" },
+  { href: "/admin/segments", icon: Filter, label: "Szegmensek", perm: "newsletter" },
   { href: "/admin/seo", icon: Globe, label: "SEO Oldalak", perm: "seo" },
   { href: "/admin/brand-voice", icon: Sparkles, label: "Brand voice", perm: "brand_voice" },
   { href: "/admin/users", icon: UserPlus, label: "Felhasználók", perm: "users" },

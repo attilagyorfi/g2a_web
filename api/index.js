@@ -4993,6 +4993,32 @@ var adminRouter = router({
   // Newsletter
   newsletter: router({
     list: permissionProcedure("newsletter").query(() => getAllNewsletterSubscribers()),
+    /** Attribution: which funnel source turned subscribers into leads (they
+     *  later submitted a contact or audit form — matched by email). */
+    attribution: permissionProcedure("newsletter").query(async () => {
+      const [subs, contacts, audits] = await Promise.all([
+        getAllNewsletterSubscribers(),
+        getContactSubmissions(),
+        getAllAuditLeads()
+      ]);
+      const leadEmails = /* @__PURE__ */ new Set();
+      for (const c of contacts) if (c.email) leadEmails.add(c.email.toLowerCase());
+      for (const a of audits) if (a.email) leadEmails.add(a.email.toLowerCase());
+      const bySource = {};
+      let totalSubs = 0, totalConverted = 0;
+      for (const s of subs) {
+        const src = s.source || "(nincs)";
+        (bySource[src] ??= { source: src, subscribers: 0, converted: 0 }).subscribers++;
+        totalSubs++;
+        if (s.email && leadEmails.has(s.email.toLowerCase())) {
+          bySource[src].converted++;
+          totalConverted++;
+        }
+      }
+      const rate = (c, n) => n ? Math.round(c / n * 1e3) / 10 : 0;
+      const rows = Object.values(bySource).map((r) => ({ ...r, rate: rate(r.converted, r.subscribers) })).sort((a, b) => b.subscribers - a.subscribers);
+      return { rows, totalSubs, totalConverted, totalRate: rate(totalConverted, totalSubs) };
+    }),
     updateSegment: permissionProcedure("newsletter").input(z2.object({
       id: z2.number(),
       segment: z2.string().optional(),

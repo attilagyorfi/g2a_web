@@ -905,6 +905,31 @@ const adminRouter = router({
   // Newsletter
   newsletter: router({
     list: permissionProcedure("newsletter").query(() => db.getAllNewsletterSubscribers()),
+    /** Attribution: which funnel source turned subscribers into leads (they
+     *  later submitted a contact or audit form — matched by email). */
+    attribution: permissionProcedure("newsletter").query(async () => {
+      const [subs, contacts, audits] = await Promise.all([
+        db.getAllNewsletterSubscribers(),
+        db.getContactSubmissions(),
+        db.getAllAuditLeads(),
+      ]);
+      const leadEmails = new Set<string>();
+      for (const c of contacts as Array<{ email?: string | null }>) if (c.email) leadEmails.add(c.email.toLowerCase());
+      for (const a of audits as Array<{ email?: string | null }>) if (a.email) leadEmails.add(a.email.toLowerCase());
+      const bySource: Record<string, { source: string; subscribers: number; converted: number }> = {};
+      let totalSubs = 0, totalConverted = 0;
+      for (const s of subs as Array<{ source?: string | null; email?: string | null }>) {
+        const src = s.source || "(nincs)";
+        (bySource[src] ??= { source: src, subscribers: 0, converted: 0 }).subscribers++;
+        totalSubs++;
+        if (s.email && leadEmails.has(s.email.toLowerCase())) { bySource[src].converted++; totalConverted++; }
+      }
+      const rate = (c: number, n: number) => (n ? Math.round((c / n) * 1000) / 10 : 0);
+      const rows = Object.values(bySource)
+        .map((r) => ({ ...r, rate: rate(r.converted, r.subscribers) }))
+        .sort((a, b) => b.subscribers - a.subscribers);
+      return { rows, totalSubs, totalConverted, totalRate: rate(totalConverted, totalSubs) };
+    }),
     updateSegment: permissionProcedure("newsletter").input(z.object({
       id: z.number(),
       segment: z.string().optional(),

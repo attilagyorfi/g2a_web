@@ -82,6 +82,7 @@ const AdminTestimonials = lazy(() => import("./pages/admin/AdminTestimonials"));
 const AdminContacts = lazy(() => import("./pages/admin/AdminContacts"));
 const AdminNewsletter = lazy(() => import("./pages/admin/AdminNewsletter"));
 const AdminNewsletterCampaigns = lazy(() => import("./pages/admin/AdminNewsletterCampaigns"));
+const AdminSegments = lazy(() => import("./pages/admin/AdminSegments"));
 const AdminSeoPages = lazy(() => import("./pages/admin/AdminSeoPages"));
 const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
 const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
@@ -177,6 +178,7 @@ function AdminRouter() {
         <Route path="/admin/contacts" component={AdminContacts} />
         <Route path="/admin/newsletter" component={AdminNewsletter} />
         <Route path="/admin/newsletter/campaigns" component={AdminNewsletterCampaigns} />
+        <Route path="/admin/segments" component={AdminSegments} />
         <Route path="/admin/case-studies" component={AdminCaseStudies} />
         <Route path="/admin/audit-leads" component={AdminAuditLeads} />
         <Route path="/admin/careers" component={AdminCareers} />
