@@ -18,7 +18,7 @@ import {
   timestamp,
   varchar
 } from "drizzle-orm/mysql-core";
-var users, siteSettings, pages, categories, posts, services, heroSlides, testimonials, partners, industries, technologies, values, contactSubmissions, emailCampaigns, emailEvents, rateLimitHits, socialAccounts, socialPosts, newsletterSubscribers, caseStudies, aiJobs, auditLeads, jobPositions, jobApplications;
+var users, siteSettings, pages, categories, posts, services, heroSlides, testimonials, partners, industries, technologies, values, contactSubmissions, emailCampaigns, emailEvents, rateLimitHits, socialAccounts, socialPosts, newsletterSubscribers, caseStudies, aiJobs, auditLeads, jobPositions, jobApplications, emailAutomationEnrollments;
 var init_schema = __esm({
   "drizzle/schema.ts"() {
     "use strict";
@@ -475,6 +475,18 @@ var init_schema = __esm({
       status: varchar("status", { length: 32 }).default("new").notNull(),
       createdAt: timestamp("createdAt").defaultNow().notNull()
     });
+    emailAutomationEnrollments = mysqlTable("email_automation_enrollments", {
+      id: int("id").autoincrement().primaryKey(),
+      email: varchar("email", { length: 320 }).notNull(),
+      automationKey: varchar("automationKey", { length: 64 }).notNull(),
+      currentStep: int("currentStep").default(0).notNull(),
+      nextRunAt: timestamp("nextRunAt"),
+      status: varchar("status", { length: 32 }).default("active").notNull(),
+      band: varchar("band", { length: 64 }),
+      name: varchar("name", { length: 256 }),
+      enrolledAt: timestamp("enrolledAt").defaultNow().notNull(),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+    });
   }
 });
 
@@ -524,12 +536,14 @@ var init_env = __esm({
 // server/db.ts
 var db_exports = {};
 __export(db_exports, {
+  cancelEnrollmentsForEmail: () => cancelEnrollmentsForEmail,
   checkNewsletterSubscriberExists: () => checkNewsletterSubscriberExists,
   createAiJob: () => createAiJob,
   createAuditLead: () => createAuditLead,
   createCategory: () => createCategory,
   createContactSubmission: () => createContactSubmission,
   createEmailCampaign: () => createEmailCampaign,
+  createEnrollment: () => createEnrollment,
   createHeroSlide: () => createHeroSlide,
   createIndustry: () => createIndustry,
   createJobApplication: () => createJobApplication,
@@ -590,6 +604,8 @@ __export(db_exports, {
   getCategories: () => getCategories,
   getContactSubmissions: () => getContactSubmissions,
   getDb: () => getDb,
+  getDueEnrollments: () => getDueEnrollments,
+  getEnrollmentStats: () => getEnrollmentStats,
   getHeroSlides: () => getHeroSlides,
   getIndustries: () => getIndustries,
   getJobPosition: () => getJobPosition,
@@ -611,6 +627,7 @@ __export(db_exports, {
   getUserByOpenId: () => getUserByOpenId,
   getUserByResetToken: () => getUserByResetToken,
   getValues: () => getValues,
+  hasActiveEnrollment: () => hasActiveEnrollment,
   listActiveJobPositions: () => listActiveJobPositions,
   listAllJobPositions: () => listAllJobPositions,
   listEmailCampaigns: () => listEmailCampaigns,
@@ -624,6 +641,7 @@ __export(db_exports, {
   updateAiJob: () => updateAiJob,
   updateCategory: () => updateCategory,
   updateEmailCampaign: () => updateEmailCampaign,
+  updateEnrollment: () => updateEnrollment,
   updateHeroSlide: () => updateHeroSlide,
   updateIndustry: () => updateIndustry,
   updateJobApplicationStatus: () => updateJobApplicationStatus,
@@ -643,7 +661,7 @@ __export(db_exports, {
   upsertSiteSetting: () => upsertSiteSetting,
   upsertUser: () => upsertUser
 });
-import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
@@ -1110,6 +1128,50 @@ async function deleteNewsletterSubscriber(id) {
   if (!db) return;
   await db.delete(newsletterSubscribers).where(eq(newsletterSubscribers.id, id));
 }
+async function hasActiveEnrollment(email, automationKey) {
+  const db = await getDb();
+  if (!db) return false;
+  const r = await db.select().from(emailAutomationEnrollments).where(and(eq(emailAutomationEnrollments.email, email), eq(emailAutomationEnrollments.automationKey, automationKey), eq(emailAutomationEnrollments.status, "active"))).limit(1);
+  return r.length > 0;
+}
+async function createEnrollment(data) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(emailAutomationEnrollments).values({
+    email: data.email,
+    automationKey: data.automationKey,
+    band: data.band ?? null,
+    name: data.name ?? null,
+    currentStep: 0,
+    nextRunAt: data.nextRunAt,
+    status: "active"
+  });
+}
+async function getDueEnrollments(limit = 200) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(emailAutomationEnrollments).where(and(eq(emailAutomationEnrollments.status, "active"), lte(emailAutomationEnrollments.nextRunAt, /* @__PURE__ */ new Date()))).orderBy(asc(emailAutomationEnrollments.nextRunAt)).limit(limit);
+}
+async function updateEnrollment(id, data) {
+  const db = await getDb();
+  if (!db) return;
+  if (Object.values(data).every((v) => v === void 0)) return;
+  await db.update(emailAutomationEnrollments).set(data).where(eq(emailAutomationEnrollments.id, id));
+}
+async function cancelEnrollmentsForEmail(email) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(emailAutomationEnrollments).set({ status: "cancelled" }).where(and(eq(emailAutomationEnrollments.email, email), eq(emailAutomationEnrollments.status, "active")));
+}
+async function getEnrollmentStats() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select({
+    automationKey: emailAutomationEnrollments.automationKey,
+    status: emailAutomationEnrollments.status,
+    count: sql`count(*)`
+  }).from(emailAutomationEnrollments).groupBy(emailAutomationEnrollments.automationKey, emailAutomationEnrollments.status);
+}
 async function updateNewsletterSubscriberSegment(data) {
   const db = await getDb();
   if (!db) return;
@@ -1190,6 +1252,7 @@ async function unsubscribeByToken(token) {
   const found = await db.select({ id: newsletterSubscribers.id, email: newsletterSubscribers.email }).from(newsletterSubscribers).where(eq(newsletterSubscribers.unsubscribeToken, token)).limit(1);
   if (found.length === 0) return null;
   await db.update(newsletterSubscribers).set({ isActive: false }).where(eq(newsletterSubscribers.id, found[0].id));
+  await cancelEnrollmentsForEmail(found[0].email);
   return found[0].email;
 }
 async function getAllCaseStudies() {
@@ -3235,6 +3298,29 @@ function renderLeadMagnetWelcomeHtml(input) {
   `;
   return wrapper(body, "Itt a n\xE9gy anyag az AI Marketing Csomagb\xF3l \u2014 let\xF6lt\xE9s egy kattint\xE1ssal.", lang);
 }
+function renderSimpleEmailHtml(input) {
+  const lang = "hu";
+  const greeting = input.name ? `Szia ${escapeHtml(input.name)}!` : "Szia!";
+  const paras = input.paragraphs.map((p) => `<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(p).replace(/\n/g, "<br>")}</p>`).join("");
+  const ctaBlock = input.cta ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:6px 0 4px">
+        <a href="${input.cta.href}" style="display:inline-block;background:${BRAND_TEAL};color:#06201d;padding:12px 24px;border-radius:6px;font-size:13px;font-weight:800;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.04em">${escapeHtml(input.cta.label)}</a>
+      </td></tr></table>` : "";
+  const body = `
+    ${darkHeader({ tag: input.tag, secondaryLine: UI[lang].partnerLine })}
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:40px 36px 8px">
+          <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.02em">${greeting}</h1>
+          ${paras}
+          ${ctaBlock}
+        </td>
+      </tr>
+    </table>
+    ${signature(lang)}
+    ${footer(input.unsubscribeUrl, lang)}
+  `;
+  return wrapper(body, input.preheader, lang);
+}
 var CHECKLIST_BANDS = {
   "Er\u0151s alapok": "A g\xE9pezet m\u0171k\xF6dik \u2014 innen a finomhangol\xE1s \xE9s a sk\xE1l\xE1z\xE1s j\xF6n. Nem az alapokon kell dolgoznod, hanem azon, hogy a megl\xE9v\u0151kb\u0151l t\xF6bbet hozz ki: m\xE9lyebb m\xE9r\xE9s, optimaliz\xE1l\xE1s, rendszerez\xE9s.",
   "J\xF3 \xFAton vagy": "Az alapok nagyr\xE9szt megvannak, de van p\xE1r r\xE9s, amit bet\xF6mve ar\xE1nytalanul sokat nyersz. A k\xF6vetkez\u0151 h\xF3napban csak az al\xE1bbi 3 leggyeng\xE9bb pontodra f\xF3kusz\xE1lj.",
@@ -3726,6 +3812,125 @@ var FIELD_LABELS = {
     areas: "\u610F\u5411\u9886\u57DF"
   }
 };
+
+// server/_core/automations.ts
+var SITE = "https://g2amarketing.hu";
+var CHECKLIST = `${SITE}/marketing-teszt`;
+var PROMPTS = `${SITE}/letoltesek/G2A_Prompt_gyujtemeny_2026.pdf`;
+var CONSULT = `${SITE}/ingyenes-audit`;
+function offerStep(ctx) {
+  const band = ctx.band ?? "J\xF3 \xFAton vagy";
+  if (band === "Er\u0151s alapok") {
+    return {
+      subject: "Er\u0151s alapok \u2014 most j\xF6n a neheze",
+      paragraphs: [
+        "Az elm\xFAlt k\xE9t h\xE9tben v\xE9gigvett\xFCk az eszk\xF6z\xF6ket, a promptokat \xE9s a m\xE9r\xE9st. A teszted alapj\xE1n n\xE1lad az alapok rendben vannak \u2014 ez t\xF6bb, mint amit a legt\xF6bb c\xE9gn\xE9l l\xE1tunk.",
+        "Innen megv\xE1ltozik a j\xE1t\xE9k: nem \xFAjabb csatorn\xE1kat kell nyitni, hanem a megl\xE9v\u0151kb\u0151l t\xF6bbet kihozni. M\xE9rj m\xE9lyebben (melyik csatorna hozza a legjobb \xFCgyfeleket), optimaliz\xE1lj a b\u0151v\xEDt\xE9s helyett, \xE9s tedd folyamatt\xE1, ami eddig ad hoc ment.",
+        "Ezen a szinten a r\xE9szletek d\xF6ntenek. Ha szeretn\xE9d, egy 30 perces ingyenes konzult\xE1ci\xF3n megn\xE9zz\xFCk, hol van n\xE1lad a legnagyobb kiakn\xE1zatlan tartal\xE9k."
+      ]
+    };
+  }
+  if (band === "Sok a lehet\u0151s\xE9g" || band === "Nagy potenci\xE1l") {
+    return {
+      subject: "Ha elakadt\xE1l, itt vagyunk",
+      paragraphs: [
+        "Az elm\xFAlt k\xE9t h\xE9tben sok inputot kapt\xE1l \u2014 eszk\xF6z\xF6k, promptok, m\xE9r\xE9s. Ha most azt \xE9rzed, hogy sok, \xE9s nem tudod, mivel kezdd, az teljesen term\xE9szetes.",
+        "A legjobb h\xEDr: neked hoznak a legt\xF6bbet az els\u0151 l\xE9p\xE9sek, mert minden jav\xEDt\xE1s azonnal \xE9rezhet\u0151. Nem kell egyszerre az eg\xE9sz \u2014 el\xE9g egyetlen alap: m\u0171k\xF6d\u0151 weboldal, a m\xE9r\xE9s bek\xF6t\xE9se, vagy egy k\xF6vetkezetesen vitt csatorna.",
+        "Ha szeretn\xE9d, egy 30 perces ingyenes konzult\xE1ci\xF3n kijel\xF6lj\xFCk egy\xFCtt az els\u0151 1-2 l\xE9p\xE9st \u2014 k\xF6tetlen\xFCl, konkr\xE9t javaslatokkal."
+      ]
+    };
+  }
+  return {
+    subject: "Megn\xE9zz\xFCk egy\xFCtt a marketinged?",
+    paragraphs: [
+      "Az elm\xFAlt k\xE9t h\xE9tben v\xE9gigvett\xFCk az eszk\xF6z\xF6ket, a promptokat \xE9s a m\xE9r\xE9st. Rem\xE9lem, volt k\xF6zt\xFCk olyan, amit m\xE1r haszn\xE1lsz is.",
+      "A teszted alapj\xE1n j\xF3 \xFAton vagy: az alapok nagyr\xE9szt megvannak, csak p\xE1r r\xE9s van, ahol elsziv\xE1rog az eredm\xE9ny. A legt\xF6bb c\xE9gn\xE9l 3-4 j\xF3l megv\xE1lasztott jav\xEDt\xE1s hozza az eredm\xE9ny nagy r\xE9sz\xE9t \u2014 nem a mennyis\xE9g sz\xE1m\xEDt, hanem a sorrend.",
+      "Ha elakadn\xE1l abban, mit tegy\xE9l el\u0151re, egy 30 perces ingyenes konzult\xE1ci\xF3n sz\xEDvesen seg\xEDt\xFCnk prioriz\xE1lni \u2014 k\xF6tetlen\xFCl, konkr\xE9t javaslatokkal."
+    ]
+  };
+}
+var AUTOMATIONS = {
+  "leadmagnet-nurture": {
+    key: "leadmagnet-nurture",
+    name: "AI Marketing Csomag \u2014 nurture",
+    steps: [
+      {
+        dayOffset: 2,
+        build: (ctx) => ({
+          subject: "Hol kezdd a csomagot?",
+          html: renderSimpleEmailHtml({
+            name: ctx.name,
+            tag: "AI Marketing Csomag",
+            unsubscribeUrl: ctx.unsubscribeUrl,
+            preheader: "Ne az eg\xE9szet edd meg egyszerre \u2014 kezdd itt, 15 perc az eg\xE9sz.",
+            paragraphs: [
+              "Rem\xE9lem, siker\xFClt let\xF6ltened a csomagot. N\xE9gy anyag els\u0151re soknak t\u0171nhet, ez\xE9rt egy tan\xE1cs: ne akard egyszerre az eg\xE9szet.",
+              "Ha csak egy dologra van ma 15 perced, ezt v\xE1laszd: a 34 pontos \xF6nellen\u0151rz\u0151 checklist\xE1t. Menj v\xE9gig rajta \u0151szint\xE9n, \xE9s a v\xE9g\xE9n pontsz\xE1mot kapsz \u2014 \xE9s fekete-feh\xE9ren l\xE1tod, hol a legnagyobb a r\xE9s.",
+              "A legt\xF6bb marketing nem egy nagy dolgon bukik el, hanem sok apr\xF3 r\xE9sen sziv\xE1rog el az eredm\xE9ny. A checklista pont ezeket teszi l\xE1that\xF3v\xE1 \u2014 a k\xF6vetkez\u0151 levelekben pedig \xE9pp az ilyenekhez adok konkr\xE9t seg\xEDts\xE9get."
+            ],
+            cta: { label: "Ugr\xE1s a checklist\xE1hoz \u2192", href: CHECKLIST }
+          })
+        })
+      },
+      {
+        dayOffset: 5,
+        build: (ctx) => ({
+          subject: "A leggyakoribb AI-hiba a marketingben",
+          html: renderSimpleEmailHtml({
+            name: ctx.name,
+            tag: "AI j\xF3zanul",
+            unsubscribeUrl: ctx.unsubscribeUrl,
+            preheader: "Az AI nem att\xF3l j\xF3, hogy megnyitod. Hanem ahogy k\xE9red.",
+            paragraphs: [
+              "Egy dolog, amit a legt\xF6bb AI-tipp elhallgat: az AI \xF6nmag\xE1ban \xE1ltal\xE1nosat \xEDr. Semlegeset, sablonosat \u2014 pont azt, amit mindenki m\xE1s is kap.",
+              "A k\xFCl\xF6nbs\xE9g nem a szuper eszk\xF6zben van, hanem a kontextusban, amit adsz neki. H\xE1rom dolog, amit\u0151l azonnal jobb lesz az eredm\xE9ny:\n1. Szerep \u2014 mondd meg, ki legyen az AI.\n2. C\xE9lk\xF6z\xF6ns\xE9g \u2014 kinek sz\xF3l a sz\xF6veg, milyen hangnemben.\n3. P\xE9lda \u2014 illessz be egy kor\xE1bbi, j\xF3l siker\xFClt saj\xE1t sz\xF6veget.",
+              "A csomagban l\xE9v\u0151 50 prompt pont \xEDgy \xE9p\xFCl fel. \xC9s egy \u0151szinte megjegyz\xE9s: az AI gyors, de nem t\xE9vedhetetlen \u2014 a t\xE9nyeket, sz\xE1mokat, neveket mindig ellen\u0151rizd. Az AI eszk\xF6z, nem var\xE1zslat."
+            ],
+            cta: { label: "N\xE9zd meg a promptokat \u2192", href: PROMPTS }
+          })
+        })
+      },
+      {
+        dayOffset: 9,
+        build: (ctx) => ({
+          subject: "3 sz\xE1m, amit havonta n\xE9zz (a t\xF6bbit hagyd)",
+          html: renderSimpleEmailHtml({
+            name: ctx.name,
+            tag: "Strat\xE9gia-els\u0151",
+            unsubscribeUrl: ctx.unsubscribeUrl,
+            preheader: "Kevesebb t\xE1bl\xE1zat, jobb d\xF6nt\xE9sek.",
+            paragraphs: [
+              "Sok eszk\xF6zr\u0151l \xE9s promptr\xF3l volt sz\xF3 az elm\xFAlt hetekben. De legy\xFCnk \u0151szint\xE9k: az eszk\xF6z \xF6nmag\xE1ban nem csin\xE1l marketinget. A strat\xE9gia \xE9s a k\xF6vetkezetes m\xE9r\xE9s teszi.",
+              "N\xE1lunk van egy mond\xE1s: \u201EHa nincs strat\xE9gia, nincs G2A.\u201D A gyakorlatban ez azt jelenti, hogy nem eszk\xF6zlist\xE1val kezd\xFCnk, hanem a c\xE9llal \u2014 \xE9s ut\xE1na n\xE9zz\xFCk, mi m\xE9ri vissza.",
+              "Ha egyetlen dolgot viszel el ebb\u0151l a lev\xE9lb\u0151l: v\xE1lassz 3 kulcsmutat\xF3t, \xE9s havonta csak azokat n\xE9zd. P\xE9ld\xE1ul h\xE1ny \xFAj \xE9rdekl\u0151d\u0151 j\xF6tt, mennyi volt a megnyit\xE1si/\xE1tkattint\xE1si ar\xE1ny, \xE9s ebb\u0151l h\xE1ny lett t\xE9nyleges \xFCgyf\xE9l. A t\xF6bbi sz\xE1m \xE9rdekes, de ez a h\xE1rom visz d\xF6nt\xE9sre."
+            ],
+            cta: { label: "Vissza a checklist\xE1hoz \u2192", href: CHECKLIST }
+          })
+        })
+      },
+      {
+        dayOffset: 14,
+        build: (ctx) => {
+          const o = offerStep(ctx);
+          return {
+            subject: o.subject,
+            html: renderSimpleEmailHtml({
+              name: ctx.name,
+              tag: "Ingyenes konzult\xE1ci\xF3",
+              unsubscribeUrl: ctx.unsubscribeUrl,
+              preheader: "Nincs k\xF6telezetts\xE9g, nincs s\xFCket duma \u2014 csak konkr\xE9t javaslatok.",
+              paragraphs: o.paragraphs,
+              cta: { label: "Ingyenes konzult\xE1ci\xF3 \u2192", href: CONSULT }
+            })
+          };
+        }
+      }
+    ]
+  }
+};
+function getAutomation(key) {
+  return AUTOMATIONS[key];
+}
 
 // server/_core/socialCopy.ts
 init_brandVoice();
@@ -5501,6 +5706,19 @@ var leadMagnetRouter = router({
         replyTo: input.email
       });
     }
+    const NURTURE = "leadmagnet-nurture";
+    if (!await hasActiveEnrollment(input.email, NURTURE)) {
+      const first = getAutomation(NURTURE)?.steps[0];
+      if (first) {
+        await createEnrollment({
+          email: input.email,
+          automationKey: NURTURE,
+          band: input.band ?? null,
+          name: input.name ?? null,
+          nextRunAt: new Date(Date.now() + first.dayOffset * 24 * 60 * 60 * 1e3)
+        });
+      }
+    }
     if (isEmailConfigured() && unsubscribeToken) {
       const unsubscribeUrl = `${origin}/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
       if (input.source === "marketing-teszt" && input.score !== void 0 && input.band) {
@@ -6533,6 +6751,70 @@ ${a.excerpt}
   app2.post("/api/cron/weekly-digest", handler);
 }
 
+// server/_core/automationCronRoute.ts
+init_db();
+var ORIGIN4 = "https://g2amarketing.hu";
+var BATCH = 200;
+var DAY_MS = 24 * 60 * 60 * 1e3;
+function registerAutomationCronRoute(app2) {
+  const handler = async (req, res) => {
+    const secret = process.env.CRON_SECRET;
+    if (secret) {
+      const auth = req.headers.authorization || "";
+      if (auth !== `Bearer ${secret}`) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+    } else if (process.env.NODE_ENV === "production") {
+      return res.status(503).json({ error: "CRON_SECRET not set in production." });
+    }
+    if (!isEmailConfigured()) {
+      return res.status(200).json({ ok: true, note: "email not configured \u2014 nothing sent", sent: 0 });
+    }
+    const due = await getDueEnrollments(BATCH);
+    let sent = 0, completed = 0, cancelled = 0, failed = 0;
+    for (const e of due) {
+      const automation = getAutomation(e.automationKey);
+      if (!automation) {
+        await updateEnrollment(e.id, { status: "cancelled" });
+        cancelled++;
+        continue;
+      }
+      const sub = await getNewsletterSubscriberByEmail(e.email);
+      if (!sub || sub.isActive === false) {
+        await updateEnrollment(e.id, { status: "cancelled" });
+        cancelled++;
+        continue;
+      }
+      const step = automation.steps[e.currentStep];
+      if (!step) {
+        await updateEnrollment(e.id, { status: "completed", nextRunAt: null });
+        completed++;
+        continue;
+      }
+      const unsubscribeUrl = `${ORIGIN4}/api/newsletter/unsubscribe?token=${sub.unsubscribeToken ?? ""}`;
+      const { subject, html } = step.build({ name: e.name ?? sub.name, band: e.band, unsubscribeUrl });
+      const ok = await sendEmail({ to: e.email, subject, html });
+      if (!ok) {
+        failed++;
+        continue;
+      }
+      sent++;
+      const nextStep = e.currentStep + 1;
+      const next = automation.steps[nextStep];
+      if (next) {
+        const nextRunAt = new Date(new Date(e.enrolledAt).getTime() + next.dayOffset * DAY_MS);
+        await updateEnrollment(e.id, { currentStep: nextStep, nextRunAt });
+      } else {
+        await updateEnrollment(e.id, { currentStep: nextStep, status: "completed", nextRunAt: null });
+        completed++;
+      }
+    }
+    return res.status(200).json({ ok: true, processed: due.length, sent, completed, cancelled, failed });
+  };
+  app2.get("/api/cron/automations", handler);
+  app2.post("/api/cron/automations", handler);
+}
+
 // server/_core/app.ts
 init_env();
 var secretsChecked = false;
@@ -6562,6 +6844,7 @@ function createApp() {
   registerSitemapRoute(app2);
   registerRssRoute(app2);
   registerDigestCronRoute(app2);
+  registerAutomationCronRoute(app2);
   app2.use(
     "/api/trpc",
     createExpressMiddleware({

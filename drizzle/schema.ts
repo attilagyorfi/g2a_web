@@ -538,10 +538,28 @@ export const jobApplications = mysqlTable("job_applications", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
+// ─── Email automation (drip / nurture engine) ───────────────────────────────
+/** Per-subscriber enrollment state in a code-defined sequence (see
+ *  server/_core/automations.ts). A cron advances `currentStep` when
+ *  `nextRunAt` is due. `band` snapshots the checklist band for branching. */
+export const emailAutomationEnrollments = mysqlTable("email_automation_enrollments", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull(),
+  automationKey: varchar("automationKey", { length: 64 }).notNull(),
+  currentStep: int("currentStep").default(0).notNull(),
+  nextRunAt: timestamp("nextRunAt"),
+  status: varchar("status", { length: 32 }).default("active").notNull(),
+  band: varchar("band", { length: 64 }),
+  name: varchar("name", { length: 256 }),
+  enrolledAt: timestamp("enrolledAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type JobPosition = typeof jobPositions.$inferSelect;
 export type JobApplication = typeof jobApplications.$inferSelect;
+export type EmailAutomationEnrollment = typeof emailAutomationEnrollments.$inferSelect;
 export type Post = typeof posts.$inferSelect;
 export type InsertPost = typeof posts.$inferInsert;
 export type Service = typeof services.$inferSelect;

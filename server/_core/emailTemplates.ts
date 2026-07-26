@@ -452,6 +452,47 @@ export function renderLeadMagnetWelcomeHtml(input: LeadMagnetWelcomeInput): stri
   return wrapper(body, "Itt a négy anyag az AI Marketing Csomagból — letöltés egy kattintással.", lang);
 }
 
+// ─── Generic nurture / drip email (automation steps) — HU only ──────────────
+
+export type SimpleEmailInput = {
+  name?: string | null;
+  tag: string;
+  /** Body paragraphs. `\n` becomes <br>, blank-line splits are separate <p>. */
+  paragraphs: string[];
+  cta?: { label: string; href: string };
+  unsubscribeUrl: string;
+  preheader: string;
+};
+
+/** Plain, on-brand email body used by the automation sequence steps. */
+export function renderSimpleEmailHtml(input: SimpleEmailInput): string {
+  const lang: Lang = "hu";
+  const greeting = input.name ? `Szia ${escapeHtml(input.name)}!` : "Szia!";
+  const paras = input.paragraphs
+    .map((p) => `<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:${TEXT_SECONDARY}">${escapeHtml(p).replace(/\n/g, "<br>")}</p>`)
+    .join("");
+  const ctaBlock = input.cta
+    ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:6px 0 4px">
+        <a href="${input.cta.href}" style="display:inline-block;background:${BRAND_TEAL};color:#06201d;padding:12px 24px;border-radius:6px;font-size:13px;font-weight:800;text-decoration:none;font-family:${FONT_MONO};letter-spacing:0.04em">${escapeHtml(input.cta.label)}</a>
+      </td></tr></table>`
+    : "";
+  const body = `
+    ${darkHeader({ tag: input.tag, secondaryLine: UI[lang].partnerLine })}
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="padding:40px 36px 8px">
+          <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:${TEXT_PRIMARY};font-weight:800;letter-spacing:-0.02em">${greeting}</h1>
+          ${paras}
+          ${ctaBlock}
+        </td>
+      </tr>
+    </table>
+    ${signature(lang)}
+    ${footer(input.unsubscribeUrl, lang)}
+  `;
+  return wrapper(body, input.preheader, lang);
+}
+
 // ─── Interactive checklist result (marketing-teszt) — HU only ───────────────
 
 /** Band copy keyed by the label the client sends. */

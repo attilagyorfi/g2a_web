@@ -1,10 +1,11 @@
-import { and, asc, desc, eq, inArray, like, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, like, lte, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser,
   aiJobs,
   auditLeads,
   caseStudies,
+  emailAutomationEnrollments,
   categories,
   contactSubmissions,
   heroSlides,
@@ -633,6 +634,62 @@ export async function deleteNewsletterSubscriber(id: number) {
   if (!db) return;
   await db.delete(newsletterSubscribers).where(eq(newsletterSubscribers.id, id));
 }
+
+// ─── Email automation enrollments ─────────────────────────────────────────────
+export async function hasActiveEnrollment(email: string, automationKey: string) {
+  const db = await getDb();
+  if (!db) return false;
+  const r = await db.select().from(emailAutomationEnrollments)
+    .where(and(eq(emailAutomationEnrollments.email, email), eq(emailAutomationEnrollments.automationKey, automationKey), eq(emailAutomationEnrollments.status, "active")))
+    .limit(1);
+  return r.length > 0;
+}
+
+export async function createEnrollment(data: { email: string; automationKey: string; band?: string | null; name?: string | null; nextRunAt: Date }) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(emailAutomationEnrollments).values({
+    email: data.email, automationKey: data.automationKey,
+    band: data.band ?? null, name: data.name ?? null,
+    currentStep: 0, nextRunAt: data.nextRunAt, status: "active",
+  });
+}
+
+/** Active enrollments whose next step is due — the cron work queue. */
+export async function getDueEnrollments(limit = 200) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(emailAutomationEnrollments)
+    .where(and(eq(emailAutomationEnrollments.status, "active"), lte(emailAutomationEnrollments.nextRunAt, new Date())))
+    .orderBy(asc(emailAutomationEnrollments.nextRunAt))
+    .limit(limit);
+}
+
+export async function updateEnrollment(id: number, data: Partial<{ currentStep: number; nextRunAt: Date | null; status: string }>) {
+  const db = await getDb();
+  if (!db) return;
+  if (Object.values(data).every((v) => v === undefined)) return;
+  await db.update(emailAutomationEnrollments).set(data).where(eq(emailAutomationEnrollments.id, id));
+}
+
+/** Stop all active sequences for an email (e.g. on unsubscribe). */
+export async function cancelEnrollmentsForEmail(email: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(emailAutomationEnrollments).set({ status: "cancelled" })
+    .where(and(eq(emailAutomationEnrollments.email, email), eq(emailAutomationEnrollments.status, "active")));
+}
+
+export async function getEnrollmentStats() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select({
+    automationKey: emailAutomationEnrollments.automationKey,
+    status: emailAutomationEnrollments.status,
+    count: sql<number>`count(*)`,
+  }).from(emailAutomationEnrollments)
+    .groupBy(emailAutomationEnrollments.automationKey, emailAutomationEnrollments.status);
+}
 export async function updateNewsletterSubscriberSegment(data: { id: number; segment?: string; source?: string; tags?: string }) {
   const db = await getDb();
   if (!db) return;
@@ -771,6 +828,9 @@ export async function unsubscribeByToken(token: string): Promise<string | null> 
     .update(newsletterSubscribers)
     .set({ isActive: false })
     .where(eq(newsletterSubscribers.id, found[0].id));
+  // Stop any running drip sequences immediately (the cron also guards on
+  // isActive, this just marks them cancelled without waiting for the next run).
+  await cancelEnrollmentsForEmail(found[0].email);
   return found[0].email;
 }
 // ─── Case Studies ─────────────────────────────────────────────────────────────

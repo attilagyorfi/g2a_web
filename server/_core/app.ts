@@ -20,6 +20,7 @@ import { registerSitemapRoute } from "./sitemapRoute";
 import { registerRssRoute } from "./rssRoute";
 import { registerPasswordAuthRoute } from "./passwordAuthRoute";
 import { registerDigestCronRoute } from "./digestCronRoute";
+import { registerAutomationCronRoute } from "./automationCronRoute";
 import { ENV } from "./env";
 
 let secretsChecked = false;
@@ -82,6 +83,7 @@ export function createApp(): Express {
   // Weekly newsletter digest cron — GET /api/cron/weekly-digest. Triggered
   // by the schedule in vercel.json (Fridays 07:00 UTC = 09:00 CEST).
   registerDigestCronRoute(app);
+  registerAutomationCronRoute(app);
 
   // tRPC API — /api/trpc/*
   app.use(

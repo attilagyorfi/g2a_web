@@ -25,6 +25,7 @@ import {
   renderChecklistResultHtml,
   type Lang,
 } from "./_core/emailTemplates";
+import { getAutomation } from "./_core/automations";
 import { generateSocialCopy } from "./_core/socialCopy";
 import {
   loadBrandVoice,
@@ -1823,6 +1824,19 @@ const leadMagnetRouter = router({
             `**Pontszám:** ${input.score ?? "–"}\n**Sáv:** ${input.band || "–"}\n**Leggyengébb:** ${input.weakestAreas || "–"}`,
           replyTo: input.email,
         });
+      }
+
+      // Enrol into the nurture drip once (survives across landing/checklist opt-ins).
+      const NURTURE = "leadmagnet-nurture";
+      if (!(await db.hasActiveEnrollment(input.email, NURTURE))) {
+        const first = getAutomation(NURTURE)?.steps[0];
+        if (first) {
+          await db.createEnrollment({
+            email: input.email, automationKey: NURTURE,
+            band: input.band ?? null, name: input.name ?? null,
+            nextRunAt: new Date(Date.now() + first.dayOffset * 24 * 60 * 60 * 1000),
+          });
+        }
       }
 
       if (isEmailConfigured() && unsubscribeToken) {
