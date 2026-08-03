@@ -2186,8 +2186,7 @@ var PERMISSION_KEYS = [
   "seo",
   "brand_voice",
   // Rendszer
-  "settings",
-  "users"
+  "settings"
 ];
 var VALID = new Set(PERMISSION_KEYS);
 function parsePermissions(raw) {
@@ -4209,6 +4208,12 @@ function permissionProcedure(permission) {
     return next({ ctx });
   });
 }
+var ownerProcedure = adminProcedure2.use(({ ctx, next }) => {
+  if (!ctx.user.isOwner) {
+    throw new TRPCError3({ code: "FORBIDDEN", message: "Ez a m\u0171velet csak a tulajdonos\xE9." });
+  }
+  return next({ ctx });
+});
 function originFromRequest(req) {
   const origin = req.headers?.origin;
   if (origin) return origin.replace(/\/$/, "");
@@ -4352,12 +4357,12 @@ var contentRouter = router({
 });
 var contactRouter = router({
   submit: publicProcedure.input(z2.object({
-    name: z2.string().min(2, "K\xE9rj\xFCk adja meg a nev\xE9t"),
-    email: z2.string().email("\xC9rv\xE9nyes email c\xEDm sz\xFCks\xE9ges"),
-    phone: z2.string().optional(),
-    subject: z2.string().optional(),
-    message: z2.string().min(10, "Az \xFCzenet legal\xE1bb 10 karakter legyen"),
-    serviceInterest: z2.string().optional(),
+    name: z2.string().min(2, "K\xE9rj\xFCk adja meg a nev\xE9t").max(120),
+    email: z2.string().email("\xC9rv\xE9nyes email c\xEDm sz\xFCks\xE9ges").max(320),
+    phone: z2.string().max(40).optional(),
+    subject: z2.string().max(200).optional(),
+    message: z2.string().min(10, "Az \xFCzenet legal\xE1bb 10 karakter legyen").max(5e3),
+    serviceInterest: z2.string().max(200).optional(),
     // Honeypot — must remain empty for the submission to be persisted
     [HONEYPOT_FIELD]: z2.string().optional(),
     // Cloudflare Turnstile widget token — verified server-side
@@ -4440,14 +4445,14 @@ function normalizeUrl(input) {
 }
 var auditRouter = router({
   submit: publicProcedure.input(z2.object({
-    name: z2.string().min(2, "K\xE9rj\xFCk adja meg a nev\xE9t"),
-    email: z2.string().email("\xC9rv\xE9nyes email c\xEDm sz\xFCks\xE9ges"),
-    phone: z2.string().optional(),
-    company: z2.string().optional(),
-    website: z2.string().optional(),
-    monthlyBudget: z2.string().optional(),
-    currentChallenges: z2.string().optional(),
-    goals: z2.string().optional(),
+    name: z2.string().min(2, "K\xE9rj\xFCk adja meg a nev\xE9t").max(120),
+    email: z2.string().email("\xC9rv\xE9nyes email c\xEDm sz\xFCks\xE9ges").max(320),
+    phone: z2.string().max(40).optional(),
+    company: z2.string().max(200).optional(),
+    website: z2.string().max(500).optional(),
+    monthlyBudget: z2.string().max(100).optional(),
+    currentChallenges: z2.string().max(3e3).optional(),
+    goals: z2.string().max(3e3).optional(),
     [AUDIT_HONEYPOT]: z2.string().optional(),
     turnstileToken: z2.string().optional(),
     // Visitor's language for the confirmation email. Not persisted.
@@ -5572,7 +5577,7 @@ var adminRouter = router({
     };
   }),
   users: router({
-    list: permissionProcedure("users").query(async () => {
+    list: ownerProcedure.query(async () => {
       const rows = await listStaffUsers();
       return rows.map((u) => ({
         id: u.id,
@@ -5591,7 +5596,7 @@ var adminRouter = router({
      * set-password token, emails the link, and ALSO returns it so the owner
      * can pass it on by hand — deliverability shouldn't block onboarding.
      */
-    invite: permissionProcedure("users").input(z2.object({
+    invite: ownerProcedure.input(z2.object({
       name: z2.string().min(2).max(120),
       email: z2.string().email(),
       permissions: z2.array(z2.enum(PERMISSION_KEYS)).max(PERMISSION_KEYS.length)
@@ -5623,7 +5628,7 @@ var adminRouter = router({
       if (!result.ok) emailError = result.error;
       return { id: created?.id ?? 0, link, emailSent, emailError };
     }),
-    update: permissionProcedure("users").input(z2.object({
+    update: ownerProcedure.input(z2.object({
       id: z2.number(),
       name: z2.string().min(2).max(120).optional(),
       permissions: z2.array(z2.enum(PERMISSION_KEYS)).optional(),
@@ -5642,7 +5647,7 @@ var adminRouter = router({
       return { success: true };
     }),
     /** New set-password link for someone who never used (or lost) the first. */
-    resendInvite: permissionProcedure("users").input(z2.object({ id: z2.number() })).mutation(async ({ input, ctx }) => {
+    resendInvite: ownerProcedure.input(z2.object({ id: z2.number() })).mutation(async ({ input, ctx }) => {
       const target = await getUserById(input.id);
       if (!target || !target.email) throw new TRPCError3({ code: "NOT_FOUND", message: "Nincs ilyen felhaszn\xE1l\xF3." });
       const token = generateResetToken();
@@ -5659,7 +5664,7 @@ var adminRouter = router({
       });
       return { link, emailSent: result.ok, emailError: result.error };
     }),
-    remove: permissionProcedure("users").input(z2.object({ id: z2.number() })).mutation(async ({ input, ctx }) => {
+    remove: ownerProcedure.input(z2.object({ id: z2.number() })).mutation(async ({ input, ctx }) => {
       const target = await getUserById(input.id);
       if (!target) throw new TRPCError3({ code: "NOT_FOUND", message: "Nincs ilyen felhaszn\xE1l\xF3." });
       if (target.isOwner) {
@@ -6162,9 +6167,11 @@ function registerResendWebhookRoute(app2) {
           return;
         }
       } else if (ENV.isProduction) {
-        console.warn(
-          "[resend-webhook] RESEND_WEBHOOK_SECRET not set in production \u2014 accepting unsigned events"
+        console.error(
+          "[resend-webhook] RESEND_WEBHOOK_SECRET not set in production \u2014 rejecting unsigned events"
         );
+        res.status(503).json({ error: "Webhook not configured" });
+        return;
       }
       const event = req.body;
       if (!event || typeof event !== "object" || !event.type) {
@@ -6791,7 +6798,7 @@ function registerDigestCronRoute(app2) {
       if (auth !== `Bearer ${secret}`) {
         return res.status(401).json({ error: "Unauthorized: missing or wrong Bearer token" });
       }
-    } else if (process.env.NODE_ENV === "production") {
+    } else if (process.env.NODE_ENV !== "development") {
       return res.status(503).json({
         error: "CRON_SECRET not set in production. Refusing to send."
       });
@@ -6909,7 +6916,7 @@ function registerChurnCronRoute(app2) {
       if ((req.headers.authorization || "") !== `Bearer ${secret}`) {
         return res.status(401).json({ error: "Unauthorized" });
       }
-    } else if (process.env.NODE_ENV === "production") {
+    } else if (process.env.NODE_ENV !== "development") {
       return res.status(503).json({ error: "CRON_SECRET not set in production." });
     }
     const result = await runChurn();
@@ -6931,7 +6938,7 @@ function registerAutomationCronRoute(app2) {
       if (auth !== `Bearer ${secret}`) {
         return res.status(401).json({ error: "Unauthorized" });
       }
-    } else if (process.env.NODE_ENV === "production") {
+    } else if (process.env.NODE_ENV !== "development") {
       return res.status(503).json({ error: "CRON_SECRET not set in production." });
     }
     if (!isEmailConfigured()) {

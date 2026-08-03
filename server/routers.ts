@@ -68,6 +68,18 @@ function permissionProcedure(permission: Permission) {
   });
 }
 
+/**
+ * Owner-only. User management (invite / edit permissions / remove) can grant
+ * any permission, so whoever holds it effectively holds all of them — it must
+ * NOT be a delegatable permission. Only the ADMIN_EMAIL owner (isOwner) passes.
+ */
+const ownerProcedure = adminProcedure.use(({ ctx, next }) => {
+  if (!ctx.user.isOwner) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Ez a művelet csak a tulajdonosé." });
+  }
+  return next({ ctx });
+});
+
 /** Absolute origin for building invite / reset links in emails. */
 function originFromRequest(req: { headers: Record<string, unknown>; protocol?: string; get?: (h: string) => string | undefined }): string {
   const origin = req.headers?.origin as string | undefined;
@@ -264,12 +276,12 @@ const contentRouter = router({
 const contactRouter = router({
   submit: publicProcedure
     .input(z.object({
-      name: z.string().min(2, "Kérjük adja meg a nevét"),
-      email: z.string().email("Érvényes email cím szükséges"),
-      phone: z.string().optional(),
-      subject: z.string().optional(),
-      message: z.string().min(10, "Az üzenet legalább 10 karakter legyen"),
-      serviceInterest: z.string().optional(),
+      name: z.string().min(2, "Kérjük adja meg a nevét").max(120),
+      email: z.string().email("Érvényes email cím szükséges").max(320),
+      phone: z.string().max(40).optional(),
+      subject: z.string().max(200).optional(),
+      message: z.string().min(10, "Az üzenet legalább 10 karakter legyen").max(5000),
+      serviceInterest: z.string().max(200).optional(),
       // Honeypot — must remain empty for the submission to be persisted
       [HONEYPOT_FIELD]: z.string().optional(),
       // Cloudflare Turnstile widget token — verified server-side
@@ -367,14 +379,14 @@ function normalizeUrl(input: string | null | undefined): string {
 const auditRouter = router({
   submit: publicProcedure
     .input(z.object({
-      name: z.string().min(2, "Kérjük adja meg a nevét"),
-      email: z.string().email("Érvényes email cím szükséges"),
-      phone: z.string().optional(),
-      company: z.string().optional(),
-      website: z.string().optional(),
-      monthlyBudget: z.string().optional(),
-      currentChallenges: z.string().optional(),
-      goals: z.string().optional(),
+      name: z.string().min(2, "Kérjük adja meg a nevét").max(120),
+      email: z.string().email("Érvényes email cím szükséges").max(320),
+      phone: z.string().max(40).optional(),
+      company: z.string().max(200).optional(),
+      website: z.string().max(500).optional(),
+      monthlyBudget: z.string().max(100).optional(),
+      currentChallenges: z.string().max(3000).optional(),
+      goals: z.string().max(3000).optional(),
       [AUDIT_HONEYPOT]: z.string().optional(),
       turnstileToken: z.string().optional(),
       // Visitor's language for the confirmation email. Not persisted.
@@ -1564,7 +1576,7 @@ const adminRouter = router({
     };
   }),
   users: router({
-    list: permissionProcedure("users").query(async () => {
+    list: ownerProcedure.query(async () => {
       const rows = await db.listStaffUsers();
       // Never ship the hash or a live invite token to the browser.
       return rows.map((u) => ({
@@ -1585,7 +1597,7 @@ const adminRouter = router({
      * set-password token, emails the link, and ALSO returns it so the owner
      * can pass it on by hand — deliverability shouldn't block onboarding.
      */
-    invite: permissionProcedure("users")
+    invite: ownerProcedure
       .input(z.object({
         name: z.string().min(2).max(120),
         email: z.string().email(),
@@ -1620,7 +1632,7 @@ const adminRouter = router({
         return { id: created?.id ?? 0, link, emailSent, emailError };
       }),
 
-    update: permissionProcedure("users")
+    update: ownerProcedure
       .input(z.object({
         id: z.number(),
         name: z.string().min(2).max(120).optional(),
@@ -1642,7 +1654,7 @@ const adminRouter = router({
       }),
 
     /** New set-password link for someone who never used (or lost) the first. */
-    resendInvite: permissionProcedure("users")
+    resendInvite: ownerProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input, ctx }) => {
         const target = await db.getUserById(input.id);
@@ -1662,7 +1674,7 @@ const adminRouter = router({
         return { link, emailSent: result.ok, emailError: result.error };
       }),
 
-    remove: permissionProcedure("users")
+    remove: ownerProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input, ctx }) => {
         const target = await db.getUserById(input.id);

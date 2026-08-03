@@ -57,7 +57,7 @@ export function registerChurnCronRoute(app: Express): void {
       if ((req.headers.authorization || "") !== `Bearer ${secret}`) {
         return res.status(401).json({ error: "Unauthorized" });
       }
-    } else if (process.env.NODE_ENV === "production") {
+    } else if (process.env.NODE_ENV !== "development") {
       return res.status(503).json({ error: "CRON_SECRET not set in production." });
     }
     const result = await runChurn();

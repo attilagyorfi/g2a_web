@@ -153,7 +153,7 @@ export function registerDigestCronRoute(app: Express): void {
       if (auth !== `Bearer ${secret}`) {
         return res.status(401).json({ error: "Unauthorized: missing or wrong Bearer token" });
       }
-    } else if (process.env.NODE_ENV === "production") {
+    } else if (process.env.NODE_ENV !== "development") {
       // Refuse to run in prod without a secret — otherwise an attacker who
       // discovered the URL could trigger a mass mail blast.
       return res.status(503).json({

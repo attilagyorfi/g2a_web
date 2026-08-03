@@ -31,7 +31,6 @@ export const PERMISSION_KEYS = [
   "brand_voice",
   // Rendszer
   "settings",
-  "users",
 ] as const;
 
 export type Permission = (typeof PERMISSION_KEYS)[number];
@@ -86,7 +85,6 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     hint: "Csak megbízható munkatársnak",
     items: [
       { key: "settings", label: "Beállítások", desc: "Oldalbeállítások, integrációk, kulcsok" },
-      { key: "users", label: "Felhasználók", desc: "Munkatársak meghívása és jogosultságaik" },
     ],
   },
 ];

@@ -29,6 +29,7 @@ const navItems: Array<{
   label: string;
   exact?: boolean;
   perm?: Permission;
+  ownerOnly?: boolean;
 }> = [
   { href: "/admin", icon: LayoutDashboard, label: "Irányítópult", exact: true },
   { href: "/admin/posts", icon: Newspaper, label: "Blog cikkek", perm: "posts" },
@@ -47,7 +48,7 @@ const navItems: Array<{
   { href: "/admin/segments", icon: Filter, label: "Szegmensek", perm: "newsletter" },
   { href: "/admin/seo", icon: Globe, label: "SEO Oldalak", perm: "seo" },
   { href: "/admin/brand-voice", icon: Sparkles, label: "Brand voice", perm: "brand_voice" },
-  { href: "/admin/users", icon: UserPlus, label: "Felhasználók", perm: "users" },
+  { href: "/admin/users", icon: UserPlus, label: "Felhasználók", ownerOnly: true },
   { href: "/admin/settings", icon: Settings, label: "Beállítások", perm: "settings" },
 ];
 
@@ -129,7 +130,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Nav */}
         <nav style={{ flex: 1, padding: "0.75rem 0", overflowY: "auto" }}>
-          {navItems.filter(item => !item.perm || hasPermission(user, item.perm)).map(item => {
+          {navItems.filter(item => item.ownerOnly ? user?.isOwner : (!item.perm || hasPermission(user, item.perm))).map(item => {
             const isActive = item.exact ? location === item.href : (location === item.href || location.startsWith(item.href + "/"));
             const Icon = item.icon;
             return (

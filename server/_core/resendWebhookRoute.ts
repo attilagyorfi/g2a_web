@@ -146,11 +146,14 @@ export function registerResendWebhookRoute(app: Express) {
           return;
         }
       } else if (ENV.isProduction) {
-        // Production with no secret configured = misconfig, but be permissive
-        // to avoid silently swallowing events. Log a warning and accept.
-        console.warn(
-          "[resend-webhook] RESEND_WEBHOOK_SECRET not set in production — accepting unsigned events",
+        // Fail CLOSED: with no secret we can't tell a real Resend event from a
+        // forged one, and these events bump lead scores + write to email_events.
+        // Refuse rather than accept unsigned traffic. (Set RESEND_WEBHOOK_SECRET.)
+        console.error(
+          "[resend-webhook] RESEND_WEBHOOK_SECRET not set in production — rejecting unsigned events",
         );
+        res.status(503).json({ error: "Webhook not configured" });
+        return;
       }
 
       // Resend event format
