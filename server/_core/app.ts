@@ -47,9 +47,27 @@ function warnOnWeakSecrets(): void {
   }
 }
 
+/** 301s carried over from vercel.json — served in-app so they survive the move
+ *  off Vercel (Apache/Passenger on tarhely.eu doesn't read vercel.json). */
+const REDIRECTS: Record<string, string> = {
+  "/marketing-audit": "/ingyenes-audit",
+  "/en/marketing-audit": "/en/ingyenes-audit",
+  "/zh/marketing-audit": "/zh/ingyenes-audit",
+  "/iparagi/marketing-ugyvedii-irodaknak": "/iparagi/marketing-ugyvedi-irodaknak",
+  "/en/iparagi/marketing-ugyvedii-irodaknak": "/en/iparagi/marketing-ugyvedi-irodaknak",
+  "/zh/iparagi/marketing-ugyvedii-irodaknak": "/zh/iparagi/marketing-ugyvedi-irodaknak",
+};
+
 export function createApp(): Express {
   warnOnWeakSecrets();
   const app = express();
+
+  // Permanent redirects (old URLs → new). Before everything else, cheap.
+  app.use((req, res, next) => {
+    const target = REDIRECTS[req.path.replace(/\/+$/, "") || "/"];
+    if (target) return res.redirect(301, target);
+    next();
+  });
 
   // Resend webhook — POST /api/webhooks/resend (open/click/bounce events).
   // CRITICAL: must be registered BEFORE `express.json()` so the raw bytes

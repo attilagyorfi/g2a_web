@@ -42,13 +42,21 @@ async function startServer() {
     serveStatic(app);
   }
 
+  // Production (incl. cPanel / Phusion Passenger on tarhely.eu): bind exactly
+  // to the port Passenger hands us via PORT — no scanning, which would fight
+  // Passenger's socket handoff. Dev keeps the auto-port so parallel `pnpm dev`
+  // instances don't collide.
+  if (process.env.NODE_ENV !== "development") {
+    const port = process.env.PORT || 3000;
+    server.listen(port, () => console.log(`Server running (production) on ${port}`));
+    return;
+  }
+
   const preferredPort = parseInt(process.env.PORT || "3000");
   const port = await findAvailablePort(preferredPort);
-
   if (port !== preferredPort) {
     console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
-
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
   });
