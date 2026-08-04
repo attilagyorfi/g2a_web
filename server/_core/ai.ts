@@ -573,10 +573,23 @@ export async function generateMultilangBlogDraft(
   // folded away: the two-pass content prompt already strips AI-tells and
   // holds the 1500-2000-word length, and dropping it keeps the 3 parallel
   // locales comfortably inside the 300s Vercel budget.
+  //
+  // Retry each locale once. The common failure is a transient OpenAI
+  // timeout on a single locale (ZH is heaviest); without the retry that one
+  // rejection would fail the whole Promise.all and throw away the HU + EN
+  // drafts that already succeeded — wasted work and API spend.
+  const draftWithRetry = async (lang: Lang): Promise<BlogDraft> => {
+    try {
+      return await generateBlogDraft({ ...input, lang });
+    } catch (err) {
+      console.warn(`[blog] ${lang} draft failed, retrying once:`, err instanceof Error ? err.message : err);
+      return await generateBlogDraft({ ...input, lang });
+    }
+  };
   const [hu, en, zh] = await Promise.all([
-    generateBlogDraft({ ...input, lang: "hu" }).then(async (d) => { await tick("draft"); return d; }),
-    generateBlogDraft({ ...input, lang: "en" }).then(async (d) => { await tick("draft"); return d; }),
-    generateBlogDraft({ ...input, lang: "zh" }).then(async (d) => { await tick("draft"); return d; }),
+    draftWithRetry("hu").then(async (d) => { await tick("draft"); return d; }),
+    draftWithRetry("en").then(async (d) => { await tick("draft"); return d; }),
+    draftWithRetry("zh").then(async (d) => { await tick("draft"); return d; }),
   ]);
 
   // Mark the job complete after all three locales land.

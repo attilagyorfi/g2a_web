@@ -2705,16 +2705,24 @@ async function generateMultilangBlogDraft(input, jobId) {
     } catch {
     }
   };
+  const draftWithRetry = async (lang) => {
+    try {
+      return await generateBlogDraft({ ...input, lang });
+    } catch (err) {
+      console.warn(`[blog] ${lang} draft failed, retrying once:`, err instanceof Error ? err.message : err);
+      return await generateBlogDraft({ ...input, lang });
+    }
+  };
   const [hu, en, zh] = await Promise.all([
-    generateBlogDraft({ ...input, lang: "hu" }).then(async (d) => {
+    draftWithRetry("hu").then(async (d) => {
       await tick("draft");
       return d;
     }),
-    generateBlogDraft({ ...input, lang: "en" }).then(async (d) => {
+    draftWithRetry("en").then(async (d) => {
       await tick("draft");
       return d;
     }),
-    generateBlogDraft({ ...input, lang: "zh" }).then(async (d) => {
+    draftWithRetry("zh").then(async (d) => {
       await tick("draft");
       return d;
     })
